@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Grieer">
+<meta name="theme-color" content="#2C3E50">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<link rel="manifest" href="manifest.json">
+<title>Grieer Rauchfangkehrermeister</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow-x:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:linear-gradient(160deg,#1a252f 0%,#2C3E50 50%,#1a3a4a 100%);
+  min-height:100vh;color:#fff}
+.hdr{padding:calc(env(safe-area-inset-top,20px) + 20px) 20px 0;text-align:center}
+.logo-wrap{display:inline-flex;align-items:center;gap:14px;
+  background:rgba(255,255,255,.07);border-radius:20px;
+  padding:14px 22px;margin-bottom:22px;
+  border:1px solid rgba(255,255,255,.12)}
+.logo-img{width:56px;height:56px;border-radius:13px;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+.logo-name{font-size:28px;font-weight:900;letter-spacing:3px;color:#fff}
+.logo-name .red{color:#CC1111}
+.logo-sub{font-size:10px;color:#78909C;letter-spacing:1px;margin-top:2px;text-transform:uppercase}
+.hero{padding:0 24px 22px;text-align:center}
+.hero h1{font-size:22px;font-weight:700;line-height:1.35;margin-bottom:8px;color:#ECEFF1}
+.hero p{font-size:13px;color:#90A4AE;line-height:1.6;max-width:300px;margin:0 auto}
+.btn-main{display:block;margin:0 20px 12px;
+  background:linear-gradient(135deg,#27AE60,#2ECC71);
+  color:#fff;text-decoration:none;text-align:center;
+  padding:20px;border-radius:16px;font-size:17px;font-weight:700;
+  box-shadow:0 8px 24px rgba(39,174,96,.4);
+  border:none;cursor:pointer;width:calc(100% - 40px);
+  -webkit-tap-highlight-color:transparent}
+.btn-main .ico{font-size:24px;display:block;margin-bottom:5px}
+.btn-main .sub{font-size:11px;opacity:.85;font-weight:400;margin-top:3px}
+.btn-inst{display:block;margin:0 20px 24px;
+  background:rgba(255,255,255,.08);color:#B0BEC5;
+  text-decoration:none;text-align:center;padding:15px;
+  border-radius:14px;font-size:14px;font-weight:600;
+  border:1.5px solid rgba(255,255,255,.15);cursor:pointer;
+  width:calc(100% - 40px);-webkit-tap-highlight-color:transparent}
+.grid{margin:0 20px 22px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.feat{background:rgba(255,255,255,.06);border-radius:14px;padding:14px;
+  border:1px solid rgba(255,255,255,.08)}
+.feat-ico{font-size:22px;margin-bottom:6px;display:block}
+.feat-title{font-size:12px;font-weight:700;color:#ECEFF1;margin-bottom:3px}
+.feat-sub{font-size:10.5px;color:#78909C;line-height:1.4}
+.chips{margin:0 20px 22px}
+.chips-ttl{font-size:10px;color:#546E7A;text-transform:uppercase;
+  letter-spacing:1px;margin-bottom:9px;font-weight:600}
+.chips-row{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:rgba(255,255,255,.08);border-radius:20px;
+  padding:5px 11px;font-size:11.5px;color:#B0BEC5;
+  border:1px solid rgba(255,255,255,.1)}
+.foot{text-align:center;padding:0 20px calc(env(safe-area-inset-bottom,16px) + 16px);
+  font-size:10px;color:#455A64;line-height:1.9}
+/* Overlay */
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:200;
+  padding:20px;overflow-y:auto}
+.ov.on{display:block}
+.ov-card{background:#1E2D3D;border-radius:20px;padding:24px;
+  max-width:380px;margin:16px auto;border:1px solid rgba(255,255,255,.1)}
+.ov-card h2{font-size:18px;font-weight:700;margin-bottom:5px;color:#ECEFF1}
+.ov-card .sub2{font-size:12px;color:#78909C;margin-bottom:18px;line-height:1.5}
+.sc{display:flex;align-items:flex-start;gap:12px;
+  background:rgba(255,255,255,.05);border-radius:12px;padding:12px;
+  margin-bottom:9px;border:1px solid rgba(255,255,255,.07)}
+.sn{background:#27AE60;color:#fff;border-radius:50%;
+  width:28px;height:28px;min-width:28px;display:flex;align-items:center;
+  justify-content:center;font-size:13px;font-weight:700}
+.st{font-size:12.5px;color:#ECEFF1;line-height:1.55}
+.info{background:rgba(39,174,96,.1);border:1px solid rgba(39,174,96,.3);
+  border-radius:10px;padding:11px 13px;margin-top:14px;
+  font-size:12px;color:#A8E6CF;line-height:1.65}
+.btn-cls{width:100%;padding:14px;background:rgba(255,255,255,.08);
+  border:1.5px solid rgba(255,255,255,.15);border-radius:12px;
+  color:#B0BEC5;font-size:14px;font-weight:600;cursor:pointer;margin-top:12px}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="logo-wrap">
+    <img class="logo-img" src="data:image/png;base64,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" alt="Grieer">
+    <div>
+      <div class="logo-name">GRI<span class="red">E</span>ER</div>
+      <div class="logo-sub">Rauchfangkehrermeister</div>
+    </div>
+  </div>
+</div>
+
+<div class="hero">
+  <h1>Ihre digitale<br>Kanzlei-App</h1>
+  <p>Kehrtarife, Gasservice, Brandschutz, Wartung und Verrechnung – alles in einer App.</p>
+</div>
+
+<a class="btn-main" href="app.html">
+  <span class="ico">🚀</span>
+  Grieer KV App starten
+  <div class="sub">Tippen zum Öffnen</div>
+</a>
+
+<button class="btn-inst" onclick="document.getElementById('ov').classList.add('on')">
+  📲 Am Home-Bildschirm installieren
+</button>
+
+<div class="grid">
+  <div class="feat"><span class="feat-ico">🔥</span><div class="feat-title">Kehrtarif-KV</div><div class="feat-sub">Bgld. KehrG 2022 &amp; LGBl. 98/2025</div></div>
+  <div class="feat"><span class="feat-ico">🔥</span><div class="feat-title">Gasservice</div><div class="feat-sub">B/C-Geräte, Kombithermen &amp; Wartung</div></div>
+  <div class="feat"><span class="feat-ico">🛡</span><div class="feat-title">Brandschutz</div><div class="feat-sub">Rauchwarnmelder, CO, Feuerlöscher</div></div>
+  <div class="feat"><span class="feat-ico">💶</span><div class="feat-title">Verrechnung</div><div class="feat-sub">60 Positionen, EP editierbar</div></div>
+  <div class="feat"><span class="feat-ico">🔔</span><div class="feat-title">Wartungserinnerung</div><div class="feat-sub">Digital ausfüllen &amp; drucken</div></div>
+  <div class="feat"><span class="feat-ico">☀</span><div class="feat-title">PV-Reinigung</div><div class="feat-sub">Nano, Thermografie, Reinigung</div></div>
+</div>
+
+<div class="chips">
+  <div class="chips-ttl">Alle Bereiche</div>
+  <div class="chips-row">
+    <span class="chip">👤 Kunden</span>
+    <span class="chip">☀ PV</span>
+    <span class="chip">🔥 Gas</span>
+    <span class="chip">💨 Lüftung</span>
+    <span class="chip">🛡 Brandschutz</span>
+    <span class="chip">🧱 Kamintürl</span>
+    <span class="chip">🔥 Kehrtarif</span>
+    <span class="chip">💶 Verrechnung</span>
+    <span class="chip">📋 BS-Info</span>
+    <span class="chip">🔔 Wartung</span>
+  </div>
+</div>
+
+<div class="foot">
+  Grieer Rauchfangkehrermeister<br>
+  Neugebäu 10, 7201 Neudörfl a.d. Leitha<br>
+  +43 (0) 2622 77062 · office@grieer.com<br>
+  www.grieer.com · Preisliste 2026
+</div>
+
+<!-- Installations-Overlay -->
+<div class="ov" id="ov">
+  <div class="ov-card">
+    <h2>📲 App installieren</h2>
+    <p class="sub2">So kommt die Grieer App auf deinen Home-Bildschirm – ganz ohne App Store.</p>
+    <div class="sc"><div class="sn">1</div><div class="st">Diese Seite muss in <b>Safari</b> geöffnet sein</div></div>
+    <div class="sc"><div class="sn">2</div><div class="st">Unten in Safari auf das <b>Teilen-Symbol ↑</b> tippen</div></div>
+    <div class="sc"><div class="sn">3</div><div class="st">Im Menü nach unten scrollen → <b>„Zum Home-Bildschirm"</b> antippen</div></div>
+    <div class="sc"><div class="sn">4</div><div class="st">Name <b>„Grieer"</b> lassen → <b>„Hinzufügen"</b> tippen ✓</div></div>
+    <div class="info">
+      ✓ Grieer-Icon erscheint am Home-Bildschirm<br>
+      ✓ App startet als Vollbild ohne Safari-Leiste<br>
+      ✓ Funktioniert offline nach der Installation<br>
+      ✓ Daten werden dauerhaft gespeichert
+    </div>
+    <button class="btn-cls" onclick="document.getElementById('ov').classList.remove('on')">✕ Schließen</button>
+  </div>
+</div>
+
+<script>
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function(){});
+if(window.navigator.standalone) document.querySelector('.btn-inst').style.display='none';
+</script>
+</body>
+</html>
