@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Grieer – KV App</title>
+<title>Grieer App</title>
 <meta name="description" content="Grieer Rauchfangkehrermeister – Kostenvoranschlag App">
 <meta name="theme-color" content="#2C3E50">
 <!-- iOS PWA -->
@@ -544,30 +544,98 @@ input[type=radio].we-native-cb{border-radius:50%;}
 .ki-loading-dots span:nth-child(3){animation-delay:.4s}
 @keyframes kidot{0%,60%,100%{opacity:.3;transform:scale(.8)}30%{opacity:1;transform:scale(1)}}
 
+
+/* ══ BOTTOM NAVIGATION iPhone ══ */
+:root{ --nav-h:64px; }
+nav#bottom-nav{
+  position:fixed!important;bottom:0;left:0;right:0;top:auto!important;
+  height:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));
+  background:#2C3E50;display:flex!important;align-items:flex-start;
+  flex-direction:row!important;flex-wrap:nowrap!important;
+  padding-top:6px;padding-bottom:env(safe-area-inset-bottom,0px);
+  box-shadow:0 -2px 20px rgba(0,0,0,.3);z-index:500;overflow:hidden;gap:0!important;
+}
+nav#bottom-nav img{display:none!important}
+.nav-tab{
+  flex:1;display:flex!important;flex-direction:column!important;
+  align-items:center;gap:2px;padding:4px 2px;
+  border:none!important;background:transparent!important;
+  color:#94A3B8;font-size:9px!important;font-weight:600;
+  cursor:pointer;touch-action:manipulation;min-height:44px;min-width:0;
+  -webkit-tap-highlight-color:transparent;font-family:inherit;
+}
+.nav-tab-icon{font-size:20px;line-height:1.2;display:block}
+.nav-tab.active{color:#fff!important;background:transparent!important;box-shadow:none!important}
+.nav-more-btn{
+  flex:1;display:flex!important;flex-direction:column!important;
+  align-items:center;gap:2px;padding:4px 2px;
+  border:none!important;background:transparent!important;
+  color:#94A3B8;font-size:9px;font-weight:600;
+  cursor:pointer;touch-action:manipulation;min-height:44px;font-family:inherit;
+}
+.nav-more-btn.open{color:#fff}
+.nav-more-icon{font-size:20px;line-height:1.2;display:block}
+.more-menu-btn{
+  display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px;
+  border:none;background:rgba(255,255,255,.08);border-radius:10px;color:#CBD5E1;
+  font-size:10px;font-weight:600;cursor:pointer;touch-action:manipulation;
+  font-family:inherit;min-height:60px;width:100%;
+  -webkit-tap-highlight-color:transparent;
+}
+.more-menu-btn:active,.more-menu-btn.active{background:rgba(255,255,255,.22);color:#fff}
+body{padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px) + 4px)!important}
+#toast{bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px) + 16px)!important}
+#ios-banner{bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px) + 8px)!important}
+@media(min-width:700px){
+  nav#bottom-nav{position:sticky!important;top:0!important;bottom:auto!important;
+    height:auto!important;padding:6px 8px;flex-wrap:wrap!important;overflow:visible}
+  nav#bottom-nav img{display:block!important}
+  .nav-tab{flex:0 0 auto!important;flex-direction:row!important;gap:5px!important;
+    padding:7px 14px!important;border-radius:8px!important;font-size:12px!important;min-height:36px!important}
+  .nav-tab-icon{font-size:16px!important}
+  .nav-tab.active{background:rgba(255,255,255,.15)!important;border-radius:8px!important}
+  .nav-more-btn{flex:0 0 auto!important}
+  body{padding-bottom:0!important}
+}
 </style>
 </head>
 <body>
-<nav class="nav">
-  <img src="data:image/png;base64,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" alt="Grieer" class="nav-logo">
-  <div class="nav-row" id="nav-row1">
-    <button id="nav-aufnahme" onclick="show('aufnahme')">👤 Kunden</button>
-    <button id="nav-pv" onclick="show('pv')" title="🔐 PIN erforderlich">☀ PV</button>
-    <button id="nav-gas" onclick="show('gas')" title="🔐 PIN erforderlich">🔥 Gas</button>
-    <button id="nav-luft" onclick="show('luft')" title="🔐 PIN erforderlich">💨 Lüftung</button>
-    <button id="nav-brand" onclick="show('brand')" title="🔐 PIN erforderlich">🛡 Brandschutz</button>
-    <button id="nav-kamin" onclick="show('kamin')" title="🔐 PIN erforderlich">🧱 Kamin</button>
-    <button id="nav-kehr" onclick="show('kehr')" title="🔐 PIN erforderlich">🔥 Kehrtarif</button>
-    <button id="nav-brandinfo" onclick="show('brandinfo')">📋 BS-Info</button>
-    <button id="nav-gesamt" onclick="show('gesamt')" title="🔐 PIN erforderlich">📝 Gesamt-KV</button>
-    <button id="nav-wprot" onclick="show('wprot')">📋 Protokoll</button>
-    <button id="nav-maengel" onclick="show('maengel')" style="background:#E74C3C">⚠ Mängel</button>
-    <button id="nav-wart" onclick="show('wart')">🔔 Erinnerung</button>
-    <button id="nav-verr" onclick="show('verr')" title="🔐 PIN erforderlich">💶 Verrechnung</button>
-    <span id="sync-ind" style="margin-left:4px;align-self:center;font-size:9px;color:#7DCEA0;opacity:0;transition:opacity .4s;white-space:nowrap;flex-shrink:0">⟳ sync</span>
-
-  </div>
-  <button id="nav-ki" onclick="show('ki')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);font-weight:700">🤖 KI-Assistent</button>
+<nav id="bottom-nav">
+  <!-- 5 Haupt-Tabs -->
+  <button class="nav-tab active" id="nav-aufnahme" onclick="show('aufnahme')">
+    <span class="nav-tab-icon">👤</span>Kunden
+  </button>
+  <button class="nav-tab" id="nav-wprot" onclick="show('wprot')">
+    <span class="nav-tab-icon">📋</span>Protokoll
+  </button>
+  <button class="nav-tab" id="nav-maengel" onclick="show('maengel')">
+    <span class="nav-tab-icon">⚠️</span>Mängel
+  </button>
+  <button class="nav-tab" id="nav-wart" onclick="show('wart')">
+    <span class="nav-tab-icon">🔔</span>Erinnerung
+  </button>
+  <button class="nav-more-btn" onclick="toggleMoreMenu()" id="nav-more-btn">
+    <span class="nav-more-icon">⋯</span>Mehr
+  </button>
 </nav>
+<div id="nav-more-overlay" onclick="closeMoreMenu()" style="position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:498;display:none"></div>
+<div id="nav-more-menu" style="position:fixed;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));left:0;right:0;background:#3D5166;border-radius:18px 18px 0 0;padding:12px 12px 8px;z-index:499;display:none;box-shadow:0 -4px 24px rgba(0,0,0,.4)">
+  <div style="font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.8px;padding:0 4px 8px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:8px">Alle Bereiche</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+    <button class="more-menu-btn" id="nav-pv" onclick="showMore('pv')"><span style="font-size:22px;display:block;margin-bottom:3px">☀️</span>PV</button>
+    <button class="more-menu-btn" id="nav-gas" onclick="showMore('gas')"><span style="font-size:22px;display:block;margin-bottom:3px">🔥</span>Gas</button>
+    <button class="more-menu-btn" id="nav-luft" onclick="showMore('luft')"><span style="font-size:22px;display:block;margin-bottom:3px">💨</span>Lüftung</button>
+    <button class="more-menu-btn" id="nav-brand" onclick="showMore('brand')"><span style="font-size:22px;display:block;margin-bottom:3px">🛡️</span>Brandschutz</button>
+    <button class="more-menu-btn" id="nav-kamin" onclick="showMore('kamin')"><span style="font-size:22px;display:block;margin-bottom:3px">🧱</span>Kamintürl</button>
+    <button class="more-menu-btn" id="nav-kehr" onclick="showMore('kehr')"><span style="font-size:22px;display:block;margin-bottom:3px">📜</span>Kehrtarif</button>
+    <button class="more-menu-btn" id="nav-brandinfo" onclick="showMore('brandinfo')"><span style="font-size:22px;display:block;margin-bottom:3px">📋</span>BS-Info</button>
+    <button class="more-menu-btn" id="nav-gesamt" onclick="showMore('gesamt')"><span style="font-size:22px;display:block;margin-bottom:3px">📝</span>Gesamt-KV</button>
+    <button class="more-menu-btn" id="nav-verr" onclick="showMore('verr')"><span style="font-size:22px;display:block;margin-bottom:3px">💶</span>Verrechnung</button>
+    <button class="more-menu-btn" id="nav-ki" onclick="showMore('ki')"><span style="font-size:22px;display:block;margin-bottom:3px">🤖</span>KI-Assistent</button>
+  </div>
+  <button onclick="closeMoreMenu()" style="width:100%;margin-top:10px;padding:10px;background:rgba(255,255,255,.1);color:#CBD5E1;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">✕ Schließen</button>
+</div>
+
 
 
 <div class="pg active" id="page-aufnahme">
@@ -1711,9 +1779,7 @@ input[type=radio].we-native-cb{border-radius:50%;}
     display:block;margin:0 auto 14px">
     Abbrechen
   </button>
-  <div style="font-size:10px;color:#546E7A">
-    Passwort: <b style="color:#78909C">roland</b> oder <b style="color:#78909C">grieer</b>
-  </div>
+  <div style="font-size:10px;color:#546E7A;text-align:center">Betriebszugang</div>
 </div>
 
 <div id="ios-banner">
@@ -3055,6 +3121,29 @@ document.querySelectorAll('.adate').forEach(function(el){el.value=_ds;});
 // ── Utils ───────────────────────────────────────────────────────────────────
 function fmt(n){return n.toLocaleString('de-AT',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';}
 
+
+function showMore(id){ closeMoreMenu(); show(id); }
+
+function toggleMoreMenu(){
+  var m=document.getElementById('nav-more-menu');
+  var o=document.getElementById('nav-more-overlay');
+  var b=document.getElementById('nav-more-btn');
+  if(!m) return;
+  var open=m.style.display==='block';
+  m.style.display=open?'none':'block';
+  if(o) o.style.display=open?'none':'block';
+  if(b) b.classList.toggle('open',!open);
+}
+
+function closeMoreMenu(){
+  var m=document.getElementById('nav-more-menu');
+  var o=document.getElementById('nav-more-overlay');
+  var b=document.getElementById('nav-more-btn');
+  if(m) m.style.display='none';
+  if(o) o.style.display='none';
+  if(b) b.classList.remove('open');
+}
+
 function show(id){
   // PIN-Schutz für KV-Tabs
   if(typeof _pinProtectedTabs !== 'undefined' && _pinProtectedTabs.indexOf(id) >= 0){
@@ -3437,7 +3526,7 @@ function saveCurrentPage(){
 
   var content='<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8">'
     +'<meta name="viewport" content="width=device-width,initial-scale=1">'
-    +'<title>'+titleTxt+' – Grieer</title>'
+    +'<title>Grieer App</title>'
     +'<style>@page{size:A4 portrait;margin:8mm 10mm}'
     +'body{font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-size:10px;background:#fff;margin:0;padding:8px}'
     +'*{box-sizing:border-box}'
@@ -3501,72 +3590,118 @@ function showToast(msg, dur){
 }
 
 // ── Universelles Drucken – iOS/Android/Desktop ───────────────
-function universalPrint(htmlContent) {
-  var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent||'');
-  var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent||'');
 
-  // iOS Safari: Blob-URL in neuem Tab öffnen → Teilen → Als PDF sichern
-  if(isIOS || isSafari){
-    try {
-      var blob = new Blob([htmlContent],{type:'text/html;charset=utf-8'});
-      var url  = URL.createObjectURL(blob);
-      // Neues Fenster öffnen
-      var w = window.open(url,'_blank');
-      if(w){
-        w.onload=function(){
-          setTimeout(function(){
-            try{w.print();}catch(e){}
-            // iOS Hinweis
-            if(isIOS){
-              showToast('📄 Druckdialog → Teilen ↑ → "Als PDF sichern"',4000);
-            }
-          },600);
-        };
-        setTimeout(function(){URL.revokeObjectURL(url);},30000);
-        return;
-      }
-      URL.revokeObjectURL(url);
-    }catch(e){}
-    // iOS Fallback: Download
-    try{
-      var b2=new Blob([htmlContent],{type:'text/html;charset=utf-8'});
-      var u2=URL.createObjectURL(b2);
-      var a=document.createElement('a');
-      a.href=u2; a.download='Grieer_Formular.html'; a.target='_blank';
-      document.body.appendChild(a); a.click();
-      setTimeout(function(){URL.revokeObjectURL(u2);a.remove();},1000);
-      showToast('📥 Datei gespeichert → In Dateien öffnen → Teilen → Als PDF sichern',5000);
-    }catch(e){
-      alert('Bitte Screenshot → Teilen → Als PDF sichern');
-    }
-    return;
-  }
+// ══════════════════════════════════════════════════════════════
+// DRUCKEN / SPEICHERN / TEILEN – universell & zuverlässig
+// ══════════════════════════════════════════════════════════════
 
-  // Desktop/Android: window.open + print()
-  try{
-    var w2=window.open('','_blank','width=900,height=700');
-    if(w2){
-      w2.document.open();w2.document.write(htmlContent);w2.document.close();
-      w2.focus();
-      setTimeout(function(){try{w2.print();}catch(e){}},700);
-      return;
-    }
-  }catch(e){}
-
-  // Letzter Fallback: iframe
-  try{
-    var old=document.getElementById('_pf');if(old)old.remove();
-    var fr=document.createElement('iframe');
-    fr.id='_pf';
-    fr.style.cssText='position:fixed;top:-9999px;left:-9999px;width:210mm;height:297mm;border:0';
-    document.body.appendChild(fr);
-    fr.contentDocument.open();fr.contentDocument.write(htmlContent);fr.contentDocument.close();
-    setTimeout(function(){try{fr.contentWindow.print();}catch(e){}
-      setTimeout(function(){if(fr.parentNode)fr.remove();},5000);},600);
-  }catch(e){
-    alert('Drucken nicht möglich. Bitte Seite als PDF über den Browser drucken.');
+function universalPrint(htmlContent){
+  // iOS/Safari: Blob → neues Fenster → window.print()
+  var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent||'');
+  var blob=new Blob([htmlContent],{type:'text/html;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var w=window.open(url,'_blank');
+  if(w){
+    w.addEventListener('load',function(){
+      setTimeout(function(){
+        try{w.print();}catch(e){}
+        if(isIOS) showToast('📄 Druckdialog öffnet → "Als PDF sichern" wählen',4000);
+      },500);
+    });
+    setTimeout(function(){URL.revokeObjectURL(url);},60000);
+  } else {
+    // Popup blockiert → direkt download
+    var a=document.createElement('a');
+    a.href=url; a.download='Grieer_Formular.html';
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){URL.revokeObjectURL(url);a.remove();},2000);
+    showToast('📥 Datei heruntergeladen',3000);
   }
 }
+
+function saveCurrentPage(){
+  var active=document.querySelector('.pg.active');
+  if(!active){showToast('❌ Kein aktiver Tab');return;}
+  var title=active.querySelector('.kv-title,h2,h3');
+  var name=(title?title.textContent.trim():'Grieer').replace(/[^a-zA-Z0-9ÄÖÜäöü_-]/g,'_');
+  var date=new Date().toLocaleDateString('de-AT').replace(/\./g,'-');
+  var filename='Grieer_'+name+'_'+date+'.html';
+  
+  // Vollständiges HTML mit Styles
+  var head=document.head.outerHTML;
+  var content='<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8">'+
+    '<meta name="viewport" content="width=device-width,initial-scale=1">'+
+    '<title>Grieer App – '+name+'</title>'+
+    head.match(/<style[^>]*>[\s\S]*?<\/style>/)?.[0]+'</head><body>'+
+    '<div style="max-width:800px;margin:0 auto;padding:20px">'+
+    active.innerHTML+'</div></body></html>';
+  
+  var blob=new Blob([content],{type:'text/html;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url; a.download=filename;
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){URL.revokeObjectURL(url);a.remove();},2000);
+  showToast('💾 '+filename+' gespeichert');
+}
+
+// WhatsApp Teilen – Text-basiert (funktioniert auf iOS + Android)
+function shareWhatsApp(text){
+  var encoded=encodeURIComponent(text||'Grieer App – Bericht');
+  // wa.me funktioniert auf iOS und Android
+  var url='https://wa.me/?text='+encoded;
+  window.open(url,'_blank');
+}
+
+// Native Share API (iOS Share Sheet / Android)
+function nativeShare(title, text, file){
+  if(navigator.share){
+    var shareData={title:title||'Grieer App',text:text||''};
+    if(file) shareData.files=[file];
+    navigator.share(shareData).then(function(){
+      showToast('✓ Geteilt');
+    }).catch(function(e){
+      if(e.name!=='AbortError') showToast('Teilen fehlgeschlagen: '+e.message);
+    });
+  } else {
+    // Fallback: WhatsApp
+    shareWhatsApp(text);
+  }
+}
+
+// Universelles Teilen für Formulare (Text + optional WhatsApp)
+function shareFormular(pageid){
+  var pg=document.getElementById('page-'+pageid)||document.querySelector('.pg.active');
+  if(!pg){showToast('❌ Seite nicht gefunden');return;}
+  
+  // Text aus Formularfeldern extrahieren
+  var lines=['🏠 *Grieer Rauchfangkehrermeister*'];
+  lines.push('📞 +43 (0) 2622 77062');
+  lines.push('─────────────────────');
+  
+  // Kundendaten
+  var name=pg.querySelector('.kd-name,[id*="name"]');
+  var adr=pg.querySelector('.kd-str,[id*="str"]');
+  if(name&&name.value) lines.push('👤 '+name.value);
+  if(adr&&adr.value) lines.push('📍 '+adr.value);
+  
+  // Alle Labels + Werte
+  pg.querySelectorAll('label,input:not([type=file]),textarea,select').forEach(function(el){
+    if(el.tagName==='LABEL') return;
+    var lbl=pg.querySelector('label[for="'+el.id+'"]');
+    var val=el.type==='checkbox'?(el.checked?'✓':'✗'):el.value;
+    if(val&&val.trim()&&lbl){
+      lines.push(lbl.textContent.trim()+': '+val.trim());
+    }
+  });
+  
+  lines.push('─────────────────────');
+  lines.push('📅 '+new Date().toLocaleDateString('de-AT'));
+  
+  var text=lines.join('\n');
+  shareWhatsApp(text);
+}
+
 
 // ── PDF speichern (iOS: über Teilen-Menü) ───────────────────
 function savePDF(htmlContent, filename) {
@@ -4837,7 +4972,7 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.register('./sw.js').then(function(reg){
       console.log('SW OK:',reg.scope);
       setInterval(function(){if(navigator.onLine)reg.update();},60000);
-    }).catch(function(e){console.log('SW Err:',e);});
+    }).catch(function(e){/* SW nur bei HTTPS */});
     function setOffBar(on){
       var b=document.getElementById('offline-bar');
       if(!b){b=document.createElement('div');b.id='offline-bar';
@@ -5402,163 +5537,65 @@ function pinLock(){
 // ══════════════════════════════════════════════════════════
 
 var MAENGEL_KATALOG = [
-// ── A: ALLGEMEINE MÄNGEL (Bgld. KG) ─────────────────────
-{id:'A01',kat:'Allgemein',art:'Kehrung verweigert',norm:'Bgld. KG §15',dring:'sofort',frist:0,hv:true,massnahme:'Meldung an Bezirksverwaltungsbehörde. Verwaltungsübertretung §21 KehrG.'},
-{id:'A02',kat:'Allgemein',art:'Niemand zu Hause – kein Zutritt',norm:'Bgld. KG §15',dring:'30 Tage',frist:30,hv:false,massnahme:'Neuen Termin vereinbaren und schriftlich ankündigen.'},
-{id:'A03',kat:'Allgemein',art:'Termin Abgasmessung nicht eingehalten',norm:'Bgld. KG',dring:'14 Tage',frist:14,hv:false,massnahme:'Neuen Termin setzen. Bei Verweigerung Behördenmeldung.'},
-{id:'A04',kat:'Allgemein',art:'Termin Betriebsdichteprüfung nicht eingehalten',norm:'Bgld. KG',dring:'14 Tage',frist:14,hv:false,massnahme:'Neuen Termin setzen.'},
-{id:'A05',kat:'Allgemein',art:'Grenzwerte Abgasmessung nicht eingehalten',norm:'Bgld. KG / HKG-V 2019 §7',dring:'sofort',frist:0,hv:true,massnahme:'Feuerstätte außer Betrieb nehmen bis Grenzwerte eingehalten werden.'},
-{id:'A06',kat:'Allgemein',art:'Betriebsdichteprüfung negativ',norm:'ÖNORM B8201',dring:'14 Tage',frist:14,hv:false,massnahme:'Mängel beheben und Betriebsdichteprüfung wiederholen.'},
-{id:'A07',kat:'Allgemein',art:'Aufnahme in HKA-Datenbank verweigert',norm:'Bgld. HKG',dring:'30 Tage',frist:30,hv:false,massnahme:'Schriftliche Aufforderung. Bei Verweigerung Behördenmeldung.'},
-{id:'A08',kat:'Allgemein',art:'Zugang zur Anlage verweigert',norm:'Bgld. HKG; Bgld. KG',dring:'sofort',frist:0,hv:false,massnahme:'Behördenmeldung. Bürgermeister einschalten.'},
-// ── M1: ABGASANLAGE – FANGKOPF (ÖNORM B8207) ────────────
-{id:'M101',kat:'Abgasanlage – Fangkopf',art:'Abdeckplatte fehlt',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Abdeckplatte montieren.'},
-{id:'M102',kat:'Abgasanlage – Fangkopf',art:'Abdeckplatte schadhaft',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Abdeckplatte erneuern.'},
-{id:'M103',kat:'Abgasanlage – Fangkopf',art:'Abstand zu brennbaren Bauteilen nicht gegeben – Kehrtüre',norm:'OIB-RL 3',dring:'sofort',frist:0,hv:true,massnahme:'Sicherheitsabstand herstellen. Nicht brennbaren Schutz einbauen.'},
-{id:'M104',kat:'Abgasanlage – Fangkopf',art:'Abstand zu brennbaren Einrichtungen nicht gegeben – Kehrtüre',norm:'OIB-RL 3',dring:'sofort',frist:0,hv:true,massnahme:'Sicherheitsabstand herstellen.'},
-{id:'M106',kat:'Abgasanlage – Fangkopf',art:'Abstand zu öffenbarem Fenster zu gering',norm:'OIB-RL 3',dring:'14 Tage',frist:14,hv:false,massnahme:'Mindestabstand gem. OIB-RL 3 herstellen.'},
-{id:'M107',kat:'Abgasanlage – Fangkopf',art:'Brennbare Materialien im Bereich der Mündung entfernen',norm:'',dring:'sofort',frist:0,hv:true,massnahme:'Brennbare Materialien sofort entfernen.'},
-{id:'M110',kat:'Abgasanlage – Fangkopf',art:'Höhe des Fangkopfs über Dach zu gering',norm:'OIB-RL 3',dring:'30 Tage',frist:30,hv:false,massnahme:'Fangkopf auf erforderliche Höhe erhöhen.'},
-{id:'M111',kat:'Abgasanlage – Fangkopf',art:'Fangaufsatz fehlt',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Geeigneten Fangaufsatz montieren.'},
-{id:'M112',kat:'Abgasanlage – Fangkopf',art:'Fangaufsatz schadhaft',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Fangaufsatz erneuern.'},
-{id:'M113',kat:'Abgasanlage – Fangkopf',art:'Fangkopf mit brennbarem Baustoff verkleidet',norm:'',dring:'sofort',frist:0,hv:true,massnahme:'Brennbaren Baustoff entfernen. Nicht brennbar ausführen.'},
-{id:'M114',kat:'Abgasanlage – Fangkopf',art:'Fangkopf schadhaft',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Fangkopf instandsetzen oder erneuern.'},
-{id:'M117',kat:'Abgasanlage – Fangkopf',art:'Kehrtürchen fehlt',norm:'ÖNORM B8207',dring:'14 Tage',frist:14,hv:false,massnahme:'Kehrtürchen einbauen.'},
-{id:'M118',kat:'Abgasanlage – Fangkopf',art:'Kehrtürchen innen Abdeckung fehlt',norm:'ÖNORM B8207',dring:'14 Tage',frist:14,hv:false,massnahme:'Abdeckung nachrüsten.'},
-{id:'M120',kat:'Abgasanlage – Fangkopf',art:'Kehrtürchen nicht frei zugänglich',norm:'ÖNORM B8207',dring:'14 Tage',frist:14,hv:false,massnahme:'Freien Zugang sicherstellen.'},
-{id:'M121',kat:'Abgasanlage – Fangkopf',art:'Kehrtürchen schadhaft',norm:'ÖNORM B8207',dring:'14 Tage',frist:14,hv:false,massnahme:'Kehrtürchen erneuern.'},
-{id:'M124',kat:'Abgasanlage – Fangkopf',art:'Nicht brennbare Unterlage bei Kehrtürchen fehlt',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Nicht brennbare Unterlage einbauen.'},
-{id:'M126',kat:'Abgasanlage – Fangkopf',art:'Überdachung bei Brennwertrohr vorhanden',norm:'',dring:'30 Tage',frist:30,hv:false,massnahme:'Überdachung entfernen – Kondensatansammlung verhindert.'},
-{id:'M127',kat:'Abgasanlage – Fangkopf',art:'Überdachung der Fangmündung schadhaft',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Überdachung erneuern.'},
-{id:'M128',kat:'Abgasanlage – Fangkopf',art:'Überdachung ist zu entfernen',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Überdachung entfernen.'},
-{id:'M129',kat:'Abgasanlage – Fangkopf',art:'Zugang zur Fangmündung fehlt',norm:'ÖNORM B8207',dring:'30 Tage',frist:30,hv:false,massnahme:'Sicheren Zugang herstellen (Leiter/Arbeitsfläche/Anschlagpunkt).'},
-{id:'M132',kat:'Abgasanlage – Fangkopf',art:'Zugang zur Fangmündung fehlt – Leiter',norm:'ÖNORM B8207',dring:'30 Tage',frist:30,hv:false,massnahme:'Steigleiter/Dachhaken nachrüsten.'},
-// ── M1: PUTZTÜRCHEN ──────────────────────────────────────
-{id:'M138',kat:'Abgasanlage – Putztürchen',art:'Abstand Putztürchen zu Fußboden zu gering',norm:'',dring:'30 Tage',frist:30,hv:false,massnahme:'Putztürchen versetzen.'},
-{id:'M139',kat:'Abgasanlage – Putztürchen',art:'Abstand Putztürchen zur Anschlussstelle zu gering',norm:'',dring:'30 Tage',frist:30,hv:false,massnahme:'Putztürchen versetzen.'},
-{id:'M140',kat:'Abgasanlage – Putztürchen',art:'Abstand zu brennbaren Bauteilen nicht gegeben – Putztüre',norm:'',dring:'sofort',frist:0,hv:true,massnahme:'Sicherheitsabstand herstellen.'},
-{id:'M143',kat:'Abgasanlage – Putztürchen',art:'Putztürchen der Hinterlüftung nicht im selben Raum',norm:'',dring:'30 Tage',frist:30,hv:false,massnahme:'Putztürchen im gleichen Raum wie Anschluss herstellen.'},
-{id:'M144',kat:'Abgasanlage – Putztürchen',art:'Putztürchen fehlt',norm:'ÖNORM B8207',dring:'14 Tage',frist:14,hv:false,massnahme:'Putztürchen einbauen.'},
-{id:'M145',kat:'Abgasanlage – Putztürchen',art:'Putztürchen im Brennstofflagerraum',norm:'',dring:'sofort',frist:0,hv:true,massnahme:'Putztürchen verlegen – Brandgefahr.'},
-{id:'M146',kat:'Abgasanlage – Putztürchen',art:'Putztürchen in der Garage',norm:'',dring:'sofort',frist:0,hv:true,massnahme:'Putztürchen verlegen – unzulässiger Aufstellungsort.'},
-{id:'M149',kat:'Abgasanlage – Putztürchen',art:'Putztürchen nicht frei zugänglich',norm:'ÖNORM B8207',dring:'14 Tage',frist:14,hv:false,massnahme:'Freien Zugang herstellen.'},
-{id:'M150',kat:'Abgasanlage – Putztürchen',art:'Putztürchen schadhaft',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Putztürchen erneuern.'},
-// ── M1: ANSCHLUSSSTELLE (ÖNORM B8311) ────────────────────
-{id:'M151',kat:'Abgasanlage – Anschlussstelle',art:'Abstand Anschlussstellen zueinander zu gering',norm:'ÖNORM B8311',dring:'30 Tage',frist:30,hv:false,massnahme:'Anschlussstellen gem. ÖNORM B8311 versetzen.'},
-{id:'M152',kat:'Abgasanlage – Anschlussstelle',art:'Anschlussstelle ist zu versetzen',norm:'ÖNORM B8311',dring:'30 Tage',frist:30,hv:false,massnahme:'Anschlussstelle versetzen.'},
-{id:'M153',kat:'Abgasanlage – Anschlussstelle',art:'Anschluss nicht im selben Geschoß',norm:'ÖNORM B8311',dring:'30 Tage',frist:30,hv:false,massnahme:'Anschluss in gleiches Geschoß verlegen.'},
-{id:'M155',kat:'Abgasanlage – Anschlussstelle',art:'Anschlusskapsel fehlt',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Anschlusskapsel einbauen.'},
-{id:'M157',kat:'Abgasanlage – Anschlussstelle',art:'Anschlusskapsel schadhaft',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Anschlusskapsel erneuern.'},
-{id:'M158',kat:'Abgasanlage – Anschlussstelle',art:'Anschlussstelle – Dehnmöglichkeit nicht gegeben',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Dehnmöglichkeit herstellen.'},
-{id:'M159',kat:'Abgasanlage – Anschlussstelle',art:'Anschlussstelle – Fehleinmündung',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Sofort beheben. Brandgefahr durch Fehlleitung.'},
-{id:'M160',kat:'Abgasanlage – Anschlussstelle',art:'Anschlussstelle – Innenrohr schadhaft',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Innenrohr erneuern.'},
-{id:'M161',kat:'Abgasanlage – Anschlussstelle',art:'Anschlussstelle nicht vorhanden',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Anschlussstelle herstellen.'},
-{id:'M162',kat:'Abgasanlage – Anschlussstelle',art:'Anschlussstutzen fehlt',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Anschlussstutzen einbauen.'},
-// ── M1: ABGASANLAGE ALLGEMEIN ────────────────────────────
-{id:'M164',kat:'Abgasanlage',art:'Ziegelmauerwerkputz schadhaft',norm:'',dring:'30 Tage',frist:30,hv:false,massnahme:'Innenputz instandsetzen.'},
-{id:'M165',kat:'Abgasanlage',art:'Abgasanlage betriebsundicht',norm:'ÖNORM B8201',dring:'sofort',frist:0,hv:true,massnahme:'Außer Betrieb nehmen. Betriebsdichteprüfung nach ÖNORM B8201 wiederholen.'},
-{id:'M166',kat:'Abgasanlage',art:'Abgasanlage entspricht nicht der Bauweise',norm:'',dring:'30 Tage',frist:30,hv:false,massnahme:'Abgasanlage gem. Vorschriften herstellen.'},
-{id:'M168',kat:'Abgasanlage',art:'Abgasanlage ist verpecht – Glanzruß',norm:'',dring:'sofort',frist:0,hv:true,massnahme:'Ausbrennen/Ausschlagen. Feuerwehr verständigen. §7 Abs.1 KehrG.'},
-{id:'M169',kat:'Abgasanlage',art:'Abgasanlage ist zu sanieren',norm:'',dring:'30 Tage',frist:30,hv:false,massnahme:'Sanierung durch Fachfirma beauftragen.'},
-{id:'M170',kat:'Abgasanlage',art:'Abgasanlage mit brennbarem Material verkleidet',norm:'',dring:'sofort',frist:0,hv:true,massnahme:'Brennbares Material sofort entfernen.'},
-{id:'M175',kat:'Abgasanlage',art:'Abstand zu brennbaren Bauteilen nicht gegeben',norm:'OIB-RL 3',dring:'sofort',frist:0,hv:true,massnahme:'Sicherheitsabstand herstellen.'},
-{id:'M179',kat:'Abgasanlage',art:'Erdung bei Abgasanlage aus Metall fehlt',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Erdung nachführen.'},
-{id:'M182',kat:'Abgasanlage',art:'Freier Querschnitt nicht gegeben',norm:'Bgld. KG §6',dring:'sofort',frist:0,hv:true,massnahme:'Abgasanlage kehren. Ggf. Ausbrennen.'},
-{id:'M183',kat:'Abgasanlage',art:'Glanzruß ist zu entfernen',norm:'Bgld. KG §7',dring:'sofort',frist:0,hv:true,massnahme:'Ausbrennen/Ausschlagen lassen. Feuerwehr verständigen.'},
-{id:'M187',kat:'Abgasanlage',art:'Nebenluftklappe schadhaft',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Nebenluftklappe erneuern.'},
-{id:'M190',kat:'Abgasanlage',art:'Versottung der Abgasanlage',norm:'',dring:'30 Tage',frist:30,hv:false,massnahme:'Sanierung erforderlich. Fachfirma beauftragen.'},
-{id:'M191',kat:'Abgasanlage',art:'Wirksame Abgasanlagenhöhe mindestens 4m',norm:'',dring:'30 Tage',frist:30,hv:false,massnahme:'Abgasanlage auf Mindesthöhe 4m erhöhen.'},
-{id:'M193',kat:'Abgasanlage',art:'Zugang zu Kehrstelle verstellt/verbaut',norm:'ÖNORM B8207',dring:'14 Tage',frist:14,hv:false,massnahme:'Zugang freimachen.'},
-// ── M2: VERBINDUNGSSTÜCKE (ÖNORM B8311) ──────────────────
-{id:'M201',kat:'Verbindungsstück',art:'Abstand zu brennbaren Bauteilen nicht gegeben',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Sicherheitsabstand gem. ÖNORM B8311 herstellen.'},
-{id:'M202',kat:'Verbindungsstück',art:'Abstand zu brennbaren Einrichtungsgegenständen zu gering',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Sicherheitsabstand herstellen.'},
-{id:'M204',kat:'Verbindungsstück',art:'Fix verlegtes Verbindungsstück nicht brandbeständig',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Brandbeständig ausführen oder erneuern.'},
-{id:'M207',kat:'Verbindungsstück',art:'Verbindungsstück aus nicht geeignetem Material',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Geeignetes Material gem. ÖNORM B8311 verwenden.'},
-{id:'M208',kat:'Verbindungsstück',art:'Verbindungsstück bei Durchtritt Brandabschnitt nicht brandbeständig',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Brandbeständige Ausführung herstellen.'},
-{id:'M209',kat:'Verbindungsstück',art:'Verbindungsstück führt durch Geschossdecke',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Verbindungsstück neu führen.'},
-{id:'M212',kat:'Verbindungsstück',art:'Verbindungsstück nicht betriebsdicht an Fang angeschlossen',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Dichten Anschluss herstellen.'},
-{id:'M214',kat:'Verbindungsstück',art:'Verbindungsstück ist zu erneuern',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Verbindungsstück erneuern.'},
-{id:'M217',kat:'Verbindungsstück',art:'Verbindungsstück durch brennbare Wand geführt',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Verbindungsstück neu führen. Brandabschnitt abdichten.'},
-{id:'M220',kat:'Verbindungsstück',art:'Abgasklappe im Verbindungsstück fehlt',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Abgasklappe einbauen.'},
-{id:'M221',kat:'Verbindungsstück',art:'Abgasklappe im Verbindungsstück schadhaft',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Abgasklappe erneuern.'},
-{id:'M222',kat:'Verbindungsstück',art:'Explosionsklappe im Verbindungsstück fehlt',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Explosionsklappe einbauen.'},
-{id:'M224',kat:'Verbindungsstück',art:'Reinigungsöffnung im fix verlegten Verbindungsstück fehlt',norm:'ÖNORM B8311',dring:'30 Tage',frist:30,hv:false,massnahme:'Reinigungsöffnung nachrüsten.'},
-// ── M3: FEUERSTÄTTEN (ÖNORM B8311 / HKG) ────────────────
-{id:'M311',kat:'Feuerstätte',art:'CE-Kennzeichen fehlt',norm:'ÖNORM B8311; Bgld. HKG',dring:'30 Tage',frist:30,hv:false,massnahme:'CE-Kennzeichen beibringen oder Hersteller kontaktieren.'},
-{id:'M312',kat:'Feuerstätte',art:'Verbrennungsluft nicht ausreichend',norm:'ÖNORM B8311; Bgld. HKG',dring:'sofort',frist:0,hv:true,massnahme:'Verbrennungsluftversorgung sicherstellen. Ggf. Heizverbot.'},
-{id:'M313',kat:'Feuerstätte',art:'Verbrennungsluft nicht raumluftunabhängig (4-Pascal-Messung)',norm:'ÖNORM B8311; GK 62',dring:'30 Tage',frist:30,hv:false,massnahme:'4-Pascal-Messung durchführen lassen.'},
-{id:'M318',kat:'Feuerstätte',art:'Feuerstätte schadhaft',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Außer Betrieb nehmen. Reparatur oder Austausch.'},
-{id:'M319',kat:'Feuerstätte',art:'Feuerstätte nicht ordnungsgemäß aufgestellt',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Ordnungsgemäße Aufstellung herstellen.'},
-{id:'M320',kat:'Feuerstätte',art:'Fluchtschalter vor Heizraum fehlt',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Fluchtschalter vor Heizraum installieren.'},
-{id:'M326',kat:'Feuerstätte',art:'Keine Zulassung/Konformitätserklärung vorhanden',norm:'ÖNORM B8311',dring:'30 Tage',frist:30,hv:false,massnahme:'Konformitätserklärung beibringen.'},
-{id:'M336',kat:'Feuerstätte',art:'Nicht brennbare Unterlage fehlt',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Nicht brennbare Unterlage einbauen.'},
-{id:'M341',kat:'Feuerstätte',art:'Prüfbefund für Feuerstätte fehlt',norm:'ÖNORM B8311',dring:'30 Tage',frist:30,hv:false,massnahme:'Prüfbefund durch Fachfirma erstellen lassen.'},
-{id:'M352',kat:'Feuerstätte',art:'Schamottierung schadhaft',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Schamottierung instandsetzen.'},
-{id:'M358',kat:'Feuerstätte',art:'Sicherheitsabstände zu brennbaren Bauteilen nicht eingehalten',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Sicherheitsabstände sofort herstellen.'},
-{id:'M368',kat:'Feuerstätte',art:'Thermische Ablaufsicherung fehlt',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Thermische Ablaufsicherung einbauen.'},
-{id:'M369',kat:'Feuerstätte',art:'Thermische Ablaufsicherung schadhaft',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Thermische Ablaufsicherung erneuern.'},
-{id:'M370',kat:'Feuerstätte',art:'Typenschild falsch ausgefüllt',norm:'ÖNORM B8311; Bgld. HKG',dring:'30 Tage',frist:30,hv:false,massnahme:'Typenschild berichtigen.'},
-{id:'M371',kat:'Feuerstätte',art:'Typenschild fehlt',norm:'ÖNORM B8311; Bgld. HKG',dring:'30 Tage',frist:30,hv:false,massnahme:'Typenschild nachbringen.'},
-// ── M4: HEIZ- UND AUFSTELLRÄUME (ÖNORM H5170) ────────────
-{id:'M401',kat:'Heiz-/Aufstellraum',art:'Belüftung des Heizraumes fehlt',norm:'ÖNORM H5170',dring:'sofort',frist:0,hv:true,massnahme:'Belüftung einbauen. Heizraum bis Behebung nicht betreiben.'},
-{id:'M402',kat:'Heiz-/Aufstellraum',art:'Belüftung des Heizraumes nicht ausreichend',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Belüftungsquerschnitt gem. ÖNORM H5170 vergrößern.'},
-{id:'M403',kat:'Heiz-/Aufstellraum',art:'Belüftung des Heizraumes verschlossen',norm:'ÖNORM H5170',dring:'sofort',frist:0,hv:true,massnahme:'Belüftung sofort öffnen.'},
-{id:'M404',kat:'Heiz-/Aufstellraum',art:'Belüftung durch andere Räume nicht zulässig',norm:'OIB-RL 2',dring:'30 Tage',frist:30,hv:false,massnahme:'Direkte Belüftung ins Freie herstellen.'},
-{id:'M408',kat:'Heiz-/Aufstellraum',art:'Brandschutztüre geht nicht in Fluchtrichtung auf',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Türanschlag ändern.'},
-{id:'M409',kat:'Heiz-/Aufstellraum',art:'Brandschutztüre fehlt',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Brandschutztüre (T30) einbauen.'},
-{id:'M410',kat:'Heiz-/Aufstellraum',art:'Brandschutztüre schließt nicht selbst',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Selbstschließer nachrüsten.'},
-{id:'M411',kat:'Heiz-/Aufstellraum',art:'Brennbares Material lagert zu nahe an Feuerstätte',norm:'ÖNORM H5170',dring:'sofort',frist:0,hv:true,massnahme:'Brennbares Material sofort entfernen.'},
-{id:'M420',kat:'Heiz-/Aufstellraum',art:'Feuerlöscheinrichtung nicht überprüft',norm:'TRVB F124',dring:'14 Tage',frist:14,hv:false,massnahme:'Feuerlöscher durch Fachfirma überprüfen lassen (TRVB F124).'},
-{id:'M421',kat:'Heiz-/Aufstellraum',art:'Feuerlöscheinrichtung vor Heizraum fehlt/zu gering',norm:'TRVB F124',dring:'14 Tage',frist:14,hv:false,massnahme:'Geeigneten Feuerlöscher bereitstellen (mind. 6kg ABC-Pulver). Gem. TRVB F124.'},
-{id:'M422',kat:'Heiz-/Aufstellraum',art:'Feuerstätte wird in Garage betrieben',norm:'TRVB F124',dring:'sofort',frist:0,hv:true,massnahme:'Feuerstätte sofort außer Betrieb nehmen. Nicht zulässig.'},
-{id:'M423',kat:'Heiz-/Aufstellraum',art:'Fluchtschalter fehlt',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Fluchtschalter außerhalb Heizraum installieren.'},
-{id:'M424',kat:'Heiz-/Aufstellraum',art:'Fluchtschalter falsch positioniert',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Fluchtschalter außerhalb Heizraum versetzen.'},
-{id:'M425',kat:'Heiz-/Aufstellraum',art:'Fluchtschalter nicht beschriftet',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Fluchtschalter beschriften.'},
-{id:'M428',kat:'Heiz-/Aufstellraum',art:'Heizraum fehlt (aufgrund Anlagengröße erforderlich)',norm:'ÖNORM H5170',dring:'30 Tage',frist:30,hv:false,massnahme:'Heizraum gem. ÖNORM H5170 herstellen.'},
-{id:'M430',kat:'Heiz-/Aufstellraum',art:'Heizraum nicht brandbeständig ausgeführt',norm:'ÖNORM H5170',dring:'30 Tage',frist:30,hv:false,massnahme:'Brandbeständige Ausführung herstellen.'},
-{id:'M431',kat:'Heiz-/Aufstellraum',art:'Heizraumbeschriftung fehlt',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Heizraum beschriften.'},
-{id:'M433',kat:'Heiz-/Aufstellraum',art:'Rauchwarnmelder fehlen',norm:'OIB-RL 2',dring:'30 Tage',frist:30,hv:false,massnahme:'Rauchwarnmelder gem. ÖNORM EN14604 montieren.'},
-{id:'M435',kat:'Heiz-/Aufstellraum',art:'Tür zum Heizraum nicht brandhemmend',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Brandhemmende Tür einbauen.'},
-{id:'M436',kat:'Heiz-/Aufstellraum',art:'Verbrennungslufteinrichtung außer Funktion',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Verbrennungslufteinrichtung sofort instandsetzen.'},
-// ── M5: BRENNSTOFFLAGERUNG ───────────────────────────────
-{id:'M501',kat:'Brennstofflagerung',art:'Brennstofflagerraum erforderlich',norm:'ÖNORM H5170',dring:'30 Tage',frist:30,hv:false,massnahme:'Gesonderten Brennstofflagerraum herstellen.'},
-{id:'M502',kat:'Brennstofflagerung',art:'Be- und Entlüftung fehlt',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Be- und Entlüftung einbauen.'},
-{id:'M506',kat:'Brennstofflagerung',art:'Feuerlöscher fehlt',norm:'TRVB F124',dring:'14 Tage',frist:14,hv:false,massnahme:'Geeigneten Feuerlöscher bereitstellen.'},
-{id:'M507',kat:'Brennstofflagerung',art:'Feuerlöscher nicht ordnungsgemäß',norm:'TRVB F124',dring:'14 Tage',frist:14,hv:false,massnahme:'Feuerlöscher überprüfen/erneuern.'},
-{id:'M509',kat:'Brennstofflagerung',art:'Öltank korrodiert',norm:'ÖNORM H5170',dring:'sofort',frist:0,hv:true,massnahme:'Tank sofort außer Betrieb nehmen. Fachfirma beauftragen.'},
-{id:'M510',kat:'Brennstofflagerung',art:'Öltank einwandig (Doppelwand erforderlich)',norm:'ÖNORM H5170',dring:'30 Tage',frist:30,hv:false,massnahme:'Doppelwandigen Tank einbauen oder Auffangwanne nachrüsten.'},
-{id:'M512',kat:'Brennstofflagerung',art:'Rückbrandeinrichtung fehlt',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Rückbrandeinrichtung einbauen.'},
-{id:'M518',kat:'Brennstofflagerung',art:'Pellettank zu groß',norm:'ÖNORM EN15287',dring:'30 Tage',frist:30,hv:false,massnahme:'Pelletlager anlegen oder Tankgröße reduzieren.'},
-{id:'M520',kat:'Brennstofflagerung',art:'Pellettank nicht geerdet',norm:'ÖNORM EN15287',dring:'14 Tage',frist:14,hv:false,massnahme:'Erdung nachrüsten.'},
-{id:'M523',kat:'Brennstofflagerung',art:'Hackgutlager erforderlich',norm:'TRVB 118H',dring:'30 Tage',frist:30,hv:false,massnahme:'Hackgutlager gem. TRVB 118H herstellen.'},
-// ── M6: HKG-GESETZ/VERORDNUNG ────────────────────────────
-{id:'M612',kat:'HKG – Heizraum',art:'Feuerlöscher fehlt (Heizraum)',norm:'Bgld. HKG; ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Geeigneten Feuerlöscher bereitstellen.'},
-{id:'M613',kat:'HKG – Heizraum',art:'Gefahrenschalter außerhalb Heizraum fehlt',norm:'Bgld. HKG; ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Gefahrenschalter installieren.'},
-{id:'M614',kat:'HKG – Heizraum',art:'Kein Heizraum vorhanden',norm:'Bgld. HKG; ÖNORM H5170',dring:'30 Tage',frist:30,hv:false,massnahme:'Heizraum gem. ÖNORM H5170 herstellen.'},
-{id:'M620',kat:'HKG – Feuerungsanlage',art:'Abgasklappe defekt',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Abgasklappe reparieren oder erneuern.'},
-{id:'M621',kat:'HKG – Feuerungsanlage',art:'Abgasklappe fehlt',norm:'Bgld. HKG',dring:'14 Tage',frist:14,hv:false,massnahme:'Abgasklappe einbauen.'},
-{id:'M625',kat:'HKG – Feuerungsanlage',art:'Heizflächen verschmutzt',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Heizflächen reinigen.'},
-{id:'M626',kat:'HKG – Feuerungsanlage',art:'Keine Zulassung/Konformitätserklärung',norm:'Bgld. HKG',dring:'30 Tage',frist:30,hv:false,massnahme:'Konformitätserklärung beibringen.'},
-{id:'M630',kat:'HKG – Feuerungsanlage',art:'Technische Dokumentation fehlt',norm:'Bgld. HKG',dring:'30 Tage',frist:30,hv:false,massnahme:'Technische Dokumentation beibringen.'},
-{id:'M631',kat:'HKG – Feuerungsanlage',art:'Typenschild fehlt',norm:'Bgld. HKG',dring:'30 Tage',frist:30,hv:false,massnahme:'Typenschild nachbringen.'},
-{id:'M634',kat:'HKG – Feuerungsanlage',art:'Zugregler/Verpuffungsklappe fehlt',norm:'Bgld. HKG',dring:'14 Tage',frist:14,hv:false,massnahme:'Zugregler einbauen.'},
-{id:'M635',kat:'HKG – Feuerungsanlage',art:'Verfeuerung schadstoffbelasteter Materialien',norm:'Bgld. HKG',dring:'sofort',frist:0,hv:true,massnahme:'Sofort einstellen. Strafanzeige.'},
-{id:'M638',kat:'HKG – Wiederkehrende Prüfung',art:'Zugang zur Anlage verwehrt',norm:'Bgld. HKG; Bgld. KG',dring:'sofort',frist:0,hv:false,massnahme:'Behördenmeldung. Bürgermeister einschalten.'},
-// ── FEUERSTÄTTENBESCHAU §9-12 (KehrG 2022) ───────────────
-{id:'FB01',kat:'Feuerstättenbeschau §9',art:'Feuerpolizeilicher Mangel – augenscheinlich',norm:'Bgld. KehrG 2022 §9 Abs.3 Z.1 / TRVB 105 / ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Protokollierung §11 KehrG. Meldung an Behörde. Frist setzen.'},
-{id:'FB02',kat:'Feuerstättenbeschau §9',art:'Sicherheitseinrichtung defekt oder fehlend',norm:'Bgld. KehrG 2022 §9 / OIB-RL 2',dring:'sofort',frist:0,hv:true,massnahme:'Außer Betrieb nehmen bis Sicherheitseinrichtung funktionsfähig.'},
-{id:'FB03',kat:'Feuerstättenbeschau §9',art:'Sonstiger Umstand für Brandgefahr (§9 Abs.3 Z.2)',norm:'Bgld. KehrG 2022 §9 Abs.3 Z.2',dring:'14 Tage',frist:14,hv:false,massnahme:'Mängel protokollieren. Frist gem. §11 KehrG setzen.'},
-{id:'FB04',kat:'Feuerstättenbeschau §10',art:'Verfügungsberechtigter verweigert Zutritt (§10 Abs.2)',norm:'Bgld. KehrG 2022 §10 Abs.2',dring:'sofort',frist:0,hv:false,massnahme:'Bürgermeister gem. §10 Abs.2 informieren. Schriftliche Aufforderung.'},
-{id:'FB05',kat:'Feuerstättenbeschau §11',art:'Mängelprotokoll §11 – Frist nicht eingehalten',norm:'Bgld. KehrG 2022 §11',dring:'sofort',frist:0,hv:false,massnahme:'Behördenmeldung gem. §11 Abs.3 KehrG 2022. Nachfrist setzen.'},
-// ── TRVB F124 – LÖSCHHILFE ────────────────────────────────
-{id:'T01',kat:'TRVB F124 – Löschhilfe',art:'Erste Löschhilfe nicht gewährleistet',norm:'TRVB F 124 F',dring:'14 Tage',frist:14,hv:false,massnahme:'Tragbaren Feuerlöscher bereitstellen. Unterweisung gem. TRVB F124.'},
-{id:'T02',kat:'TRVB F124 – Löschhilfe',art:'Feuerlöscher überfällig/nicht einsatzbereit',norm:'TRVB F 124 F',dring:'14 Tage',frist:14,hv:false,massnahme:'Feuerlöscher durch Fachfirma warten. Wartungsintervall: jährlich.'},
-{id:'T03',kat:'TRVB F124 – Löschhilfe',art:'Falsche Löschmittelklasse für Brandrisiko',norm:'TRVB F 124 F / EN 2',dring:'14 Tage',frist:14,hv:false,massnahme:'Geeigneten Feuerlöscher je Brandklasse bereitstellen: A=Feststoffe, B=Flüssigkeiten, C=Gase.'},
-// ── ABGASMESSUNG / HKG-V 2019 ────────────────────────────
-{id:'HK01',kat:'Abgasmessung HKG-V',art:'CO-Wert überschritten (>1000 ppm)',norm:'HKG-Verordnung 2019 §7 / EN 50379',dring:'sofort',frist:0,hv:true,massnahme:'Sofort außer Betrieb nehmen. Brenner reinigen/einstellen. Erneute Messung vor Inbetriebnahme.'},
-{id:'HK02',kat:'Abgasmessung HKG-V',art:'CO-Wert erhöht (200–1000 ppm)',norm:'HKG-Verordnung 2019 §7',dring:'14 Tage',frist:14,hv:false,massnahme:'Brenner reinigen/einstellen. Nachkontrolle innerhalb 14 Tage.'},
-{id:'HK03',kat:'Abgasmessung HKG-V',art:'Abgasverluste überschritten (kW-abhängig)',norm:'HKG-Verordnung 2019 §7',dring:'30 Tage',frist:30,hv:false,massnahme:'Wärmetauscher reinigen. Brenner einstellen. Grenzwert je kW: >50kW=8%, 25-50kW=9%, 4-25kW=10%.'},
-{id:'HK04',kat:'Abgasmessung HKG-V',art:'Abgastemperatur zu hoch (>200°C)',norm:'HKG-Verordnung 2019 §7',dring:'14 Tage',frist:14,hv:false,massnahme:'Wärmetauscher reinigen. Wasserdruck/Heizkurve prüfen.'}
+{id:'A01',kat:'Allgemein',art:'Kehrung verweigert',norm:'Bgld. KG §15',dring:'sofort',frist:0,hv:true,massnahme:'Meldung an Bezirksverwaltungsbehörde.',warum:'Rauchfangkehrer sind nach §15 Bgld. KehrG 2022 berechtigt, jederzeit Zutritt zu fordern.',risiko:'Unbekannte Mängel können zu Bränden oder CO-Vergiftung führen. Haftung beim Eigentümer.',behebung:'Schriftliche Aufforderung mit Fristsetung. Bei Verweigerung: BH-Meldung gem. §15 Abs.2 KehrG.'},
+{id:'A02',kat:'Allgemein',art:'Niemand zu Hause – kein Zutritt',norm:'Bgld. KG §15',dring:'30 Tage',frist:30,hv:false,massnahme:'Neuen Termin vereinbaren.',warum:'Kehrtermin ist gesetzlich vorgeschrieben (§6 KehrG).',risiko:'Rußablagerungen, Glanzruß, Abgasgefahr durch mangelnde Kehrung.',behebung:'Schriftliche Terminankündigung (mind. 3 Werktage vorher). Zweiten Termin anbieten. Danach Behördenmeldung.'},
+{id:'A03',kat:'Allgemein',art:'Termin Abgasmessung nicht eingehalten',norm:'Bgld. KG / HKG-V 2019',dring:'14 Tage',frist:14,hv:false,massnahme:'Neuen Termin setzen. Bei Verweigerung Behördenmeldung.',warum:'Abgasmessung ist nach HKG-V 2019 §7 und Bgld. HKG Pflicht.',risiko:'Unentdeckte CO-Überschreitung kann tödlich sein.',behebung:'Ersatztermin setzen (14 Tage). Bei Weigerung: Meldung an Überwachungsstelle §36 HKG.'},
+{id:'A04',kat:'Allgemein',art:'Betriebsdichteprüfung negativ',norm:'ÖNORM B8201',dring:'14 Tage',frist:14,hv:false,massnahme:'Mängel beheben und Betriebsdichteprüfung wiederholen.',warum:'Undichte Abgasanlage leitet Verbrennungsgase in den Aufstellraum – CO-Gefahr.',risiko:'Lebensgefahr durch CO-Vergiftung. Brandgefahr.',behebung:'Abgasanlage abdichten. Betriebsdichtheitsnachweis gem. ÖNORM B8201 (200 Pa, 5 min).'},
+{id:'A05',kat:'Allgemein',art:'Grenzwerte Abgasmessung überschritten',norm:'HKG-V 2019 §7',dring:'sofort',frist:0,hv:true,massnahme:'Feuerstätte sofort außer Betrieb nehmen.',warum:'CO > 1000 ppm ist gem. HKG-V 2019 §7 sofortiger Heizungsausfall. Anlage ist gefährlich.',risiko:'Lebensgefahr durch Kohlenmonoxidvergiftung. CO ist geruchlos und unsichtbar.',behebung:'Sofortiges Heizverbot. Brenner reinigen/einstellen. Neue Messung vor Wiederinbetrieb. Grenzwerte: <4kW=11%, 4-25kW=10%, 25-50kW=9%, >50kW=8% Verlust; CO max. 1000 ppm.'},
+{id:'A06',kat:'Allgemein',art:'Aufnahme in HKA-Datenbank verweigert',norm:'Bgld. HKG §48',dring:'30 Tage',frist:30,hv:false,massnahme:'Schriftliche Aufforderung. Bei Verweigerung Behördenmeldung.',warum:'Eintragung in Anlagendatenbank ist Pflicht nach Bgld. HKG §48.',risiko:'Fehlende Dokumentation. Keine Nachvollziehbarkeit bei Mängeln oder Haftungsfragen.',behebung:'Anlagendatenblatt ausfüllen. Bei Weigerung: Behördenmeldung.'},
+{id:'M101',kat:'Abgasanlage – Fangkopf',art:'Abdeckplatte fehlt',norm:'ÖNORM B8207',dring:'14 Tage',frist:14,hv:false,massnahme:'Abdeckplatte montieren.',warum:'Ohne Abdeckplatte dringt Regen/Schnee ein. Versottung und Frostschäden entstehen.',risiko:'Versottung. Frostschäden. Korrosion. Leistungsverlust.',behebung:'Nichtbrennbare Abdeckplatte montieren. Befestigung und Dichtheit prüfen.'},
+{id:'M102',kat:'Abgasanlage – Fangkopf',art:'Abdeckplatte schadhaft',norm:'ÖNORM B8207',dring:'14 Tage',frist:14,hv:false,massnahme:'Abdeckplatte erneuern.',warum:'Schadhafte Abdeckplatte bietet keinen Witterungsschutz mehr.',risiko:'Wassereintritt, Versottung, Frostschäden.',behebung:'Abdeckplatte vollständig erneuern. Material: nichtbrennbar (A), frostbeständig.'},
+{id:'M103',kat:'Abgasanlage – Fangkopf',art:'Abstand zu brennbaren Bauteilen nicht gegeben',norm:'OIB-RL 3',dring:'sofort',frist:0,hv:true,massnahme:'Sicherheitsabstand sofort herstellen.',warum:'Heißes Abgas kann brennbare Materialien entzünden. OIB-RL 3 schreibt Mindestabstände vor.',risiko:'Brandgefahr. Schornsteinbrand. Gebäudebrand.',behebung:'Brennbare Materialien entfernen ODER nicht brennbaren Schutz (A2) montieren.'},
+{id:'M110',kat:'Abgasanlage – Fangkopf',art:'Höhe des Fangkopfs über Dach zu gering',norm:'OIB-RL 3',dring:'30 Tage',frist:30,hv:false,massnahme:'Fangkopf auf erforderliche Höhe erhöhen.',warum:'Zu geringe Höhe verursacht Rückstau, Windeinfluss stört Zugverhältnisse.',risiko:'Abgasrückstau in Wohnraum. CO-Gefahr. Schlechte Verbrennungsqualität.',behebung:'Mind. 0,5 m über Flachdach, 1,0 m über Dachfirst (OIB-RL 3). Bei Schrägdach: Abstand ≥ 1 m von Dachfläche.'},
+{id:'M111',kat:'Abgasanlage – Fangkopf',art:'Fangaufsatz fehlt',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Geeigneten Fangaufsatz montieren.',warum:'Fangaufsatz verhindert Regeneinfall und verbessert Zugeigenschaften.',risiko:'Wassereintritt, Schornsteinbrand-Risiko bei Funkenflug.',behebung:'Fangaufsatz aus nichtbrennbarem Material montieren.'},
+{id:'M114',kat:'Abgasanlage – Fangkopf',art:'Fangkopf schadhaft',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Fangkopf instandsetzen oder erneuern.',warum:'Strukturelle Schäden beeinträchtigen Funktion und Dichtheit.',risiko:'Abgasaustritt, Witterungsschäden, Einsturzgefahr.',behebung:'Fachgerechte Instandsetzung oder Erneuerung durch Fachfirma.'},
+{id:'M117',kat:'Abgasanlage – Fangkopf',art:'Kehrtürchen fehlt',norm:'ÖNORM B8207 §5',dring:'14 Tage',frist:14,hv:false,massnahme:'Kehrtürchen einbauen.',warum:'Kehrtürchen ist für ordnungsgemäße Kehrung gem. ÖNORM B8207 Pflicht.',risiko:'Kehrung nicht möglich. Nicht ordnungsgemäßer Betrieb.',behebung:'Kehrtürchen einbauen: brandbeständig, mind. 15×15 cm, zugänglich, dicht verschließbar.'},
+{id:'M120',kat:'Abgasanlage – Fangkopf',art:'Kehrtürchen nicht frei zugänglich',norm:'ÖNORM B8207',dring:'14 Tage',frist:14,hv:false,massnahme:'Freien Zugang sicherstellen.',warum:'Kehrung ist ohne freien Zugang nicht sachgerecht möglich.',risiko:'Kehrung unmöglich. Ruß- und Schmutzablagerungen unkontrolliert.',behebung:'Hindernisse entfernen. Dauerhaften freien Zugang (mind. 60 cm) sicherstellen.'},
+{id:'M129',kat:'Abgasanlage – Fangkopf',art:'Zugang zur Fangmündung fehlt',norm:'ÖNORM B8207 §6',dring:'30 Tage',frist:30,hv:false,massnahme:'Sicheren Zugang herstellen.',warum:'Sicherer Zugang zur Fangmündung ist für Kehrung und Inspektion vorgeschrieben.',risiko:'Arbeitssicherheitsgefahr. Kehrung nicht ordnungsgemäß möglich.',behebung:'Steigleiter/Dachstiege/Anschlagpunkte gem. ÖNORM B8207 §6 nachrüsten.'},
+{id:'M138',kat:'Abgasanlage – Putztürchen',art:'Abstand Putztürchen zu Fußboden zu gering',norm:'',dring:'30 Tage',frist:30,hv:false,massnahme:'Putztürchen versetzen.',warum:'Zu geringer Abstand zum Boden verhindert ordnungsgemäße Kehrarbeit.',risiko:'Kehrung erschwert. Schmutz- und Ruß-Akkumulation.',behebung:'Putztürchen auf die richtige Höhe versetzen (mind. 15 cm über Boden).'},
+{id:'M144',kat:'Abgasanlage – Putztürchen',art:'Putztürchen fehlt',norm:'ÖNORM B8207',dring:'14 Tage',frist:14,hv:false,massnahme:'Putztürchen einbauen.',warum:'Putztürchen ist für Kehrung und Inspektion der Abgasanlage zwingend erforderlich.',risiko:'Kehrung unmöglich. Abgasanlage nicht wartbar.',behebung:'Putztürchen einbauen: nichtbrennbar, im selben Raum wie Feuerstätte, frei zugänglich.'},
+{id:'M145',kat:'Abgasanlage – Putztürchen',art:'Putztürchen im Brennstofflagerraum',norm:'',dring:'sofort',frist:0,hv:true,massnahme:'Putztürchen verlegen.',warum:'Putztürchen im Brennstofflager = direkter Brandweg zwischen Abgasanlage und brennbarem Material.',risiko:'Brandgefahr. Schornsteinbrand breitet sich sofort auf Brennstofflager aus.',behebung:'Putztürchen an zulässigem Ort neu einbauen. Bestehende Öffnung fachgerecht verschließen.'},
+{id:'M146',kat:'Abgasanlage – Putztürchen',art:'Putztürchen in der Garage',norm:'',dring:'sofort',frist:0,hv:true,massnahme:'Putztürchen verlegen.',warum:'Garagen sind feuergefährdete Räume. Putztürchen dort ist brandschutztechnisch unzulässig.',risiko:'Brandausbreitung. Explosionsgefahr durch Kraftstoffdämpfe.',behebung:'Putztürchen an sicherem Ort (Flur, Keller, Heizraum) neu einbauen.'},
+{id:'M149',kat:'Abgasanlage – Putztürchen',art:'Putztürchen nicht frei zugänglich',norm:'ÖNORM B8207',dring:'14 Tage',frist:14,hv:false,massnahme:'Freien Zugang herstellen.',warum:'Kehrung ohne freien Zugang nicht sachgerecht möglich.',risiko:'Kehrung unmöglich. Ablagerungen unkontrolliert.',behebung:'Hindernisse dauerhaft entfernen. Mind. 60 cm Zugangsbreite sicherstellen.'},
+{id:'M150',kat:'Abgasanlage – Putztürchen',art:'Putztürchen schadhaft',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Putztürchen erneuern.',warum:'Schadhaftes Putztürchen dichtet nicht ab. Rauchgase können austreten.',risiko:'Abgasaustritt. Brandgefahr durch glühende Rußpartikel.',behebung:'Putztürchen vollständig erneuern. Dichte Ausführung aus nichtbrennbarem Material.'},
+{id:'M155',kat:'Abgasanlage – Anschlussstelle',art:'Anschlusskapsel fehlt',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Anschlusskapsel einbauen.',warum:'Anschlusskapsel dichtet Verbindungsstück zur Abgasanlage ab. Ohne sie tritt Abgas aus.',risiko:'Abgasaustritt. CO-Gefahr. Feuchtigkeit in der Abgasanlage.',behebung:'Dichte Anschlusskapsel aus nichtbrennbarem Material einbauen.'},
+{id:'M159',kat:'Abgasanlage – Anschlussstelle',art:'Anschlussstelle – Fehleinmündung',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Sofort beheben. Heizverbot.',warum:'Fehleinmündung: Abgas wird nicht in die richtige Abgasanlage geleitet. Lebensgefahr.',risiko:'CO-Vergiftungsgefahr. Abgas tritt unkontrolliert aus. Schornsteinbrand.',behebung:'Anlage sofort außer Betrieb. Fachgerechte Einmündung gem. ÖNORM B8311 herstellen. Abnahme durch RFK.'},
+{id:'M161',kat:'Abgasanlage – Anschlussstelle',art:'Anschlussstelle nicht vorhanden',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Anschlussstelle herstellen.',warum:'Ohne Anschlussstelle keine ordnungsgemäße Abgasführung möglich.',risiko:'Abgasaustritt in Aufstellraum. CO-Vergiftung. Versottung.',behebung:'Anschlussstelle gem. ÖNORM B8311 fachgerecht einbauen. Abnahme durch RFK.'},
+{id:'M165',kat:'Abgasanlage',art:'Abgasanlage betriebsundicht',norm:'ÖNORM B8201',dring:'sofort',frist:0,hv:true,massnahme:'Außer Betrieb. Dichtheitsnachweis.',warum:'Betriebsundichte Abgasanlage leitet Verbrennungsgase in den Wohnbereich.',risiko:'Lebensgefährliche CO-Vergiftung. Brandgefahr.',behebung:'Sofortiges Heizverbot. Undichte Stellen abdichten. Betriebsdichtheitsnachweis gem. ÖNORM B8201 (200 Pa, 5 min).'},
+{id:'M168',kat:'Abgasanlage',art:'Abgasanlage verpecht – Glanzruß',norm:'Bgld. KG §7',dring:'sofort',frist:0,hv:true,massnahme:'Ausbrennen/Ausschlagen. Feuerwehr verständigen.',warum:'Glanzruß (Hartruß) ist hochentzündlich. §7 KehrG: Sofortmaßnahme Pflicht.',risiko:'Schornsteinbrand mit >1000°C. Gebäudebrand. Deckeneinsturz.',behebung:'Sofortiges Heizverbot. Feuerwehr verständigen. Glanzruß durch Fachkehren oder chemische Behandlung entfernen. Abnahme nach Beseitigung.'},
+{id:'M175',kat:'Abgasanlage',art:'Abstand zu brennbaren Bauteilen nicht gegeben',norm:'OIB-RL 3',dring:'sofort',frist:0,hv:true,massnahme:'Sicherheitsabstand herstellen.',warum:'Heiße Abgasanlage kann brennbare Materialien entzünden.',risiko:'Schwelbrand. Gebäudebrand.',behebung:'Sicherheitsabstand gem. OIB-RL 3 herstellen ODER A2-Schutzplatte mit Abstand montieren.'},
+{id:'M182',kat:'Abgasanlage',art:'Freier Querschnitt nicht gegeben',norm:'Bgld. KG §6',dring:'sofort',frist:0,hv:true,massnahme:'Abgasanlage kehren. Notfalls ausbrennen.',warum:'Verstopfte Abgasanlage verhindert Abzug der Verbrennungsgase.',risiko:'CO-Vergiftung. Abgasrückstau in Wohnraum.',behebung:'Sofort kehren. Bei Verpackung: chemische Behandlung oder Ausbrennen mit Feuerwehr. Ursache klären.'},
+{id:'M190',kat:'Abgasanlage',art:'Versottung der Abgasanlage',norm:'',dring:'30 Tage',frist:30,hv:false,massnahme:'Sanierung erforderlich. Fachfirma.',warum:'Versottung durch Wasserkondensation bei zu niedrigen Abgastemperaturen. Zerstört Fugen.',risiko:'Strukturschäden. Abgasaustritt durch Risse.',behebung:'Sanierung durch Fachfirma. Edelstahlrohr einziehen oder Auskleidung. Ursache beheben (Brennwert, Niedertemperatur).'},
+{id:'M201',kat:'Verbindungsstück',art:'Abstand zu brennbaren Bauteilen nicht gegeben',norm:'ÖNORM B8311 §4.2.8 / TRVB H 105',dring:'sofort',frist:0,hv:true,massnahme:'Sicherheitsabstand herstellen.',warum:'Heißes Rauchrohr (>200°C) kann brennbare Bauteile entzünden.',risiko:'Schwelbrand. Deckenbrand. Gebäudebrand.',behebung:'Abstand zu Wänden/Decken: mind. 50 cm (ungeschützt) oder 25 cm (F30 verkleidet) gem. TRVB H 105 §4.2.'},
+{id:'M207',kat:'Verbindungsstück',art:'Verbindungsstück aus ungeeignetem Material',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Geeignetes Material verwenden.',warum:'Nur nichtbrennbare (A) Materialien sind zulässig.',risiko:'Brandgefahr. Schmelzen/Verbrennen des Materials. Abgasaustritt.',behebung:'Verbindungsstück aus zugelassenem Material (1.4301 Edelstahl, emailliertes Stahlrohr) ersetzen.'},
+{id:'M212',kat:'Verbindungsstück',art:'Nicht betriebsdicht angeschlossen',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Dichten Anschluss herstellen.',warum:'Undichter Anschluss = Abgasaustritt in Aufstellraum. Lebensgefahr.',risiko:'CO-Vergiftung. Gebäudebrand.',behebung:'Verbindungsstück fachgerecht andichten. Dichtigkeitsprüfung durchführen.'},
+{id:'M214',kat:'Verbindungsstück',art:'Verbindungsstück zu erneuern',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Verbindungsstück erneuern.',warum:'Veraltetes oder korrodiertes Verbindungsstück ist undicht und nicht mehr betriebssicher.',risiko:'Abgasaustritt. Brandgefahr.',behebung:'Fachgerechte Erneuerung des Verbindungsstückes. Alle Verbindungen dicht ausführen.'},
+{id:'M312',kat:'Feuerstätte',art:'Verbrennungsluft nicht ausreichend',norm:'ÖNORM B8311; GK 62',dring:'sofort',frist:0,hv:true,massnahme:'Verbrennungsluft sofort sicherstellen.',warum:'Ohne ausreichend Frischluft verbrennt Gas/Öl unvollständig → CO-Entstehung.',risiko:'Lebensgefahr durch CO-Vergiftung.',behebung:'Lüftungsöffnungen reinigen/nachrüsten. 4-Pascal-Messung (GK 62) durchführen.'},
+{id:'M318',kat:'Feuerstätte',art:'Feuerstätte schadhaft',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Außer Betrieb nehmen. Reparatur oder Austausch.',warum:'Schadhafte Feuerstätte gibt unkontrolliert Abgase und Wärme ab.',risiko:'CO-Vergiftung. Brandgefahr. Explosion bei Gasgeräten.',behebung:'Heizverbot bis Reparatur. Fachfirma beauftragen. Abnahme durch RFK nach Reparatur.'},
+{id:'M326',kat:'Feuerstätte',art:'Keine Zulassung/Konformitätserklärung',norm:'ÖNORM B8311',dring:'30 Tage',frist:30,hv:false,massnahme:'Konformitätserklärung beibringen.',warum:'CE-Kennzeichen und Konformitätserklärung sind gesetzlich vorgeschrieben.',risiko:'Rechtliche Konsequenzen. Haftungsrisiko bei Schadensfall.',behebung:'Hersteller kontaktieren. CE-Kennzeichen und Konformitätserklärung beibringen oder Anlage austauschen.'},
+{id:'M358',kat:'Feuerstätte',art:'Sicherheitsabstände nicht eingehalten',norm:'ÖNORM B8311 §3.2 / TRVB H 105',dring:'sofort',frist:0,hv:true,massnahme:'Sicherheitsabstände sofort herstellen.',warum:'Strahlungshitze kann brennbare Materialien langsam entzünden (Schwelbrand).',risiko:'Schwelbrand. Gebäudebrand. Tödliche Brandgefahr.',behebung:'Gem. TRVB H 105 §3.2.1: Eisenofen zu brennb. Wand mind. 50 cm, Kachelofen mind. 25 cm. Oder F30-Schutzplatte mit 3 cm Abstand nachrüsten.'},
+{id:'M371',kat:'Feuerstätte',art:'Typenschild fehlt',norm:'ÖNORM B8311; Bgld. HKG',dring:'30 Tage',frist:30,hv:false,massnahme:'Typenschild nachbringen.',warum:'Typenschild ist Pflicht gem. Bgld. HKG §13. Ohne es keine Nachvollziehbarkeit.',risiko:'Keine Identifizierung der Anlage. Haftungsprobleme.',behebung:'Hersteller kontaktieren. Typenschild in Deutsch, dauerhaft, leserlich anbringen.'},
+{id:'M401',kat:'Heiz-/Aufstellraum',art:'Belüftung Heizraum fehlt',norm:'ÖNORM H5170',dring:'sofort',frist:0,hv:true,massnahme:'Belüftung einbauen. Heizraum nicht betreiben.',warum:'Ohne Belüftung: O₂-Mangel → unvollständige Verbrennung → CO.',risiko:'Lebensgefahr CO. Gerät erlischt. Explosion möglich.',behebung:'Zuluft- und Abluftöffnungen einbauen: je mind. 150 cm² Querschnitt direkt ins Freie.'},
+{id:'M409',kat:'Heiz-/Aufstellraum',art:'Brandschutztüre fehlt',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Brandschutztüre einbauen.',warum:'Heizraum muss brandabgetrennt sein.',risiko:'Brand breitet sich unkontrolliert aus. Fluchtwege gefährdet.',behebung:'T30-Brandschutztüre einbauen: selbstschließend, in Fluchtrichtung, beschriftet.'},
+{id:'M420',kat:'Heiz-/Aufstellraum',art:'Feuerlöscheinrichtung nicht überprüft',norm:'TRVB F 124 §8',dring:'14 Tage',frist:14,hv:false,massnahme:'Feuerlöscher durch Fachfirma prüfen lassen.',warum:'Nicht geprüfte Feuerlöscher sind im Brandfall nicht zuverlässig.',risiko:'Im Brandfall: Feuerlöscher versagt. Unkontrollierte Brandausbreitung.',behebung:'Fachbetrieb beauftragen. Prüfintervall: jährlich. Prüfnachweis im Prüfbuch vermerken.'},
+{id:'M421',kat:'Heiz-/Aufstellraum',art:'Feuerlöscher vor Heizraum fehlt',norm:'TRVB F 124',dring:'14 Tage',frist:14,hv:false,massnahme:'Geeigneten Feuerlöscher bereitstellen.',warum:'Vor jedem Heizraum ist Erste Löschhilfe vorgeschrieben (TRVB F 124).',risiko:'Keine Löschmöglichkeit bei Entstehungsbrand.',behebung:'Mind. 6 kg ABC-Pulver-Feuerlöscher vor dem Heizraum. Gut sichtbar, leicht erreichbar.'},
+{id:'M433',kat:'Heiz-/Aufstellraum',art:'Rauchwarnmelder fehlen',norm:'OIB-RL 2',dring:'30 Tage',frist:30,hv:false,massnahme:'Rauchwarnmelder montieren.',warum:'Rauchwarnmelder sind in Aufenthaltsräumen Pflicht (OIB-RL 2).',risiko:'Brand wird nicht rechtzeitig erkannt. Tödliche Brandgefahr.',behebung:'Optischen Rauchwarnmelder (ÖNORM EN 14604) an der Decke montieren. 10-Jahres-Batterie empfohlen.'},
+{id:'M506',kat:'Brennstofflagerung',art:'Feuerlöscher fehlt',norm:'TRVB F 124',dring:'14 Tage',frist:14,hv:false,massnahme:'Geeigneten Feuerlöscher bereitstellen.',warum:'Brennstofflager hat erhöhte Brandgefahr. Erste Löschhilfe Pflicht.',risiko:'Keine Löschmöglichkeit bei Entstehungsbrand.',behebung:'6 kg ABC-Feuerlöscher. Jährliche Prüfung durch Fachbetrieb.'},
+{id:'M509',kat:'Brennstofflagerung',art:'Öltank korrodiert',norm:'ÖNORM H5170',dring:'sofort',frist:0,hv:true,massnahme:'Tank sofort außer Betrieb. Fachfirma.',warum:'Korrodierter Öltank kann auslaufen. Heizöl ist Umweltgefährdungsstoff.',risiko:'Heizölauslaufen. Bodenkontamination. Brandgefahr. Haftungsrisiko.',behebung:'Tank sofort entleeren lassen. Sachkundiger Betrieb mit Leck-Test. Bei starker Korrosion: Austausch gegen Kunststofftank.'},
+{id:'M612',kat:'HKG – Heizraum',art:'Feuerlöscher fehlt (Heizraum)',norm:'Bgld. HKG; ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Feuerlöscher bereitstellen.',warum:'Bgld. HKG schreibt Feuerlöscher vor dem Heizraum zwingend vor.',risiko:'Entstehungsbrand im Heizraum nicht bekämpfbar.',behebung:'6 kg ABC-Feuerlöscher vor dem Heizraum. Halter-Montage auf Augenhöhe. Jahresüberprüfung veranlassen.'},
+{id:'M621',kat:'HKG – Feuerungsanlage',art:'Abgasklappe fehlt',norm:'Bgld. HKG',dring:'14 Tage',frist:14,hv:false,massnahme:'Abgasklappe einbauen.',warum:'Abgasklappe verhindert unkontrollierten Wärmeverlust und Zugprobleme.',risiko:'Erhöhter Wärmeverlust. Zugprobleme.',behebung:'Motorische oder manuelle Abgasklappe einbauen. Elektrische Verriegelung mit Brenner herstellen.'},
+{id:'M631',kat:'HKG – Feuerungsanlage',art:'Typenschild fehlt',norm:'Bgld. HKG',dring:'30 Tage',frist:30,hv:false,massnahme:'Typenschild nachbringen.',warum:'Bgld. HKG §13: Typenschild auf jeder Feuerungsanlage Pflicht.',risiko:'Keine Identifizierung. Haftungsprobleme.',behebung:'Hersteller kontaktieren. Typenschild dauerhaft und leserlich anbringen.'},
+{id:'M638',kat:'HKG – Wiederkehrende Prüfung',art:'Zugang zur Anlage verwehrt',norm:'Bgld. HKG; Bgld. KG',dring:'sofort',frist:0,hv:false,massnahme:'Behördenmeldung. Bürgermeister einschalten.',warum:'Betreiber ist gesetzlich verpflichtet, Zugang für Prüfung zu gewähren (§25 HKG).',risiko:'Anlage läuft unkontrolliert. Gefährliche Mängel werden nicht entdeckt.',behebung:'Schriftliche Aufforderung mit Frist 5 Werktage. Meldung BH. Kosten trägt Betreiber.'},
+{id:'FB01',kat:'Feuerstättenbeschau §9',art:'Feuerpolizeilicher Mangel (augenscheinlich)',norm:'Bgld. KehrG 2022 §9 Abs.3 / TRVB 105 / ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Protokollierung §11 KehrG. Meldung an Behörde.',warum:'§9 Abs.3 Z.1 KehrG: Rauchfangkehrer muss grobe feuerpolizeiliche Mängel sofort protokollieren.',risiko:'Brandgefahr. Abgasgefahr. Haftungsrisiko.',behebung:'Mängelprotokoll gem. §11 KehrG erstellen. Frist setzen. Kopie an Eigentümer. Bei Nichtbehebung: Behördenmeldung §11 Abs.3 KehrG 2022.'},
+{id:'FB02',kat:'Feuerstättenbeschau §9',art:'Sicherheitseinrichtung defekt/fehlt',norm:'Bgld. KehrG 2022 §9 / OIB-RL 2',dring:'sofort',frist:0,hv:true,massnahme:'Außer Betrieb bis Sicherheitseinrichtung funktionsfähig.',warum:'Defekte Sicherheitseinrichtungen (Thermosicherung, STB, Sicherheitsventil) verhindern gefahrlosen Betrieb.',risiko:'Überhitzung. Explosion. CO-Freisetzung.',behebung:'Anlage außer Betrieb. Sicherheitseinrichtung durch Heizungsfachbetrieb ersetzen. Abnahme durch Prüfberechtigten.'},
+{id:'FB03',kat:'Feuerstättenbeschau §9',art:'Sonstige Brandgefahr (§9 Abs.3 Z.2)',norm:'Bgld. KehrG 2022 §9 Abs.3 Z.2',dring:'14 Tage',frist:14,hv:false,massnahme:'Mängel protokollieren. Frist setzen.',warum:'§9 Abs.3 Z.2: Auch sonstige Umstände die Brandbekämpfung erschweren sind zu melden.',risiko:'Brandgefahr je nach Art des festgestellten Umstandes.',behebung:'Mängelprotokoll erstellen. 14-Tage-Frist setzen. Wiederholungsbesichtigung nach Fristablauf.'},
+{id:'T01',kat:'TRVB F124 – Löschhilfe',art:'Erste Löschhilfe nicht gewährleistet',norm:'TRVB F 124 F',dring:'14 Tage',frist:14,hv:false,massnahme:'Tragbaren Feuerlöscher bereitstellen.',warum:'TRVB F 124 schreibt erste Löschhilfe in Risikobereichen vor.',risiko:'Entstehungsbrand kann nicht bekämpft werden.',behebung:'Geeigneten Feuerlöscher je nach Brandklasse bereitstellen und Mitarbeiter unterweisen.'},
+{id:'T02',kat:'TRVB F124 – Löschhilfe',art:'Feuerlöscher überfällig/nicht einsatzbereit',norm:'TRVB F 124 §8',dring:'14 Tage',frist:14,hv:false,massnahme:'Feuerlöscher durch Fachfirma warten lassen.',warum:'Überfällige Feuerlöscher können im Brandfall ausfallen.',risiko:'Feuerlöscher versagt im Brandfall.',behebung:'Fachbetrieb beauftragen. Prüfung jährlich. Druckbehälter alle 5 Jahre prüfen.'},
+{id:'T03',kat:'TRVB F124 – Löschhilfe',art:'Falsche Löschmittelklasse',norm:'TRVB F 124 / EN 2',dring:'14 Tage',frist:14,hv:false,massnahme:'Geeigneten Feuerlöscher je Brandklasse bereitstellen.',warum:'Falsches Löschmittel kann Brand verstärken (zB Wasser auf Fettbrand) oder nicht löschen.',risiko:'Brandausbreitung. Verletzungsgefahr.',behebung:'Brandklassen prüfen: A=Feststoffe→ABC-Pulver, B=Flüssigkeiten→Schaum/CO2, C=Gase→ABC-Pulver, F=Fette→Fettbrandlöscher.'},
+{id:'HK01',kat:'Abgasmessung HKG-V',art:'CO-Wert überschritten (>1000 ppm)',norm:'HKG-Verordnung 2019 §7 / EN 50379',dring:'sofort',frist:0,hv:true,massnahme:'Sofort außer Betrieb nehmen.',warum:'CO > 1000 ppm ist gem. HKG-V 2019 §7 sofortiger Heizungsausfall. Lebensgefährlich.',risiko:'Lebensgefährliche CO-Vergiftung. CO ist farb- und geruchlos.',behebung:'Sofortiges Heizverbot. Räume lüften. Brenner reinigen und einstellen. CO-Ursache lokalisieren. Neue Messung vor Wiederinbetriebnahme. CO-Warnmelder empfohlen.'},
+{id:'HK02',kat:'Abgasmessung HKG-V',art:'CO-Wert erhöht (200–1000 ppm)',norm:'HKG-Verordnung 2019 §7',dring:'14 Tage',frist:14,hv:false,massnahme:'Brenner reinigen/einstellen. Nachkontrolle.',warum:'CO 200-1000 ppm ist ein Mangel. Dauerbetrieb gefährdet Gesundheit.',risiko:'Chronische CO-Exposition: Kopfschmerzen, Schwindel, Herz-Kreislauf-Schäden.',behebung:'Brenner reinigen, Elektroden und Düse prüfen, Lufteinstellung optimieren. Wärmetauscher auf Risse prüfen. Nachkontrolle innerhalb 14 Tage.'},
+{id:'HK03',kat:'Abgasmessung HKG-V',art:'Abgasverluste überschritten',norm:'HKG-Verordnung 2019 §7',dring:'30 Tage',frist:30,hv:false,massnahme:'Wärmetauscher reinigen. Brenner einstellen.',warum:'Zu hohe Abgasverluste = schlechter Wirkungsgrad. Energieverschwendung.',risiko:'Erhöhter Energieverbrauch. Unnötige Kosten. Gesetzliche Mängel.',behebung:'Grenzwerte: <4kW→11%, 4-25kW→10%, 25-50kW→9%, >50kW→8%. Wärmetauscher reinigen. Wenn baubedingt: Brennwerttechnik prüfen.'},
+{id:'HK04',kat:'Abgasmessung HKG-V',art:'Abgastemperatur zu hoch (>200°C)',norm:'HKG-Verordnung 2019 §7',dring:'14 Tage',frist:14,hv:false,massnahme:'Wärmetauscher reinigen. Heizkurve prüfen.',warum:'Zu hohe Abgastemperatur bedeutet hoher Wärmeverlust durch den Kamin.',risiko:'Hoher Energieverlust. Überhitzung der Abgasanlage möglich.',behebung:'Wärmetauscher reinigen. Volumenstrom und Heizkurve prüfen. Bei >300°C: Anlage außer Betrieb bis Ursache geklärt.'}
 ];
 
 // Mängel-Kategorie-Farben
@@ -6240,6 +6277,25 @@ ANTWORTFORMAT:
 
 Antworte auf Deutsch, klar strukturiert, praxisbezogen.`;
 
+
+function kiUpdateStatus(){
+  var bar=document.getElementById('ki-status-bar');
+  var dot=document.getElementById('ki-status-dot');
+  var txt=document.getElementById('ki-status-text');
+  if(!bar) return;
+  if(navigator.onLine){
+    bar.style.background='#E8F5E9';bar.style.color='#2E7D32';bar.style.borderColor='#A5D6A7';
+    if(dot) dot.style.background='#27AE60';
+    if(txt) txt.textContent='Online – KI-Assistent aktiv';
+  }else{
+    bar.style.background='#FFF3E0';bar.style.color='#E65100';bar.style.borderColor='#FFCC80';
+    if(dot) dot.style.background='#FF9800';
+    if(txt) txt.textContent='Offline – nur lokale Wissensdatenbank';
+  }
+}
+window.addEventListener('online', kiUpdateStatus);
+window.addEventListener('offline', kiUpdateStatus);
+
 function kiSend(){
   var input = document.getElementById('ki-input');
   var question = input ? input.value.trim() : '';
@@ -6328,7 +6384,12 @@ function kiAskClaude(question, imageBase64, imageType){
 
   fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: {'Content-Type':'application/json'},
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': '',
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
     body: JSON.stringify({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 1500,
@@ -6361,9 +6422,13 @@ function kiAskClaude(question, imageBase64, imageType){
   })
   .catch(function(err){
     kiHideLoading();
-    // Offline-Fallback: lokale Wissensdatenbank durchsuchen
-    var offlineAnswer = kiOfflineSearch(question);
-    kiAddMessage(offlineAnswer, 'ai');
+    var msg = err && err.message ? err.message : String(err);
+    if(!navigator.onLine){
+      kiAddMessage(kiOfflineSearch(question), 'ai');
+    } else {
+      kiAddMessage('⚠️ Verbindungsfehler: ' + msg +
+        '\n\nOffline-Antwort:\n' + kiOfflineSearch(question), 'ai');
+    }
     if(btn) btn.disabled = false;
   });
 }
@@ -6392,4 +6457,339 @@ function kiCopy(){
 }
 // ══════════════════════════════════════════════════════════
 
+
+
+function mmPrint(){
+  var pg = document.getElementById('page-maengel');
+  if(!pg){ alert('Seite nicht gefunden.'); return; }
+  function gcm(cls){ var el=pg.querySelector('.'+cls); return el?(el.value||''):''; }
+  function gvm(id){ var el=document.getElementById(id); return el?(el.value||''):''; }
+  var maengel = mmGetMaengel();
+  var logoEl = document.querySelector('.kv-hdr img.logo');
+  var logoH = logoEl ? '<img src="'+logoEl.src+'" style="height:36px;width:36px;object-fit:contain">' : '';
+  var sig1='',sig2='';
+  var c1=document.getElementById('mmsig1'), c2=document.getElementById('mmsig2');
+  if(c1) sig1='<img src="'+c1.toDataURL()+'" style="width:100%;height:50px;object-fit:contain;border:0.5px solid #ddd;display:block">';
+  if(c2) sig2='<img src="'+c2.toDataURL()+'" style="width:100%;height:50px;object-fit:contain;border:0.5px solid #ddd;display:block">';
+  var heizvb = document.getElementById('mm-heizvb')?.checked;
+  var content =
+    '<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8">' +
+    '<style>@page{size:A4 portrait;margin:10mm 12mm}*{box-sizing:border-box;margin:0;padding:0}' +
+    'body{font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-size:10px;color:#111}' +
+    '.hdr{display:flex;justify-content:space-between;align-items:center;border-bottom:2.5px solid #E74C3C;padding-bottom:7px;margin-bottom:8px}' +
+    '.hl{display:flex;align-items:center;gap:8px}' +
+    '.ht{font-size:15px;font-weight:800;color:#E74C3C}' +
+    '.hs{font-size:7.5px;color:#666}' +
+    '.hr{text-align:right;font-size:7.5px;color:#555;line-height:1.7}' +
+    '.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:7px}' +
+    '.bx{border:1px solid #ddd;border-radius:4px;padding:6px 9px}' +
+    '.bo{border-color:#F9A825;background:#FFF8E1}' +
+    '.br{border-color:#E74C3C;background:#FFEBEE}' +
+    '.bl{font-size:7.5px;font-weight:700;text-transform:uppercase;border-bottom:0.5px solid #ddd;padding-bottom:2px;margin-bottom:4px}' +
+    '.blo{color:#E65100}.blr{color:#E74C3C}' +
+    '.rw{display:flex;gap:3px;margin-bottom:2px;align-items:baseline}' +
+    '.lb{font-size:7.5px;color:#777;min-width:55px;font-weight:600}' +
+    '.vl{font-size:9px;color:#111;flex:1;border-bottom:0.4px solid #eee}' +
+    '.mi{border:1px solid #F9A825;border-radius:4px;padding:5px 8px;margin-bottom:5px;background:#fff}' +
+    '.mn{font-size:8px;font-weight:700;color:#E65100;margin-bottom:2px}' +
+    '.ma{font-size:9px;font-weight:700;color:#111}' +
+    '.md{font-size:8.5px;color:#555;margin-top:2px}' +
+    '.mf{font-size:8px;color:#E74C3C;font-weight:700;margin-top:2px}' +
+    '.hv{background:#FFEBEE;border:2px solid #E74C3C;border-radius:6px;padding:8px 12px;' +
+      'font-size:13px;font-weight:800;color:#E74C3C;text-align:center;margin-bottom:8px}' +
+    '.sr{display:flex;gap:10px;margin-top:8px}' +
+    '.sb{flex:1;border:0.8px solid #999;border-radius:4px;padding:3px 5px}' +
+    '.sl{font-size:6.5px;color:#888;text-align:center;border-top:0.4px solid #ddd;padding-top:2px;margin-top:2px}' +
+    '.foot{margin-top:7px;border-top:0.4px solid #ddd;padding-top:3px;text-align:center;font-size:6.5px;color:#888}' +
+    '</style></head><body>' +
+    '<div class="hdr"><div class="hl">' + logoH +
+      '<div><div class="ht">⚠ Mängelmeldung</div>' +
+      '<div class="hs">Bgld. KehrG 2022 §11 – Mängelbehebung mit Fristsetzung</div></div></div>' +
+      '<div class="hr">Grieer Rauchfangkehrermeister<br>Neugebäu 10, 7201 Neudörfl<br>' +
+      '+43 (0) 2622 77062 · office@grieer.com<br>' +
+      'Nr.: <b>' + gvm('mm-nr') + '</b> · ' + gvm('mm-datum') + '<br>' +
+      'Monteur: ' + gvm('mm-monteur') +
+      '</div></div>' +
+    (heizvb ? '<div class="hv">🚫 SOFORTIGES HEIZVERBOT AUSGESPROCHEN!</div>' : '') +
+    '<div class="g2">' +
+      '<div class="bx"><div class="bl blo">Kundendaten</div>' +
+        '<div class="rw"><span class="lb">Name</span><span class="vl">' + gcm('kd-name') + '</span></div>' +
+        '<div class="rw"><span class="lb">Adresse</span><span class="vl">' + gcm('kd-str') + '</span></div>' +
+        '<div class="rw"><span class="lb">PLZ/Ort</span><span class="vl">' + gcm('kd-plz') + '</span></div>' +
+        '<div class="rw"><span class="lb">Telefon</span><span class="vl">' + gcm('kd-tel') + '</span></div>' +
+      '</div>' +
+      '<div class="bx"><div class="bl blo">Anlage</div>' +
+        '<div class="rw"><span class="lb">Anlage</span><span class="vl">' + gvm('mm-anlage') + '</span></div>' +
+        '<div class="rw"><span class="lb">Ort</span><span class="vl">' + gvm('mm-ort') + '</span></div>' +
+        '<div class="rw"><span class="lb">Serien-Nr.</span><span class="vl">' + gvm('mm-sn') + '</span></div>' +
+      '</div></div>' +
+    '<div class="bx bo" style="margin-bottom:7px"><div class="bl blo">⚠ Festgestellte Mängel</div>' +
+    maengel.map(function(m){
+      return '<div class="mi">' +
+        '<div class="mn">Mangel ' + m.nr + ': ' + m.art + '</div>' +
+        (m.beschreibung ? '<div class="md">' + m.beschreibung + '</div>' : '') +
+        '<div style="display:flex;gap:10px;margin-top:3px">' +
+        (m.dringlichkeit ? '<span class="mf">' + m.dringlichkeit + '</span>' : '') +
+        (m.frist ? '<span class="mf">Frist: ' + m.frist + '</span>' : '') +
+        '</div></div>';
+    }).join('') + '</div>' +
+    '<div class="g2" style="margin-bottom:7px">' +
+      '<div class="bx br"><div class="bl blr">Fristsetzung (§11 KehrG 2022)</div>' +
+        '<div class="rw"><span class="lb">Behebungsfrist</span><span class="vl" style="font-weight:700;color:#E74C3C">' + gvm('mm-frist') + '</span></div>' +
+        '<div class="rw"><span class="lb">Nachmeldung</span><span class="vl">' + gvm('mm-nachfrist') + '</span></div>' +
+        '<div class="rw"><span class="lb">Nächste Prüfung</span><span class="vl">' + gvm('mm-naechste') + '</span></div>' +
+      '</div>' +
+      '<div class="bx"><div class="bl">Behörde / Weiterleitung</div>' +
+        '<div class="rw"><span class="vl">' +
+          (document.getElementById('mm-behoerde')?.checked ? '☑ Meldung an Bezirksverwaltungsbehörde' : '☐ Meldung an Behörde') + '</span></div>' +
+        '<div class="rw"><span class="vl">' +
+          (document.getElementById('mm-feuerwehr')?.checked ? '☑ Feuerbeschau gem. §8 Bgld. FeuerwehrG 2019' : '☐ Feuerbeschau') + '</span></div>' +
+      '</div></div>' +
+    '<div class="sr">' +
+      '<div class="sb">' + sig1 + '<div class="sl">Neudörfl, Datum &amp; Unterschrift Rauchfangkehrer</div></div>' +
+      '<div class="sb">' + sig2 + '<div class="sl">Datum &amp; Unterschrift Eigentümer/Verfügungsberechtigte/r</div></div>' +
+    '</div>' +
+    '<div class="foot">Grieer Rauchfangkehrermeister · Neugebäu 10, 7201 Neudörfl · +43 (0) 2622 77062 · office@grieer.com · www.grieer.com<br>' +
+      'Grundlage: Bgld. KehrG 2022 §11 – nach Ablauf der Frist erfolgt Meldung an die zuständige Behörde und Heizverbot</div>' +
+    '</body></html>';
+  universalPrint(content);
+}
+
+
+function mmReset(){
+  if(!confirm('Mängelmeldung zurücksetzen?')) return;
+  ['mm-nr','mm-datum','mm-monteur','mm-anlage','mm-ort','mm-sn',
+   'mm-frist','mm-nachfrist','mm-naechste'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.value='';
+  });
+  ['mm-heizvb','mm-behoerde','mm-feuerwehr'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.checked=false;
+  });
+  var list=document.getElementById('mm-list');
+  if(list) list.innerHTML='';
+  mmCount=0;
+  sigClear('mmsig1'); sigClear('mmsig2');
+}
+
+// ══════════════════════════════════════════════════════════
+// MÄNGELKATALOG – laut KehrG 2022, OIB-RL, ÖNORM, HKG-V
+// ══════════════════════════════════════════════════════════
+
+// ══════════════════════════════════════════════════════════
+// VOLLSTÄNDIGER MÄNGELKATALOG (Grieer / WTG Burgenland)
+// Quellen: Bgld.KehrG 2022, OIB-RL, ÖNORM B8201/B8207/B8311,
+//          TRVB F124, TRVB 110B, TRVB 118H, Bgld.HKG,
+//          ÖNORM H5170, Feuerstättenbeschau §9-§12
+// ══════════════════════════════════════════════════════════
+
+var MAENGEL_KATALOG = [
+// ── A: ALLGEMEINE MÄNGEL (Bgld. KG) ─────────────────────
+{id:'A01',kat:'Allgemein',art:'Kehrung verweigert',norm:'Bgld. KG §15',dring:'sofort',frist:0,hv:true,massnahme:'Meldung an Bezirksverwaltungsbehörde. Verwaltungsübertretung §21 KehrG.'},
+{id:'A02',kat:'Allgemein',art:'Niemand zu Hause – kein Zutritt',norm:'Bgld. KG §15',dring:'30 Tage',frist:30,hv:false,massnahme:'Neuen Termin vereinbaren und schriftlich ankündigen.'},
+{id:'A03',kat:'Allgemein',art:'Termin Abgasmessung nicht eingehalten',norm:'Bgld. KG',dring:'14 Tage',frist:14,hv:false,massnahme:'Neuen Termin setzen. Bei Verweigerung Behördenmeldung.'},
+{id:'A04',kat:'Allgemein',art:'Termin Betriebsdichteprüfung nicht eingehalten',norm:'Bgld. KG',dring:'14 Tage',frist:14,hv:false,massnahme:'Neuen Termin setzen.'},
+{id:'A05',kat:'Allgemein',art:'Grenzwerte Abgasmessung nicht eingehalten',norm:'Bgld. KG / HKG-V 2019 §7',dring:'sofort',frist:0,hv:true,massnahme:'Feuerstätte außer Betrieb nehmen bis Grenzwerte eingehalten werden.'},
+{id:'A06',kat:'Allgemein',art:'Betriebsdichteprüfung negativ',norm:'ÖNORM B8201',dring:'14 Tage',frist:14,hv:false,massnahme:'Mängel beheben und Betriebsdichteprüfung wiederholen.'},
+{id:'A07',kat:'Allgemein',art:'Aufnahme in HKA-Datenbank verweigert',norm:'Bgld. HKG',dring:'30 Tage',frist:30,hv:false,massnahme:'Schriftliche Aufforderung. Bei Verweigerung Behördenmeldung.'},
+{id:'A08',kat:'Allgemein',art:'Zugang zur Anlage verweigert',norm:'Bgld. HKG; Bgld. KG',dring:'sofort',frist:0,hv:false,massnahme:'Behördenmeldung. Bürgermeister einschalten.'},
+// ── M1: ABGASANLAGE – FANGKOPF (ÖNORM B8207) ────────────
+{id:'M101',kat:'Abgasanlage – Fangkopf',art:'Abdeckplatte fehlt',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Abdeckplatte montieren.'},
+{id:'M102',kat:'Abgasanlage – Fangkopf',art:'Abdeckplatte schadhaft',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Abdeckplatte erneuern.'},
+{id:'M103',kat:'Abgasanlage – Fangkopf',art:'Abstand zu brennbaren Bauteilen nicht gegeben – Kehrtüre',norm:'OIB-RL 3',dring:'sofort',frist:0,hv:true,massnahme:'Sicherheitsabstand herstellen. Nicht brennbaren Schutz einbauen.'},
+{id:'M104',kat:'Abgasanlage – Fangkopf',art:'Abstand zu brennbaren Einrichtungen nicht gegeben – Kehrtüre',norm:'OIB-RL 3',dring:'sofort',frist:0,hv:true,massnahme:'Sicherheitsabstand herstellen.'},
+{id:'M106',kat:'Abgasanlage – Fangkopf',art:'Abstand zu öffenbarem Fenster zu gering',norm:'OIB-RL 3',dring:'14 Tage',frist:14,hv:false,massnahme:'Mindestabstand gem. OIB-RL 3 herstellen.'},
+{id:'M107',kat:'Abgasanlage – Fangkopf',art:'Brennbare Materialien im Bereich der Mündung entfernen',norm:'',dring:'sofort',frist:0,hv:true,massnahme:'Brennbare Materialien sofort entfernen.'},
+{id:'M110',kat:'Abgasanlage – Fangkopf',art:'Höhe des Fangkopfs über Dach zu gering',norm:'OIB-RL 3',dring:'30 Tage',frist:30,hv:false,massnahme:'Fangkopf auf erforderliche Höhe erhöhen.'},
+{id:'M111',kat:'Abgasanlage – Fangkopf',art:'Fangaufsatz fehlt',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Geeigneten Fangaufsatz montieren.'},
+{id:'M112',kat:'Abgasanlage – Fangkopf',art:'Fangaufsatz schadhaft',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Fangaufsatz erneuern.'},
+{id:'M113',kat:'Abgasanlage – Fangkopf',art:'Fangkopf mit brennbarem Baustoff verkleidet',norm:'',dring:'sofort',frist:0,hv:true,massnahme:'Brennbaren Baustoff entfernen. Nicht brennbar ausführen.'},
+{id:'M114',kat:'Abgasanlage – Fangkopf',art:'Fangkopf schadhaft',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Fangkopf instandsetzen oder erneuern.'},
+{id:'M117',kat:'Abgasanlage – Fangkopf',art:'Kehrtürchen fehlt',norm:'ÖNORM B8207',dring:'14 Tage',frist:14,hv:false,massnahme:'Kehrtürchen einbauen.'},
+{id:'M118',kat:'Abgasanlage – Fangkopf',art:'Kehrtürchen innen Abdeckung fehlt',norm:'ÖNORM B8207',dring:'14 Tage',frist:14,hv:false,massnahme:'Abdeckung nachrüsten.'},
+{id:'M120',kat:'Abgasanlage – Fangkopf',art:'Kehrtürchen nicht frei zugänglich',norm:'ÖNORM B8207',dring:'14 Tage',frist:14,hv:false,massnahme:'Freien Zugang sicherstellen.'},
+{id:'M121',kat:'Abgasanlage – Fangkopf',art:'Kehrtürchen schadhaft',norm:'ÖNORM B8207',dring:'14 Tage',frist:14,hv:false,massnahme:'Kehrtürchen erneuern.'},
+{id:'M124',kat:'Abgasanlage – Fangkopf',art:'Nicht brennbare Unterlage bei Kehrtürchen fehlt',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Nicht brennbare Unterlage einbauen.'},
+{id:'M126',kat:'Abgasanlage – Fangkopf',art:'Überdachung bei Brennwertrohr vorhanden',norm:'',dring:'30 Tage',frist:30,hv:false,massnahme:'Überdachung entfernen – Kondensatansammlung verhindert.'},
+{id:'M127',kat:'Abgasanlage – Fangkopf',art:'Überdachung der Fangmündung schadhaft',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Überdachung erneuern.'},
+{id:'M128',kat:'Abgasanlage – Fangkopf',art:'Überdachung ist zu entfernen',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Überdachung entfernen.'},
+{id:'M129',kat:'Abgasanlage – Fangkopf',art:'Zugang zur Fangmündung fehlt',norm:'ÖNORM B8207',dring:'30 Tage',frist:30,hv:false,massnahme:'Sicheren Zugang herstellen (Leiter/Arbeitsfläche/Anschlagpunkt).'},
+{id:'M132',kat:'Abgasanlage – Fangkopf',art:'Zugang zur Fangmündung fehlt – Leiter',norm:'ÖNORM B8207',dring:'30 Tage',frist:30,hv:false,massnahme:'Steigleiter/Dachhaken nachrüsten.'},
+// ── M1: PUTZTÜRCHEN ──────────────────────────────────────
+{id:'M138',kat:'Abgasanlage – Putztürchen',art:'Abstand Putztürchen zu Fußboden zu gering',norm:'',dring:'30 Tage',frist:30,hv:false,massnahme:'Putztürchen versetzen.'},
+{id:'M139',kat:'Abgasanlage – Putztürchen',art:'Abstand Putztürchen zur Anschlussstelle zu gering',norm:'',dring:'30 Tage',frist:30,hv:false,massnahme:'Putztürchen versetzen.'},
+{id:'M140',kat:'Abgasanlage – Putztürchen',art:'Abstand zu brennbaren Bauteilen nicht gegeben – Putztüre',norm:'',dring:'sofort',frist:0,hv:true,massnahme:'Sicherheitsabstand herstellen.'},
+{id:'M143',kat:'Abgasanlage – Putztürchen',art:'Putztürchen der Hinterlüftung nicht im selben Raum',norm:'',dring:'30 Tage',frist:30,hv:false,massnahme:'Putztürchen im gleichen Raum wie Anschluss herstellen.'},
+{id:'M144',kat:'Abgasanlage – Putztürchen',art:'Putztürchen fehlt',norm:'ÖNORM B8207',dring:'14 Tage',frist:14,hv:false,massnahme:'Putztürchen einbauen.'},
+{id:'M145',kat:'Abgasanlage – Putztürchen',art:'Putztürchen im Brennstofflagerraum',norm:'',dring:'sofort',frist:0,hv:true,massnahme:'Putztürchen verlegen – Brandgefahr.'},
+{id:'M146',kat:'Abgasanlage – Putztürchen',art:'Putztürchen in der Garage',norm:'',dring:'sofort',frist:0,hv:true,massnahme:'Putztürchen verlegen – unzulässiger Aufstellungsort.'},
+{id:'M149',kat:'Abgasanlage – Putztürchen',art:'Putztürchen nicht frei zugänglich',norm:'ÖNORM B8207',dring:'14 Tage',frist:14,hv:false,massnahme:'Freien Zugang herstellen.'},
+{id:'M150',kat:'Abgasanlage – Putztürchen',art:'Putztürchen schadhaft',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Putztürchen erneuern.'},
+// ── M1: ANSCHLUSSSTELLE (ÖNORM B8311) ────────────────────
+{id:'M151',kat:'Abgasanlage – Anschlussstelle',art:'Abstand Anschlussstellen zueinander zu gering',norm:'ÖNORM B8311',dring:'30 Tage',frist:30,hv:false,massnahme:'Anschlussstellen gem. ÖNORM B8311 versetzen.'},
+{id:'M152',kat:'Abgasanlage – Anschlussstelle',art:'Anschlussstelle ist zu versetzen',norm:'ÖNORM B8311',dring:'30 Tage',frist:30,hv:false,massnahme:'Anschlussstelle versetzen.'},
+{id:'M153',kat:'Abgasanlage – Anschlussstelle',art:'Anschluss nicht im selben Geschoß',norm:'ÖNORM B8311',dring:'30 Tage',frist:30,hv:false,massnahme:'Anschluss in gleiches Geschoß verlegen.'},
+{id:'M155',kat:'Abgasanlage – Anschlussstelle',art:'Anschlusskapsel fehlt',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Anschlusskapsel einbauen.'},
+{id:'M157',kat:'Abgasanlage – Anschlussstelle',art:'Anschlusskapsel schadhaft',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Anschlusskapsel erneuern.'},
+{id:'M158',kat:'Abgasanlage – Anschlussstelle',art:'Anschlussstelle – Dehnmöglichkeit nicht gegeben',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Dehnmöglichkeit herstellen.'},
+{id:'M159',kat:'Abgasanlage – Anschlussstelle',art:'Anschlussstelle – Fehleinmündung',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Sofort beheben. Brandgefahr durch Fehlleitung.'},
+{id:'M160',kat:'Abgasanlage – Anschlussstelle',art:'Anschlussstelle – Innenrohr schadhaft',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Innenrohr erneuern.'},
+{id:'M161',kat:'Abgasanlage – Anschlussstelle',art:'Anschlussstelle nicht vorhanden',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Anschlussstelle herstellen.'},
+{id:'M162',kat:'Abgasanlage – Anschlussstelle',art:'Anschlussstutzen fehlt',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Anschlussstutzen einbauen.'},
+// ── M1: ABGASANLAGE ALLGEMEIN ────────────────────────────
+{id:'M164',kat:'Abgasanlage',art:'Ziegelmauerwerkputz schadhaft',norm:'',dring:'30 Tage',frist:30,hv:false,massnahme:'Innenputz instandsetzen.'},
+{id:'M165',kat:'Abgasanlage',art:'Abgasanlage betriebsundicht',norm:'ÖNORM B8201',dring:'sofort',frist:0,hv:true,massnahme:'Außer Betrieb nehmen. Betriebsdichteprüfung nach ÖNORM B8201 wiederholen.'},
+{id:'M166',kat:'Abgasanlage',art:'Abgasanlage entspricht nicht der Bauweise',norm:'',dring:'30 Tage',frist:30,hv:false,massnahme:'Abgasanlage gem. Vorschriften herstellen.'},
+{id:'M168',kat:'Abgasanlage',art:'Abgasanlage ist verpecht – Glanzruß',norm:'',dring:'sofort',frist:0,hv:true,massnahme:'Ausbrennen/Ausschlagen. Feuerwehr verständigen. §7 Abs.1 KehrG.'},
+{id:'M169',kat:'Abgasanlage',art:'Abgasanlage ist zu sanieren',norm:'',dring:'30 Tage',frist:30,hv:false,massnahme:'Sanierung durch Fachfirma beauftragen.'},
+{id:'M170',kat:'Abgasanlage',art:'Abgasanlage mit brennbarem Material verkleidet',norm:'',dring:'sofort',frist:0,hv:true,massnahme:'Brennbares Material sofort entfernen.'},
+{id:'M175',kat:'Abgasanlage',art:'Abstand zu brennbaren Bauteilen nicht gegeben',norm:'OIB-RL 3',dring:'sofort',frist:0,hv:true,massnahme:'Sicherheitsabstand herstellen.'},
+{id:'M179',kat:'Abgasanlage',art:'Erdung bei Abgasanlage aus Metall fehlt',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Erdung nachführen.'},
+{id:'M182',kat:'Abgasanlage',art:'Freier Querschnitt nicht gegeben',norm:'Bgld. KG §6',dring:'sofort',frist:0,hv:true,massnahme:'Abgasanlage kehren. Ggf. Ausbrennen.'},
+{id:'M183',kat:'Abgasanlage',art:'Glanzruß ist zu entfernen',norm:'Bgld. KG §7',dring:'sofort',frist:0,hv:true,massnahme:'Ausbrennen/Ausschlagen lassen. Feuerwehr verständigen.'},
+{id:'M187',kat:'Abgasanlage',art:'Nebenluftklappe schadhaft',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Nebenluftklappe erneuern.'},
+{id:'M190',kat:'Abgasanlage',art:'Versottung der Abgasanlage',norm:'',dring:'30 Tage',frist:30,hv:false,massnahme:'Sanierung erforderlich. Fachfirma beauftragen.'},
+{id:'M191',kat:'Abgasanlage',art:'Wirksame Abgasanlagenhöhe mindestens 4m',norm:'',dring:'30 Tage',frist:30,hv:false,massnahme:'Abgasanlage auf Mindesthöhe 4m erhöhen.'},
+{id:'M193',kat:'Abgasanlage',art:'Zugang zu Kehrstelle verstellt/verbaut',norm:'ÖNORM B8207',dring:'14 Tage',frist:14,hv:false,massnahme:'Zugang freimachen.'},
+// ── M2: VERBINDUNGSSTÜCKE (ÖNORM B8311) ──────────────────
+{id:'M201',kat:'Verbindungsstück',art:'Abstand zu brennbaren Bauteilen nicht gegeben',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Sicherheitsabstand gem. ÖNORM B8311 herstellen.'},
+{id:'M202',kat:'Verbindungsstück',art:'Abstand zu brennbaren Einrichtungsgegenständen zu gering',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Sicherheitsabstand herstellen.'},
+{id:'M204',kat:'Verbindungsstück',art:'Fix verlegtes Verbindungsstück nicht brandbeständig',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Brandbeständig ausführen oder erneuern.'},
+{id:'M207',kat:'Verbindungsstück',art:'Verbindungsstück aus nicht geeignetem Material',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Geeignetes Material gem. ÖNORM B8311 verwenden.'},
+{id:'M208',kat:'Verbindungsstück',art:'Verbindungsstück bei Durchtritt Brandabschnitt nicht brandbeständig',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Brandbeständige Ausführung herstellen.'},
+{id:'M209',kat:'Verbindungsstück',art:'Verbindungsstück führt durch Geschossdecke',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Verbindungsstück neu führen.'},
+{id:'M212',kat:'Verbindungsstück',art:'Verbindungsstück nicht betriebsdicht an Fang angeschlossen',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Dichten Anschluss herstellen.'},
+{id:'M214',kat:'Verbindungsstück',art:'Verbindungsstück ist zu erneuern',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Verbindungsstück erneuern.'},
+{id:'M217',kat:'Verbindungsstück',art:'Verbindungsstück durch brennbare Wand geführt',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Verbindungsstück neu führen. Brandabschnitt abdichten.'},
+{id:'M220',kat:'Verbindungsstück',art:'Abgasklappe im Verbindungsstück fehlt',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Abgasklappe einbauen.'},
+{id:'M221',kat:'Verbindungsstück',art:'Abgasklappe im Verbindungsstück schadhaft',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Abgasklappe erneuern.'},
+{id:'M222',kat:'Verbindungsstück',art:'Explosionsklappe im Verbindungsstück fehlt',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Explosionsklappe einbauen.'},
+{id:'M224',kat:'Verbindungsstück',art:'Reinigungsöffnung im fix verlegten Verbindungsstück fehlt',norm:'ÖNORM B8311',dring:'30 Tage',frist:30,hv:false,massnahme:'Reinigungsöffnung nachrüsten.'},
+// ── M3: FEUERSTÄTTEN (ÖNORM B8311 / HKG) ────────────────
+{id:'M311',kat:'Feuerstätte',art:'CE-Kennzeichen fehlt',norm:'ÖNORM B8311; Bgld. HKG',dring:'30 Tage',frist:30,hv:false,massnahme:'CE-Kennzeichen beibringen oder Hersteller kontaktieren.'},
+{id:'M312',kat:'Feuerstätte',art:'Verbrennungsluft nicht ausreichend',norm:'ÖNORM B8311; Bgld. HKG',dring:'sofort',frist:0,hv:true,massnahme:'Verbrennungsluftversorgung sicherstellen. Ggf. Heizverbot.'},
+{id:'M313',kat:'Feuerstätte',art:'Verbrennungsluft nicht raumluftunabhängig (4-Pascal-Messung)',norm:'ÖNORM B8311; GK 62',dring:'30 Tage',frist:30,hv:false,massnahme:'4-Pascal-Messung durchführen lassen.'},
+{id:'M318',kat:'Feuerstätte',art:'Feuerstätte schadhaft',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Außer Betrieb nehmen. Reparatur oder Austausch.'},
+{id:'M319',kat:'Feuerstätte',art:'Feuerstätte nicht ordnungsgemäß aufgestellt',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Ordnungsgemäße Aufstellung herstellen.'},
+{id:'M320',kat:'Feuerstätte',art:'Fluchtschalter vor Heizraum fehlt',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Fluchtschalter vor Heizraum installieren.'},
+{id:'M326',kat:'Feuerstätte',art:'Keine Zulassung/Konformitätserklärung vorhanden',norm:'ÖNORM B8311',dring:'30 Tage',frist:30,hv:false,massnahme:'Konformitätserklärung beibringen.'},
+{id:'M336',kat:'Feuerstätte',art:'Nicht brennbare Unterlage fehlt',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Nicht brennbare Unterlage einbauen.'},
+{id:'M341',kat:'Feuerstätte',art:'Prüfbefund für Feuerstätte fehlt',norm:'ÖNORM B8311',dring:'30 Tage',frist:30,hv:false,massnahme:'Prüfbefund durch Fachfirma erstellen lassen.'},
+{id:'M352',kat:'Feuerstätte',art:'Schamottierung schadhaft',norm:'ÖNORM B8311',dring:'14 Tage',frist:14,hv:false,massnahme:'Schamottierung instandsetzen.'},
+{id:'M358',kat:'Feuerstätte',art:'Sicherheitsabstände zu brennbaren Bauteilen nicht eingehalten',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Sicherheitsabstände sofort herstellen.'},
+{id:'M368',kat:'Feuerstätte',art:'Thermische Ablaufsicherung fehlt',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Thermische Ablaufsicherung einbauen.'},
+{id:'M369',kat:'Feuerstätte',art:'Thermische Ablaufsicherung schadhaft',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Thermische Ablaufsicherung erneuern.'},
+{id:'M370',kat:'Feuerstätte',art:'Typenschild falsch ausgefüllt',norm:'ÖNORM B8311; Bgld. HKG',dring:'30 Tage',frist:30,hv:false,massnahme:'Typenschild berichtigen.'},
+{id:'M371',kat:'Feuerstätte',art:'Typenschild fehlt',norm:'ÖNORM B8311; Bgld. HKG',dring:'30 Tage',frist:30,hv:false,massnahme:'Typenschild nachbringen.'},
+// ── M4: HEIZ- UND AUFSTELLRÄUME (ÖNORM H5170) ────────────
+{id:'M401',kat:'Heiz-/Aufstellraum',art:'Belüftung des Heizraumes fehlt',norm:'ÖNORM H5170',dring:'sofort',frist:0,hv:true,massnahme:'Belüftung einbauen. Heizraum bis Behebung nicht betreiben.'},
+{id:'M402',kat:'Heiz-/Aufstellraum',art:'Belüftung des Heizraumes nicht ausreichend',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Belüftungsquerschnitt gem. ÖNORM H5170 vergrößern.'},
+{id:'M403',kat:'Heiz-/Aufstellraum',art:'Belüftung des Heizraumes verschlossen',norm:'ÖNORM H5170',dring:'sofort',frist:0,hv:true,massnahme:'Belüftung sofort öffnen.'},
+{id:'M404',kat:'Heiz-/Aufstellraum',art:'Belüftung durch andere Räume nicht zulässig',norm:'OIB-RL 2',dring:'30 Tage',frist:30,hv:false,massnahme:'Direkte Belüftung ins Freie herstellen.'},
+{id:'M408',kat:'Heiz-/Aufstellraum',art:'Brandschutztüre geht nicht in Fluchtrichtung auf',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Türanschlag ändern.'},
+{id:'M409',kat:'Heiz-/Aufstellraum',art:'Brandschutztüre fehlt',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Brandschutztüre (T30) einbauen.'},
+{id:'M410',kat:'Heiz-/Aufstellraum',art:'Brandschutztüre schließt nicht selbst',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Selbstschließer nachrüsten.'},
+{id:'M411',kat:'Heiz-/Aufstellraum',art:'Brennbares Material lagert zu nahe an Feuerstätte',norm:'ÖNORM H5170',dring:'sofort',frist:0,hv:true,massnahme:'Brennbares Material sofort entfernen.'},
+{id:'M420',kat:'Heiz-/Aufstellraum',art:'Feuerlöscheinrichtung nicht überprüft',norm:'TRVB F124',dring:'14 Tage',frist:14,hv:false,massnahme:'Feuerlöscher durch Fachfirma überprüfen lassen (TRVB F124).'},
+{id:'M421',kat:'Heiz-/Aufstellraum',art:'Feuerlöscheinrichtung vor Heizraum fehlt/zu gering',norm:'TRVB F124',dring:'14 Tage',frist:14,hv:false,massnahme:'Geeigneten Feuerlöscher bereitstellen (mind. 6kg ABC-Pulver). Gem. TRVB F124.'},
+{id:'M422',kat:'Heiz-/Aufstellraum',art:'Feuerstätte wird in Garage betrieben',norm:'TRVB F124',dring:'sofort',frist:0,hv:true,massnahme:'Feuerstätte sofort außer Betrieb nehmen. Nicht zulässig.'},
+{id:'M423',kat:'Heiz-/Aufstellraum',art:'Fluchtschalter fehlt',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Fluchtschalter außerhalb Heizraum installieren.'},
+{id:'M424',kat:'Heiz-/Aufstellraum',art:'Fluchtschalter falsch positioniert',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Fluchtschalter außerhalb Heizraum versetzen.'},
+{id:'M425',kat:'Heiz-/Aufstellraum',art:'Fluchtschalter nicht beschriftet',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Fluchtschalter beschriften.'},
+{id:'M428',kat:'Heiz-/Aufstellraum',art:'Heizraum fehlt (aufgrund Anlagengröße erforderlich)',norm:'ÖNORM H5170',dring:'30 Tage',frist:30,hv:false,massnahme:'Heizraum gem. ÖNORM H5170 herstellen.'},
+{id:'M430',kat:'Heiz-/Aufstellraum',art:'Heizraum nicht brandbeständig ausgeführt',norm:'ÖNORM H5170',dring:'30 Tage',frist:30,hv:false,massnahme:'Brandbeständige Ausführung herstellen.'},
+{id:'M431',kat:'Heiz-/Aufstellraum',art:'Heizraumbeschriftung fehlt',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Heizraum beschriften.'},
+{id:'M433',kat:'Heiz-/Aufstellraum',art:'Rauchwarnmelder fehlen',norm:'OIB-RL 2',dring:'30 Tage',frist:30,hv:false,massnahme:'Rauchwarnmelder gem. ÖNORM EN14604 montieren.'},
+{id:'M435',kat:'Heiz-/Aufstellraum',art:'Tür zum Heizraum nicht brandhemmend',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Brandhemmende Tür einbauen.'},
+{id:'M436',kat:'Heiz-/Aufstellraum',art:'Verbrennungslufteinrichtung außer Funktion',norm:'ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Verbrennungslufteinrichtung sofort instandsetzen.'},
+// ── M5: BRENNSTOFFLAGERUNG ───────────────────────────────
+{id:'M501',kat:'Brennstofflagerung',art:'Brennstofflagerraum erforderlich',norm:'ÖNORM H5170',dring:'30 Tage',frist:30,hv:false,massnahme:'Gesonderten Brennstofflagerraum herstellen.'},
+{id:'M502',kat:'Brennstofflagerung',art:'Be- und Entlüftung fehlt',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Be- und Entlüftung einbauen.'},
+{id:'M506',kat:'Brennstofflagerung',art:'Feuerlöscher fehlt',norm:'TRVB F124',dring:'14 Tage',frist:14,hv:false,massnahme:'Geeigneten Feuerlöscher bereitstellen.'},
+{id:'M507',kat:'Brennstofflagerung',art:'Feuerlöscher nicht ordnungsgemäß',norm:'TRVB F124',dring:'14 Tage',frist:14,hv:false,massnahme:'Feuerlöscher überprüfen/erneuern.'},
+{id:'M509',kat:'Brennstofflagerung',art:'Öltank korrodiert',norm:'ÖNORM H5170',dring:'sofort',frist:0,hv:true,massnahme:'Tank sofort außer Betrieb nehmen. Fachfirma beauftragen.'},
+{id:'M510',kat:'Brennstofflagerung',art:'Öltank einwandig (Doppelwand erforderlich)',norm:'ÖNORM H5170',dring:'30 Tage',frist:30,hv:false,massnahme:'Doppelwandigen Tank einbauen oder Auffangwanne nachrüsten.'},
+{id:'M512',kat:'Brennstofflagerung',art:'Rückbrandeinrichtung fehlt',norm:'ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Rückbrandeinrichtung einbauen.'},
+{id:'M518',kat:'Brennstofflagerung',art:'Pellettank zu groß',norm:'ÖNORM EN15287',dring:'30 Tage',frist:30,hv:false,massnahme:'Pelletlager anlegen oder Tankgröße reduzieren.'},
+{id:'M520',kat:'Brennstofflagerung',art:'Pellettank nicht geerdet',norm:'ÖNORM EN15287',dring:'14 Tage',frist:14,hv:false,massnahme:'Erdung nachrüsten.'},
+{id:'M523',kat:'Brennstofflagerung',art:'Hackgutlager erforderlich',norm:'TRVB 118H',dring:'30 Tage',frist:30,hv:false,massnahme:'Hackgutlager gem. TRVB 118H herstellen.'},
+// ── M6: HKG-GESETZ/VERORDNUNG ────────────────────────────
+{id:'M612',kat:'HKG – Heizraum',art:'Feuerlöscher fehlt (Heizraum)',norm:'Bgld. HKG; ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Geeigneten Feuerlöscher bereitstellen.'},
+{id:'M613',kat:'HKG – Heizraum',art:'Gefahrenschalter außerhalb Heizraum fehlt',norm:'Bgld. HKG; ÖNORM H5170',dring:'14 Tage',frist:14,hv:false,massnahme:'Gefahrenschalter installieren.'},
+{id:'M614',kat:'HKG – Heizraum',art:'Kein Heizraum vorhanden',norm:'Bgld. HKG; ÖNORM H5170',dring:'30 Tage',frist:30,hv:false,massnahme:'Heizraum gem. ÖNORM H5170 herstellen.'},
+{id:'M620',kat:'HKG – Feuerungsanlage',art:'Abgasklappe defekt',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Abgasklappe reparieren oder erneuern.'},
+{id:'M621',kat:'HKG – Feuerungsanlage',art:'Abgasklappe fehlt',norm:'Bgld. HKG',dring:'14 Tage',frist:14,hv:false,massnahme:'Abgasklappe einbauen.'},
+{id:'M625',kat:'HKG – Feuerungsanlage',art:'Heizflächen verschmutzt',norm:'',dring:'14 Tage',frist:14,hv:false,massnahme:'Heizflächen reinigen.'},
+{id:'M626',kat:'HKG – Feuerungsanlage',art:'Keine Zulassung/Konformitätserklärung',norm:'Bgld. HKG',dring:'30 Tage',frist:30,hv:false,massnahme:'Konformitätserklärung beibringen.'},
+{id:'M630',kat:'HKG – Feuerungsanlage',art:'Technische Dokumentation fehlt',norm:'Bgld. HKG',dring:'30 Tage',frist:30,hv:false,massnahme:'Technische Dokumentation beibringen.'},
+{id:'M631',kat:'HKG – Feuerungsanlage',art:'Typenschild fehlt',norm:'Bgld. HKG',dring:'30 Tage',frist:30,hv:false,massnahme:'Typenschild nachbringen.'},
+{id:'M634',kat:'HKG – Feuerungsanlage',art:'Zugregler/Verpuffungsklappe fehlt',norm:'Bgld. HKG',dring:'14 Tage',frist:14,hv:false,massnahme:'Zugregler einbauen.'},
+{id:'M635',kat:'HKG – Feuerungsanlage',art:'Verfeuerung schadstoffbelasteter Materialien',norm:'Bgld. HKG',dring:'sofort',frist:0,hv:true,massnahme:'Sofort einstellen. Strafanzeige.'},
+{id:'M638',kat:'HKG – Wiederkehrende Prüfung',art:'Zugang zur Anlage verwehrt',norm:'Bgld. HKG; Bgld. KG',dring:'sofort',frist:0,hv:false,massnahme:'Behördenmeldung. Bürgermeister einschalten.'},
+// ── FEUERSTÄTTENBESCHAU §9-12 (KehrG 2022) ───────────────
+{id:'FB01',kat:'Feuerstättenbeschau §9',art:'Feuerpolizeilicher Mangel – augenscheinlich',norm:'Bgld. KehrG 2022 §9 Abs.3 Z.1 / TRVB 105 / ÖNORM B8311',dring:'sofort',frist:0,hv:true,massnahme:'Protokollierung §11 KehrG. Meldung an Behörde. Frist setzen.'},
+{id:'FB02',kat:'Feuerstättenbeschau §9',art:'Sicherheitseinrichtung defekt oder fehlend',norm:'Bgld. KehrG 2022 §9 / OIB-RL 2',dring:'sofort',frist:0,hv:true,massnahme:'Außer Betrieb nehmen bis Sicherheitseinrichtung funktionsfähig.'},
+{id:'FB03',kat:'Feuerstättenbeschau §9',art:'Sonstiger Umstand für Brandgefahr (§9 Abs.3 Z.2)',norm:'Bgld. KehrG 2022 §9 Abs.3 Z.2',dring:'14 Tage',frist:14,hv:false,massnahme:'Mängel protokollieren. Frist gem. §11 KehrG setzen.'},
+{id:'FB04',kat:'Feuerstättenbeschau §10',art:'Verfügungsberechtigter verweigert Zutritt (§10 Abs.2)',norm:'Bgld. KehrG 2022 §10 Abs.2',dring:'sofort',frist:0,hv:false,massnahme:'Bürgermeister gem. §10 Abs.2 informieren. Schriftliche Aufforderung.'},
+{id:'FB05',kat:'Feuerstättenbeschau §11',art:'Mängelprotokoll §11 – Frist nicht eingehalten',norm:'Bgld. KehrG 2022 §11',dring:'sofort',frist:0,hv:false,massnahme:'Behördenmeldung gem. §11 Abs.3 KehrG 2022. Nachfrist setzen.'},
+// ── TRVB F124 – LÖSCHHILFE ────────────────────────────────
+{id:'T01',kat:'TRVB F124 – Löschhilfe',art:'Erste Löschhilfe nicht gewährleistet',norm:'TRVB F 124 F',dring:'14 Tage',frist:14,hv:false,massnahme:'Tragbaren Feuerlöscher bereitstellen. Unterweisung gem. TRVB F124.'},
+{id:'T02',kat:'TRVB F124 – Löschhilfe',art:'Feuerlöscher überfällig/nicht einsatzbereit',norm:'TRVB F 124 F',dring:'14 Tage',frist:14,hv:false,massnahme:'Feuerlöscher durch Fachfirma warten. Wartungsintervall: jährlich.'},
+{id:'T03',kat:'TRVB F124 – Löschhilfe',art:'Falsche Löschmittelklasse für Brandrisiko',norm:'TRVB F 124 F / EN 2',dring:'14 Tage',frist:14,hv:false,massnahme:'Geeigneten Feuerlöscher je Brandklasse bereitstellen: A=Feststoffe, B=Flüssigkeiten, C=Gase.'},
+// ── ABGASMESSUNG / HKG-V 2019 ────────────────────────────
+{id:'HK01',kat:'Abgasmessung HKG-V',art:'CO-Wert überschritten (>1000 ppm)',norm:'HKG-Verordnung 2019 §7 / EN 50379',dring:'sofort',frist:0,hv:true,massnahme:'Sofort außer Betrieb nehmen. Brenner reinigen/einstellen. Erneute Messung vor Inbetriebnahme.'},
+{id:'HK02',kat:'Abgasmessung HKG-V',art:'CO-Wert erhöht (200–1000 ppm)',norm:'HKG-Verordnung 2019 §7',dring:'14 Tage',frist:14,hv:false,massnahme:'Brenner reinigen/einstellen. Nachkontrolle innerhalb 14 Tage.'},
+{id:'HK03',kat:'Abgasmessung HKG-V',art:'Abgasverluste überschritten (kW-abhängig)',norm:'HKG-Verordnung 2019 §7',dring:'30 Tage',frist:30,hv:false,massnahme:'Wärmetauscher reinigen. Brenner einstellen. Grenzwert je kW: >50kW=8%, 25-50kW=9%, 4-25kW=10%.'},
+{id:'HK04',kat:'Abgasmessung HKG-V',art:'Abgastemperatur zu hoch (>200°C)',norm:'HKG-Verordnung 2019 §7',dring:'14 Tage',frist:14,hv:false,massnahme:'Wärmetauscher reinigen. Wasserdruck/Heizkurve prüfen.'}
+];
+
+// Mängel-Kategorie-Farben
+var MM_KAT_FARBEN = {
+  'Allgemein':                    '#546E7A',
+  'Abgasanlage – Fangkopf':       '#E67E22',
+  'Abgasanlage – Putztürchen':     '#E67E22',
+  'Abgasanlage – Anschlussstelle': '#E67E22',
+  'Abgasanlage':                  '#E74C3C',
+  'Verbindungsstück':             '#8E44AD',
+  'Feuerstätte':                  '#C0392B',
+  'Heiz-/Aufstellraum':          '#1565C0',
+  'Brennstofflagerung':           '#795548',
+  'HKG – Heizraum':              '#2C3E50',
+  'HKG – Feuerungsanlage':        '#2C3E50',
+  'HKG – Wiederkehrende Prüfung': '#2C3E50',
+  'Feuerstättenbeschau §9':       '#B71C1C',
+  'Feuerstättenbeschau §10':      '#B71C1C',
+  'Feuerstättenbeschau §11':      '#B71C1C',
+  'TRVB F124 – Löschhilfe':       '#E65100',
+  'Abgasmessung HKG-V':           '#6A1B9A'
+}
+
+// Datum berechnen
+
+function mmShare(){
+  var nl='\n';
+  var nameEl=document.querySelector('#page-maengel .kd-name');
+  var adrEl=document.querySelector('#page-maengel .kd-str');
+  var datumEl=document.getElementById('mm-datum');
+  var lines=['Grieer Rauchfangkehrermeister','+43 (0) 2622 77062','office@grieer.com','---'];
+  if(nameEl&&nameEl.value) lines.push('Kunde: '+nameEl.value);
+  if(adrEl&&adrEl.value) lines.push('Adresse: '+adrEl.value);
+  if(datumEl&&datumEl.value) lines.push('Datum: '+datumEl.value);
+  lines.push('---','MAENGELPROTOKOLL:');
+  var items=document.querySelectorAll('[id^="mm-item-"]');
+  var count=0;
+  items.forEach(function(item){
+    var artEl=item.querySelector('[style*="font-size:13px"]');
+    var fristEl=item.querySelector('input[type="text"]');
+    var hvEl=item.querySelector('[style*="HEIZVERBOT"]');
+    if(artEl){
+      count++;
+      lines.push(count+'. '+artEl.textContent.trim());
+      if(hvEl) lines.push('   => HEIZVERBOT!');
+      if(fristEl&&fristEl.value) lines.push('   Frist: '+fristEl.value);
+    }
+  });
+  if(count===0) lines.push('Keine Maengel eingetragen.');
+  lines.push('---','Bitte Maengel fristgerecht beheben.','Grieer Rauchfangkehrermeister');
+  shareWhatsApp(lines.join(nl));
+}
 </script>
