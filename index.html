@@ -17,18 +17,28 @@
 
 
 
-<style>.pg{display:none;padding:10px;max-width:min(900px,100%);margin:0 auto;box-sizing:border-box}
-.pg.active{display:block}
-@media(min-width:641px) and (max-width:1024px){.pg{padding:8px;max-width:100%}}
-@media(max-width:640px){.pg{padding:4px}}
-@media print{
-  nav,.no-print,#ios-banner,#toast,#pin-overlay{display:none!important}
-  body{background:#fff!important}
-  .pg{display:none!important}
-  .pg.active{display:block!important;padding:0}
-  .card{box-shadow:none!important}
-  .kv-foot{display:block!important}
+<style>/* SEITEN-SICHTBARKEIT */
+.pg{display:none!important}
+.pg.active{display:block!important;padding:10px;max-width:min(900px,100%);margin:0 auto;box-sizing:border-box}
+@media(min-width:641px) and (max-width:1024px){
+  .pg.active{padding:8px;max-width:100%}
 }
+@media(max-width:640px){
+  .pg.active{padding:4px}
+}
+#ios-banner{display:none!important}
+#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
+  background:#2C3E50;color:#fff;padding:8px 16px;border-radius:20px;
+  font-size:12px;font-weight:600;z-index:9000;display:none;
+  white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+
+#ios-banner{display:none!important}
+#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
+  background:#2C3E50;color:#fff;padding:8px 16px;border-radius:20px;
+  font-size:12px;font-weight:600;z-index:9000;display:none;
+  white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+@media(min-width:641px) and (max-width:1024px){}
+@media(max-width:640px){}
 
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -54,8 +64,7 @@ nav button{background:rgba(255,255,255,.13);color:#fff;border:none;border-radius
   min-height:36px;display:inline-flex;align-items:center;justify-content:center}
 nav button:hover,nav button:active{background:rgba(255,255,255,.28)}
 nav button.active{background:var(--gn);font-weight:700}
-.pg{display:none;padding:10px;max-width:900px;margin:0 auto}
-.pg.active{display:block}
+
 .card{background:#fff;border-radius:8px;padding:14px 16px;
   box-shadow:0 2px 12px rgba(0,0,0,.10);margin-bottom:12px}
 .kv-hdr{display:flex;align-items:center;gap:14px;margin-bottom:10px;
@@ -195,7 +204,7 @@ input.qty{width:48px;text-align:center;border:1px solid #ccc;border-radius:3px;
   .nav-row{gap:3px}
   nav button{font-size:11.5px;padding:7px 11px;min-height:36px}
   nav>.nav-logo{height:32px;width:32px}
-  .pg{padding:8px;max-width:100%}
+  
   .ig{grid-template-columns:1fr 1fr;gap:8px}
   .fanl-grid{grid-template-columns:1fr 1fr}
   table{font-size:12px}
@@ -215,7 +224,7 @@ input.qty{width:48px;text-align:center;border:1px solid #ccc;border-radius:3px;
   .nav-row{gap:3px}
   nav button{font-size:11px;padding:7px 10px;min-height:38px}
   nav>.nav-logo{height:30px;width:30px}
-  .pg{padding:4px}
+  
   .card{padding:7px 9px;border-radius:5px}
   .ig{grid-template-columns:1fr;gap:6px}
   .ibox{padding:6px 8px}
@@ -308,10 +317,10 @@ input.qty{width:48px;text-align:center;border:1px solid #ccc;border-radius:3px;
 .foto-empty{color:#aaa;font-size:11px;margin-top:5px;font-style:italic;display:block}
 
   body{background:#fff}
-  .pg{display:block!important;padding:0}
+  
   .card{box-shadow:none;padding:6px}
   .sig-box{break-inside:avoid}
-}
+
 
 /* ── iOS Installations-Banner ──────────────────────────────── */
 #ios-banner{position:fixed;bottom:0;left:0;right:0;z-index:9999;
@@ -325,8 +334,6 @@ input.qty{width:48px;text-align:center;border:1px solid #ccc;border-radius:3px;
 #ios-banner .ios-close{background:none;border:none;color:#fff;font-size:22px;
   cursor:pointer;padding:4px;opacity:.7;flex-shrink:0}
 #ios-banner .ios-arrow{font-size:11px;color:#aad;margin-top:4px;display:block}
-
-
 
 /* ── KV Schnellauswahl (Kunden-Tab) ─────────────────────────── */
 .kv-quickmenu{background:var(--fb);border:1.5px solid var(--lb);
@@ -357,8 +364,6 @@ input.qty{width:48px;text-align:center;border:1px solid #ccc;border-radius:3px;
 
 /* Desktop: alle Tabs sichtbar, kein Dropdown */
 /* Mobil/Tablet: Tabs ausgeblendet, nur Dropdown */
-
-
 
 /* Wartung – Checkbox-Kästchen ─────────────────────────── */
 .we-check-row{display:flex;align-items:center;gap:12px;padding:8px 10px;
@@ -393,7 +398,6 @@ input.qty{width:48px;text-align:center;border:1px solid #ccc;border-radius:3px;
   touch-action:manipulation}
 .we-int-active{border-color:#1565C0;background:#1565C0;color:#fff}
 .we-int-btn:hover{border-color:#1565C0}
-
 
 /* ── Handy Touch-Optimierung ─────────────────────────────── */
 @media(max-width:640px){
@@ -439,7 +443,6 @@ input.qty{width:48px;text-align:center;border:1px solid #ccc;border-radius:3px;
   .we-check-title{font-size:12px}
   .fin,.fin-sel{font-size:13px !important}
 }
-
 
 /* Native Checkbox/Radio Labels für Wartung */
 .we-native-label{
@@ -487,13 +490,11 @@ input[type=radio].we-native-cb{border-radius:50%;}
   .we-check-sub{font-size:11px}
 }
 
-
 .btn-save{background:#8E44AD;color:#fff;border:none;border-radius:7px;
   padding:9px 14px;font-size:12px;font-weight:600;cursor:pointer;
   touch-action:manipulation;-webkit-tap-highlight-color:transparent;
   min-height:44px;display:inline-flex;align-items:center;gap:5px}
 .btn-save:active{background:#6C3483}
-
 
 /* Ampel Messwerte */
 .amp-wrap{position:relative}
@@ -506,7 +507,6 @@ input[type=radio].we-native-cb{border-radius:50%;}
   border-radius:8px;font-weight:700;font-size:13px;margin-top:8px}
 .amp-gesamt-ok{background:#E8F5E9;border:2px solid #27AE60;color:#1B5E20}
 .amp-gesamt-err{background:#FFEBEE;border:2px solid #E74C3C;color:#B71C1C}
-
 
 /* PIN-Schutz */
 #pin-overlay{position:fixed;inset:0;background:#2C3E50;z-index:9999;
@@ -528,7 +528,6 @@ input[type=radio].we-native-cb{border-radius:50%;}
 .pin-del{font-size:18px}
 .pin-error{color:#E74C3C;font-size:13px;margin-top:12px;min-height:20px}
 .pin-hint{color:#78909C;font-size:11px;margin-top:16px}
-
 
 /* KI-Assistent */
 .ki-quick-btn{background:#EBF5FB;border:1.5px solid #1565C0;color:#1565C0;
@@ -554,7 +553,14 @@ input[type=radio].we-native-cb{border-radius:50%;}
 .ki-loading-dots span:nth-child(3){animation-delay:.4s}
 @keyframes kidot{0%,60%,100%{opacity:.3;transform:scale(.8)}30%{opacity:1;transform:scale(1)}}
 
-</style>
+@media print{
+  nav,.no-print,#ios-banner,#toast,#pin-overlay{display:none!important}
+  body{background:#fff!important}
+  .pg{display:none!important}
+  .pg.active{display:block!important;padding:0!important;max-width:100%!important}
+  .card{box-shadow:none!important}
+  .kv-foot{display:block!important}
+}</style>
 </head>
 <body>
 <nav class="nav">
@@ -580,112 +586,151 @@ input[type=radio].we-native-cb{border-radius:50%;}
 </nav>
 
 
-<div class="pg active" id="page-aufnahme">
+<div class="pg" id="page-aufnahme">
 <div class="card">
+
 <div class="kv-hdr">
   <img class="logo" src="data:image/png;base64,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" alt="Grieer">
   <div class="contact">
+    <b>Grieer Rauchfangkehrermeister</b><br>
     Neugebäu 10, 7201 Neudörfl a.d. Leitha<br>
-    +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp;
-    <a href="mailto:office@grieer.com">office@grieer.com</a> &nbsp;|&nbsp;
-    www.grieer.com
+    +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com
   </div>
 </div>
+
 <div class="title-row">
   <div>
     <div class="kv-title">Aufnahmeblatt – Kundendaten</div>
     <div class="kv-sub">Einmal ausfüllen → Daten werden in alle KV übernommen</div>
-  </div><div class="meta">
-  <div class="mrow"><label>KV-Nr.</label><input type="text" placeholder="2025-001"></div>
-  <div class="mrow"><label>Datum</label><input type="text" class="adate"></div>
-  <div class="mrow"><label>Gültig bis</label><input type="text"></div>
-  <div class="mrow"><label>Bearbeiter/in</label><input type="text"></div>
+  </div>
+  <div class="meta">
+    <div class="mrow"><label>KV-Nr.</label><input type="text" placeholder="2026-001"></div>
+    <div class="mrow"><label>Datum</label><input type="text" class="adate"></div>
+    <div class="mrow"><label>Gültig bis</label><input type="text"></div>
+    <div class="mrow"><label>Bearbeiter/in</label><input type="text"></div>
+  </div>
 </div>
-</div>
-<div class="ig">
+
+<div class="ig" style="grid-template-columns:1fr 1fr">
   <div class="ibox">
     <div class="btl">Kundendaten</div>
     <div class="frow"><label>Kd.-Nr.</label>
-      <input type="text" class="fin" id="k-nr" oninput="syncKunden()" placeholder="z.B. 2026-0001" style="max-width:140px"></div>
+      <input type="text" class="fin kd-nr" id="k-nr" oninput="syncKunden()" placeholder="z.B. 2026-0001"></div>
     <div class="frow"><label>Name / Firma</label>
-      <input type="text" class="fin" id="k-name" oninput="syncKunden()" placeholder="Mustermann GmbH"></div>
+      <input type="text" class="fin kd-name" id="k-name" oninput="syncKunden()" placeholder="Mustermann GmbH"></div>
     <div class="frow"><label>Straße / Nr.</label>
-      <input type="text" class="fin" id="k-str" oninput="syncKunden()"></div>
+      <input type="text" class="fin kd-str" id="k-str" oninput="syncKunden()"></div>
     <div class="frow"><label>PLZ / Ort</label>
-      <input type="text" class="fin" id="k-plz" oninput="syncKunden()" placeholder="7201 Neudörfl"></div>
+      <input type="text" class="fin kd-plz" id="k-plz" oninput="syncKunden()" placeholder="7201 Neudörfl"></div>
     <div class="frow"><label>Telefon</label>
-      <input type="text" class="fin" id="k-tel" oninput="syncKunden()" placeholder="+43 ..."></div>
+      <input type="text" class="fin kd-tel" id="k-tel" oninput="syncKunden()" placeholder="+43 ..."></div>
     <div class="frow"><label>E-Mail</label>
-      <input type="text" class="fin" id="k-email" oninput="syncKunden()"></div>
+      <input type="text" class="fin kd-email" id="k-email" oninput="syncKunden()"></div>
   </div>
   <div class="ibox ibox-b">
     <div class="btl btl-b">Objekt</div>
-    <div class="frow"><label>Adresse</label><input type="text" class="fin" placeholder="Gleich wie Kunden?"></div>
+    <div class="frow"><label>Adresse</label><input type="text" class="fin" placeholder="Gleich wie Kunde?"></div>
     <div class="frow"><label>Gebäudeart</label>
-      <select class="fin-sel"><option>EFH</option><option>MFH</option><option>Gewerbe</option><option>Landwirtschaft</option></select></div>
+      <select class="fin-sel">
+        <option>EFH</option><option>MFH</option><option>Gewerbe</option><option>Landwirtschaft</option>
+      </select></div>
     <div class="frow"><label>Ansprechperson</label><input type="text" class="fin"></div>
     <div class="frow"><label>Notizen</label><input type="text" class="fin"></div>
   </div>
 </div>
-<div class="btns no-print">
-  <button class="btn" onclick="doPrint()">🖨 Aufnahmeblatt drucken</button>
-</div>
-<div style="background:#E8F5E9;border:1px solid #27AE60;border-radius:5px;
-  padding:8px 12px;margin:10px 0;font-size:10.5px;color:#1B5E20">
-  <b>⟳ Automatischer Sync:</b> Kundendaten werden gespeichert und auf allen Geräten/Tabs 
-  sofort übernommen. Auch nach Neustart der App verfügbar.
-  <button onclick="syncClear()" style="margin-left:10px;background:#E53935;color:#fff;
-    border:none;border-radius:3px;padding:2px 8px;font-size:10px;cursor:pointer">
-    ✕ Daten löschen
-  </button>
-</div>
 
-<!-- KV Schnellauswahl -->
-<div class="kv-quickmenu no-print">
-  <div class="btl" style="margin-bottom:8px">📋 KV auswählen</div>
-  <div class="kv-quick-grid">
-    <button class="kv-quick-btn" onclick="show('pv')">
-      <span class="kv-quick-icon">☀</span>
-      <span class="kv-quick-lbl">PV-Reinigung</span>
+<!-- KACHELMENÜ -->
+<div class="kv-quickmenu no-print" style="margin-top:14px">
+  <div style="font-size:13px;font-weight:700;color:#2C3E50;margin-bottom:8px;text-align:center">
+    📋 Formulare auswählen
+  </div>
+  <div class="kv-quick-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(95px,1fr));gap:8px">
+
+    <button class="kv-quick-btn" onclick="show('pv')" style="background:#F39C12;color:#fff;border:none;border-radius:10px;padding:12px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:600;min-height:70px;touch-action:manipulation;-webkit-tap-highlight-color:transparent">
+      <span style="font-size:22px">☀️</span>
+      <span>PV-Reinigung</span>
     </button>
-    <button class="kv-quick-btn" onclick="show('gas')">
-      <span class="kv-quick-icon">🔥</span>
-      <span class="kv-quick-lbl">Gasservice</span>
+
+    <button class="kv-quick-btn" onclick="show('gas')" style="background:#E74C3C;color:#fff;border:none;border-radius:10px;padding:12px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:600;min-height:70px;touch-action:manipulation;-webkit-tap-highlight-color:transparent">
+      <span style="font-size:22px">🔥</span>
+      <span>Gas-Service</span>
     </button>
-    <button class="kv-quick-btn" onclick="show('luft')">
-      <span class="kv-quick-icon">💨</span>
-      <span class="kv-quick-lbl">Lüftung</span>
+
+    <button class="kv-quick-btn" onclick="show('luft')" style="background:#1ABC9C;color:#fff;border:none;border-radius:10px;padding:12px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:600;min-height:70px;touch-action:manipulation;-webkit-tap-highlight-color:transparent">
+      <span style="font-size:22px">💨</span>
+      <span>Lüftung</span>
     </button>
-    <button class="kv-quick-btn" onclick="show('brand')">
-      <span class="kv-quick-icon">🛡</span>
-      <span class="kv-quick-lbl">Brandschutz</span>
+
+    <button class="kv-quick-btn" onclick="show('brand')" style="background:#C0392B;color:#fff;border:none;border-radius:10px;padding:12px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:600;min-height:70px;touch-action:manipulation;-webkit-tap-highlight-color:transparent">
+      <span style="font-size:22px">🛡️</span>
+      <span>Brandschutz</span>
     </button>
-    <button class="kv-quick-btn" onclick="show('kamin')">
-      <span class="kv-quick-icon">🧱</span>
-      <span class="kv-quick-lbl">Kamintürl</span>
+
+    <button class="kv-quick-btn" onclick="show('kamin')" style="background:#8E44AD;color:#fff;border:none;border-radius:10px;padding:12px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:600;min-height:70px;touch-action:manipulation;-webkit-tap-highlight-color:transparent">
+      <span style="font-size:22px">🧱</span>
+      <span>Kamintürl</span>
     </button>
-    <button class="kv-quick-btn" onclick="show('kehr')">
-      <span class="kv-quick-icon">📜</span>
-      <span class="kv-quick-lbl">Kehrtarif-KV</span>
+
+    <button class="kv-quick-btn" onclick="show('kehr')" style="background:#34495E;color:#fff;border:none;border-radius:10px;padding:12px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:600;min-height:70px;touch-action:manipulation;-webkit-tap-highlight-color:transparent">
+      <span style="font-size:22px">📜</span>
+      <span>Kehrtarif</span>
     </button>
-    <button class="kv-quick-btn" onclick="show('brandinfo')">
-      <span class="kv-quick-icon">📋</span>
-      <span class="kv-quick-lbl">BS-Info</span>
+
+    <button class="kv-quick-btn" onclick="show('brandinfo')" style="background:#D35400;color:#fff;border:none;border-radius:10px;padding:12px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:600;min-height:70px;touch-action:manipulation;-webkit-tap-highlight-color:transparent">
+      <span style="font-size:22px">📋</span>
+      <span>BS-Info</span>
     </button>
-    
-    <button class="kv-quick-btn" onclick="show('gesamt')"><span class="kv-quick-ico">📝</span><span class="kv-quick-lbl">Gesamt-KV</span></button>
-    <button class="kv-quick-btn" onclick="show('wart')"><span class="kv-quick-ico">🔔</span><span class="kv-quick-lbl">Erinnerung</span></button>
-    <button class="kv-quick-btn" onclick="show('verr')">
-      <span class="kv-quick-icon">💶</span>
-      <span class="kv-quick-lbl">Verrechnung</span>
+
+    <button class="kv-quick-btn" onclick="show('gesamt')" style="background:#2C3E50;color:#fff;border:none;border-radius:10px;padding:12px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:600;min-height:70px;touch-action:manipulation;-webkit-tap-highlight-color:transparent">
+      <span style="font-size:22px">📝</span>
+      <span>Gesamt-KV</span>
     </button>
+
+    <button class="kv-quick-btn" onclick="show('wprot')" style="background:#16A085;color:#fff;border:none;border-radius:10px;padding:12px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:600;min-height:70px;touch-action:manipulation;-webkit-tap-highlight-color:transparent">
+      <span style="font-size:22px">📋</span>
+      <span>Protokoll</span>
+    </button>
+
+    <button class="kv-quick-btn" onclick="show('maengel')" style="background:#E74C3C;color:#fff;border:none;border-radius:10px;padding:12px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:700;min-height:70px;touch-action:manipulation;-webkit-tap-highlight-color:transparent">
+      <span style="font-size:22px">⚠️</span>
+      <span>Mängel</span>
+    </button>
+
+    <button class="kv-quick-btn" onclick="show('wart')" style="background:#27AE60;color:#fff;border:none;border-radius:10px;padding:12px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:600;min-height:70px;touch-action:manipulation;-webkit-tap-highlight-color:transparent">
+      <span style="font-size:22px">🔔</span>
+      <span>Erinnerung</span>
+    </button>
+
+    <button class="kv-quick-btn" onclick="show('verr')" style="background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:12px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:600;min-height:70px;touch-action:manipulation;-webkit-tap-highlight-color:transparent">
+      <span style="font-size:22px">💶</span>
+      <span>Verrechnung</span>
+    </button>
+
+    <button class="kv-quick-btn" onclick="show('ki')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:10px;padding:12px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:700;min-height:70px;touch-action:manipulation;-webkit-tap-highlight-color:transparent">
+      <span style="font-size:22px">🤖</span>
+      <span>KI-Assistent</span>
+    </button>
+
   </div>
 </div>
-<div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
+
+<!-- AKTIONEN -->
+<div class="btns no-print" style="display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 5px">
+  <button class="btn" style="background:#1565C0;color:#fff;border:none;border-radius:7px;padding:10px 14px;font-size:12px;font-weight:600;cursor:pointer" onclick="kvPrint('aufnahme')">🖨 Drucken / PDF</button>
+  <button class="btn" style="background:#25D366;color:#fff;border:none;border-radius:7px;padding:10px 14px;font-size:12px;font-weight:600;cursor:pointer" onclick="kvWhatsAppSend('aufnahme')">💬 WhatsApp</button>
+  <button class="btn" style="background:#C0392B;color:#fff;border:none;border-radius:7px;padding:10px 14px;font-size:12px;font-weight:600;cursor:pointer" onclick="kvMailSend('aufnahme')">✉ E-Mail</button>
+  <button class="btn" style="background:#27AE60;color:#fff;border:none;border-radius:7px;padding:10px 14px;font-size:12px;font-weight:600;cursor:pointer" onclick="kvSpeichern('aufnahme')">💾 Speichern</button>
+  <button class="btn" style="background:#E67E22;color:#fff;border:none;border-radius:7px;padding:10px 14px;font-size:12px;font-weight:600;cursor:pointer" onclick="kvLaden('aufnahme')">📂 Laden</button>
+  <button class="btn" style="background:#7F8C8D;color:#fff;border:none;border-radius:7px;padding:10px 14px;font-size:12px;font-weight:600;cursor:pointer" onclick="kvDateiSpeichern('aufnahme')">⬇ Datei</button>
+</div>
+
+<div class="kv-foot">
+  Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com
+</div>
+
 </div>
 </div>
 
-    <button class="kv-quick-btn" onclick="show('ki')"><span class="kv-quick-ico">🤖</span><span class="kv-quick-lbl">Assistent</span></button>
 <div class="pg" id="page-pv">
 <div class="card">
 <div class="kv-hdr">
@@ -837,7 +882,15 @@ input[type=radio].we-native-cb{border-radius:50%;}
     <input type="file" accept="image/*" multiple onchange="fotoAdd(this,'pv')">
   </label>
   <span id="foto-empty-pv" class="foto-empty">Noch keine Fotos hinzugefügt</span>
-  <div class="foto-grid" id="foto-grid-pv"></div>
+  <div class="foto-grid" id="foto-grid-pv"><div class="btns no-print" style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 5px">
+  <button class="btn" style="background:#1565C0" onclick="kvPrint('pv')">🖨 Drucken / PDF</button>
+  <button class="btn" style="background:#25D366" onclick="kvWhatsAppSend('pv')">💬 WhatsApp</button>
+  <button class="btn" style="background:#C0392B" onclick="kvMailSend('pv')">✉ E-Mail</button>
+  <button class="btn" style="background:#27AE60" onclick="kvSpeichern('pv')">💾 Speichern</button>
+  <button class="btn" style="background:#E67E22" onclick="kvLaden('pv')">📂 Laden</button>
+  <button class="btn" style="background:#7F8C8D" onclick="kvDateiSpeichern('pv')">⬇ Datei</button>
+</div>
+</div>
 </div>
 <div class="sig"><div class="sig-box">
   <div class="sig-lbl">Datum & Unterschrift Auftraggeber/in</div>
@@ -848,9 +901,9 @@ input[type=radio].we-native-cb{border-radius:50%;}
   <canvas class="sig-canvas" id="sig2" width="400" height="120"></canvas>
   <button class="sig-clr" onclick="sigClear('sig2')">✕ Löschen</button>
 </div></div>
-<div class="btns no-print"><button class="btn" onclick="doPrint()">🖨 Als PDF / Drucken</button><button class="btn btn-g" onclick="doMail()">✉ Per E-Mail senden</button><button class="btn btn-rst no-print" onclick="resetKV('pv')" title="Alle Felder dieses KV zurücksetzen">↺ Zurücksetzen</button></div>
-<div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
+
 </div>
+
 </div>
 
 <div class="pg" id="page-gas">
@@ -998,7 +1051,15 @@ input[type=radio].we-native-cb{border-radius:50%;}
     <input type="file" accept="image/*" multiple onchange="fotoAdd(this,'gas')">
   </label>
   <span id="foto-empty-gas" class="foto-empty">Noch keine Fotos hinzugefügt</span>
-  <div class="foto-grid" id="foto-grid-gas"></div>
+  <div class="foto-grid" id="foto-grid-gas"><div class="btns no-print" style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 5px">
+  <button class="btn" style="background:#1565C0" onclick="kvPrint('gas')">🖨 Drucken / PDF</button>
+  <button class="btn" style="background:#25D366" onclick="kvWhatsAppSend('gas')">💬 WhatsApp</button>
+  <button class="btn" style="background:#C0392B" onclick="kvMailSend('gas')">✉ E-Mail</button>
+  <button class="btn" style="background:#27AE60" onclick="kvSpeichern('gas')">💾 Speichern</button>
+  <button class="btn" style="background:#E67E22" onclick="kvLaden('gas')">📂 Laden</button>
+  <button class="btn" style="background:#7F8C8D" onclick="kvDateiSpeichern('gas')">⬇ Datei</button>
+</div>
+</div>
 </div>
 <div class="sig"><div class="sig-box">
   <div class="sig-lbl">Datum & Unterschrift Auftraggeber/in</div>
@@ -1009,11 +1070,9 @@ input[type=radio].we-native-cb{border-radius:50%;}
   <canvas class="sig-canvas" id="sig4" width="400" height="120"></canvas>
   <button class="sig-clr" onclick="sigClear('sig4')">✕ Löschen</button>
 </div></div>
-<div class="btns no-print"><button class="btn" onclick="doPrint()">🖨 Als PDF / Drucken</button><button class="btn btn-g" onclick="doMail()">✉ Per E-Mail senden</button><button class="btn btn-rst no-print" onclick="resetKV('gas')" title="Alle Felder dieses KV zurücksetzen">↺ Zurücksetzen</button></div>
-<div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
-
 
 </div>
+
 </div>
 
 <div class="pg" id="page-luft">
@@ -1122,7 +1181,15 @@ input[type=radio].we-native-cb{border-radius:50%;}
     <input type="file" accept="image/*" multiple onchange="fotoAdd(this,'luft')">
   </label>
   <span id="foto-empty-luft" class="foto-empty">Noch keine Fotos hinzugefügt</span>
-  <div class="foto-grid" id="foto-grid-luft"></div>
+  <div class="foto-grid" id="foto-grid-luft"><div class="btns no-print" style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 5px">
+  <button class="btn" style="background:#1565C0" onclick="kvPrint('luft')">🖨 Drucken / PDF</button>
+  <button class="btn" style="background:#25D366" onclick="kvWhatsAppSend('luft')">💬 WhatsApp</button>
+  <button class="btn" style="background:#C0392B" onclick="kvMailSend('luft')">✉ E-Mail</button>
+  <button class="btn" style="background:#27AE60" onclick="kvSpeichern('luft')">💾 Speichern</button>
+  <button class="btn" style="background:#E67E22" onclick="kvLaden('luft')">📂 Laden</button>
+  <button class="btn" style="background:#7F8C8D" onclick="kvDateiSpeichern('luft')">⬇ Datei</button>
+</div>
+</div>
 </div>
 <div class="sig"><div class="sig-box">
   <div class="sig-lbl">Datum & Unterschrift Auftraggeber/in</div>
@@ -1133,9 +1200,9 @@ input[type=radio].we-native-cb{border-radius:50%;}
   <canvas class="sig-canvas" id="sig6" width="400" height="120"></canvas>
   <button class="sig-clr" onclick="sigClear('sig6')">✕ Löschen</button>
 </div></div>
-<div class="btns no-print"><button class="btn" onclick="doPrint()">🖨 Als PDF / Drucken</button><button class="btn btn-g" onclick="doMail()">✉ Per E-Mail senden</button><button class="btn btn-rst no-print" onclick="resetKV('luft')" title="Alle Felder dieses KV zurücksetzen">↺ Zurücksetzen</button></div>
-<div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
+
 </div>
+
 </div>
 
 <div class="pg" id="page-brand">
@@ -1269,7 +1336,15 @@ input[type=radio].we-native-cb{border-radius:50%;}
     <input type="file" accept="image/*" multiple onchange="fotoAdd(this,'br')">
   </label>
   <span id="foto-empty-br" class="foto-empty">Noch keine Fotos hinzugefügt</span>
-  <div class="foto-grid" id="foto-grid-br"></div>
+  <div class="foto-grid" id="foto-grid-br"><div class="btns no-print" style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 5px">
+  <button class="btn" style="background:#1565C0" onclick="kvPrint('brand')">🖨 Drucken / PDF</button>
+  <button class="btn" style="background:#25D366" onclick="kvWhatsAppSend('brand')">💬 WhatsApp</button>
+  <button class="btn" style="background:#C0392B" onclick="kvMailSend('brand')">✉ E-Mail</button>
+  <button class="btn" style="background:#27AE60" onclick="kvSpeichern('brand')">💾 Speichern</button>
+  <button class="btn" style="background:#E67E22" onclick="kvLaden('brand')">📂 Laden</button>
+  <button class="btn" style="background:#7F8C8D" onclick="kvDateiSpeichern('brand')">⬇ Datei</button>
+</div>
+</div>
 </div>
 <div class="sig"><div class="sig-box">
   <div class="sig-lbl">Datum & Unterschrift Auftraggeber/in</div>
@@ -1280,9 +1355,9 @@ input[type=radio].we-native-cb{border-radius:50%;}
   <canvas class="sig-canvas" id="sig8" width="400" height="120"></canvas>
   <button class="sig-clr" onclick="sigClear('sig8')">✕ Löschen</button>
 </div></div>
-<div class="btns no-print"><button class="btn" onclick="doPrint()">🖨 Als PDF / Drucken</button><button class="btn btn-g" onclick="doMail()">✉ Per E-Mail senden</button><button class="btn btn-rst no-print" onclick="resetKV('br')" title="Alle Felder dieses KV zurücksetzen">↺ Zurücksetzen</button></div>
-<div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
+
 </div>
+
 </div>
 
 <div class="pg" id="page-kamin">
@@ -1385,7 +1460,15 @@ input[type=radio].we-native-cb{border-radius:50%;}
     <input type="file" accept="image/*" multiple onchange="fotoAdd(this,'kamin')">
   </label>
   <span id="foto-empty-kamin" class="foto-empty">Noch keine Fotos hinzugefügt</span>
-  <div class="foto-grid" id="foto-grid-kamin"></div>
+  <div class="foto-grid" id="foto-grid-kamin"><div class="btns no-print" style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 5px">
+  <button class="btn" style="background:#1565C0" onclick="kvPrint('kamin')">🖨 Drucken / PDF</button>
+  <button class="btn" style="background:#25D366" onclick="kvWhatsAppSend('kamin')">💬 WhatsApp</button>
+  <button class="btn" style="background:#C0392B" onclick="kvMailSend('kamin')">✉ E-Mail</button>
+  <button class="btn" style="background:#27AE60" onclick="kvSpeichern('kamin')">💾 Speichern</button>
+  <button class="btn" style="background:#E67E22" onclick="kvLaden('kamin')">📂 Laden</button>
+  <button class="btn" style="background:#7F8C8D" onclick="kvDateiSpeichern('kamin')">⬇ Datei</button>
+</div>
+</div>
 </div>
 <div class="sig"><div class="sig-box">
   <div class="sig-lbl">Datum & Unterschrift Auftraggeber/in</div>
@@ -1396,9 +1479,9 @@ input[type=radio].we-native-cb{border-radius:50%;}
   <canvas class="sig-canvas" id="sig10" width="400" height="120"></canvas>
   <button class="sig-clr" onclick="sigClear('sig10')">✕ Löschen</button>
 </div></div>
-<div class="btns no-print"><button class="btn" onclick="doPrint()">🖨 Als PDF / Drucken</button><button class="btn btn-g" onclick="doMail()">✉ Per E-Mail senden</button><button class="btn btn-rst no-print" onclick="resetKV('kamin')" title="Alle Felder dieses KV zurücksetzen">↺ Zurücksetzen</button></div>
-<div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
+
 </div>
+
 </div>
 
 <div class="pg" id="page-kehr">
@@ -1591,16 +1674,20 @@ input[type=radio].we-native-cb{border-radius:50%;}
     <input type="file" accept="image/*" multiple onchange="fotoAdd(this,'kehr')">
   </label>
   <span id="foto-empty-kehr" class="foto-empty">Noch keine Fotos hinzugefügt</span>
-  <div class="foto-grid" id="foto-grid-kehr"></div>
+  <div class="foto-grid" id="foto-grid-kehr"><div class="btns no-print" style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 5px">
+  <button class="btn" style="background:#1565C0" onclick="kvPrint('kehr')">🖨 Drucken / PDF</button>
+  <button class="btn" style="background:#25D366" onclick="kvWhatsAppSend('kehr')">💬 WhatsApp</button>
+  <button class="btn" style="background:#C0392B" onclick="kvMailSend('kehr')">✉ E-Mail</button>
+  <button class="btn" style="background:#27AE60" onclick="kvSpeichern('kehr')">💾 Speichern</button>
+  <button class="btn" style="background:#E67E22" onclick="kvLaden('kehr')">📂 Laden</button>
+  <button class="btn" style="background:#7F8C8D" onclick="kvDateiSpeichern('kehr')">⬇ Datei</button>
+</div>
+</div>
 </div>
 
-<div class="btns no-print">
-  <button class="btn" onclick="kPrint()">🖨 Als PDF / Drucken</button>
-  <button class="btn btn-g" onclick="kMail()">✉ Per E-Mail senden</button>
-  <button class="btn btn-rst" onclick="resetKehrKV()">↺ Zurücksetzen</button>
+
 </div>
-<div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
-</div>
+
 </div>
 
 <div class="pg" id="page-brandinfo">
@@ -1615,33 +1702,7 @@ input[type=radio].we-native-cb{border-radius:50%;}
     <div class="kv-sub">Rauchwarnmelder · CO-Warnmelder · Feuerlöscher · Rauchabsauganlagen · Stand 2025</div>
   </div>
 </div>
-<div class="btns no-print" style="margin-bottom:12px">
-  <button class="btn" onclick="brandinfoPrint()">🖨 Drucken / PDF</button>
-  <button class="btn btn-g" onclick="brandinfoMail()">✉ Per E-Mail senden</button>
-  <button class="btn" style="background:#8E44AD" onclick="brandinfoShare()">📤 Teilen / WhatsApp</button>
-  <button class="btn btn-o" onclick="brandinfoDownload()">⬇ PDF speichern</button>
-</div>
-<div style="background:#FFF8E1;border:1.5px solid #F9A825;border-radius:5px;padding:8px 12px;margin-bottom:12px;font-size:11px;color:#5D4037">
-  <b>ℹ Hinweis:</b> Alle Preise auf Anfrage – individuelle Angebote nach Besichtigung. Kontakt: <b>+43 (0) 2622 77062</b>
-</div>
 
-<div style="background:var(--b);color:#fff;font-weight:700;font-size:11px;padding:5px 10px;border-radius:4px;margin-bottom:8px">1 · Rauchwarnmelder – Vergleich</div>
-<div class="tbl-wrap" style="margin-bottom:8px">
-<table style="width:100%;border-collapse:collapse;font-size:11px">
-<thead><tr style="background:var(--b);color:#fff">
-  <th style="padding:5px 7px;text-align:left;width:28%">Eigenschaft</th>
-  <th style="padding:5px 7px;text-align:left;width:36%">ZA208</th>
-  <th style="padding:5px 7px;text-align:left;width:36%;background:#27AE60">SAGS536 ★ Empfehlung</th>
-</tr></thead>
-<tbody>
-  <tr><td style="padding:4px 7px;font-weight:600;border-bottom:1px solid #eee">Sensor / Typ</td><td style="padding:4px 7px;border-bottom:1px solid #eee">Ionisation · 9V Batterie</td><td style="padding:4px 7px;border-bottom:1px solid #eee;background:#E8F5E9">Ionisation · 10J-Batterie</td></tr>
-  <tr style="background:#f5f7f9"><td style="padding:4px 7px;font-weight:600;border-bottom:1px solid #eee">Norm</td><td style="padding:4px 7px;border-bottom:1px solid #eee">EN 14604</td><td style="padding:4px 7px;border-bottom:1px solid #eee;background:#E8F5E9">EN 14604 + Q-Label</td></tr>
-  <tr><td style="padding:4px 7px;font-weight:600;border-bottom:1px solid #eee">Batterie</td><td style="padding:4px 7px;border-bottom:1px solid #eee">5 Jahre → Wechsel nötig</td><td style="padding:4px 7px;border-bottom:1px solid #eee;background:#E8F5E9"><b>10 Jahre – kein Wechsel</b></td></tr>
-  <tr style="background:#f5f7f9"><td style="padding:4px 7px;font-weight:600;border-bottom:1px solid #eee">Raumgröße</td><td style="padding:4px 7px;border-bottom:1px solid #eee">bis 50 m²</td><td style="padding:4px 7px;border-bottom:1px solid #eee;background:#E8F5E9">bis 60 m²</td></tr>
-  <tr><td style="padding:4px 7px;font-weight:600">Bewertung</td><td style="padding:4px 7px;color:#E67E22;font-size:14px">★★★★☆</td><td style="padding:4px 7px;color:#27AE60;font-size:14px;background:#E8F5E9"><b>★★★★★</b></td></tr>
-</tbody></table></div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px">
-  <div style="background:#E8F5E9;border:1px solid #27AE60;border-radius:4px;padding:8px"><div style="font-size:9.5px;font-weight:700;color:#1B5E20;margin-bottom:4px">✓ Vorteile ZA208</div><div style="font-size:9px;color:#1B5E20;line-height:1.5">• Solider Einstiegspreis<br>• Norm-konform EN 14604<br>• Einfache Montage<br>• Geeignet für EFH &amp; Wohnungen</div></div>
   <div style="background:#FFEBEE;border:1px solid #E53935;border-radius:4px;padding:8px"><div style="font-size:9.5px;font-weight:700;color:#B71C1C;margin-bottom:4px">✗ Hinweise ZA208</div><div style="font-size:9px;color:#B71C1C;line-height:1.5">• Batterie nach 5 Jahren tauschen<br>• Kein Funk-Verbund</div></div>
 </div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
@@ -1689,6 +1750,14 @@ input[type=radio].we-native-cb{border-radius:50%;}
   <b>⚠ Wartungsintervalle:</b> Feuerlöscher alle <b>2 Jahre</b> (ÖNORM F 1053) · Rauchwarnmelder monatlich testen · CO-Warnmelder alle <b>7 Jahre</b> tauschen · SK Graffit jährlich warten<br>
   Terminvereinbarung: <b>+43 (0) 2622 77062</b> &nbsp;|&nbsp; office@grieer.com
 </div>
+<div class="btns no-print" style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 5px">
+  <button class="btn" style="background:#1565C0" onclick="kvPrint('brandinfo')">🖨 Drucken / PDF</button>
+  <button class="btn" style="background:#25D366" onclick="kvWhatsAppSend('brandinfo')">💬 WhatsApp</button>
+  <button class="btn" style="background:#C0392B" onclick="kvMailSend('brandinfo')">✉ E-Mail</button>
+  <button class="btn" style="background:#27AE60" onclick="kvSpeichern('brandinfo')">💾 Speichern</button>
+  <button class="btn" style="background:#E67E22" onclick="kvLaden('brandinfo')">📂 Laden</button>
+  <button class="btn" style="background:#7F8C8D" onclick="kvDateiSpeichern('brandinfo')">⬇ Datei</button>
+</div>
 <div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
 </div>
 </div>
@@ -1726,7 +1795,7 @@ input[type=radio].we-native-cb{border-radius:50%;}
   </div>
 </div>
 
-<div id="ios-banner">
+<div id="ios-banner" style="display:none!important">
   <img src="icon-180.png" alt="Grieer">
   <div class="ios-txt">
     <b>Grieer App installieren</b>
@@ -1735,6 +1804,10 @@ input[type=radio].we-native-cb{border-radius:50%;}
   </div>
   <button class="ios-close" id="ios-close-btn" aria-label="Schließen">✕</button>
 </div>
+<!-- ENDE ios-banner -->
+
+
+
 
 <div class="pg" id="page-gesamt">
 <div class="card">
@@ -1876,20 +1949,22 @@ input[type=radio].we-native-cb{border-radius:50%;}
     <canvas class="sig-canvas" id="gkvsig2" width="400" height="100"></canvas>
     <button class="sig-clr no-print" onclick="sigClear('gkvsig2')">✕</button>
     <div class="sig-lbl">Grieer – Stempel &amp; Unterschrift</div>
-  </div>
+  <div class="btns no-print" style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 5px">
+  <button class="btn" style="background:#1565C0" onclick="kvPrint('gesamt')">🖨 Drucken / PDF</button>
+  <button class="btn" style="background:#25D366" onclick="kvWhatsAppSend('gesamt')">💬 WhatsApp</button>
+  <button class="btn" style="background:#C0392B" onclick="kvMailSend('gesamt')">✉ E-Mail</button>
+  <button class="btn" style="background:#27AE60" onclick="kvSpeichern('gesamt')">💾 Speichern</button>
+  <button class="btn" style="background:#E67E22" onclick="kvLaden('gesamt')">📂 Laden</button>
+  <button class="btn" style="background:#7F8C8D" onclick="kvDateiSpeichern('gesamt')">⬇ Datei</button>
+</div>
+</div>
 </div>
 
-<div class="btns no-print" style="margin-top:10px">
-  <button class="btn" onclick="doPrint()">🖨 Drucken / PDF</button>
-  <button class="btn btn-g" onclick="doMail()">✉ Per E-Mail</button>
-  <button class="btn btn-save" onclick="saveCurrentPage()" title="Als Datei auf Gerät speichern">⬇ Speichern</button>
-  <button class="btn btn-rst" onclick="resetKV('gesamt')">↺ Zurücksetzen</button>
-</div>
 
-<div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
-</div>
 </div>
 <!-- ═══ ENDE GEMEINSAMER KV ═══ -->
+
+</div>
 
 <div class="pg" id="page-wprot">
 <div class="card">
@@ -2118,140 +2193,208 @@ input[type=radio].we-native-cb{border-radius:50%;}
     <canvas class="sig-canvas" id="wpsig2" width="400" height="100"></canvas>
     <button class="sig-clr no-print" onclick="sigClear('wpsig2')">✕</button>
     <div class="sig-lbl">Datum &amp; Unterschrift Kunde</div>
-  </div>
+  <div class="btns no-print" style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 5px">
+  <button class="btn" style="background:#1565C0" onclick="kvPrint('wprot')">🖨 Drucken / PDF</button>
+  <button class="btn" style="background:#25D366" onclick="kvWhatsAppSend('wprot')">💬 WhatsApp</button>
+  <button class="btn" style="background:#C0392B" onclick="kvMailSend('wprot')">✉ E-Mail</button>
+  <button class="btn" style="background:#27AE60" onclick="kvSpeichern('wprot')">💾 Speichern</button>
+  <button class="btn" style="background:#E67E22" onclick="kvLaden('wprot')">📂 Laden</button>
+  <button class="btn" style="background:#7F8C8D" onclick="kvDateiSpeichern('wprot')">⬇ Datei</button>
+</div>
+</div>
 </div>
 
-<div class="btns no-print" style="margin-top:10px">
-  <button class="btn" onclick="wpPrint()">🖨 Drucken / PDF</button>
-  <button class="btn btn-g" onclick="wpShare()">📤 Teilen / Senden</button>
-  <button class="btn btn-save" onclick="saveCurrentPage()" title="Als Datei auf Gerät speichern">⬇ Speichern</button>
-  <button class="btn btn-rst" onclick="wpReset()">↺ Zurücksetzen</button>
+
 </div>
-<div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
-</div>
+
 </div>
 
 <div class="pg" id="page-maengel">
 <div class="card">
-<div class="kv-hdr">
+
+<!-- BEHÖRDEN-KOPF -->
+<div class="kv-hdr" style="border-bottom:3px solid #E74C3C">
   <img class="logo" src="data:image/png;base64,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" alt="Grieer">
-  <div class="contact">Neugebäu 10, 7201 Neudörfl a.d. Leitha<br>
-    +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com</div>
-</div>
-<div class="title-row">
-  <div>
-    <div class="kv-title" style="color:#E74C3C">⚠ Mängelmeldung</div>
-    <div class="kv-sub">Bgld. KehrG 2022 §11 – Mängelbehebung mit Fristsetzung</div>
-  </div>
-  <div class="meta">
-    <div class="mrow"><label>Meldungs-Nr.</label><input type="text" class="fin" id="mm-nr" placeholder="MM-2026-001"></div>
-    <div class="mrow"><label>Datum</label><input type="text" class="fin adate" id="mm-datum"></div>
-    <div class="mrow"><label>Monteur</label><input type="text" class="fin" id="mm-monteur" placeholder="Grieer Kai"></div>
+  <div class="contact">
+    <b>Grieer Rauchfangkehrermeister</b><br>
+    Neugebäu 10, 7201 Neudörfl a.d. Leitha<br>
+    +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com
   </div>
 </div>
 
-<!-- KUNDENDATEN -->
+<!-- TITEL -->
+<div style="background:#E74C3C;color:#fff;padding:10px 14px;border-radius:6px;margin-bottom:10px">
+  <div style="font-size:16px;font-weight:800;letter-spacing:.5px">⚠ MÄNGELMELDUNG</div>
+  <div style="font-size:11px;opacity:.95;margin-top:2px">gemäß § 11 Burgenländisches Kehrgesetz 2022 und § 36 Bgld. HKG 2019</div>
+</div>
+
+<!-- KOPFZEILE BEHÖRDENFORMULAR -->
+<div class="ig" style="grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+  <div class="ibox" style="border:1.5px solid #2C3E50">
+    <div class="btl">Meldungs-Nr.</div>
+    <input type="text" class="fin" id="mm-nr" placeholder="MM-2026-001" style="width:100%;font-weight:700;color:#E74C3C;font-size:13px">
+  </div>
+  <div class="ibox" style="border:1.5px solid #2C3E50">
+    <div class="btl">Ausstellungsdatum</div>
+    <input type="text" class="fin adate" id="mm-datum" style="width:100%;font-weight:700;font-size:13px">
+  </div>
+  <div class="ibox" style="border:1.5px solid #2C3E50">
+    <div class="btl">Ausstellender RFK</div>
+    <input type="text" class="fin" id="mm-monteur" placeholder="Grieer" style="width:100%;font-weight:700;font-size:13px">
+  </div>
+</div>
+
+<!-- KUNDENDATEN / ANLAGE -->
 <div class="ig" style="grid-template-columns:1fr 1fr;margin-bottom:10px">
-  <div class="ibox">
-    <div class="btl">Kundendaten / Objekt</div>
+  <div class="ibox" style="border:1.5px solid #555">
+    <div class="btl">A. Verfügungsberechtigte/r / Eigentümer</div>
     <div class="frow"><label>Kd.-Nr.</label><input type="text" class="fin kd-nr"></div>
-    <div class="frow"><label>Name / Firma</label><input type="text" class="fin kd-name"></div>
+    <div class="frow"><label>Name/Firma</label><input type="text" class="fin kd-name"></div>
     <div class="frow"><label>Adresse</label><input type="text" class="fin kd-str"></div>
-    <div class="frow"><label>PLZ / Ort</label><input type="text" class="fin kd-plz"></div>
+    <div class="frow"><label>PLZ/Ort</label><input type="text" class="fin kd-plz"></div>
     <div class="frow"><label>Telefon</label><input type="text" class="fin kd-tel"></div>
     <div class="frow"><label>E-Mail</label><input type="text" class="fin kd-email"></div>
   </div>
-  <div class="ibox ibox-b">
-    <div class="btl btl-b">Anlage / Feuerungsanlage</div>
-    <div class="frow"><label>Anlage</label><input type="text" class="fin" id="mm-anlage" placeholder="z.B. Gasheizung Vaillant"></div>
-    <div class="frow"><label>Aufstellungsort</label><input type="text" class="fin" id="mm-ort" placeholder="z.B. Keller"></div>
-    <div class="frow"><label>Seriennummer</label><input type="text" class="fin" id="mm-sn"></div>
-    <div class="frow" style="margin-top:8px"><label>Einsatz-Art</label>
+  <div class="ibox" style="border:1.5px solid #555;background:#FFF8E1">
+    <div class="btl">B. Betroffene Anlage</div>
+    <div class="frow"><label>Anlage</label><input type="text" class="fin" id="mm-anlage" placeholder="z.B. Gasheizung Vaillant ecoTEC plus"></div>
+    <div class="frow"><label>Aufstellort</label><input type="text" class="fin" id="mm-ort" placeholder="z.B. Heizraum Keller"></div>
+    <div class="frow"><label>Hersteller/Type</label><input type="text" class="fin" id="mm-sn" placeholder="z.B. VC 246/5-5"></div>
+    <div class="frow"><label>Leistung</label><input type="text" class="fin" id="mm-leistung" placeholder="z.B. 24 kW"></div>
+    <div class="frow"><label>Brennstoff</label>
+      <select class="fin-sel" id="mm-brennstoff">
+        <option>Erdgas</option><option>Flüssiggas</option><option>Heizöl EL</option>
+        <option>Pellets</option><option>Stückholz</option><option>Hackgut</option>
+      </select></div>
+    <div class="frow"><label>Anlass</label>
       <select class="fin-sel" id="mm-art">
         <option>Routinekehrung</option>
-        <option>Feuerstättenbeschau</option>
+        <option>Feuerstättenbeschau § 9 KehrG</option>
         <option>Gasservice / Wartung</option>
-        <option>Betriebsdichteprüfung</option>
-        <option>Sonstiger Einsatz</option>
-      </select>
-    </div>
+        <option>Wiederkehrende Prüfung § 25 HKG</option>
+        <option>Betriebsdichtheitsprüfung</option>
+        <option>Mängelbehebungskontrolle § 11 KehrG</option>
+      </select></div>
   </div>
 </div>
 
-<!-- MÄNGELLISTE -->
+<!-- C. MÄNGELLISTE -->
 <div class="ibox" style="margin-bottom:10px;background:#FFF8E1;border:2px solid #F9A825">
-  <div class="btl" style="color:#E65100">⚠ Festgestellte Mängel</div>
-  <div id="mm-list" style="margin-top:8px"></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-    <button onclick="mmShowKatalog()" class="btn" style="background:#2C3E50">
-      📋 Aus Katalog wählen
+  <div class="btl" style="color:#E65100">C. Festgestellte Mängel</div>
+  <div id="mm-list" style="margin-top:8px">
+    <div id="mm-empty" style="text-align:center;color:#999;padding:20px;font-size:11px">
+      Noch kein Mangel erfasst – aus Katalog wählen oder eigenen erfassen.
+    </div>
+  </div>
+  <div class="no-print" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+    <button onclick="mmShowKatalogNew()" class="btn" style="background:#2C3E50;color:#fff;border:none;border-radius:7px;padding:10px;font-size:12px;font-weight:600;cursor:pointer">
+      📋 Aus Katalog wählen (52 Einträge)
     </button>
-    <button onclick="mmAdd()" class="btn" style="background:#E67E22">
+    <button onclick="mmAdd()" class="btn" style="background:#E67E22;color:#fff;border:none;border-radius:7px;padding:10px;font-size:12px;font-weight:600;cursor:pointer">
       ✏️ Eigener Mangel
     </button>
   </div>
 </div>
 
-<!-- FRISTEN -->
+<!-- D. FRISTSETZUNG -->
 <div class="ig" style="grid-template-columns:1fr 1fr;margin-bottom:10px">
-  <div class="ibox">
-    <div class="btl" style="color:#E74C3C">Fristsetzung (§11 KehrG)</div>
+  <div class="ibox" style="border:1.5px solid #E74C3C">
+    <div class="btl" style="color:#E74C3C">D. Fristsetzung (§ 11 KehrG / § 36 HKG)</div>
     <div class="frow"><label>Behebungsfrist</label>
-      <input type="text" class="fin" id="mm-frist" placeholder="z.B. 14.06.2026"
+      <input type="text" class="fin" id="mm-frist" placeholder="TT.MM.JJJJ"
         style="border-color:#E74C3C;font-weight:700;color:#E74C3C"></div>
     <div class="frow"><label>Nachmeldung bis</label>
-      <input type="text" class="fin" id="mm-nachfrist" placeholder="z.B. 21.06.2026"></div>
+      <input type="text" class="fin" id="mm-nachfrist" placeholder="TT.MM.JJJJ"></div>
+    <div class="frow"><label>Nächste Prüfung</label>
+      <input type="text" class="fin" id="mm-naechste" placeholder="TT.MM.JJJJ"></div>
     <div style="margin-top:8px">
       <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;
         background:#FFEBEE;border:2px solid #E74C3C;border-radius:7px;
         cursor:pointer;font-size:12px;font-weight:700;min-height:44px">
         <input type="checkbox" id="mm-heizvb" style="width:20px;height:20px;accent-color:#E74C3C">
-        🚫 Sofortiges Heizverbot ausgesprochen
+        🚫 SOFORTIGES HEIZVERBOT ausgesprochen
       </label>
     </div>
   </div>
-  <div class="ibox ibox-b">
-    <div class="btl btl-b">Behörde / Weiterleitung</div>
+  <div class="ibox" style="border:1.5px solid #1565C0;background:#E3F2FD">
+    <div class="btl" style="color:#1565C0">E. Behördliche Weiterleitung</div>
     <div style="margin-top:6px">
       <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;
-        background:#FFF;border:2px solid #B0BEC5;border-radius:7px;
-        cursor:pointer;font-size:12px;font-weight:600;min-height:44px;margin-bottom:6px">
+        background:#fff;border:2px solid #B0BEC5;border-radius:7px;
+        cursor:pointer;font-size:11.5px;font-weight:600;min-height:44px;margin-bottom:6px">
         <input type="checkbox" id="mm-behoerde" style="width:20px;height:20px;accent-color:#1565C0">
-        📋 Meldung an Bezirksverwaltungsbehörde
+        📋 Meldung an Bezirksverwaltungsbehörde (§ 11 Abs. 4 KehrG)
       </label>
       <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;
-        background:#FFF;border:2px solid #B0BEC5;border-radius:7px;
-        cursor:pointer;font-size:12px;font-weight:600;min-height:44px">
+        background:#fff;border:2px solid #B0BEC5;border-radius:7px;
+        cursor:pointer;font-size:11.5px;font-weight:600;min-height:44px;margin-bottom:6px">
         <input type="checkbox" id="mm-feuerwehr" style="width:20px;height:20px;accent-color:#E74C3C">
-        🚒 Feuerbeschau gem. §8 Bgld. FeuerwehrG 2019
+        🚒 Feuerbeschau gem. § 8 Bgld. FwG 2019
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;
+        background:#fff;border:2px solid #B0BEC5;border-radius:7px;
+        cursor:pointer;font-size:11.5px;font-weight:600;min-height:44px">
+        <input type="checkbox" id="mm-buergermeister" style="width:20px;height:20px;accent-color:#1565C0">
+        🏛 Bürgermeister-Meldung (§ 12 KehrG)
       </label>
     </div>
-    <div class="frow" style="margin-top:8px"><label>Nächste Prüfung</label>
-      <input type="text" class="fin" id="mm-naechste" placeholder="TT.MM.JJJJ"></div>
+    <div style="margin-top:8px;padding:6px 8px;background:#fff;border-radius:5px;font-size:9.5px;color:#555;line-height:1.4">
+      <b>Rechtsmittelbelehrung:</b> Gegen diese Mängelmeldung steht binnen 14 Tagen ab Zustellung Beschwerde an die Bezirksverwaltungsbehörde offen (§ 17 KehrG, AVG).
+    </div>
   </div>
+</div>
+
+<!-- F. ANWEISUNG AN DEN VERFÜGUNGSBERECHTIGTEN -->
+<div class="ibox" style="margin-bottom:10px;border:1.5px solid #2C3E50;background:#F5F5F5">
+  <div class="btl">F. Anweisung an den Verfügungsberechtigten</div>
+  <ol style="margin:6px 0 0 18px;padding:0;font-size:11px;line-height:1.6;color:#333">
+    <li>Die festgestellten Mängel sind innerhalb der oben angegebenen Frist durch eine fachkundige Person zu beheben.</li>
+    <li>Die Behebung ist dem Rauchfangkehrer unaufgefordert schriftlich mitzuteilen.</li>
+    <li>Bei Nichtbehebung innerhalb der Frist wird die zuständige Behörde gemäß § 11 KehrG 2022 verständigt.</li>
+    <li>Bei ausgesprochenem Heizverbot ist die Anlage <b>UNVERZÜGLICH außer Betrieb zu nehmen</b>.</li>
+    <li>Die Anlage darf erst nach erfolgreicher Mängelbehebung und Freigabe durch den RFK wieder in Betrieb gehen.</li>
+  </ol>
 </div>
 
 <!-- UNTERSCHRIFTEN -->
-<div class="sig">
-  <div class="sig-box">
-    <canvas class="sig-canvas" id="mmsig1" width="400" height="100"></canvas>
-    <button class="sig-clr no-print" onclick="sigClear('mmsig1')">✕</button>
-    <div class="sig-lbl">Neudörfl, Datum &amp; Unterschrift Rauchfangkehrer</div>
+<div class="sr" style="display:flex;gap:12px;margin-top:12px">
+  <div class="sb" style="flex:1;text-align:center">
+    <canvas class="sig-canvas" id="mmsig1" width="280" height="60" style="width:100%;height:60px;border:1px dashed #999;background:#fff;cursor:crosshair;border-radius:5px"></canvas>
+    <div class="no-print" style="display:flex;justify-content:center;margin-top:3px">
+      <button onclick="sigClear('mmsig1')" style="background:none;border:1px solid #999;color:#666;border-radius:3px;padding:2px 8px;font-size:9px;cursor:pointer">✕ Löschen</button>
+    </div>
+    <div class="sig-lbl" style="font-size:9px;color:#666;border-top:1px solid #ccc;padding-top:3px;margin-top:3px">
+      <b>Unterschrift Rauchfangkehrer</b><br>
+      <span style="font-size:8px;color:#888">Datum: <span class="adate-txt"></span></span>
+    </div>
   </div>
-  <div class="sig-box">
-    <canvas class="sig-canvas" id="mmsig2" width="400" height="100"></canvas>
-    <button class="sig-clr no-print" onclick="sigClear('mmsig2')">✕</button>
-    <div class="sig-lbl">Datum &amp; Unterschrift Eigentümer / Verfügungsberechtigte/r</div>
+  <div class="sb" style="flex:1;text-align:center">
+    <canvas class="sig-canvas" id="mmsig2" width="280" height="60" style="width:100%;height:60px;border:1px dashed #999;background:#fff;cursor:crosshair;border-radius:5px"></canvas>
+    <div class="no-print" style="display:flex;justify-content:center;margin-top:3px">
+      <button onclick="sigClear('mmsig2')" style="background:none;border:1px solid #999;color:#666;border-radius:3px;padding:2px 8px;font-size:9px;cursor:pointer">✕ Löschen</button>
+    </div>
+    <div class="sig-lbl" style="font-size:9px;color:#666;border-top:1px solid #ccc;padding-top:3px;margin-top:3px">
+      <b>Unterschrift Verfügungsberechtigte/r</b><br>
+      <span style="font-size:8px;color:#888">Erhalt zur Kenntnis genommen</span>
+    </div>
   </div>
 </div>
 
-<div class="btns no-print" style="margin-top:10px">
-  <button class="btn" onclick="mmPrint()">🖨 Drucken / PDF</button>
-  <button class="btn btn-g" onclick="mmShare()">📤 Per Mail / SMS senden</button>
-  <button class="btn btn-save" onclick="saveCurrentPage()">⬇ Speichern</button>
-  <button class="btn btn-rst" onclick="mmReset()">↺ Zurücksetzen</button>
+<!-- AKTIONEN -->
+<div class="btns no-print" style="display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 5px">
+  <button class="btn" style="background:#1565C0" onclick="kvPrint('page-maengel')">🖨 Drucken / PDF</button>
+  <button class="btn" style="background:#25D366" onclick="kvWhatsAppSend('page-maengel')">💬 WhatsApp</button>
+  <button class="btn" style="background:#C0392B" onclick="kvMailSend('page-maengel')">✉ E-Mail</button>
+  <button class="btn" style="background:#27AE60" onclick="kvSpeichern('page-maengel')">💾 Speichern</button>
+  <button class="btn" style="background:#E67E22" onclick="kvLaden('page-maengel')">📂 Laden</button>
+  <button class="btn" style="background:#7F8C8D" onclick="kvDateiSpeichern('page-maengel')">⬇ Datei</button>
+  <button class="btn" style="background:#9E9E9E" onclick="mmReset()">↻ Zurücksetzen</button>
 </div>
-<div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
+
+<div class="kv-foot">
+  Grieer Rauchfangkehrermeister · Neugebäu 10, 7201 Neudörfl · +43 (0) 2622 77062 · office@grieer.com
+</div>
+
 </div>
 </div>
 
@@ -2432,22 +2575,24 @@ input[type=radio].we-native-cb{border-radius:50%;}
     <canvas class="sig-canvas" id="wsig2" width="400" height="100"></canvas>
     <button class="sig-clr no-print" onclick="sigClear('wsig2')">✕</button>
     <div class="sig-lbl">Grieer – Stempel &amp; Unterschrift</div>
-  </div>
+  <div class="btns no-print" style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 5px">
+  <button class="btn" style="background:#1565C0" onclick="kvPrint('wart')">🖨 Drucken / PDF</button>
+  <button class="btn" style="background:#25D366" onclick="kvWhatsAppSend('wart')">💬 WhatsApp</button>
+  <button class="btn" style="background:#C0392B" onclick="kvMailSend('wart')">✉ E-Mail</button>
+  <button class="btn" style="background:#27AE60" onclick="kvSpeichern('wart')">💾 Speichern</button>
+  <button class="btn" style="background:#E67E22" onclick="kvLaden('wart')">📂 Laden</button>
+  <button class="btn" style="background:#7F8C8D" onclick="kvDateiSpeichern('wart')">⬇ Datei</button>
+</div>
+</div>
 </div>
 
 <!-- ── BUTTONS ───────────────────────────────────────────── -->
-<div class="btns no-print" style="margin-top:10px">
-  <button class="btn" onclick="wartungPrint()">🖨 Als PDF / Drucken</button>
-  <button class="btn btn-g" onclick="wartungMail()">✉ Per E-Mail senden</button>
-  <button class="btn btn-save" onclick="saveCurrentPage()" title="Als Datei auf Gerät speichern">⬇ Speichern</button>
-  <button class="btn btn-rst" onclick="wartungReset()">↺ Zurücksetzen</button>
-</div>
 
-<div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
-</div>
 </div>
 
 <!-- ═══ GEMEINSAMER KV ═══ -->
+</div>
+
 <div class="pg" id="page-verr">
 <div class="card">
 <div class="kv-hdr">
@@ -2942,19 +3087,23 @@ input[type=radio].we-native-cb{border-radius:50%;}
 <div class="tot-wrap" style="margin-top:10px">
   <div class="tot-row"><span>Nettobetrag</span><span id="verr-net">0,00&nbsp;€</span></div>
   <div class="tot-row"><span>USt. 20&nbsp;%</span><span id="verr-ust">0,00&nbsp;€</span></div>
-  <div class="tot-row"><span>Bruttobetrag</span><span id="verr-tot">0,00&nbsp;€</span></div>
+  <div class="tot-row"><span>Bruttobetrag</span><span id="verr-tot">0,00&nbsp;€</span><div class="btns no-print" style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 5px">
+  <button class="btn" style="background:#1565C0" onclick="kvPrint('verr')">🖨 Drucken / PDF</button>
+  <button class="btn" style="background:#25D366" onclick="kvWhatsAppSend('verr')">💬 WhatsApp</button>
+  <button class="btn" style="background:#C0392B" onclick="kvMailSend('verr')">✉ E-Mail</button>
+  <button class="btn" style="background:#27AE60" onclick="kvSpeichern('verr')">💾 Speichern</button>
+  <button class="btn" style="background:#E67E22" onclick="kvLaden('verr')">📂 Laden</button>
+  <button class="btn" style="background:#7F8C8D" onclick="kvDateiSpeichern('verr')">⬇ Datei</button>
+</div>
+</div>
 </div>
 <div class="grand">
   <span style="font-size:14px;font-weight:600">GESAMT brutto</span>
   <span style="font-size:22px;font-weight:700" id="verr-grand">0,00&nbsp;€</span>
 </div>
-<div class="btns no-print">
-  <button class="btn" onclick="verrPrint()">🖨 Als PDF / Drucken</button>
-  <button class="btn btn-g" onclick="doMail()">✉ Per E-Mail senden</button>
-  <button class="btn btn-rst" onclick="resetVerr()">↺ Zurücksetzen</button>
+
 </div>
-<div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
-</div>
+
 </div>
 
 <div class="pg" id="page-ki">
@@ -3048,21 +3197,657 @@ input[type=radio].we-native-cb{border-radius:50%;}
   </button>
 </div>
 
+
+  
 </div>
 </div>
 
-<script>// SOFORT: Alle Seiten verstecken
+<script>
+// ═══════════════════════════════════════════════════════════════
+// GRIEER A4-DRUCK / PDF / WHATSAPP / MAIL / SPEICHERN SYSTEM
+// ═══════════════════════════════════════════════════════════════
+
+var A4_CSS = [
+  '@page{size:A4 portrait;margin:8mm 10mm}',
+  'html,body{width:210mm;margin:0;padding:0;background:#fff}',
+  'body{font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-size:10px;padding:6px;color:#222}',
+  '*{box-sizing:border-box}',
+  '.card{box-shadow:none!important;border:none!important;padding:5px 7px;border-radius:4px}',
+  '.kv-hdr{display:flex;align-items:center;gap:8px;border-bottom:2px solid #2C3E50;padding-bottom:5px;margin-bottom:6px}',
+  '.kv-hdr img{height:32px;width:32px;object-fit:contain}',
+  '.kv-title{font-size:13px;font-weight:700;color:#2C3E50;margin:0}',
+  '.kv-sub{font-size:8px;color:#666;margin:0}',
+  '.contact{font-size:7.5px;color:#666;line-height:1.4}',
+  '.title-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}',
+  '.meta{font-size:8px;color:#555}',
+  '.mrow{display:flex;align-items:center;gap:4px;margin-bottom:2px}',
+  '.mrow label{min-width:60px;font-size:7.5px;color:#888}',
+  '.ig{display:grid;gap:5px;margin-bottom:5px}',
+  '.ibox{padding:5px 7px;border:1px solid #ccc;border-radius:4px;background:#fff}',
+  '.ibox-b{background:#FFF8E1}',
+  '.btl{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;border-bottom:0.5px solid #ddd;padding-bottom:2px;margin-bottom:4px;color:#2C3E50}',
+  '.btl-b{color:#E67E22}',
+  '.frow{display:flex;align-items:baseline;gap:4px;margin-bottom:2px;flex-wrap:nowrap}',
+  '.frow label{font-size:8px;color:#888;min-width:55px;flex-shrink:0}',
+  '.fin,.fin-sel{font-size:9px;color:#111;border:none;border-bottom:0.5px solid #ddd;padding:0 2px;background:transparent;width:auto;min-width:30px;max-width:100%}',
+  'table{font-size:8.5px;border-collapse:collapse;width:100%;margin-bottom:4px}',
+  'thead th{background:#2C3E50;color:#fff;padding:2px 4px;font-size:8px;text-align:left}',
+  'td,th{padding:2px 4px;font-size:8px;border-bottom:0.3px solid #eee}',
+  'tr:nth-child(even) td{background:#F8F9FA}',
+  '.tot-wrap{padding:3px 7px;border-top:1px solid #ddd}',
+  '.tot-row{display:flex;justify-content:space-between;font-size:9px;padding:1px 0}',
+  '.grand{display:flex;justify-content:space-between;background:#2C3E50;color:#fff;padding:4px 7px;border-radius:3px;font-weight:700;margin-top:3px}',
+  '.grand span:last-child{font-size:13px}',
+  '.bx{padding:4px 6px;border:1px solid #ddd;border-radius:3px;margin-bottom:3px}',
+  '.bx.br{background:#EBF5FB}',
+  '.bl{font-size:8px;font-weight:700;color:#1565C0;border-bottom:0.3px solid #ddd;padding-bottom:2px;margin-bottom:3px}',
+  '.blr{color:#E74C3C}',
+  '.rw{display:flex;justify-content:space-between;font-size:8.5px;padding:1px 0}',
+  '.lb{color:#666;font-size:8px}',
+  '.vl{font-size:8.5px;color:#111}',
+  '.g2{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:5px}',
+  '.sr{display:flex;gap:8px;margin-top:5px}',
+  '.sb{flex:1;text-align:center}',
+  '.sig-canvas,.sig-box{width:100%;height:50px;border-bottom:0.5px solid #999;display:block}',
+  '.sig-lbl{font-size:7px;color:#999;text-align:center;margin-top:2px}',
+  '.kv-foot{font-size:7px;color:#999;text-align:center;border-top:0.5px solid #eee;margin-top:8px;padding-top:4px}',
+  '.no-print,.btns,.kv-quickmenu,.btn,.kv-quick-btn{display:none!important}',
+  '.opt-row[style*="display:none"]{display:none!important}',
+  '.opt-row{display:block}',
+  '.ma{background:#FFF3E0;border-left:2px solid #E74C3C;padding:3px 5px;margin-bottom:3px;border-radius:2px}',
+  '.ms{font-size:8px;font-weight:700;color:#E74C3C}',
+  '.md{font-size:7.5px;color:#555}',
+  '.mf{font-size:7px;background:#ddd;padding:1px 4px;border-radius:2px;color:#333}',
+  '.foto-grid img,.mm-foto,.mm-foto-container img{display:inline-block!important;width:60px;height:45px;object-fit:cover;border-radius:3px;margin:2px}',
+  'input[type="checkbox"]{display:none}',
+  '.chk-label::before{content:"☐ ";font-size:9px}',
+  'input[type="checkbox"]:checked + .chk-label::before{content:"☑ "}',
+  '.mm-item{page-break-inside:avoid;border:1.5px solid #999!important;padding:8px;margin-bottom:6px;border-radius:4px}'
+].join('\n');
+
+function buildA4Html(pageIdParam) {
+  var pageId = pageIdParam;
+  if (!pageId) {
+    var act = document.querySelector('.pg.active');
+    pageId = act ? act.id : null;
+  }
+  if (pageId && pageId.indexOf('page-') !== 0) pageId = 'page-' + pageId;
+  var pg = document.getElementById(pageId);
+  if (!pg) return null;
+  
+  var clone = pg.cloneNode(true);
+  
+  // Checkboxen → ☑/☐
+  clone.querySelectorAll('input[type="checkbox"]').forEach(function(el) {
+    var span = document.createElement('span');
+    span.style.cssText = 'font-size:11px;margin-right:4px';
+    span.textContent = el.checked ? '☑ ' : '☐ ';
+    if (el.parentNode) el.parentNode.insertBefore(span, el);
+    el.remove();
+  });
+  
+  // Inputs/Selects → Text
+  clone.querySelectorAll('input,select,textarea').forEach(function(el) {
+    var val = '';
+    if (el.tagName === 'SELECT') {
+      val = el.options[el.selectedIndex] ? el.options[el.selectedIndex].text : '';
+    } else {
+      val = el.value || el.placeholder || '';
+    }
+    var span = document.createElement('span');
+    span.className = 'fin';
+    span.style.cssText = 'border-bottom:0.5px solid #999;padding:0 4px;font-size:10px;color:#111';
+    span.textContent = val;
+    if (el.parentNode) el.parentNode.replaceChild(span, el);
+  });
+  
+  // Signaturen Canvas → img
+  pg.querySelectorAll('canvas.sig-canvas').forEach(function(cv) {
+    var cloneEl = clone.querySelector('#' + cv.id);
+    if (cloneEl && cv.width > 0) {
+      try {
+        var img = document.createElement('img');
+        img.src = cv.toDataURL('image/png');
+        img.style.cssText = 'width:100%;height:50px;object-fit:contain;display:block';
+        cloneEl.parentNode.replaceChild(img, cloneEl);
+      } catch(e){}
+    }
+  });
+  
+  // Logo + Bilder erhalten (Originalquellen kopieren)
+  pg.querySelectorAll('img').forEach(function(origImg) {
+    if (!origImg.id && !origImg.className) return;
+    var cloneImg = clone.querySelector('img[src="' + origImg.getAttribute('src') + '"]');
+    if (cloneImg) cloneImg.src = origImg.src;
+  });
+  
+  // Keine no-print Elemente
+  clone.querySelectorAll('.no-print,.btns,.kv-quickmenu,.btn,.kv-quick-btn,button').forEach(function(el){
+    el.remove();
+  });
+  
+  // Inaktive opt-rows
+  clone.querySelectorAll('.opt-row').forEach(function(row) {
+    if (row.style.display === 'none') row.remove();
+  });
+  
+  // KI-Chat leeren
+  var chat = clone.querySelector('#ki-chat');
+  if (chat) chat.innerHTML = '';
+  
+  // Dropdowns entfernen
+  var drops = clone.querySelectorAll('[id$="-dropdown"]');
+  drops.forEach(function(d){d.remove();});
+  
+  var title = pg.querySelector('.kv-title');
+  var titleTxt = title ? title.textContent.trim() : 'Grieer';
+  var datum = new Date().toLocaleDateString('de-AT');
+  
+  return {
+    html: '<!DOCTYPE html><html lang="de"><head>'
+      + '<meta charset="UTF-8">'
+      + '<meta name="viewport" content="width=device-width,initial-scale=1">'
+      + '<title>Grieer - ' + titleTxt + ' - ' + datum + '</title>'
+      + '<style>' + A4_CSS + '</style>'
+      + '</head><body>'
+      + '<div class="card">' + clone.innerHTML + '</div>'
+      + '</body></html>',
+    title: titleTxt,
+    datum: datum
+  };
+}
+
+function kvPrint(pageId) {
+  var data = buildA4Html(pageId);
+  if (!data) { showToast('⚠ Keine Seite aktiv'); return; }
+  var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent || '');
+  var blob = new Blob([data.html], {type:'text/html;charset=utf-8'});
+  var url = URL.createObjectURL(blob);
+  var w = window.open(url, '_blank');
+  if (w) {
+    w.addEventListener('load', function() {
+      setTimeout(function() {
+        try { w.print(); } catch(e) {}
+        if (isIOS) showToast('📄 Im Druckdialog → "Als PDF sichern" wählen', 4000);
+      }, 600);
+    });
+    setTimeout(function() { URL.revokeObjectURL(url); }, 90000);
+  } else {
+    kvDateiSpeichern(pageId);
+    showToast('📥 Popup blockiert - Datei wird heruntergeladen', 3000);
+  }
+}
+
+function kvDateiSpeichern(pageId) {
+  var data = buildA4Html(pageId);
+  if (!data) { showToast('⚠ Keine Seite aktiv'); return; }
+  var filename = 'Grieer_' + data.title.replace(/[^a-zA-Z0-9äöüÄÖÜß ]/g,'').replace(/\s+/g,'_') + '_' + data.datum.replace(/\./g,'-') + '.html';
+  try {
+    var blob = new Blob([data.html], {type:'text/html;charset=utf-8'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = filename; a.target = '_blank';
+    document.body.appendChild(a); a.click();
+    setTimeout(function() { URL.revokeObjectURL(url); a.remove(); }, 2000);
+    if (/iphone|ipad|ipod/i.test(navigator.userAgent||'')) {
+      showToast('📥 In "Dateien" → Downloads gespeichert', 4000);
+    } else {
+      showToast('💾 Datei gespeichert: ' + filename, 3000);
+    }
+  } catch(e) {
+    alert('Speichern fehlgeschlagen: ' + e.message);
+  }
+}
+
+function kvSpeichern(pageId) {
+  var pid = pageId;
+  if (pid && pid.indexOf('page-') === 0) pid = pid.replace('page-','');
+  if (!pid) {
+    var act = document.querySelector('.pg.active');
+    pid = act ? act.id.replace('page-','') : null;
+  }
+  var pg = document.getElementById('page-' + pid);
+  if (!pg) { showToast('⚠ Keine Seite aktiv'); return; }
+  var data = {};
+  pg.querySelectorAll('input,select,textarea').forEach(function(el) {
+    var key = el.id || el.name || (el.dataset && el.dataset.opt ? 'opt-' + el.dataset.opt : '');
+    if (!key) return;
+    data[key] = el.type === 'checkbox' ? el.checked : el.value;
+  });
+  // Mängelliste speichern
+  if (pid === 'maengel') {
+    data._mmItems = [];
+    pg.querySelectorAll('.mm-item').forEach(function(item) {
+      var entry = {
+        katalogId: item.getAttribute('data-katalog-id'),
+        frist: item.querySelector('.mm-item-frist') ? item.querySelector('.mm-item-frist').value : '',
+        art: item.querySelector('.mm-art') ? item.querySelector('.mm-art').value : '',
+        norm: item.querySelector('.mm-norm') ? item.querySelector('.mm-norm').value : '',
+        risiko: item.querySelector('.mm-risiko') ? item.querySelector('.mm-risiko').value : '',
+        massnahme: item.querySelector('.mm-massnahme') ? item.querySelector('.mm-massnahme').value : ''
+      };
+      var fotos = [];
+      item.querySelectorAll('.mm-foto').forEach(function(img){ fotos.push(img.src); });
+      entry.fotos = fotos;
+      data._mmItems.push(entry);
+    });
+  }
+  localStorage.setItem('grieer-kv-' + pid, JSON.stringify({data:data, ts:Date.now()}));
+  showToast('💾 In App gespeichert');
+}
+
+function kvLaden(pageId) {
+  var pid = pageId;
+  if (pid && pid.indexOf('page-') === 0) pid = pid.replace('page-','');
+  if (!pid) {
+    var act = document.querySelector('.pg.active');
+    pid = act ? act.id.replace('page-','') : null;
+  }
+  var pg = document.getElementById('page-' + pid);
+  if (!pg) { showToast('⚠ Keine Seite aktiv'); return; }
+  var raw = localStorage.getItem('grieer-kv-' + pid);
+  if (!raw) { showToast('⚠ Keine gespeicherten Daten'); return; }
+  var saved = JSON.parse(raw);
+  var data = saved.data || saved;
+  pg.querySelectorAll('input,select,textarea').forEach(function(el) {
+    var key = el.id || el.name || (el.dataset && el.dataset.opt ? 'opt-' + el.dataset.opt : '');
+    if (!key || !(key in data)) return;
+    if (el.type === 'checkbox') el.checked = data[key];
+    else el.value = data[key];
+  });
+  // Mängelliste laden
+  if (pid === 'maengel' && data._mmItems) {
+    var list = document.getElementById('mm-list');
+    if (list) list.innerHTML = '';
+    mmCount = 0;
+    data._mmItems.forEach(function(entry) {
+      if (entry.katalogId) {
+        mmAddFromKatalogNew(entry.katalogId);
+      } else {
+        mmAdd();
+      }
+      var lastItem = document.querySelector('#mm-list .mm-item:last-child');
+      if (lastItem) {
+        var fristEl = lastItem.querySelector('.mm-item-frist');
+        if (fristEl && entry.frist) fristEl.value = entry.frist;
+        if (entry.art) {
+          var artEl = lastItem.querySelector('.mm-art');
+          if (artEl) artEl.value = entry.art;
+        }
+        if (entry.norm) {
+          var normEl = lastItem.querySelector('.mm-norm');
+          if (normEl) normEl.value = entry.norm;
+        }
+        if (entry.risiko) {
+          var risikoEl = lastItem.querySelector('.mm-risiko');
+          if (risikoEl) risikoEl.value = entry.risiko;
+        }
+        if (entry.massnahme) {
+          var massEl = lastItem.querySelector('.mm-massnahme');
+          if (massEl) massEl.value = entry.massnahme;
+        }
+        if (entry.fotos && entry.fotos.length) {
+          var container = lastItem.querySelector('.mm-foto-container');
+          entry.fotos.forEach(function(src) {
+            var img = document.createElement('img');
+            img.className = 'mm-foto';
+            img.src = src;
+            img.style.cssText = 'width:80px;height:60px;object-fit:cover;border-radius:4px;border:1px solid #ccc;margin:2px;display:inline-block';
+            if (container) container.appendChild(img);
+          });
+        }
+      }
+    });
+  }
+  try { ct(pid); } catch(e) {}
+  showToast('📂 Daten geladen');
+}
+
+function kvWhatsAppSend(pageId) {
+  var pid = pageId;
+  if (pid && pid.indexOf('page-') === 0) pid = pid.replace('page-','');
+  if (!pid) {
+    var act = document.querySelector('.pg.active');
+    pid = act ? act.id.replace('page-','') : null;
+  }
+  var pg = document.getElementById('page-' + pid);
+  if (!pg) return;
+  function gv(cls) { var el = pg.querySelector('.' + cls); return el ? (el.value || el.textContent || '') : ''; }
+  var name = gv('kd-name'); var adr = gv('kd-str'); var plz = gv('kd-plz');
+  var title = pg.querySelector('.kv-title');
+  var titleTxt = title ? title.textContent.trim() : 'Kostenvoranschlag';
+  var grand = pg.querySelector('.grand span:last-child');
+  var summe = grand ? grand.textContent.trim() : '';
+  var nl = '\n';
+  var msg = '*Grieer Rauchfangkehrermeister*' + nl
+    + titleTxt + nl
+    + '────────────────────' + nl
+    + (name ? '👤 Kunde: ' + name + nl : '')
+    + (adr ? '📍 Adresse: ' + adr + nl : '')
+    + (plz ? '🏙 PLZ/Ort: ' + plz + nl : '')
+    + (summe ? nl + '💶 Gesamt: *' + summe + '*' + nl : '')
+    + nl + '📞 +43 (0) 2622 77062'
+    + nl + '✉ office@grieer.com'
+    + nl + '🌐 www.grieer.com';
+  window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+}
+
+function kvMailSend(pageId) {
+  var pid = pageId;
+  if (pid && pid.indexOf('page-') === 0) pid = pid.replace('page-','');
+  if (!pid) {
+    var act = document.querySelector('.pg.active');
+    pid = act ? act.id.replace('page-','') : null;
+  }
+  var pg = document.getElementById('page-' + pid);
+  if (!pg) return;
+  function gv(cls) { var el = pg.querySelector('.' + cls); return el ? (el.value || '') : ''; }
+  var name = gv('kd-name'); var plz = gv('kd-plz');
+  var emailTo = gv('kd-email');
+  var title = pg.querySelector('.kv-title');
+  var titleTxt = title ? title.textContent.trim() : 'Kostenvoranschlag';
+  var grand = pg.querySelector('.grand span:last-child');
+  var summe = grand ? grand.textContent.trim() : '';
+  var nl = '%0D%0A';
+  var subj = encodeURIComponent('Grieer - ' + titleTxt);
+  var body = 'Sehr geehrte Damen und Herren,' + nl + nl
+    + 'anbei unser Kostenvoranschlag fuer: ' + encodeURIComponent(titleTxt) + nl
+    + (name ? 'Kunde: ' + encodeURIComponent(name) + nl : '')
+    + (plz ? 'PLZ/Ort: ' + encodeURIComponent(plz) + nl : '')
+    + (summe ? nl + 'Gesamtbetrag: ' + encodeURIComponent(summe) + nl : '')
+    + nl + 'Mit freundlichen Gruessen' + nl
+    + 'Grieer Rauchfangkehrermeister' + nl
+    + 'Tel: +43 (0) 2622 77062' + nl
+    + 'Mail: office@grieer.com';
+  window.location.href = 'mailto:' + emailTo + '?subject=' + subj + '&body=' + body;
+}
+
+// ═══ MÄNGEL-SYSTEM ═══════════════════════════════════════
+var mmCount = 0;
+
+function mmFristDatum(tage) {
+  if (!tage || tage <= 0) return 'SOFORT';
+  var d = new Date();
+  d.setDate(d.getDate() + tage);
+  return d.toLocaleDateString('de-AT');
+}
+
+function mmShowKatalogNew() {
+  var existing = document.getElementById('mm-katalog-dropdown');
+  if (existing) {
+    existing.style.display = existing.style.display === 'none' ? 'block' : 'none';
+    return;
+  }
+  var div = document.createElement('div');
+  div.id = 'mm-katalog-dropdown';
+  div.className = 'no-print';
+  div.style.cssText = 'background:#fff;border:2px solid #2C3E50;border-radius:10px;'
+    + 'padding:12px;margin-bottom:10px;max-height:500px;overflow-y:auto';
+  
+  var kats = {};
+  MAENGEL_KATALOG.forEach(function(m) {
+    if (!kats[m.kat]) kats[m.kat] = [];
+    kats[m.kat].push(m);
+  });
+  
+  var html = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
+    + '<div style="font-size:12px;font-weight:700;color:#2C3E50">📋 Mangel aus Katalog wählen</div>'
+    + '<button onclick="document.getElementById(\'mm-katalog-dropdown\').style.display=\'none\'" '
+    + 'style="background:#E74C3C;color:#fff;border:none;border-radius:4px;padding:4px 8px;cursor:pointer;font-size:11px">✕</button>'
+    + '</div>'
+    + '<input type="text" id="mm-katalog-search" placeholder="Suchen..." '
+    + 'oninput="mmKatalogFilter(this.value)" '
+    + 'style="width:100%;padding:8px;border:1.5px solid #ccc;border-radius:5px;font-size:12px;margin-bottom:8px;outline:none">';
+  
+  Object.keys(kats).forEach(function(kat) {
+    var farbe = (typeof MM_KAT_FARBEN !== 'undefined' && MM_KAT_FARBEN[kat]) || '#546E7A';
+    html += '<div class="mm-kat-group" data-kat="' + kat.toLowerCase() + '">';
+    html += '<div style="font-size:10px;font-weight:700;color:' + farbe + ';'
+      + 'text-transform:uppercase;margin:8px 0 4px;padding-bottom:2px;border-bottom:1px solid ' + farbe + '">'
+      + kat + ' (' + kats[kat].length + ')</div>';
+    kats[kat].forEach(function(m) {
+      var fristTxt = m.frist === 0 ? '<span style="color:#E74C3C;font-weight:700">SOFORT</span>'
+                   : m.frist + ' Tage';
+      var hvTxt = m.hv ? ' · <span style="color:#E74C3C;font-weight:700">HEIZVERBOT</span>' : '';
+      html += '<div class="mm-kat-item" data-search="' + (m.id + ' ' + m.art + ' ' + m.kat).toLowerCase() + '" '
+        + 'onclick="mmAddFromKatalogNew(\'' + m.id + '\')" '
+        + 'style="padding:7px 10px;border:1px solid #eee;border-radius:5px;margin-bottom:4px;'
+        + 'cursor:pointer;background:#fff;transition:background .15s" '
+        + 'onmouseover="this.style.background=\'#F0F4F8\'" '
+        + 'onmouseout="this.style.background=\'#fff\'">'
+        + '<div style="font-size:11px;font-weight:700;color:#222">' + m.id + ': ' + m.art + '</div>'
+        + '<div style="font-size:9.5px;color:#888;margin-top:1px">' + m.norm + ' · ' + fristTxt + hvTxt + '</div>'
+        + '</div>';
+    });
+    html += '</div>';
+  });
+  
+  div.innerHTML = html;
+  var list = document.getElementById('mm-list');
+  if (list && list.parentNode) list.parentNode.insertBefore(div, list);
+}
+
+function mmKatalogFilter(query) {
+  query = (query || '').toLowerCase().trim();
+  var items = document.querySelectorAll('.mm-kat-item');
+  var groups = document.querySelectorAll('.mm-kat-group');
+  items.forEach(function(it) {
+    var s = it.getAttribute('data-search') || '';
+    it.style.display = (!query || s.indexOf(query) >= 0) ? 'block' : 'none';
+  });
+  groups.forEach(function(g) {
+    var visible = g.querySelectorAll('.mm-kat-item:not([style*="display:none"])').length;
+    g.style.display = visible > 0 ? 'block' : 'none';
+  });
+}
+
+function mmAddFromKatalogNew(katalogId) {
+  var m = MAENGEL_KATALOG.find(function(x) { return x.id === katalogId; });
+  if (!m) return;
+  mmCount++;
+  var id = 'mm-item-' + mmCount;
+  var farbe = (typeof MM_KAT_FARBEN !== 'undefined' && MM_KAT_FARBEN[m.kat]) || '#546E7A';
+  var fristDatum = mmFristDatum(m.frist);
+  var dringIcon = m.frist === 0 ? '🔴' : (m.frist <= 14 ? '🟡' : '🟢');
+  var dringTxt = m.frist === 0 ? 'SOFORT' : m.frist + ' Tage Frist';
+  
+  var div = document.createElement('div');
+  div.className = 'mm-item';
+  div.id = id;
+  div.setAttribute('data-katalog-id', m.id);
+  div.style.cssText = 'background:#fff;border:2px solid ' + farbe + ';border-radius:8px;'
+    + 'padding:12px;margin-bottom:10px;position:relative';
+  
+  div.innerHTML = 
+    '<button class="no-print" onclick="document.getElementById(\'' + id + '\').remove()" '
+    + 'style="position:absolute;top:6px;right:6px;background:#E74C3C;color:#fff;border:none;'
+    + 'border-radius:4px;width:26px;height:26px;cursor:pointer;font-size:14px;font-weight:700">✕</button>'
+    
+    // Kopf: Kategorie + ID + Norm
+    + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap">'
+      + '<span style="background:' + farbe + ';color:#fff;border-radius:4px;padding:2px 8px;'
+        + 'font-size:9px;font-weight:700;text-transform:uppercase">' + m.kat + '</span>'
+      + '<span style="font-size:9.5px;color:#666;font-weight:600">' + m.id + '</span>'
+      + '<span style="font-size:9.5px;color:#666">· ' + m.norm + '</span>'
+    + '</div>'
+    
+    // Mangel-Bezeichnung
+    + '<div style="font-size:13px;font-weight:700;color:' + farbe + ';margin-bottom:8px">'
+      + dringIcon + ' ' + m.art + '</div>'
+    
+    // WARUM (Rechtsgrundlage)
+    + '<div style="background:#EBF5FB;border-left:3px solid #1565C0;padding:6px 9px;margin-bottom:6px;border-radius:0 4px 4px 0">'
+      + '<div style="font-size:9px;font-weight:700;color:#1565C0;text-transform:uppercase;margin-bottom:2px">📚 Rechtsgrundlage</div>'
+      + '<div style="font-size:10.5px;color:#0D47A1;line-height:1.4">' + (m.warum || '') + '</div>'
+    + '</div>'
+    
+    // RISIKO
+    + '<div style="background:#FFEBEE;border-left:3px solid #E74C3C;padding:6px 9px;margin-bottom:6px;border-radius:0 4px 4px 0">'
+      + '<div style="font-size:9px;font-weight:700;color:#E74C3C;text-transform:uppercase;margin-bottom:2px">⚠ Risiko / Gefahr</div>'
+      + '<div style="font-size:10.5px;color:#B71C1C;line-height:1.4">' + (m.risiko || '') + '</div>'
+    + '</div>'
+    
+    // MASSNAHME / LÖSUNG
+    + '<div style="background:#E8F5E9;border-left:3px solid #27AE60;padding:6px 9px;margin-bottom:6px;border-radius:0 4px 4px 0">'
+      + '<div style="font-size:9px;font-weight:700;color:#27AE60;text-transform:uppercase;margin-bottom:2px">✓ Lösungsvorschlag (gem. Norm)</div>'
+      + '<div style="font-size:10.5px;color:#1B5E20;line-height:1.4;font-weight:600">' + (m.massnahme || '') + '</div>'
+      + (m.behebung ? '<div style="font-size:10px;color:#2E7D32;line-height:1.4;margin-top:4px">' + m.behebung + '</div>' : '')
+    + '</div>'
+    
+    // Frist + Foto
+    + '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px">'
+      + '<div><label style="font-size:9px;color:#666;display:block;margin-bottom:2px;font-weight:600">Dringlichkeit</label>'
+        + '<div style="font-weight:700;color:' + farbe + ';font-size:11.5px">' + dringIcon + ' ' + dringTxt + '</div></div>'
+      + '<div><label style="font-size:9px;color:#666;display:block;margin-bottom:2px;font-weight:600">Behebungsfrist</label>'
+        + '<input type="text" class="mm-item-frist" value="' + fristDatum + '" '
+        + 'style="width:100%;border:1.5px solid ' + farbe + ';border-radius:4px;padding:5px 7px;'
+        + 'font-size:11px;font-weight:700;color:' + farbe + ';outline:none"></div>'
+      + '<div class="no-print"><label style="font-size:9px;color:#666;display:block;margin-bottom:2px;font-weight:600">Foto</label>'
+        + '<label style="display:flex;align-items:center;justify-content:center;height:34px;'
+        + 'background:#f5f5f5;border:1.5px dashed #ccc;border-radius:4px;cursor:pointer;font-size:14px">'
+        + '📷<input type="file" accept="image/*" capture="environment" style="display:none" '
+        + 'onchange="mmFotoAddNew(this,\'' + id + '\')"></label></div>'
+    + '</div>'
+    
+    // Foto-Container
+    + '<div class="mm-foto-container" style="margin-top:6px"></div>'
+    
+    // HEIZVERBOT-Warnung
+    + (m.hv ? '<div style="margin-top:8px;background:#E74C3C;color:#fff;border-radius:5px;'
+        + 'padding:6px 10px;font-size:12px;font-weight:700;text-align:center">'
+        + '🚫 SOFORTIGES HEIZVERBOT ERFORDERLICH (§ 36 HKG / § 11 KehrG)</div>' : '');
+  
+  document.getElementById('mm-list').appendChild(div);
+  
+  // Heizverbot auto-setzen
+  if (m.hv) {
+    var hv = document.getElementById('mm-heizvb');
+    if (hv) hv.checked = true;
+  }
+  // Frist-Datum auto-setzen wenn leer
+  var fristEl = document.getElementById('mm-frist');
+  if (fristEl && !fristEl.value && m.frist >= 0) {
+    fristEl.value = fristDatum;
+  }
+  // Katalog schließen
+  var kat = document.getElementById('mm-katalog-dropdown');
+  if (kat) kat.style.display = 'none';
+  // Empty-Hinweis entfernen
+  var empty = document.getElementById('mm-empty');
+  if (empty) empty.remove();
+}
+
+function mmFotoAddNew(input, itemId) {
+  if (!input.files || !input.files[0]) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var item = document.getElementById(itemId);
+    if (!item) return;
+    var container = item.querySelector('.mm-foto-container');
+    if (!container) return;
+    var img = document.createElement('img');
+    img.className = 'mm-foto';
+    img.src = e.target.result;
+    img.style.cssText = 'width:80px;height:60px;object-fit:cover;border-radius:4px;'
+      + 'border:1px solid #ccc;margin:2px;display:inline-block';
+    container.appendChild(img);
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function mmAdd() {
+  mmCount++;
+  var id = 'mm-item-' + mmCount;
+  var div = document.createElement('div');
+  div.className = 'mm-item';
+  div.id = id;
+  div.style.cssText = 'background:#fff;border:2px solid #E67E22;border-radius:8px;'
+    + 'padding:12px;margin-bottom:10px;position:relative';
+  div.innerHTML = 
+    '<button class="no-print" onclick="document.getElementById(\'' + id + '\').remove()" '
+    + 'style="position:absolute;top:6px;right:6px;background:#E74C3C;color:#fff;border:none;'
+    + 'border-radius:4px;width:26px;height:26px;cursor:pointer;font-size:14px;font-weight:700">✕</button>'
+    + '<div style="background:#FEF9E7;color:#7D6608;border-radius:4px;padding:3px 8px;'
+    + 'font-size:9px;font-weight:700;text-transform:uppercase;display:inline-block;margin-bottom:6px">'
+    + '✏️ Eigener Mangel</div>'
+    + '<div style="margin-bottom:6px"><label style="font-size:10px;color:#666;display:block;margin-bottom:2px;font-weight:600">Mangel / Bezeichnung</label>'
+    + '<input type="text" class="mm-art" placeholder="z.B. Verbindungsstück undicht" '
+    + 'style="width:100%;border:1.5px solid #E67E22;border-radius:4px;padding:6px 8px;font-size:12px;font-weight:700;outline:none"></div>'
+    + '<div style="margin-bottom:6px"><label style="font-size:10px;color:#666;display:block;margin-bottom:2px;font-weight:600">Norm / Paragraph</label>'
+    + '<input type="text" class="mm-norm" placeholder="z.B. ÖNORM B 8201" '
+    + 'style="width:100%;border:1px solid #ccc;border-radius:4px;padding:5px 8px;font-size:11px;outline:none"></div>'
+    + '<div style="margin-bottom:6px"><label style="font-size:10px;color:#666;display:block;margin-bottom:2px;font-weight:600">Risiko / Gefahr</label>'
+    + '<input type="text" class="mm-risiko" placeholder="z.B. CO-Austritt möglich" '
+    + 'style="width:100%;border:1px solid #ccc;border-radius:4px;padding:5px 8px;font-size:11px;outline:none"></div>'
+    + '<div style="margin-bottom:6px"><label style="font-size:10px;color:#666;display:block;margin-bottom:2px;font-weight:600">Lösungsvorschlag</label>'
+    + '<textarea class="mm-massnahme" rows="2" placeholder="z.B. Verbindungsstück erneuern, Dichtheitsprüfung nach OENORM B 8201" '
+    + 'style="width:100%;border:1px solid #ccc;border-radius:4px;padding:5px 8px;font-size:11px;outline:none;resize:vertical;font-family:inherit"></textarea></div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div>'
+    + '<label style="font-size:10px;color:#666;display:block;margin-bottom:2px;font-weight:600">Behebungsfrist</label>'
+    + '<input type="text" class="mm-item-frist" placeholder="TT.MM.JJJJ" '
+    + 'style="width:100%;border:1.5px solid #E67E22;border-radius:4px;padding:5px 7px;font-size:11px;font-weight:700;outline:none"></div>'
+    + '<div class="no-print"><label style="font-size:10px;color:#666;display:block;margin-bottom:2px;font-weight:600">Foto</label>'
+    + '<label style="display:flex;align-items:center;justify-content:center;height:32px;'
+    + 'background:#f5f5f5;border:1.5px dashed #ccc;border-radius:4px;cursor:pointer;font-size:14px">'
+    + '📷<input type="file" accept="image/*" capture="environment" style="display:none" '
+    + 'onchange="mmFotoAddNew(this,\'' + id + '\')"></label></div></div>'
+    + '<div class="mm-foto-container" style="margin-top:6px"></div>';
+  document.getElementById('mm-list').appendChild(div);
+  var empty = document.getElementById('mm-empty');
+  if (empty) empty.remove();
+}
+
+function mmReset() {
+  if (!confirm('Mängelmeldung zurücksetzen? Alle Eingaben gehen verloren.')) return;
+  ['mm-nr','mm-datum','mm-monteur','mm-anlage','mm-ort','mm-sn','mm-frist',
+   'mm-nachfrist','mm-naechste'].forEach(function(id) {
+    var el = document.getElementById(id); if (el) el.value = '';
+  });
+  ['mm-heizvb','mm-behoerde','mm-feuerwehr'].forEach(function(id) {
+    var el = document.getElementById(id); if (el) el.checked = false;
+  });
+  var list = document.getElementById('mm-list');
+  if (list) list.innerHTML = '<div id="mm-empty" style="text-align:center;color:#999;padding:20px;font-size:11px">Noch kein Mangel erfasst – aus Katalog wählen oder eigenen erfassen.</div>';
+  mmCount = 0;
+}
+// SOFORT: Alle Seiten verstecken
 (function(){
   function hideAll(){
-    var all=document.querySelectorAll('.pg');
-    for(var i=0;i<all.length;i++){all[i].style.cssText='display:none!important';all[i].classList.remove('active');}
-    var auf=document.getElementById('page-aufnahme');
-    if(auf){auf.style.cssText='display:block!important;padding:10px;max-width:900px;margin:0 auto;box-sizing:border-box';auf.classList.add('active');}
-    var btn=document.getElementById('nav-aufnahme');
-    if(btn)btn.classList.add('active');
+    var all = document.querySelectorAll('.pg');
+    for(var i=0; i<all.length; i++){
+      all[i].classList.remove('active');
+      all[i].style.setProperty('display','none','important');
+    }
+    var auf = document.getElementById('page-aufnahme');
+    if(auf){
+      auf.classList.add('active');
+      auf.style.setProperty('display','block','important');
+      auf.style.setProperty('padding','10px','important');
+      auf.style.setProperty('max-width','900px','');
+      auf.style.setProperty('margin','0 auto','');
+      auf.style.setProperty('box-sizing','border-box','');
+    }
+    var btn = document.getElementById('nav-aufnahme');
+    if(btn) btn.classList.add('active');
   }
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',hideAll);}else{hideAll();}
-  window.addEventListener('load',function(){var pg=document.querySelector('.pg.active');if(!pg||pg.style.display==='none')hideAll();});
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', hideAll);
+  } else {
+    hideAll();
+  }
+  window.addEventListener('load', function(){
+    var pg = document.querySelector('.pg.active');
+    if(!pg) hideAll();
+  });
+  document.addEventListener('DOMContentLoaded', function(){
+    if(typeof kiUpdateStatus === 'function') kiUpdateStatus();
+    if(typeof showIosBanner === 'function') showIosBanner();
+    if(typeof syncLoad === 'function') syncLoad();
+    var heute = new Date().toLocaleDateString('de-AT');
+    document.querySelectorAll('.adate').forEach(function(el){
+      if(!el.value) el.value = heute;
+    });
+  });
 })();
 
 
@@ -3079,21 +3864,16 @@ document.querySelectorAll('.adate').forEach(function(el){el.value=_ds;});
 function fmt(n){return n.toLocaleString('de-AT',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';}
 
 function show(id){
-  if(typeof _pinProtectedTabs!=='undefined'&&_pinProtectedTabs.indexOf(id)>=0){
-    pinRequestTab(id);return;
+  console.log('[Grieer] show:', id);
+  try {
+    if(typeof _pinProtectedTabs!=='undefined'&&_pinProtectedTabs.indexOf(id)>=0){
+      pinRequestTab(id);return;
+    }
+    _showTabDirect(id);
+  } catch(e) {
+    console.error('[Grieer] show error:', e);
+    alert('Fehler: ' + e.message);
   }
-  var all=document.querySelectorAll('.pg');
-  for(var i=0;i<all.length;i++){
-    all[i].style.cssText='display:none!important';
-    all[i].classList.remove('active');
-  }
-  var nb=document.querySelectorAll('nav button');
-  for(var j=0;j<nb.length;j++) nb[j].classList.remove('active');
-  var pg=document.getElementById('page-'+id);
-  var btn=document.getElementById('nav-'+id);
-  if(pg){pg.style.cssText='display:block!important;padding:10px;max-width:900px;margin:0 auto;box-sizing:border-box';pg.classList.add('active');}
-  if(btn) btn.classList.add('active');
-  window.scrollTo(0,0);
 }
 
 function ct(tab){
@@ -4907,30 +5687,22 @@ function verrEpReset() {
 
 // ── Service Worker registrieren ──────────────────────────────
 if('serviceWorker' in navigator){
-  window.addEventListener('load',function(){
-    navigator.serviceWorker.register('./sw.js').then(function(reg){
-      console.log('SW OK:',reg.scope);
-      setInterval(function(){if(navigator.onLine)reg.update();},60000);
-    }).catch(function(e){console.log('SW Err:',e);});
-    function setOffBar(on){
-      var b=document.getElementById('offline-bar');
-      if(!b){b=document.createElement('div');b.id='offline-bar';
-        b.style.cssText='position:fixed;top:0;left:0;right:0;padding:5px 10px;'
-          +'text-align:center;font-size:11px;font-weight:700;z-index:9999;display:none';
-        document.body.insertBefore(b,document.body.firstChild);}
-      var h=document.getElementById('ki-offline-hint');
-      if(!on){
-        b.style.background='#E74C3C';b.style.color='#fff';b.style.display='block';
-        b.textContent='📵 Offline – App läuft weiter (ohne KI-Assistent)';
-        if(h)h.style.display='block';
-      }else{
-        b.style.background='#27AE60';b.style.color='#fff';b.style.display='block';
-        b.textContent='✓ Online';if(h)h.style.display='none';
-        setTimeout(function(){b.style.display='none';},2500);}
-    }
-    window.addEventListener('online',function(){setOffBar(true);});
-    window.addEventListener('offline',function(){setOffBar(false);});
+  navigator.serviceWorker.getRegistrations().then(function(regs){
+    regs.forEach(function(reg){
+      reg.unregister().then(function(){
+        console.log('[Grieer] SW unregistered');
+      });
+    });
   });
+  if(typeof caches !== 'undefined'){
+    caches.keys().then(function(keys){
+      keys.forEach(function(k){
+        caches.delete(k).then(function(){
+          console.log('[Grieer] Cache deleted:', k);
+        });
+      });
+    });
+  }
 }
 
 // ── iOS Installations-Banner ─────────────────────────────────
@@ -5408,8 +6180,11 @@ var _pendingTab = null;
 var _pinProtectedTabs = ['pv','gas','luft','brand','kamin','kehr','gesamt','verr'];
 
 function pinInit(){
-  var ov=document.getElementById('pin-overlay');
-  if(ov) ov.classList.add('hidden');
+  var ov = document.getElementById('pin-overlay');
+  if(ov){
+    ov.classList.add('hidden');
+    // NICHT inline-style setzen - das blockiert spätere Öffnen!
+  }
 }
 
 function pinWordCheck(val){
@@ -5425,35 +6200,86 @@ function pinWordCheck(val){
 }
 
 function pinWordSubmit(){
-  var inp=document.getElementById('pin-word-input');
+  console.log('[Grieer] pinWordSubmit');
+  var inp = document.getElementById('pin-word-input');
   if(!inp) return;
-  var val=inp.value.trim().toLowerCase();
-  if(_pinWords.indexOf(val)>=0){
+  var val = inp.value.trim().toLowerCase();
+  if(_pinWords.indexOf(val) >= 0){
     sessionStorage.setItem('grieer-unlocked','1');
-    _pinUnlocked=true;
-    document.getElementById('pin-overlay').classList.add('hidden');
-    inp.value='';
-    var err=document.getElementById('pin-word-error');
-    if(err) err.textContent='';
-    if(_pendingTab){_showTabDirect(_pendingTab);_pendingTab=null;}
-  }else{
-    var err=document.getElementById('pin-word-error');
+    _pinUnlocked = true;
+    var ov = document.getElementById('pin-overlay');
+    if(ov){
+      ov.classList.add('hidden');
+      ov.style.setProperty('display','none','important');
+    }
+    inp.value = '';
+    var err = document.getElementById('pin-word-error');
+    if(err) err.textContent = '';
+    if(_pendingTab){
+      console.log('[Grieer] PIN OK, öffne:', _pendingTab);
+      _showTabDirect(_pendingTab);
+      _pendingTab = null;
+    }
+  } else {
+    var err = document.getElementById('pin-word-error');
     if(err){err.style.color='#EF9A9A';err.textContent='✗ Falsches Passwort';}
     inp.select();
   }
 }
+function _showTabDirect(id){
+  console.log('[Grieer] _showTabDirect:', id);
+  // 1. Alle Seiten verstecken
+  var all = document.querySelectorAll('.pg');
+  for(var i=0; i<all.length; i++){
+    all[i].classList.remove('active');
+    all[i].style.setProperty('display', 'none', 'important');
+  }
+  // 2. Alle Nav-Buttons inaktiv
+  var nb = document.querySelectorAll('nav button');
+  for(var j=0; j<nb.length; j++) nb[j].classList.remove('active');
+  // 3. Ziel-Seite anzeigen
+  var pg = document.getElementById('page-'+id);
+  var btn = document.getElementById('nav-'+id);
+  if(pg){
+    pg.classList.add('active');
+    pg.style.setProperty('display', 'block', 'important');
+    pg.style.setProperty('padding', '10px', 'important');
+    pg.style.setProperty('max-width', '900px', '');
+    pg.style.setProperty('margin', '0 auto', '');
+    pg.style.setProperty('box-sizing', 'border-box', '');
+    console.log('[Grieer] Seite angezeigt:', 'page-'+id);
+  } else {
+    console.error('[Grieer] Seite NICHT GEFUNDEN:', 'page-'+id);
+  }
+  if(btn) btn.classList.add('active');
+  // 4. PIN-Overlay verstecken
+  var ov = document.getElementById('pin-overlay');
+  if(ov){
+    ov.classList.add('hidden');
+    ov.style.setProperty('display', 'none', 'important');
+  }
+  // 5. Nach oben scrollen
+  window.scrollTo(0, 0);
+}
+
 
 function pinRequestTab(tabId){
-  _pinUnlocked=sessionStorage.getItem('grieer-unlocked')==='1';
+  console.log('[Grieer] pinRequestTab:', tabId);
+  _pinUnlocked = sessionStorage.getItem('grieer-unlocked') === '1';
   if(_pinUnlocked){_showTabDirect(tabId);return;}
-  _pendingTab=tabId;
-  var ov=document.getElementById('pin-overlay');
+  _pendingTab = tabId;
+  var ov = document.getElementById('pin-overlay');
   if(ov){
     ov.classList.remove('hidden');
+    // WICHTIG: Inline-Style display:none entfernen damit Overlay sichtbar wird
+    ov.style.removeProperty('display');
+    ov.style.setProperty('display','flex','important');
     setTimeout(function(){
-      var inp=document.getElementById('pin-word-input');
-      if(inp){inp.value='';inp.focus();}
+      var inp = document.getElementById('pin-word-input');
+      if(inp){inp.value=''; inp.focus();}
     },120);
+  } else {
+    console.error('[Grieer] pin-overlay nicht gefunden!');
   }
 }
 
@@ -5567,57 +6393,6 @@ function mmFristDatum(tage){
 }
 
 // Mangel aus Katalog hinzufügen
-function mmAddFromKatalog(katalogId){
-  var m = MAENGEL_KATALOG.find(function(x){return x.id===katalogId;});
-  if(!m) return;
-  mmCount++;
-  var id = 'mm-item-' + mmCount;
-  var farbe = MM_KAT_FARBEN[m.kat] || '#555';
-  var fristDatum = mmFristDatum(m.fristTage);
-  var div = document.createElement('div');
-  div.id = id;
-  div.style.cssText = 'background:#fff;border:2px solid '+farbe+';border-radius:8px;padding:12px;margin-bottom:8px;position:relative';
-  div.innerHTML =
-    '<button onclick="document.getElementById(\''+id+'\').remove()" '
-    +'style="position:absolute;top:6px;right:6px;background:#E74C3C;color:#fff;border:none;'
-    +'border-radius:3px;width:22px;height:22px;cursor:pointer;font-size:14px">×</button>'
-    +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">'
-      +'<span style="background:'+farbe+';color:#fff;border-radius:4px;padding:2px 8px;font-size:9px;font-weight:700">'+m.kat+'</span>'
-      +'<span style="font-size:9px;color:#888">'+m.id+' · '+m.norm+'</span>'
-    +'</div>'
-    +'<div style="font-size:12px;font-weight:700;color:'+farbe+';margin-bottom:4px">'+m.art+'</div>'
-    +'<div style="font-size:11px;color:#555;margin-bottom:6px;line-height:1.4">'+m.beschreibung+'</div>'
-    +'<div style="background:#F0F4F8;border-radius:5px;padding:6px 8px;margin-bottom:6px;font-size:10.5px">'
-      +'<b style="color:#2C3E50">Maßnahme:</b> '+m.massnahme
-    +'</div>'
-    +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">'
-      +'<div><label style="font-size:9px;color:#888;display:block;margin-bottom:2px">Dringlichkeit</label>'
-      +'<div style="font-weight:700;color:'+farbe+';font-size:12px">'+(m.fristTage===0?'🔴 SOFORT':m.fristTage<=14?'🟡 '+m.fristTage+' Tage':'🟢 '+m.fristTage+' Tage')+'</div></div>'
-      +'<div><label style="font-size:9px;color:#888;display:block;margin-bottom:2px">Behebungsfrist</label>'
-      +'<input type="text" value="'+fristDatum+'" '
-      +'style="width:100%;border:1.5px solid '+farbe+';border-radius:4px;padding:4px 6px;font-size:11px;font-weight:700;color:'+farbe+';outline:none"></div>'
-      +'<div><label style="font-size:9px;color:#888;display:block;margin-bottom:2px">Foto</label>'
-      +'<label style="display:flex;align-items:center;justify-content:center;height:32px;'
-        +'background:#f5f5f5;border:1.5px dashed #ccc;border-radius:4px;cursor:pointer;font-size:11px">'
-        +'📷<input type="file" accept="image/*" style="display:none" '
-        +'onchange="mmFotoAdd(this,\''+id+'\')"></label></div>'
-    +'</div>'
-    +(m.heizverbot?'<div style="margin-top:6px;background:#FFEBEE;border:1.5px solid #E74C3C;border-radius:5px;padding:5px 8px;font-size:11px;font-weight:700;color:#E74C3C">🚫 HEIZVERBOT erforderlich!</div>':'');
-  document.getElementById('mm-list').appendChild(div);
-  // Heizverbot auto-setzen
-  if(m.heizverbot){
-    var hv=document.getElementById('mm-heizvb');
-    if(hv) hv.checked=true;
-  }
-  // Frist-Datum auto-setzen wenn leer
-  var fristEl=document.getElementById('mm-frist');
-  if(fristEl&&!fristEl.value&&m.fristTage>=0){
-    fristEl.value=fristDatum;
-  }
-  // Katalog schließen
-  var kat=document.getElementById('mm-katalog-dropdown');
-  if(kat) kat.style.display='none';
-}
 
 function mmFotoAdd(inp, itemId){
   if(!inp.files||!inp.files[0]) return;
@@ -5638,43 +6413,7 @@ function mmFotoAdd(inp, itemId){
 }
 
 // Katalog-Dropdown anzeigen
-function mmShowKatalog(){
-  var existing=document.getElementById('mm-katalog-dropdown');
-  if(existing){existing.style.display=existing.style.display==='none'?'block':'none';return;}
-  var div=document.createElement('div');
-  div.id='mm-katalog-dropdown';
-  div.style.cssText='background:#fff;border:2px solid #2C3E50;border-radius:10px;padding:12px;margin-bottom:10px;max-height:400px;overflow-y:auto';
-  var kats={};
-  MAENGEL_KATALOG.forEach(function(m){
-    if(!kats[m.kat]) kats[m.kat]=[];
-    kats[m.kat].push(m);
-  });
-  var html2='<div style="font-size:11px;font-weight:700;color:#2C3E50;margin-bottom:8px">Mangel aus Katalog wählen:</div>';
-  Object.keys(kats).forEach(function(kat){
-    var farbe=MM_KAT_FARBEN[kat]||'#555';
-    html2+='<div style="font-size:10px;font-weight:700;color:'+farbe+';text-transform:uppercase;margin:8px 0 4px;border-bottom:1px solid '+farbe+'">'+kat+'</div>';
-    kats[kat].forEach(function(m){
-      html2+='<div onclick="mmAddFromKatalog(\''+m.id+'\')" style="padding:7px 10px;border:1px solid #eee;border-radius:5px;margin-bottom:4px;cursor:pointer;'
-        +'background:#fff;transition:background .15s" onmouseover="this.style.background=\'#F0F4F8\'" onmouseout="this.style.background=\'#fff\'">'
-        +'<div style="font-size:11px;font-weight:700;color:#222">'+m.id+': '+m.art+'</div>'
-        +'<div style="font-size:9.5px;color:#888;margin-top:1px">'+m.norm+' · '
-          +(m.fristTage===0?'<span style=\'color:#E74C3C;font-weight:700\'>SOFORT/HEIZVERBOT</span>':m.fristTage+' Tage Frist')+'</div>'
-        +'</div>';
-    });
-  });
-  html2+='<button onclick="document.getElementById(\'mm-katalog-dropdown\').style.display=\'none\'" style="width:100%;margin-top:8px;padding:8px;background:#2C3E50;color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:12px">Schließen</button>';
-  div.innerHTML=html2;
-  var list=document.getElementById('mm-list');
-  if(list&&list.parentNode) list.parentNode.insertBefore(div,list);
-}
 
-
-// ══════════════════════════════════════════════════════════
-// GRIEER FACHASSISTENT – Anthropic Claude API
-// ══════════════════════════════════════════════════════════
-
-
-// ── KI Offline-Wissensdatenbank ──────────────────────────────
 function kiOfflineSearch(frage){
   var f = frage.toLowerCase();
   var antworten = [
@@ -6322,182 +7061,565 @@ Antworte auf Deutsch, klar strukturiert, praxisbezogen.
 HOFER-LEHRBEHELF (Ing. Gerhard Hofer BEd, 11. April 2026)
 ================================================================
 
-HOFER A: PFLICHTEN DES RFK (OOE - LuftREnTG Paragraph 32ff/35)
-Erstmalige Ueberpruefung: Brandsicherheit, Betriebssicherheit, Dichtheit vor IBN.
-OOE-Kehrfristen Anlage 6 (mit Heizperiode 1.10-31.05.):
-a) Heizoel ohne Verdampferbrenner: 2x/Heizperiode (12-18 Wochen)
+OOE-Kehrfristen Anlage 6 (Heizperiode 1.10-31.05.):
+a) Heizoel ohne Verdampferbrenner: 2x/Heizperiode (12-18 Wochen Abstand)
 b) Heizoel mit Verdampferbrenner: 4x/Heizperiode (6-9 Wochen)
 c) Pellets automatisch ueber 20 kW: 3x/Heizperiode (10-16 Wochen)
 d) Pellets automatisch bis 20 kW: 2x/Heizperiode (12-18 Wochen)
 e) Sonstige feste Brennstoffe: 4x/Heizperiode (6-9 Wochen)
 Schliessbare Faenge offener Feuerstaetten: 3x/Heizperiode (10-16 Wochen)
 Faenge ueber 120 kW nicht ausschliesslich Gas: 8x/Heizperiode (3-5 Wochen)
-OOE-Kehrfristen Anlage 7 (ohne Heizperiode): Brennwert/Gas: 1x/Jahr (40-60 Wochen)
+OOE Anlage 7: Brennwert/Gas: 1x/Jahr (40-60 Wochen).
+
 Verbindungsstuecke: mind. 1x/Jahr; Pellets bis 20 kW automatisch: bei JEDER Ueberpruefung.
-Fangsohle: mind. 1x/Jahr; Rueckstaende in Kundengefaess; brandsichere Verwahrung.
-Dichtheitsaberpruefung: Ueberdruck alle 5 Jahre; Unterdruck alle 10 Jahre.
-Kehrtermine OOE: max. 2 Stunden Schwankungsbreite (Bgld: max. 1 Stunde Paragraph 17).
-Aufzeichnung OOE: 5 JAHRE (Bgld. KehrG Paragraph 18: 3 JAHRE).
-Behoerdliche Ueberpruefung: RFK kontrolliert ob Paragraph 25 oo.LuftREnTG-Fristen eingehalten.
-Maengelmeldung OOE: schriftlich, max. 8 Wochen Frist, Kontrolle binnen 4 Wochen,
-bei Nichtbehebung + Gefahr: Behoerde unverzueglich verstaendigen.
+Fangsohle: mind. 1x/Jahr; brandsichere Verwahrung durch Verfuegungsberechtigte.
+Dichtheitsaberpruefung: Ueberdruck alle 5 J; Unterdruck alle 10 J.
+Kehrtermine OOE: max. 2 Stunden Schwankung (Bgld: max. 1 Stunde).
+Aufzeichnung OOE: 5 JAHRE (Bgld.: 3 JAHRE). Vollstaendig nach Tarifordnung.
+Maengelmeldung OOE: schriftlich, max. 8 Wochen Frist, Kontrolle 4 Wochen.
+Bei Nichtbehebung + Gefahr: Behoerde unverzueglich.
 Abrechnung: mind. 1x/Jahr aufgeschluesselt. Ueberpruefungstarif + Objekttarif.
 Kehrblatt: Datum, Objekt, Taetigkeit, Feststellungen, Maengel, Unterschrift.
-Kehrplan: zu Jahresbeginn, bei Hausanschlagbrettern auszuhaengen.
-Maengelmeldung: schriftlich, Art des Mangels, Frist, ggf. Heizverbot.
-
-HOFER B: TECHNISCHES FACHWISSEN
-Volumen Abgasanlage: V = Querschnittsflaeche x wirksame Hoehe; Masse: m = rho x V (rho Luft 0 C = 1,293 kg/m3)
-Ausdehnung Heizungswasser: Delta_V = V0 x gamma x Delta_T; gamma Wasser ca. 0,0002/K
-Beispiel: 350L, 15 auf 60 C: Delta_V = 350 x 0,0002 x 45 = 3,15 Liter
-Ausdehnung Heizoel: gamma ca. 0,00085/K; Beispiel 5000L, 20 auf 15 C: Delta_V = -21,25 L
-Hoehenbemassung OENORM A6240-2: Symbole Oberkante/Unterkante Fertig-/Rohkonstruktion.
-Grundriss-Symbole: Kreissymbolik fuer Gelaende/Bauwerk-Rohbau/Fertigmass.
-
-HOFER C: VERGLEICH OOE vs. BURGENLAND
-Aufzeichnung: OOE 5 Jahre; Bgld. 3 Jahre.
-Kehrtermin: OOE max. 2h; Bgld. max. 1h.
-Kehrplan: OOE auf Verlangen; Bgld. mind. 14 Tage vorher.
-Maengelfrist: OOE max. 8 Wochen, Kontrolle 4 Wochen; Bgld. angemessene Frist.
-Pellets bis 20 kW: OOE 2x/Heizperiode; Bgld. 2x/jaehrlich.
-Gas unter 50 kW: OOE 1x/Jahr; Bgld. 1x/2 Jahre.
+Technisches: V = Querschnitt x Hoehe; m = rho x V (rho Luft 0C = 1,293 kg/m3).
+Heizungswasser: Delta_V = V0 x 0,0002 x Delta_T (Beispiel: 350L, 15-60C = 3,15L).
+Heizoel: gamma 0,00085/K (Beispiel: 5000L, 20-15C = -21,25L Schrumpfung).
+OOE vs. Bgld.: Aufzeichnung 5 vs. 3 Jahre; Kehrtermin 2h vs. 1h; Kehrplan Jahresbeginn vs. 14 Tage.
 
 ================================================================
-SPERL-PRAESENTATION: RECHT UND STAAT (RFK Meisterpruefung, 16.04.2026)
-Prof. Bmstr. DI Bernhard Sperl B.Sc.
+SPERL - RECHT UND STAAT (Meisterpruefung, Prof. Bmstr. DI Bernhard Sperl)
 ================================================================
 
-SPERL A: GRUNDLAGEN RECHT
-Recht/Sitte/Moral. Arten: Voelkerrecht, Oeffentliches Recht, Privatrecht.
-Zwingendes (nicht abdingbar) vs. nachgiebiges Recht.
 Stufenbau: EU-Recht > Bundesverfassung > Bundesgesetze > Landesgesetze > Verordnungen > Bescheide.
-Kundmachung: im Bundesgesetzblatt oder anderweitig.
-Rechtsmittelfrist: 14 Tage ab Zustellung; danach Rechtskraft.
-RIS (Rechtsinformationssystem des Bundes), EUR-Lex, Justizministerium.
-
-SPERL B: GEWALTENTRENNUNG
-Legislative: Nationalrat, Bundesrat, Landtage.
-Exekutive: Bundesregierung, Landesregierungen, Behoerden.
-Judikative: unabhaengige Gerichte.
-
-SPERL C: VERWALTUNGSRECHT
-Regelt Beziehungen zwischen Staat und Buerger/Unternehmer.
-Typische Gesetze fuer RFK: GewO, Landes-Kehrordnungen, Bauordnungen, Luftreinhaltegesetze, Feuerpolizeiliche Vorschriften.
-Behoerden: Magistrat, Bezirkshauptmannschaft, Gemeinde, Landes-/Bundesbehoerden.
-Behoerde: erlaesst Bescheide; kontrolliert; verhaengt Strafen; ueberwacht Gesetze.
-AVG-Verfahren: Einleitungs- → Ermittlungs- → Erledigungsverfahren (Bescheid).
-Beweismittel AVG: Urkunden, Zeugen, Sachverstaendige, Augenschein.
-Instanzenzug: Buergermeister/Magistrat → Gemeinderat/Stadtsenat → Landesverwaltungsgericht.
-VERWALTUNGSUEBERTRETUNG: wenn Vorschriften nicht eingehalten; Fahrlaessigkeit genuegt!
-"Ich habe es nicht gewusst" zaehlt NICHT!
+Gewaltentrennung: Legislative (NR/BR/Landtage), Exekutive (Regierungen/Behoerden), Judikative (Gerichte).
+Behoerden: BH, Magistrat, Gemeinde. Erlassen Bescheide; verhaengen Strafen.
+AVG-Verfahren: Einleitung > Ermittlung > Erledigung (Bescheid). Instanz: BH > Gemeinderat > LVwG.
+VERWALTUNGSUEBERTRETUNG: Fahrlaessigkeit genuegt! Unwissen schuetzt NICHT!
 Praxisbeispiele RFK: Kehrfrist nicht eingehalten; Ueberpruefung nicht durchgefuehrt;
-Anzeige nicht gemacht; Kehrbuch mangelhaft; fehlender/falscher Befund.
-Ablauf Strafverfahren: Anzeige → Ermittlungsverfahren → Straferkenntnis → Einspruch (14 Tage!).
-Strafen koennen kumuliert auftreten!
-Verantwortung: Gewerbeinhaber/Meister/Geschaeftsfuehrer ist verantwortlich.
-Merksaetze: Verwaltungsrecht = Ordnung durch den Staat; Fahrlaessigkeit genuegt;
-Behoerde handelt mit Bescheid, nicht mit Urteil.
-
-SPERL D: ZIVILRECHT
-ABGB, UGB, KSchG, Produkthaftungsgesetz.
-Zivilrecht: allgegenwaertig, wirtschaftlich relevant, existenzbedrohend bei Fehlern.
-Bester Schutz: gute Arbeit, gute Dokumentation, Versicherung!
-Zivilrecht vs. Strafrecht: Zivilrecht = Ausgleich (Schadenersatz in Geld); Strafrecht = Bestrafung.
-Zivilklage: Klaeger klagt; Beklagter verteidigt; Gericht entscheidet. Ziel: Ausgleich, nicht Bestrafung!
-Praxisbeispiel: Kunde klagt wegen falscher Beratung und Folgeschaeden = klassische Zivilklage.
-BETRIEBSHAFTPFLICHTVERSICHERUNG fuer Gewerbetreibende DRINGEND EMPFOHLEN!
-PRIVATHAFTPFLICHTVERSICHERUNG zusaetzlich sinnvoll.
-
-SPERL E: MITARBEITER & INTERESSENSVERTRETUNGEN
-Arbeitsrecht, Kollektivvertraege.
-Gewerkschaft: freiwillig; vertritt Arbeitnehmer; schliesst Kollektivvertraege ab.
-Wirtschaftskammer: gesetzlich errichtet; VERPFLICHTEND fuer fast alle Selbststaendigen;
-ausgenommen: Land-/Forstwirte, freie Berufe.
+Anzeige nicht gemacht; Kehrbuch mangelhaft; fehlender/falscher Befund; Strafen kumulierbar!
+Verantwortung: Gewerbeinhaber/Meister ist verantwortlich.
+Zivilrecht (ABGB): Schadenersatz in Geld; bei RFK-Fehler: Betriebshaftpflicht! WICHTIG!
+Wirtschaftskammer: PFLICHT fuer fast alle Selbststaendigen.
+Gewerkschaft: FREIWILLIG; schliesst Kollektivvertraege ab.
 SVS: Sozialversicherung der Selbststaendigen.
 
 ================================================================
-PRAESENTATION: 4 Pa-TEST / VERBRENNUNGSLUFT
-Burgenlaendische Rauchfangkehrer | OECERT | Richtlinie G K62 + OENORM B 8311
+PRAESENTATIONEN: 4 PA-TEST + OFFENER KAMIN + RAUCHFANGBRAND
 ================================================================
 
-P4PA-A: WARUM MESSEN?
-Neubau dichter → weniger Verbrennungsluft. Altbau nach Sanierung ebenso. Absauganlagen (Dunstabzug).
+4 PA-TEST (Richtlinie G K62 + OENORM B 8311):
+4 Pa: raumluftabhaengige Feuerstaette (Luft aus Aufstellungsraum).
+8 Pa: raumluftunabhaengige Feuerstaette (Luft von aussen; nur nach OENORM EN 16510-1 geprueft!).
+Messprinzip: Differenzdruck Aufstellungsraum vs. Aussen mit 2 gleich langen Kapillarleitungen.
+Verbrennungsluftbedarf: 1,8 m3/h je kW (>= 0 Grad C); 2,0 m3/h (< 0 Grad C).
+POSITIV: Mittelwert < 4 Pa. Spitzen beim Fenster/Tuer vernachlaessigbar.
+NEGATIV: Messung bei geoeffnetem Fenster; bei Wiederholung negativ: Abgasfuehrung pruefen.
+Pruefbedingungen: 5-10 kW Querschnitt <= 200 cm2 Bild 7; 10-20 kW Bild 8; 20-50 kW max. 300 cm2.
+Fazit: Einfach, transparent, nahezu wetterunabhaengig.
 
-P4PA-B: DIFFERENZDRUCKMESSUNG
-4 Pa: raumluftabhaengige Feuerstaette (Verbrennungsluft aus Aufstellungsraum).
-8 Pa: raumluftunabhaengige Feuerstaette (Luft von aussen via Schacht oder LAS).
-Raumluftunabhaengig: NUR wenn nach OENORM EN 16510-1 geprueft!
-Was gemessen wird: Druckunterschied Aufstellungsraum vs. Aussen; alle Absauganlagen einbezogen.
-Grenzwert: Druckunterschied darf 4 Pa (bzw. 8 Pa) NICHT ueberschreiten.
+OFFENER KAMIN (Merkblatt 8, Kachelofenverband):
+Definition: Feuerstaette mit offenem Feuerraum; kein Raumheizgeraet!
+Absperrklappe: je Bundesland verschieden; muss absolut dicht schliessen.
+Oeffnungswinkel mind. 110 Grad; bei mittelgelagerten Achsen: nie selbstschliessend.
+Verbindungsstueck: nur Drosselklappen mit Viertel-Querschnitt offen (mind. 25 cm2).
 
-P4PA-C: MESSPRINZIP (4 Pa nach Richtlinie G K62):
-Zwei gleich lange Kapillarleitungen. Ergebnis unabhaengig von Auftrieb im Abgassystem.
-Verbrennungsluftbedarf: 1,8 m3/h je kW NWB (Aussentemp. >= 0 C); 2,0 m3/h (< 0 C).
-Voraussetzung Bauart B: wirksamer Foerderdruck mind. 4 Pa.
+RAUCHFANGBRAND: Ablagerungen brennen, nicht der Fang!
+Nach Rauchfangbrand: Betriebsdichtheitspruefung OENORM B 8201 zwingend.
+Erst nach Pruefung und RFK-Freigabe: Wiederinbetriebnahme zulaessig.
 
-P4PA-D: DURCHFUEHRUNG + BEURTEILUNG
-Keine Absauganlagen oder verriegelt: 1 Messung mit 2 Messzyklen genuegt.
-Abweichung > 1 Pa zwischen Zyklen: Ursache ermitteln + neuer Messzyklus.
-POSITIV: Mittelwert unter 4 Pa. Spitzen beim Fenster-/Tuerschliessen vernachlaessigbar.
-NEGATIV: Messung bei geoeffnetem Fenster wiederholen.
-Trotzdem negativ: Abgasfuehrung und Gasgeraet auf Maengel pruefen + Lueftungsoeffnung.
-Dokumentation: Druckverlauf aufzeichnen; alle Messzyklen dokumentieren.
-
-P4PA-E: PRUEFBEDINGUNGEN
-5-10 kW: Querschnitt <= 200 cm2; Grenzluftzahl aus Bild 7.
-10-20 kW: Querschnitt <= 200 cm2; Grenzluftzahl aus Bild 8.
-20-50 kW: Querschnitt mind. = Abgasstutzen; max. 300 cm2 oder Durchm. max. 20 cm.
-
-P4PA-F: FAZIT
-Einfach, transparent, wetterunabhaengig (Referenzraum nur hydraulisch entkoppelt).
-Langsame Aenderungen eliminiert; schnelle Schwankungen durch Kapillarschlaeuche gedaempft.
 
 ================================================================
-PRAESENTATION: OFFENER KAMIN (Merkblatt 8, Oesterr. Kachelofenverband, Oktober 2009)
+OENORM H 7510-2:2021 - EINFACHE UEBERPRUEFUNG VON FEUERUNGSANLAGEN
+(Pruefpflicht gemaess Bgld. HKG Paragraph 25)
 ================================================================
 
-POK-A: DEFINITION
-Offener Kamin = Feuerstaette mit offenem Feuerraum zum Aufstellungsraum.
-KEIN Raumheizgeraet! Kann durch Abgas-Waermeverlust negative Energiebilanz haben.
-Gilt als Sonderfeuerstaette. Gilt sinngemäss auch fuer dekorative Gasfeuerstätten.
-Anwendungsbereich: Feuerraumoeffnung 0,3-1,0 m2; Breiten/Hoehen-Verhaeltnis 0,67-1,5.
+H7510-2 ANWENDUNGSBEREICH:
+Gilt fuer: Feuerungsanlagen fuer fluessige + gasfoemige Brennstoffe + feste Brennstoffe + BHKW.
+Ersetzt NICHT die sicherheitstechnische oder vollstaendige Ueberpruefung!
 
-POK-B: ABSPERRKLAPPE (KAMINKLAPPE)
-Ob Absperrklappe integriert werden darf/muss: je nach Bundesland verschieden!
-Klappe muss absolut dicht schliessen (ist Konstruktionsbestandteil).
-Muss leicht zugaenglich und optisch kontrollierbar sein.
-Klappenstellung (offen/zu) am Handgriff eindeutig erkennbar.
-Oeffnungswinkel: mind. 110 Grad (kein Selbstschliessen im Betrieb).
-Mittelgelagerte Achsen: Klappe darf NICHT selbstschliessend sein.
+H7510-2 PRUEFABLAUF (Abschnitt 5.2):
+1. Anlagendatenblatt pruefen (Uebereinstimmung mit vorhandener Anlage)
+2. Sichtpruefung Brennstofflagerung
+3. Sichtpruefung Feuerungsanlage (Abgasanlage, Verbindungsstueck, Feuerstaette)
+4. Pruefung: Anlagendatenblatt + Betriebsanleitung vorhanden?
+5. Messoeffnung zugaenglich?
+6. Abgasmessung im bestimmungsgemaessen Betrieb
+7. Beurteilungswerte ermitteln
+8. Abgasverlust berechnen (Formel qA)
+9. Russzahl ermitteln (nur Oel)
+10. Pruefbericht erstellen + Betreiber aushaendigen
+Bei positivem Ergebnis: Pruefplakette mit naechstem Prueftermin anbringen!
 
-POK-C: VERBINDUNGSSTUECKE
-Nur Drosselklappen mit Oeffnung im oberen Teil (mind. 1/4 des Querschnitts, mind. 25 cm2).
-OENORM Paragraph 4 15 3: Abgasrohre nur Absperrklappen mit Viertel-Querschnitt offen.
-Offene Kamine nicht an eigenen Rauchfang angeschlossen: Vorrichtung zum dichten Abschluss!
+H7510-2 ABGASMESSUNG:
+O2-Gehalt in Abgasen: max. 18% (fluessig/gas) bzw. max. 15% (feste Brennstoffe)
+Messung im Kernstrom; reproduzierbar; Werte muessen stabil sein.
 
-POK-D: VERBRENNUNGSLUFT OFFENER KAMIN
-Grosse Zuluftquerschnitte erforderlich! Verbrennungsluft kann seitlich zugefuehrt werden.
-Berechnung: Luftmenge = Brennstoffmenge x Lambda x Luftbedarf; max. Geschwindigkeit 1 m/s.
-Entspannungsraum mit Umlenkbogen; Rauchschuerze; Kaminklappe mit Oeffnungswinkel > 110 Grad.
+H7510-2 ABGASVERLUST-FORMEL:
+qA = (tA - tL) x (A2 / (21 - O2gem) + B)
+tA = Abgastemperatur; tL = Verbrennungslufttemperatur; O2gem = gemessener Sauerstoffgehalt
+Brennstoffspezifische Faktoren A2/B:
+- Erdgas: A2=0,3780; B=0,0074
+- Fluessiggas Propan: A2=0,4072; B=0,0074
+- Heizoel extra leicht: A2=0,4686; B=0,0074
+- Pellets (Wassergehalt 0%): A2=0,5687; B=0,0053
+- Holz (Wassergehalt 20%): A2=0,6936; B=0,0096
 
-POK-E: WARTUNG UND HINWEISE
-Verpflichtender Probebetrieb mit Unterschrift Kunde und Hafner.
-Wassergehalt Holz: 15-20%. Beginn mit duennen Scheiten.
-Wartungsintervall: 2-10 Jahre je nach Nutzungsintensitaet.
-Metallschornsteine: mind. 1 Lage Speichermaterial (Schamotte) innen.
-Aussenliaegende Metallschornsteine: Vorwaermeinrichtung.
-Niemals Edelstahl direkt mit Stahl verbinden!
-Hierarchie: 1) Gesetze 2) Normen 3) Technische Richtlinien.
+H7510-2 PRUEFBERICHT:
+Pflichtfelder: Grenzwert, Abgastemperatur, Abgasverlust, Verbrennungslufttemperatur,
+O2 oder CO2-Gehalt, CO-Gehalt, Kesselvorlauftemperatur, Foerderdruck, Russzahl (Oel).
+Bei Maengeln: Art der Maengel + Behebungsfrist angeben.
 
 ================================================================
-FEUERWEHREINSATZ BEI RAUCHFANGBRAENDEN
+OENORM H 7510-4:2021 - UEBERPRUEFUNG WAERMEPUMPEN + SOLARANLAGEN
 ================================================================
 
-Merke: NICHT der Rauchfang brennt, sondern die ABLAGERUNGEN darin!
-Massnahmen: Feuerstaette ausloeschen, Feuerwehr verstaendigen.
-Nach Rauchfangbrand: Betriebsdichtheitspruefung gemaess OENORM B 8201 zwingend!
-Erst nach Pruefung und Freigabe durch RFK: Wiederinbetriebnahme zulaessig.
-Zwischendecke und Dachboden auf Brandausbreitung kontrollieren.
+H7510-4 WAERMEPUMPE - Pruefpunkte:
+- Betriebsstunden Verdichter, Zusatzheizer, Startvorgaenge auslesen
+- Waermemengenzaehler pruefen
+- Luft/Wasser-WP: Verdampfer auf Verschmutzung pruefen; Lufttemperaturen Verdampfer
+- Wasser/Wasser-WP: Nennvolumenstrom, Grundwassertemperatur + Rueckfuehrwassertemperatur
+- Waermequellenanlage (WQA) + Waermenutzungsanlage (WNA) sichten
+
+H7510-4 THERMISCHE SOLARANLAGE - Pruefpunkte:
+- Kollektorflaeche + Art (abgedeckte Flachkollektoren, Vakuumroehren)
+- Speichervolumen Heizungs-/Warmwasserspeicher
+- Kollektorfeldtemperatur, Solarspeichertemperatur aus Regler auslesen
+- Frostgeschuetzter Waermetraeger gemaess OENORM H 5195-2 vorhanden?
+- Ausdehnungsgefaess, Sicherheitsventil pruefen
+
+H7510-4 WAERMEUEBERGABESTATION:
+- Mechanische Beschaedigungen pruefen
+- Dichtheit Station + Komponenten
+- Waermedaemmung
+- Temperaturfuehler auf ordnungsgemaessen Einbau
+
+================================================================
+OENORM H 7510-6:2021 - SICHERHEITSTECHNISCHE EINRICHTUNGEN
+================================================================
+
+H7510-6 FEUERUNGSBEZOGENE SICHERHEITSEINRICHTUNGEN:
+1. Feuerungsregler/Feuerungsautomat: Funktion gemaess Herstellerangaben pruefen
+2. Temperaturbegrenzer (STB): Funktion pruefen; schaltet bei Ueberhitzung ab
+3. Differenzdruckueberwachung im Feuerraum: Funktion pruefen
+4. Zuendsicherung: Funktion pruefen; verhindert unverbranntes Gas
+5. Rueckbrandschutzeinrichtung (Pellets, Hackgut): PFLICHT fuer Biomasse; Funktion pruefen
+6. Abgasaustrittswatcher: gemaess Herstellerangaben pruefen
+7. Brandschutzschalter (Oel): im Zuge Wartung/Inspektion pruefen
+8. Not-Aus-Schalter: ausserhalb Heizraum; beschriftet; Funktion pruefen
+9. Abgasklappe: Funktion pruefen (verhindert Waermeverlust + CO-Austritt)
+10. CO-Melder: Vorhandensein + Funktion pruefen
+
+H7510-6 HYDRAULIKBEZOGENE SICHERHEITSEINRICHTUNGEN:
+1. Manometer: Funktion + Plausibilitaet pruefen
+2. Membranausdehnungsgefaess (MAG): optische Sichtpruefung; Nenninhalt + Vordruck aufnehmen
+3. Thermometer: Vor- + Ruecklauf pruefen
+4. Sicherheitsventil: ANLUEFTEN auf Funktion pruefen; richtiger Einbau + Dichtheit + FREIER AUSLAUF!
+   (gemaess OENORM EN 12828 + OENORM H 5151-1)
+5. Vorschaltgefaess: einwandfreier Zustand + Funktion
+6. Wassermangelsicherung: Funktion + Schaltpunkt pruefen
+7. Sicherheitstemperaturbegrenzer: Funktion pruefen
+8. Maximaldruckbegrenzer: Funktion + Schaltpunkt pruefen
+
+================================================================
+OENORM B 8311:2021 - INSTALLATION HAEUSLICHER FEUERSTAETTEN
+================================================================
+
+B8311 ANWENDUNGSBEREICH:
+Haeusliche Feuerstaetten (Kaminoefen, Kacheloefen, offene Kamine, Herde).
+Grundprinzip: An brennbaren Bauteilen max. 85 Grad C Temperaturerhoehung (65 K ueber Raumtemperatur).
+
+B8311 MINDESTABSTAENDE ZU WAENDEN (Abschnitt 5.1.3):
+Seriengefertigte Feuerstaetten:
+- Zu Waenden aus brennbaren Materialien: mind. 40 cm Abstand
+- Nichtbrennbare Wand mit Waermedurchlasswiderstand >= 0,50 m2K/W: mind. 10 cm
+- Mit Abschirmplatte belueftet: mind. 20 cm
+- Sichtscheibe (Strahlungsbereich): mind. 80 cm; mit Abschirmplatte: mind. 40 cm
+Ortsfest gesetzte Oefen, Herde, offene Kamine:
+- Zu Waenden mit brennbaren Materialien: mind. 20 cm lichter Abstand
+- Sichtscheibe: mind. 80 cm Strahlungsbereich
+
+B8311 MINDESTABSTAENDE FUSSBODEN (Abschnitt 5.1.2):
+Seriengefertigte Feuerstaetten:
+- Nichtbrennbare Unterlage vorne mind. 30 cm, seitlich mind. 10 cm ueber Heiztuer
+- Offene Kamine: vorne mind. 80 cm, seitlich mind. 20 cm nichtbrennbar
+Deckenkonstruktion brennbar: mind. 30 cm Abstand Brennraumbodenoberkante zu FOK.
+
+B8311 MINDESTABSTAENDE DECKE (Abschnitt 5.1.4):
+Seriengefertigte Feuerstaetten: mind. 40 cm zu Decken mit brennbaren Materialien
+Ortsfest: mind. 20 cm zu Decken mit brennbaren Materialien
+
+B8311 MINDESTABSTAENDE EINRICHTUNGEN (Abschnitt 5.1.5):
+Seriengefertigte Feuerstaetten: mind. 40 cm zu brennbaren Einrichtungen
+Mit Abschirmplatte: mind. 20 cm
+Sichtscheibe Strahlungsbereich: mind. 80 cm; mit Abschirmplatte: mind. 40 cm
+
+B8311 VERBINDUNGSSTUECKE (Abschnitt 4):
+Material: nichtbrennbar (A); korrosionsbestaendig
+Dichtheit: dauerhaft betriebsdicht gemaess OENORM B8201
+Horizontale Laenge: max. 3 m; Steigung: mind. 1%
+Aufhaengungen/Stuetzen: nichtbrennbar (A)
+Einbauten: grundsaetzlich NICHT zulaessig; Drosselklappen vor Einmuendung zulaessig wenn oberer Teil offen
+
+B8311 VERBRENNUNGSLUFT (Abschnitt 6):
+Raumluftabhaengige Feuerstaetten: Verbrennungsluft aus dem Aufstellraum; ausreichende Luftzufuhr sicherstellen.
+Raumluftunabhaengige Feuerstaetten: gemaess Herstellervorgaben installieren.
+
+================================================================
+TRVB H 105 - FEUERSTAETTEN FUER FESTE BRENNSTOFFE (bis 10 kW)
+================================================================
+
+H105 ANZEIGEPFLICHT (Punkt 2.3):
+Errichtung mind. anzeigepflichtig; ggf. genehmigungspflichtig.
+Vor Aenderungen: Befund des RFK einholen (Punkt 2.4).
+Gleiche Leistung + gleicher Standort: NICHT anzeigepflichtig.
+Staendortwechsel oder hoehere Leistung: mind. Anzeige erforderlich.
+
+H105 BRENNBARE WAENDE (Tabelle 1):
+Eisen/Stahl, ungeschuetzt: mind. 50 cm Abstand zur Wand
+Eisen/Stahl, F30 verkleidet: mind. 25 cm
+Gemauerte Oefen, ungeschuetzt: mind. 25 cm
+Gemauerte Oefen, F30: mind. 15 cm
+Reduzierung durch Abschirmplatte: 50 cm seitlich, 3 cm von Wand, 5 cm von Boden/Decke
+
+H105 BRENNBARE FUSSBOEDEN (Tabelle 2):
+Eisen: Vorlageblech; Bedienungsseite mind. 30 cm; seitlich mind. 10 cm ueber Geraetefuss
+Kacheln/gemauerte Herde: vorne 30 cm, seitlich 20 cm
+Offene Kamine: Brennbares mind. 100 cm von Verbrennungsraumoeffnung
+
+H105 BRENNBARE DECKEN (Tabelle 4):
+Eisen ungeschuetzt: mind. 50 cm; F30: mind. 25 cm
+Gemauert ungeschuetzt: mind. 25 cm; F30: mind. 15 cm
+
+H105 VERBINDUNGSSTUECKE (Punkt 4):
+Horizontale Laenge: max. 3 m; Steigung: mind. 1%
+Aufhaengungen/Stuetzen: nichtbrennbar (A)
+Einmuendung in Rauchfang: mind. 15 cm ueber Putztuerchen-Oberkante
+Einmuendungen aus verschiedenen Geschossen: UNZULAESSIG
+1 Rauchfang nur von EINER Wohn-/Geschaeftseinheit nutzbar
+Max. 3 Feuerstaetten je Rauchfang; Achsabstand Einmuendungen mind. 40 cm
+Abstand Verbindungsstueck zu brennbarer Wand: mind. 50 cm (ungeschuetzt) / 25 cm (F30)
+Abstand Verbindungsstueck zu brennbarer Decke: mind. 50 cm (ungeschuetzt) / 25 cm (F30)
+
+H105 BEDIENUNG UND WARTUNG (Punkt 5):
+Frischluftzufuhr: staendig wirksam sicherstellen!
+Nur Herstellerbrennstoff verwenden!
+Asche: mehrere Tage zuendfaehige Glutteile - nur in nichtbrennbaren Behaeltern mit dichten Deckeln!
+
+================================================================
+BGLD. HKG (Heizungs- und Klimaanlagengesetz) - KERNINHALTE
+================================================================
+
+HKG MELDEPFLICHT (Paragraph 23):
+Errichtung/Austausch Feuerungsanlage ist der Ueberwachungsstelle zu melden.
+
+HKG ERSTMALIGE + WIEDERKEHRENDE UEBERPRUEFUNG (Paragraph 25):
+Durch Pruefberechtigte (RFK, Sachverstaendige, Ziviltechniker).
+Ergebnis: Pruefbericht ausfuellen, Betreiber aushaendigen, im Pruefbuch aufbewahren.
+Anlage in Anlagendatenbank eintragen.
+
+HKG MAENGELBEHEBUNG (Paragraph 36):
+Gefaehrliche Maengel (CO-Grenzwertueberschreitung): sofort sanieren; RFK setzt Frist.
+Andere Maengel kleiner 1 MW: Frist max. 8 Wochen.
+Bei Weigerung: Behoerde einschalten; Benützungsverbot moeglich.
+
+HKG PRUEFBERECHTIGTE (Paragraph 37):
+Amtssachverstaendige, Ziviltechniker, Gewerbetreibende inkl. RFK.
+
+HKG ANLAGENDATENBANK (Paragraph 48):
+Pflicht zur Eintragung aller Feuerungsanlagen.
+
+================================================================
+BGLD. HK-VO 2019 - GRENZWERTE ABGASMESSUNG
+================================================================
+
+HKVO CO-GRENZWERT (Paragraph 7):
+Max. 1.000 ppm (alle Leistungsklassen) gemaess EN 50379.
+CO > 1.000 ppm: SOFORTIGES HEIZVERBOT (Paragraph 36 HKG)!
+CO 200-1.000 ppm: Mangel, max. 8 Wochen Frist.
+CO < 200 ppm: in Ordnung.
+
+HKVO ABGASVERLUSTE je Nennleistung:
+< 4 kW: max. 11%
+4-25 kW: max. 10%
+25-50 kW: max. 9%
+> 50 kW: max. 8%
+
+HKVO SONSTIGE GRENZWERTE:
+Abgastemperatur: Richtwert max. 200 Grad C; > 300 Grad C: sofort ausser Betrieb.
+Lambda: Sollwert 1,05-1,35.
+CO2-Gehalt: Gas ca. 7-12%; Oel ca. 10-14%.
+Russzahl (Oel): max. Bacharach 2 (Neuanlage: max. 1).
+
+ANLAGE 10 LGBl. 104/2025 - TARIFE AB 1.1.2026:
+Grundtarif: 21,10 Euro je angefangener Viertelstunde (inkl. MwSt.)
+Heizungsanlage bis 26 kW: hoechstens 83,90 Euro
+Heizungsanlage 26-50 kW: hoechstens 126,-- Euro
+Heizungsanlage 50-100 kW: hoechstens 167,90 Euro
+Erstmalige Ueberpruefung Einzelraumheizgeraet (Paragraph 26): hoechstens 83,90 Euro
+Umfassende Ueberpruefung (Paragraph 28): Grundentgelt 83,90 Euro + 21,10 Euro/Viertelstunde
+Ausserordentliche Ueberpruefung (Paragraph 30/35a): 21,10 Euro/Viertelstunde
+Ersterfassung Anlagendatenbank: hoechstens 21,10 Euro
+An-/Abfahrt: 21,10 Euro/Viertelstunde + amtliches Kilometergeld
+Tarif B - Klimaanlagen + Waermepumpen: 21,10 Euro/Viertelstunde
+
+
+================================================================
+NORMEN_VOLLSTAENDIG - alle relevanten OENORMEN, ONR und Richtlinien
+================================================================
+
+OENORM B 8200:2025-11 - ABGASANLAGEN, BENENNUNGEN UND DEFINITIONEN
+Anwendung: Grundnorm fuer Abgasanlagen-Terminologie in Oesterreich.
+Aktuelle Ausgabe November 2025 (Ersatz fuer 2013-Ausgabe).
+Begriffe: Abgasanlage, Rauchfang, Abgasfang, Verbindungsstueck, System-Abgasanlage.
+Druckklassen (mit EN 1443): N1, N2 (Unterdruck), P1, P2 (Ueberdruck bis 200Pa),
+M1, M2 (Mitteldruck bis 5000Pa), H1, H2 (Hochdruck > 5000Pa).
+Verweis auf alle B82xx Normen und EN 1443/13384/14471.
+
+OENORM B 8201:2000 - RAUCH-/ABGASFAENGE PRUEFUNG QUERSCHNITT + BETRIEBSDICHTHEIT
+Anwendung: Pflichtpruefung fuer Erstinbetriebnahme + wiederkehrend.
+Pruefung freier Querschnitt: visuelle Pruefung + Spiegel/Kamera; Mindestquerschnitt
+gemaess Berechnung nach EN 13384.
+Betriebsdichtheit (Anhang D - Formblatt verpflichtend):
+- Pruefverfahren: Messung im Ringspalt mit O2- oder CO2-Sonde
+- O2-Methode: O2-Gehalt darf max. 0,4 Vol-% sinken (Vergleich mit Nullpunkt)
+- CO2-Methode: CO2-Anteil darf max. 0,2 Vol-% steigen
+- Ergebnis: "Betriebsdichtheit gegeben: ja/nein"
+- Verbindungsstueck mitpruefen: ja/nein angeben
+Pruefintervalle: Unterdruck-Anlage alle 10 Jahre; Ueberdruck-Anlage alle 5 Jahre;
+nach jeder Sanierung / Instandsetzung; nach Rauchfangbrand zwingend.
+Pflichtangaben Pruefbericht: Antragsteller, Objektadresse, Fabrikat/Type/lfd.Nr.,
+Pruefgeraet-Daten (Fabrikat, Type, SN, Baujahr), Pruefergebnis, Pruefer + firmenmaessige Unterschrift.
+
+OENORM B 8203:2007 - FEUERWIDERSTANDSKLASSE - ANFORDERUNGEN
+Pruefung von Rauch-/Abgasfaengen auf Feuerwiderstand bei Russbrand-Faellen.
+Klassen: G fuer russbrandbestaendig (Soot-fire resistant) gemaess EN 1443.
+Pruefverfahren: Erhitzung auf 1000 Grad C ueber 30 Min; danach Dichtheit + Festigkeit pruefen.
+G-Klasse zwingend fuer feste Brennstoffe; N-Klasse (Non-soot-fire) fuer Gas/Oel.
+Klassifikation gemaess EN 13501-2.
+
+OENORM B 8206:2016 - SANIERUNG VON ABGASANLAGEN PLANUNG + AUSFUEHRUNG
+Sanierungsmethoden:
+1. Innenrohreinbau: starres oder flexibles Innenrohr (Edelstahl, Kunststoff, Keramik)
+2. Innenauskleidung: aufgespachtelte Schicht
+3. Innenabdichtung: Fluessigauskleidung (z.B. Furan-Harz)
+Pflichten:
+- Vor Sanierung: Sichtpruefung + Querschnittspruefung + ggf. Russablagerungen entfernen
+- Nach Sanierung: Betriebsdichtheitspruefung gemaess B 8201
+- Befund durch zustaendigen Rauchfangkehrer vor Inbetriebnahme
+Typenschild Pflichtangaben:
+- Name + Adresse Ausfuehrender
+- Temperaturklasse (T80 bis T600 nach EN 1443)
+- Druckklasse (meist N1)
+- Kondensatbestaendigkeitsklasse (D fuer trocken, W fuer feucht)
+- Korrosionswiderstandsklasse 1, 2 oder 3
+- Russbrandbestaendigkeitsklasse (G oder O)
+- Mittlere Rauigkeit (z.B. 0,005 m)
+- Durchmesser bzw. Querschnitt
+- "Die Sanierung entspricht OENORM B 8206"
+
+OENORM B 8207:1996 - LEITERN UND STEGE FUER REINIGUNG UND UEBERPRUEFUNG
+Anforderungen fuer sicheren Zugang zum Fangkopf am Dach:
+- Tritt-/Steigleiter aus nicht brennbarem Material (A1 oder A2)
+- Steigeisen mind. 280mm Tiefe, mind. 30mm Durchmesser
+- Steigleiter ab 4m Hoehe mit Rueckenschutz oder Schutzkorb
+- Mindesteinstandstiefe Tritte: 150 mm
+- Dachsteg (Laufsteg): Breite mind. 250 mm, Auflagefuesse
+- Persoenliche Schutzausruestung (PSA) Anschlagpunkte mit EN 795
+Wichtig: bei Schraegdach > 25 Grad zwingend Dachhaken/Trittflaechen montiert.
+
+OENORM B 8208:2018 - ABGASANLAGEN UND LUFTSCHAECHTE - BEZEICHNUNGEN
+Definiert Bezeichnungssystem im Grundriss:
+- Fortlaufende Nummerierung pro Geschoss (1, 2, 3...)
+- Anschlussgeschoss-Angabe (E = Erdgeschoss, OG = Obergeschoss)
+- Lichte Weite in cm (z.B. 18, 20, 22 cm)
+- Symbolische Darstellung mit Kreisen, Quadraten, Rechtecken
+- Tuernummern fuer Putztuerchen
+Tabelle 1 + Anhang A: standardisierte Symbole.
+Anwendung: Pflicht-Plandarstellung in Bauplaenen, Beschauberichten.
+
+OENORM B 8209:2013 - SYSTEM-ABGASANLAGEN - NOTRAUCHFAENGE
+Ersatz fuer B 8209:1997.
+Anwendungsbereich: temporaere Abgasanlagen, befristete Nutzung.
+Anforderungen Notrauchfang:
+- Aufstellung als alleinstehende Anlage
+- Mind. Sicherheitsabstand 3 m zu brennbaren Materialien
+- Befund + Anzeige bei Behoerde zwingend
+- Maximale Standdauer: Bauphase + 3 Monate
+- Befundung gemaess B 8201 (verkuerzt) zulaessig
+- Material: nichtbrennbar A1/A2, Druckklasse N1
+NICHT zulaessig fuer lotrechte Abgaseinleitung (siehe ONR 28205).
+
+OENORM B 8210:2008 - MISCHUNG VON FANGBAUARTEN
+Anwendung: Wenn Abgasanlage aus verschiedenen Baustoffen besteht (z.B. Mauerwerk + Innenrohr).
+Anforderungen:
+- Kompatibilitaet der Druckklassen (siehe Tabelle 2)
+- Temperaturklasse muss dem hoechsten Wert entsprechen
+- Korrosionswiderstand muss dem hoechsten Wert entsprechen
+- Russbrandbestaendigkeit muss dem hoechsten Wert entsprechen
+- Mischen NICHT zulaessig wenn Materialien unvertraeglich (z.B. Aluminium + Edelstahl: galvanische Korrosion!)
+- Klassifizierung der Mischanlage gemaess hoechster Anforderung
+
+OENORM B 8212:2020 - LUFT-ABGAS-SYSTEME (LAS) - PLANUNG, ERRICHTUNG
+Anwendungsbereich:
+- Oel-/Gasfeuerstaetten im Unter- und Ueberdruckbetrieb
+- Feste Brennstoffe nur im Unterdruckbetrieb
+- Kaskadenanlagen mit gemeinsamem Verbindungsstueck NICHT in dieser Norm
+Materialanforderungen Innenrohre:
+- Keramik (EN 1457-1, -2): Druckklassen N1, P1, M1
+- Metall (EN 1856-1, -2): Druckklassen N1, P1, M1, H1
+- Beton (EN 1857): Druckklassen N1, P1, M1
+- Kunststoff (EN 14471): Druckklassen N1, P1, M1, H1
+- Sonstige: nur mit CE oder UEA-Kennzeichnung
+LAS-Aufbau: 2 konzentrische Rohre (innen Abgas, aussen Verbrennungsluft im Gegenstrom).
+Vorteil: raumluftunabhaengig; keine Verbrennungsluft aus dem Aufstellraum.
+Umbau bestehender Abgasanlagen zu LAS: Sohlen + Putztuerchen muessen im selben Geschoss
+und in derselben Wohn-/Betriebseinheit liegen oder allgemein zugaenglich sein.
+Feuchtbetrieb: Kondensatablauf an Sohle Pflicht.
+
+OENORM EN 1443 - ABGASANLAGEN ALLGEMEINE ANFORDERUNGEN (Europaeisch)
+Grundlage fuer alle B82xx-Normen. Klassifikationssystem:
+- T-Klassen (Temperatur): T080, T100, T120, T140, T160, T200, T250, T300, T400, T450, T600
+- N/P/M/H-Klassen (Druck): siehe oben
+- W/D-Klassen (Feuchtigkeit): W = nass-betrieb, D = trocken
+- 1/2/3-Klassen (Korrosion):
+  Klasse 1 = Erdgas Brennwert; Klasse 2 = Heizoel + Erdgas/Fluessiggas;
+  Klasse 3 = feste Brennstoffe
+- G/O-Klassen (Russbrand): G = russbrandbestaendig, O = nicht russbrandbestaendig
+CE-Kennzeichnung: Pflicht fuer alle System-Abgasanlagen.
+Bezeichnungsbeispiel: T200 N1 D 3 G50 = bis 200C, Unterdruck, trocken, Korrosion fester Brennst., russbrand 50mm.
+
+OENORM EN 14604:2009 - RAUCHWARNMELDER
+Anforderungen optische Rauchwarnmelder fuer Wohnungen.
+Pruefung nach EN 14604: Empfindlichkeit, Auslosezeit, akustische Signal mind. 85 dB(A) in 3m.
+Stromversorgung: Lithium-Batterie 10 Jahre ODER Netzanschluss + Notbatterie.
+Bautyp: optisch arbeitendes Geraet (Tyndall-Effekt).
+Pflicht in Oesterreich: alle Neubauten + bestehende Bauten gemaess Landesbauordnungen.
+Burgenland: Pflicht in Schlafraeumen, Kinderzimmern, Fluchtwegen.
+Installation: an Decke, mind. 50 cm von Waenden + Ecken; nicht in Bad/Kueche (Daempfe).
+Wartung: jaehrlicher Funktionstest (Test-Knopf); Reinigung bei Bedarf.
+
+OENORM EN ISO 20023:2019 - PELLETS-SICHERHEIT IN GEWERBLICHEN UND PRIVATEN ANWENDUNGEN
+Risiken Pelletslagerung:
+- CO-Ausgasung aus Pellets (Selbsterhitzung, biochemische Prozesse): toedlich!
+- Staubentwicklung: Explosionsgefahr
+- Schimmelbildung bei feuchten Pellets
+Schutzmassnahmen:
+- Belueftung Pelletslagerraum (mind. 1 m2 freie Flaeche; nicht verschliessbar)
+- Warnschilder: "Lebensgefahr durch CO! Vor Betreten 15 Min lueften"
+- CO-Melder im Heizraum + Lagerraum
+- Zutritt nur fuer Berechtigte nach Lueftung
+- Vermeidung Staubexplosion: feuchte Reinigung; Funkenflug-frei
+
+OENORM M 7137:2012 - PELLETSLAGER ANFORDERUNGEN
+Anwendung: Lagerraum fuer Holzpellets in privaten + gewerblichen Anlagen.
+Anforderungen Lagerraum:
+- Bauart: bauphysikalische Trennung zum Heizraum (mind. EI 90)
+- Belueftung: dauerhaft, mind. 100 cm2 Aussenluft direkt ins Freie
+- Befuelloeffnung: aussen zugaenglich, druckfest (Befuellung mit Tankwagen)
+- Absaugstutzen: max. 10 m vom Befuellstutzen entfernt
+- Heizung im Lagerraum: NICHT zulaessig
+- Pelletsauslass: bodennah; Foerderschnecke oder Saugsystem
+- Lagerraumgroesse: nach Jahresverbrauch (Faustregel: 0,9 m3 pro kW Heizleistung)
+- Beschilderung: "Pelletslager - Betreten verboten ohne Lueftung"
+Befuellung: nur durch fachkundige Person; Lagerraum vor Befuellung lueften + leer/sauber.
+Vor Betreten: 15 Min lueften, CO-Messung.
+
+OENORM H 5170:2016 - DEPONIEN, ABGASEMISSIONEN, BIOGAS-ANLAGEN
+Anforderungen Abgaspruefung bei Deponiegas-Verwertung + Biogasanlagen.
+Pruefparameter: H2S-Gehalt, CO, CO2, O2, Schwefelverbindungen.
+Gilt fuer: Faulgasanlagen, BHKW mit Biogas, Deponieausgasung-Pruefung.
+NICHT relevant fuer normalen Haushalts-RFK; nur bei Gewerbe-/Industrieanlagen.
+
+OENORM B 8211 - GEBLAESEUNTERSTUETZTE ATMOSPHAERISCHE GAS-VERBRENNUNGSEINRICHTUNGEN
+Anwendungsbereich: Bauart B1 mit Geblaese-Unterstuetzung.
+Anforderungen Abgasanlage:
+- Druckklasse mind. P1 (50 Pa Ueberdruck)
+- Querschnitt nach EN 13384 berechnet
+- Geblaesefunktion ueberwacht (DUEF)
+- Sicherheitstechnische Anforderungen nach H 7510-6
+
+ONR 28205:2013 - SYSTEM-ABGASANLAGEN PLANUNG + AUSFUEHRUNG
+Oesterreichische Regel (kein OENORM): Erganzung zu B 8200ff fuer System-Abgasanlagen.
+Anforderungen:
+- Einzel-Feuerstaette mit seitlicher Abgaseinfuehrung (z.B. Kachelofen): Russsack zwingend
+- Endbefund nur wenn Feuerstaette, Verbindungsstueck und Abgasanlage komplett errichtet
+- Kennzeichnung ueber ETB (Europ. Techn. Bewertung), UEA oder OETZ
+- Notrauchfaenge nach B 8209: NICHT zulaessig fuer lotrechte Abgaseinleitung
+Planung: Statik + Dichtheit + Korrosionsschutz dokumentieren.
+Ausfuehrung: nur durch zertifizierte Fachunternehmen.
+
+OENORM H 7510-1:2021 - UEBERPRUEFUNG FEUERUNGSANLAGEN - ALLGEMEINES
+Grundnorm fuer die Serie H 7510. Definiert:
+- Pruefarten: erstmalige, wiederkehrende, ausserordentliche Pruefung
+- Pruefberechtigte: RFK, Ziviltechniker, Sachverstaendige, Gewerbetreibende (gemaess Landesgesetz)
+- Pflicht-Dokumentation: Anlagendatenblatt + Pruefbuch
+- Anlagendatenbank: Bundeslaender-spezifisch (Bgld: HKG-Datenbank)
+- Allgemeine Anforderungen Sicht- + Funktionspruefung
+
+OENORM H 7510-3:2021 - SPEZIELLE UEBERPRUEFUNG
+Detailliertere Pruefung als H 7510-2 (einfache Pruefung).
+Anwendung: bei verdaechtigen Werten der einfachen Pruefung oder als ergaenzende Pruefung.
+Zusaetzliche Pruefparameter:
+- Lambda-Berechnung detailliert (Verbrennungsluftverhaeltnis)
+- CO/CO2-Verhaeltnis exakt
+- Stickoxide NOx differenziert (NO + NO2)
+- Feinstaub (PM10) bei festen Brennstoffen
+Anforderungen: Mehrpunkt-Messung an verschiedenen Stellen.
+
+OENORM H 7510-5:2021 - KLIMA- UND LUEFTUNGSANLAGEN UEBERPRUEFUNG
+Anwendungsbereich: Klimaanlagen ab 12 kW Kuehlleistung gemaess EU-Richtlinie EPBD.
+Pruefablauf:
+- Sichtpruefung Inneneinheit + Aussenwarmegeraet
+- Filter-Verschmutzungsgrad
+- Kaltemittelmenge + Dichtheit (CO2/HFKW)
+- Effizienz im Vergleich zu Auslegungsdaten
+- Steuerung + Regelung
+Pruefintervalle:
+- Klima ab 12 kW: alle 5 Jahre (EU-Pflicht)
+- Klima ab 70 kW: alle 5 Jahre + erweiterte Pruefung
+- Lueftungsanlagen (Bgld. HKG): erstmalige Pruefung Pflicht
+
+OENORM B 2331 - TROCKENBAUWANDE / FEUERWIDERSTAND
+NICHT direkt RFK-relevant. Behandelt Trockenbauwaende.
+Bezug: bei Sanierung von Heizraum-Trennwaenden moeglich.
+
+OENORM B 3417 - HEIZUNGSANLAGEN-TECHNISCHE REGELN
+Anforderungen Planung + Errichtung Heizungsanlagen, Pufferspeicher, Sicherheitseinrichtungen.
+
+AHRENS-SAMMLER (Wien LAF NEU 2018, OIB 2018) - Wiener Bauordnung + LAF
+Wien-spezifische Regeln fuer Luft-Abgas-Systeme (LAF = Luftabgasfuehrung).
+Wichtig fuer Wien: spezielle Brandschutz-Anforderungen + Maximalanzahl Feuerstaetten je Fang.
+OIB-Sammler: Zusammenfassung der OIB-Richtlinien 1-6 mit Praxisbezug.
+
+MERKBLATT "MISCHEN VON BAUSTOFFEN" (B 8210)
+Erlaeuterung B 8210 mit Praxistabellen:
+- Edelstahl + Aluminium: NIE direkt verbinden (galvanische Korrosion)!
+- Keramik + Beton: kompatibel
+- Beton + Mauerwerk: kompatibel mit Innenrohr-Vermittlung
+- Kunststoff + Metall: nur unter Druckklasse N1 zulaessig
+
+ZUSAMMENFASSUNG WICHTIGE PRUEF-INTERVALLE (RFK):
+- Betriebsdichtheit (B 8201): Unterdruck 10 Jahre; Ueberdruck 5 Jahre
+- Wiederkehrende HKG-Pruefung (H 7510-2): jaehrlich bzw. nach Anlage 6/7
+- Klima ab 12 kW (H 7510-5): alle 5 Jahre
+- Feuerstaettenbeschau (KehrG Paragraph 9): laut Bundesland-Vorgabe
+- Kehrung (KehrG): pro Heizperiode laut Bundesland-Anlage
+- Rauchmelder (EN 14604): jaehrlicher Funktionstest durch Eigentuemer
+- Pelletslager Sicherheit (M 7137): vor jeder Befuellung + nach Lueftung
+
+ZUSAMMENFASSUNG DRUCKKLASSEN UND ANWENDUNG (EN 1443):
+- N1 (40 Pa Unterdruck): Standard fuer Schornsteine offene Kamine, Holzoefen
+- N2 (20 Pa Unterdruck): Schornsteine ohne Kondensat
+- P1 (200 Pa Ueberdruck): Brennwertanlagen (Gas) trocken
+- P2 (200 Pa Ueberdruck): Brennwertanlagen feucht
+- M1/M2 (5000 Pa Mitteldruck): industrielle Anlagen
+- H1/H2 (> 5000 Pa Hochdruck): nur fuer Hochleistungsfeuerungen
+
+TEMPERATURKLASSEN (EN 1443):
+- T080-T140: Gas-Brennwert (Niedertemperatur, Kondensat)
+- T160-T200: Gas-Heizwert, moderne Oel-Anlagen
+- T250-T300: konventionelle Heizoel, Holzpellets
+- T400-T450: Stueckholz, Hackgut
+- T600: Russbrand-Faelle, sehr hohe Temperaturen
 `;
 
 function kiSend(){
@@ -6988,6 +8110,40 @@ function mmShare(){
   shareWhatsApp(lines.join(nl));
 }
 
+function kiUpdateStatus(){
+  var bar=document.getElementById('ki-status-bar');
+  var dot=document.getElementById('ki-status-dot');
+  var txt=document.getElementById('ki-status-txt');
+  if(!bar) return;
+  var online=navigator.onLine;
+  if(online){
+    bar.style.background='#E8F5E9';
+    bar.style.borderColor='#A5D6A7';
+    if(dot){dot.style.background='#27AE60';}
+    if(txt){txt.textContent='Online – Fachassistent aktiv';}
+  } else {
+    bar.style.background='#FFF3E0';
+    bar.style.borderColor='#FFCC02';
+    if(dot){dot.style.background='#FF9800';}
+    if(txt){txt.textContent='Offline – lokale Suche aktiv';}
+  }
+}
+window.addEventListener('online', kiUpdateStatus);
+window.addEventListener('offline', kiUpdateStatus);
+
+function showIosBanner(){
+  var isIos=/iphone|ipad|ipod/i.test(navigator.userAgent||'');
+  var isStandalone=window.navigator.standalone===true;
+  var shown=localStorage.getItem('ios-banner-shown');
+  if(isIos && !isStandalone && !shown){
+    var b=document.getElementById('ios-banner');
+    if(b){
+      b.style.cssText='display:flex!important';
+      localStorage.setItem('ios-banner-shown','1');
+    }
+  }
+}
+
 function kvSave(prefix){
   try{var data={};var pg=document.getElementById('page-'+prefix);if(!pg)return;
   pg.querySelectorAll('input,select,textarea').forEach(function(el){
@@ -7009,7 +8165,7 @@ function kvLoad(prefix){
 }
 function kvWhatsApp(prefix){
   var pg=document.getElementById('page-'+prefix);if(!pg)return;
-  function gv(cls){var el=pg.querySelector('.'+cls);return el?el.value||'':''}
+  function gv(cls){var el=pg.querySelector('.'+cls);return el?el.value||'':(el?el.textContent||'':'');}
   var name=gv('kd-name');var adr=gv('kd-str');var plz=gv('kd-plz');
   var titel={pv:'PV-Reinigung',gas:'Gasservice',luft:'Lueftung',kamin:'Kamintuerl',
     kehr:'Kehrtarif',gesamt:'Gesamt-KV',br:'Brandschutz',verr:'Verrechnung',
@@ -7023,3 +8179,5 @@ function kvWhatsApp(prefix){
   window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
 }
 </script>
+</body>
+</html>
