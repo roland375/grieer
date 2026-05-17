@@ -1,19 +1,3 @@
-// Grieer App - Cache Reset SW
-self.addEventListener('install', function(e){
-  e.waitUntil(
-    caches.keys().then(function(keys){
-      return Promise.all(keys.map(function(k){ return caches.delete(k); }));
-    }).then(function(){ return self.skipWaiting(); })
-  );
-});
-self.addEventListener('activate', function(e){
-  e.waitUntil(
-    caches.keys().then(function(keys){
-      return Promise.all(keys.map(function(k){ return caches.delete(k); }));
-    }).then(function(){ return self.clients.claim(); })
-  );
-});
-// Kein Caching - alles direkt vom Netz
-self.addEventListener('fetch', function(e){
-  e.respondWith(fetch(e.request));
-});
+self.addEventListener('install',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.map(function(n){return caches.delete(n);}));}).then(function(){return self.skipWaiting();}));});
+self.addEventListener('activate',function(e){e.waitUntil(self.clients.claim());});
+self.addEventListener('fetch',function(e){e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});
