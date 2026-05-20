@@ -1054,6 +1054,40 @@ body {
 <div class="btns no-print"><button class="btn" onclick="doPrint()">🖨 Als PDF / Drucken</button><button class="btn btn-g" onclick="doMail()">✉ Per E-Mail senden</button><button class="btn btn-rst no-print" onclick="resetKV('pv')" title="Alle Felder dieses KV zurücksetzen">↺ Zurücksetzen</button></div>
 <div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
 </div>
+
+<div class="no-print" style="margin-top:18px;padding:10px;background:#F5F7FA;border-radius:10px;border:1px solid #E0E4E8">
+  <div style="font-size:10px;color:#78909C;text-align:center;margin-bottom:8px;font-weight:600;letter-spacing:0.5px">AKTIONEN</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+    <button type="button" onclick="kvShareDatei('pv')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">📤</span>
+      <span>Teilen</span>
+    </button>
+    <button type="button" onclick="kvWhatsAppSend('pv')" style="background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">💬</span>
+      <span>WhatsApp</span>
+    </button>
+    <button type="button" onclick="kvMailSend('pv')" style="background:linear-gradient(135deg,#EA4335,#B71C1C);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">✉️</span>
+      <span>E-Mail</span>
+    </button>
+    <button type="button" onclick="kvSpeichern('pv')" style="background:linear-gradient(135deg,#F39C12,#E67E22);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">💾</span>
+      <span>Speichern</span>
+    </button>
+    <button type="button" onclick="kvLaden('pv')" style="background:linear-gradient(135deg,#16A085,#0E6655);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">📂</span>
+      <span>Laden</span>
+    </button>
+    <button type="button" onclick="kvPrint('pv')" style="background:linear-gradient(135deg,#7F8C8D,#34495E);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">🖨️</span>
+      <span>Drucken</span>
+    </button>
+  </div>
+  <div style="font-size:9.5px;color:#78909C;text-align:center;margin-top:8px;line-height:1.5">
+    📤 <b>Teilen</b> hängt die KV-Datei direkt an WhatsApp/Mail an.<br>
+    💾 <b>Speichern</b> in App | 📂 <b>Laden</b> gespeicherter Daten
+  </div>
+</div>
 </div>
 
 <div class="pg" id="page-gas">
@@ -1245,6 +1279,40 @@ body {
 
 
 </div>
+
+<div class="no-print" style="margin-top:18px;padding:10px;background:#F5F7FA;border-radius:10px;border:1px solid #E0E4E8">
+  <div style="font-size:10px;color:#78909C;text-align:center;margin-bottom:8px;font-weight:600;letter-spacing:0.5px">AKTIONEN</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+    <button type="button" onclick="kvShareDatei('gas')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">📤</span>
+      <span>Teilen</span>
+    </button>
+    <button type="button" onclick="kvWhatsAppSend('gas')" style="background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">💬</span>
+      <span>WhatsApp</span>
+    </button>
+    <button type="button" onclick="kvMailSend('gas')" style="background:linear-gradient(135deg,#EA4335,#B71C1C);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">✉️</span>
+      <span>E-Mail</span>
+    </button>
+    <button type="button" onclick="kvSpeichern('gas')" style="background:linear-gradient(135deg,#F39C12,#E67E22);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">💾</span>
+      <span>Speichern</span>
+    </button>
+    <button type="button" onclick="kvLaden('gas')" style="background:linear-gradient(135deg,#16A085,#0E6655);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">📂</span>
+      <span>Laden</span>
+    </button>
+    <button type="button" onclick="kvPrint('gas')" style="background:linear-gradient(135deg,#7F8C8D,#34495E);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">🖨️</span>
+      <span>Drucken</span>
+    </button>
+  </div>
+  <div style="font-size:9.5px;color:#78909C;text-align:center;margin-top:8px;line-height:1.5">
+    📤 <b>Teilen</b> hängt die KV-Datei direkt an WhatsApp/Mail an.<br>
+    💾 <b>Speichern</b> in App | 📂 <b>Laden</b> gespeicherter Daten
+  </div>
+</div>
 </div>
 
 <div class="pg" id="page-luft">
@@ -1366,6 +1434,40 @@ body {
 </div></div>
 <div class="btns no-print"><button class="btn" onclick="doPrint()">🖨 Als PDF / Drucken</button><button class="btn btn-g" onclick="doMail()">✉ Per E-Mail senden</button><button class="btn btn-rst no-print" onclick="resetKV('luft')" title="Alle Felder dieses KV zurücksetzen">↺ Zurücksetzen</button></div>
 <div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
+</div>
+
+<div class="no-print" style="margin-top:18px;padding:10px;background:#F5F7FA;border-radius:10px;border:1px solid #E0E4E8">
+  <div style="font-size:10px;color:#78909C;text-align:center;margin-bottom:8px;font-weight:600;letter-spacing:0.5px">AKTIONEN</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+    <button type="button" onclick="kvShareDatei('luft')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">📤</span>
+      <span>Teilen</span>
+    </button>
+    <button type="button" onclick="kvWhatsAppSend('luft')" style="background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">💬</span>
+      <span>WhatsApp</span>
+    </button>
+    <button type="button" onclick="kvMailSend('luft')" style="background:linear-gradient(135deg,#EA4335,#B71C1C);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">✉️</span>
+      <span>E-Mail</span>
+    </button>
+    <button type="button" onclick="kvSpeichern('luft')" style="background:linear-gradient(135deg,#F39C12,#E67E22);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">💾</span>
+      <span>Speichern</span>
+    </button>
+    <button type="button" onclick="kvLaden('luft')" style="background:linear-gradient(135deg,#16A085,#0E6655);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">📂</span>
+      <span>Laden</span>
+    </button>
+    <button type="button" onclick="kvPrint('luft')" style="background:linear-gradient(135deg,#7F8C8D,#34495E);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">🖨️</span>
+      <span>Drucken</span>
+    </button>
+  </div>
+  <div style="font-size:9.5px;color:#78909C;text-align:center;margin-top:8px;line-height:1.5">
+    📤 <b>Teilen</b> hängt die KV-Datei direkt an WhatsApp/Mail an.<br>
+    💾 <b>Speichern</b> in App | 📂 <b>Laden</b> gespeicherter Daten
+  </div>
 </div>
 </div>
 
@@ -1514,6 +1616,40 @@ body {
 <div class="btns no-print"><button class="btn" onclick="doPrint()">🖨 Als PDF / Drucken</button><button class="btn btn-g" onclick="doMail()">✉ Per E-Mail senden</button><button class="btn btn-rst no-print" onclick="resetKV('br')" title="Alle Felder dieses KV zurücksetzen">↺ Zurücksetzen</button></div>
 <div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
 </div>
+
+<div class="no-print" style="margin-top:18px;padding:10px;background:#F5F7FA;border-radius:10px;border:1px solid #E0E4E8">
+  <div style="font-size:10px;color:#78909C;text-align:center;margin-bottom:8px;font-weight:600;letter-spacing:0.5px">AKTIONEN</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+    <button type="button" onclick="kvShareDatei('brand')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">📤</span>
+      <span>Teilen</span>
+    </button>
+    <button type="button" onclick="kvWhatsAppSend('brand')" style="background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">💬</span>
+      <span>WhatsApp</span>
+    </button>
+    <button type="button" onclick="kvMailSend('brand')" style="background:linear-gradient(135deg,#EA4335,#B71C1C);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">✉️</span>
+      <span>E-Mail</span>
+    </button>
+    <button type="button" onclick="kvSpeichern('brand')" style="background:linear-gradient(135deg,#F39C12,#E67E22);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">💾</span>
+      <span>Speichern</span>
+    </button>
+    <button type="button" onclick="kvLaden('brand')" style="background:linear-gradient(135deg,#16A085,#0E6655);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">📂</span>
+      <span>Laden</span>
+    </button>
+    <button type="button" onclick="kvPrint('brand')" style="background:linear-gradient(135deg,#7F8C8D,#34495E);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">🖨️</span>
+      <span>Drucken</span>
+    </button>
+  </div>
+  <div style="font-size:9.5px;color:#78909C;text-align:center;margin-top:8px;line-height:1.5">
+    📤 <b>Teilen</b> hängt die KV-Datei direkt an WhatsApp/Mail an.<br>
+    💾 <b>Speichern</b> in App | 📂 <b>Laden</b> gespeicherter Daten
+  </div>
+</div>
 </div>
 
 <div class="pg" id="page-kamin">
@@ -1629,6 +1765,40 @@ body {
 </div></div>
 <div class="btns no-print"><button class="btn" onclick="doPrint()">🖨 Als PDF / Drucken</button><button class="btn btn-g" onclick="doMail()">✉ Per E-Mail senden</button><button class="btn btn-rst no-print" onclick="resetKV('kamin')" title="Alle Felder dieses KV zurücksetzen">↺ Zurücksetzen</button></div>
 <div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
+</div>
+
+<div class="no-print" style="margin-top:18px;padding:10px;background:#F5F7FA;border-radius:10px;border:1px solid #E0E4E8">
+  <div style="font-size:10px;color:#78909C;text-align:center;margin-bottom:8px;font-weight:600;letter-spacing:0.5px">AKTIONEN</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+    <button type="button" onclick="kvShareDatei('kamin')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">📤</span>
+      <span>Teilen</span>
+    </button>
+    <button type="button" onclick="kvWhatsAppSend('kamin')" style="background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">💬</span>
+      <span>WhatsApp</span>
+    </button>
+    <button type="button" onclick="kvMailSend('kamin')" style="background:linear-gradient(135deg,#EA4335,#B71C1C);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">✉️</span>
+      <span>E-Mail</span>
+    </button>
+    <button type="button" onclick="kvSpeichern('kamin')" style="background:linear-gradient(135deg,#F39C12,#E67E22);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">💾</span>
+      <span>Speichern</span>
+    </button>
+    <button type="button" onclick="kvLaden('kamin')" style="background:linear-gradient(135deg,#16A085,#0E6655);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">📂</span>
+      <span>Laden</span>
+    </button>
+    <button type="button" onclick="kvPrint('kamin')" style="background:linear-gradient(135deg,#7F8C8D,#34495E);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">🖨️</span>
+      <span>Drucken</span>
+    </button>
+  </div>
+  <div style="font-size:9.5px;color:#78909C;text-align:center;margin-top:8px;line-height:1.5">
+    📤 <b>Teilen</b> hängt die KV-Datei direkt an WhatsApp/Mail an.<br>
+    💾 <b>Speichern</b> in App | 📂 <b>Laden</b> gespeicherter Daten
+  </div>
 </div>
 </div>
 
@@ -1868,8 +2038,10 @@ body {
 <div class="btns no-print" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0 6px">
   <button type="button" onclick="kvPrint(&apos;kehr&apos;)" style="background:#1565C0;color:#fff;border:none;border-radius:6px;padding:11px 10px;font-size:12px;font-weight:700;cursor:pointer">🖨 Drucken / PDF</button>
   <button type="button" onclick="kvMailSend(&apos;kehr&apos;)" style="background:#27AE60;color:#fff;border:none;border-radius:6px;padding:11px 10px;font-size:12px;font-weight:700;cursor:pointer">✉ E-Mail</button>
-  <button type="button" onclick="kvWhatsAppSend(&apos;kehr&apos;)" style="background:#25D366;color:#fff;border:none;border-radius:6px;padding:11px 10px;font-size:12px;font-weight:700;cursor:pointer">💬 WhatsApp</button>
+  <button type="button" onclick="kvShareDatei('kehr')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:6px;padding:11px 10px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation;margin-right:6px">📤 Teilen</button>
+<button type="button" onclick="kvWhatsAppSend(&apos;kehr&apos;)" style="background:#25D366;color:#fff;border:none;border-radius:6px;padding:11px 10px;font-size:12px;font-weight:700;cursor:pointer">💬 WhatsApp</button>
   <button type="button" onclick="kvSpeichern(&apos;kehr&apos;)" style="background:#8E44AD;color:#fff;border:none;border-radius:6px;padding:11px 10px;font-size:12px;font-weight:700;cursor:pointer">💾 Speichern</button>
+  <button type="button" onclick="kvLaden('kehr')" style="background:#16A085;color:#fff;border:none;border-radius:6px;padding:11px 10px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation;margin-right:6px">📂 Laden</button>
 </div>
 
 <div class="kv-foot" style="font-size:8px;color:#999;text-align:center;border-top:0.5px solid #eee;margin-top:8px;padding-top:4px">
@@ -1965,6 +2137,18 @@ body {
 </div>
 <div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
 </div>
+
+<div class="no-print" style="margin-top:18px;padding:10px;background:#F5F7FA;border-radius:10px;border:1px solid #E0E4E8">
+  <div style="font-size:10px;color:#78909C;text-align:center;margin-bottom:8px;font-weight:600;letter-spacing:0.5px">AKTIONEN</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+    <button type="button" onclick="kvShareDatei('brandinfo')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px"><span style="font-size:18px">📤</span><span>Teilen</span></button>
+    <button type="button" onclick="kvWhatsAppSend('brandinfo')" style="background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px"><span style="font-size:18px">💬</span><span>WhatsApp</span></button>
+    <button type="button" onclick="kvMailSend('brandinfo')" style="background:linear-gradient(135deg,#EA4335,#B71C1C);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px"><span style="font-size:18px">✉️</span><span>E-Mail</span></button>
+    <button type="button" onclick="kvSpeichern('brandinfo')" style="background:linear-gradient(135deg,#F39C12,#E67E22);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px"><span style="font-size:18px">💾</span><span>Speichern</span></button>
+    <button type="button" onclick="kvLaden('brandinfo')" style="background:linear-gradient(135deg,#16A085,#0E6655);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px"><span style="font-size:18px">📂</span><span>Laden</span></button>
+    <button type="button" onclick="kvPrint('brandinfo')" style="background:linear-gradient(135deg,#7F8C8D,#34495E);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px"><span style="font-size:18px">🖨️</span><span>Drucken</span></button>
+  </div>
+</div>
 </div>
 
 
@@ -1998,6 +2182,7 @@ body {
   <div style="font-size:10px;color:#546E7A">
     Passwort: <b style="color:#78909C">roland</b> oder <b style="color:#78909C">grieer</b>
   </div>
+
 </div>
 
 
@@ -2153,6 +2338,40 @@ body {
 </div>
 
 <div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
+</div>
+
+<div class="no-print" style="margin-top:18px;padding:10px;background:#F5F7FA;border-radius:10px;border:1px solid #E0E4E8">
+  <div style="font-size:10px;color:#78909C;text-align:center;margin-bottom:8px;font-weight:600;letter-spacing:0.5px">AKTIONEN</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+    <button type="button" onclick="kvShareDatei('gesamt')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">📤</span>
+      <span>Teilen</span>
+    </button>
+    <button type="button" onclick="kvWhatsAppSend('gesamt')" style="background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">💬</span>
+      <span>WhatsApp</span>
+    </button>
+    <button type="button" onclick="kvMailSend('gesamt')" style="background:linear-gradient(135deg,#EA4335,#B71C1C);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">✉️</span>
+      <span>E-Mail</span>
+    </button>
+    <button type="button" onclick="kvSpeichern('gesamt')" style="background:linear-gradient(135deg,#F39C12,#E67E22);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">💾</span>
+      <span>Speichern</span>
+    </button>
+    <button type="button" onclick="kvLaden('gesamt')" style="background:linear-gradient(135deg,#16A085,#0E6655);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">📂</span>
+      <span>Laden</span>
+    </button>
+    <button type="button" onclick="kvPrint('gesamt')" style="background:linear-gradient(135deg,#7F8C8D,#34495E);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">🖨️</span>
+      <span>Drucken</span>
+    </button>
+  </div>
+  <div style="font-size:9.5px;color:#78909C;text-align:center;margin-top:8px;line-height:1.5">
+    📤 <b>Teilen</b> hängt die KV-Datei direkt an WhatsApp/Mail an.<br>
+    💾 <b>Speichern</b> in App | 📂 <b>Laden</b> gespeicherter Daten
+  </div>
 </div>
 </div>
 <!-- ═══ ENDE GEMEINSAMER KV ═══ -->
@@ -2402,6 +2621,40 @@ body {
 
 
 
+
+<div class="no-print" style="margin-top:18px;padding:10px;background:#F5F7FA;border-radius:10px;border:1px solid #E0E4E8">
+  <div style="font-size:10px;color:#78909C;text-align:center;margin-bottom:8px;font-weight:600;letter-spacing:0.5px">AKTIONEN</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+    <button type="button" onclick="kvShareDatei('wprot')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">📤</span>
+      <span>Teilen</span>
+    </button>
+    <button type="button" onclick="kvWhatsAppSend('wprot')" style="background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">💬</span>
+      <span>WhatsApp</span>
+    </button>
+    <button type="button" onclick="kvMailSend('wprot')" style="background:linear-gradient(135deg,#EA4335,#B71C1C);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">✉️</span>
+      <span>E-Mail</span>
+    </button>
+    <button type="button" onclick="kvSpeichern('wprot')" style="background:linear-gradient(135deg,#F39C12,#E67E22);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">💾</span>
+      <span>Speichern</span>
+    </button>
+    <button type="button" onclick="kvLaden('wprot')" style="background:linear-gradient(135deg,#16A085,#0E6655);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">📂</span>
+      <span>Laden</span>
+    </button>
+    <button type="button" onclick="kvPrint('wprot')" style="background:linear-gradient(135deg,#7F8C8D,#34495E);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">🖨️</span>
+      <span>Drucken</span>
+    </button>
+  </div>
+  <div style="font-size:9.5px;color:#78909C;text-align:center;margin-top:8px;line-height:1.5">
+    📤 <b>Teilen</b> hängt die KV-Datei direkt an WhatsApp/Mail an.<br>
+    💾 <b>Speichern</b> in App | 📂 <b>Laden</b> gespeicherter Daten
+  </div>
+</div>
 </div>
 <div class="pg" id="page-maengel">
 <div class="card" style="padding:8px;max-width:900px;margin:0 auto">
@@ -2508,7 +2761,8 @@ body {
 <div class="btns no-print" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0 6px">
   <button onclick="kvPrint('maengel')" style="background:#1565C0;color:#fff;border:none;border-radius:6px;padding:11px 10px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation">🖨 Drucken / PDF</button>
   <button onclick="kvMailSend('maengel')" style="background:#27AE60;color:#fff;border:none;border-radius:6px;padding:11px 10px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation">✉ Per E-Mail senden</button>
-  <button onclick="kvWhatsAppSend('maengel')" style="background:#25D366;color:#fff;border:none;border-radius:6px;padding:11px 10px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation">💬 WhatsApp</button>
+  <button type="button" onclick="kvShareDatei('maengel')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:6px;padding:11px 10px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation;margin-right:6px">📤 Teilen</button>
+<button onclick="kvWhatsAppSend('maengel')" style="background:#25D366;color:#fff;border:none;border-radius:6px;padding:11px 10px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation">💬 WhatsApp</button>
   <button onclick="kvSpeichern('maengel')" style="background:#8E44AD;color:#fff;border:none;border-radius:6px;padding:11px 10px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation">💾 Speichern</button>
   <button onclick="kvLaden('maengel')" style="background:#7F8C8D;color:#fff;border:none;border-radius:6px;padding:11px 10px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation">📂 Laden</button>
   <button onclick="mmReset()" style="background:#E74C3C;color:#fff;border:none;border-radius:6px;padding:11px 10px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation">↺ Zurücksetzen</button>
@@ -2725,6 +2979,40 @@ body {
   </div>
 </div>
 <div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
+</div>
+
+<div class="no-print" style="margin-top:18px;padding:10px;background:#F5F7FA;border-radius:10px;border:1px solid #E0E4E8">
+  <div style="font-size:10px;color:#78909C;text-align:center;margin-bottom:8px;font-weight:600;letter-spacing:0.5px">AKTIONEN</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+    <button type="button" onclick="kvShareDatei('wart')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">📤</span>
+      <span>Teilen</span>
+    </button>
+    <button type="button" onclick="kvWhatsAppSend('wart')" style="background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">💬</span>
+      <span>WhatsApp</span>
+    </button>
+    <button type="button" onclick="kvMailSend('wart')" style="background:linear-gradient(135deg,#EA4335,#B71C1C);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">✉️</span>
+      <span>E-Mail</span>
+    </button>
+    <button type="button" onclick="kvSpeichern('wart')" style="background:linear-gradient(135deg,#F39C12,#E67E22);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">💾</span>
+      <span>Speichern</span>
+    </button>
+    <button type="button" onclick="kvLaden('wart')" style="background:linear-gradient(135deg,#16A085,#0E6655);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">📂</span>
+      <span>Laden</span>
+    </button>
+    <button type="button" onclick="kvPrint('wart')" style="background:linear-gradient(135deg,#7F8C8D,#34495E);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">🖨️</span>
+      <span>Drucken</span>
+    </button>
+  </div>
+  <div style="font-size:9.5px;color:#78909C;text-align:center;margin-top:8px;line-height:1.5">
+    📤 <b>Teilen</b> hängt die KV-Datei direkt an WhatsApp/Mail an.<br>
+    💾 <b>Speichern</b> in App | 📂 <b>Laden</b> gespeicherter Daten
+  </div>
 </div>
 </div>
 
@@ -3235,6 +3523,40 @@ body {
   <button class="btn btn-rst" onclick="resetVerr()">↺ Zurücksetzen</button>
 </div>
 <div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
+</div>
+
+<div class="no-print" style="margin-top:18px;padding:10px;background:#F5F7FA;border-radius:10px;border:1px solid #E0E4E8">
+  <div style="font-size:10px;color:#78909C;text-align:center;margin-bottom:8px;font-weight:600;letter-spacing:0.5px">AKTIONEN</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+    <button type="button" onclick="kvShareDatei('verr')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">📤</span>
+      <span>Teilen</span>
+    </button>
+    <button type="button" onclick="kvWhatsAppSend('verr')" style="background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">💬</span>
+      <span>WhatsApp</span>
+    </button>
+    <button type="button" onclick="kvMailSend('verr')" style="background:linear-gradient(135deg,#EA4335,#B71C1C);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">✉️</span>
+      <span>E-Mail</span>
+    </button>
+    <button type="button" onclick="kvSpeichern('verr')" style="background:linear-gradient(135deg,#F39C12,#E67E22);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">💾</span>
+      <span>Speichern</span>
+    </button>
+    <button type="button" onclick="kvLaden('verr')" style="background:linear-gradient(135deg,#16A085,#0E6655);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">📂</span>
+      <span>Laden</span>
+    </button>
+    <button type="button" onclick="kvPrint('verr')" style="background:linear-gradient(135deg,#7F8C8D,#34495E);color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px">
+      <span style="font-size:18px">🖨️</span>
+      <span>Drucken</span>
+    </button>
+  </div>
+  <div style="font-size:9.5px;color:#78909C;text-align:center;margin-top:8px;line-height:1.5">
+    📤 <b>Teilen</b> hängt die KV-Datei direkt an WhatsApp/Mail an.<br>
+    💾 <b>Speichern</b> in App | 📂 <b>Laden</b> gespeicherter Daten
+  </div>
 </div>
 </div>
 
@@ -4300,18 +4622,7 @@ function kvPrint(pageId){
   }catch(e){showToast('Drucken fehlgeschlagen',3000);}
 }
 
-function kvDateiSpeichern(pageId){
-  var data=buildA4Html(pageId); if(!data){showToast('Keine Seite',3000);return;}
-  var fn='Grieer_'+data.title.replace(/[^a-zA-Z0-9]/g,'_')+'_'+new Date().toLocaleDateString('de-AT').replace(/\./g,'-')+'.html';
-  try{
-    var blob=new Blob([data.html],{type:'text/html;charset=utf-8'});
-    var url=URL.createObjectURL(blob);
-    var a=document.createElement('a');a.href=url;a.download=fn;a.style.display='none';
-    document.body.appendChild(a);a.click();
-    setTimeout(function(){URL.revokeObjectURL(url);a.remove();},3000);
-    showToast('Datei gespeichert',3000);
-  }catch(e){showToast('Speichern fehlgeschlagen',3000);}
-}
+
 
 
 
@@ -10304,51 +10615,374 @@ function mmWhatsAppSendItems(){
 
 
 function _grieerGetKundendaten(){
-  // Liest die Kundendaten aus der aufnahme-Seite (Master-Quelle)
   var src = document.getElementById('page-aufnahme') || document;
   function gv(cls){var el=src.querySelector('.'+cls); return el ? (el.value||el.textContent||'').trim() : '';}
   return {
-    nr: gv('kd-nr'),
-    name: gv('kd-name'),
-    str: gv('kd-str'),
-    plz: gv('kd-plz'),
-    ort: gv('kd-ort'),
-    tel: gv('kd-tel'),
+    nr: gv('kd-nr'), name: gv('kd-name'), str: gv('kd-str'),
+    plz: gv('kd-plz'), ort: gv('kd-ort'), tel: gv('kd-tel'),
     email: gv('kd-email'),
     obj_str: gv('obj-str') || gv('kd-obj-str'),
     obj_plz: gv('obj-plz') || gv('kd-obj-plz'),
     obj_ort: gv('obj-ort') || gv('kd-obj-ort'),
-    obj_typ: gv('obj-typ') || gv('kd-obj-typ'),
-    datum: gv('kd-datum')
+    datum: gv('kd-datum') || new Date().toLocaleDateString('de-AT')
   };
+}
+
+function _kvBuildTextSummary(pid){
+  // Erzeugt formatierten Text aller angekreuzten Positionen + Berechnungen einer KV-Seite
+  if(pid && pid.indexOf('page-') === 0) pid = pid.replace('page-','');
+  var pg = document.getElementById('page-' + pid);
+  if(!pg) return '';
+  
+  var lines = [];
+  var title = pg.querySelector('.kv-title');
+  var titleText = title ? title.textContent.trim() : 'Kostenvoranschlag';
+  
+  // Sammle alle Positionen (Zeilen mit Checkbox UND/ODER ep-Feld UND/ODER Endpreis)
+  // Bei Kehr-Seite: spezielle Behandlung (Kamine + Objekttarif + Schritt 2 + Schritt 3)
+  if(pid === 'kehr'){
+    // Objekttarif
+    var objAktiv = document.getElementById('obj-aktiv');
+    if(objAktiv && objAktiv.checked){
+      var objTyp = document.querySelector('input[name="obj-typ"]:checked');
+      if(objTyp && KEHR_TYPEN[objTyp.value]){
+        var t = KEHR_TYPEN[objTyp.value];
+        lines.push('• Objekttarif (1x jährlich):');
+        lines.push('  ' + t.name + ': ' + t.obj.toFixed(2).replace('.',',') + ' €');
+      }
+    }
+    // Kamine
+    var kamine = document.querySelectorAll('#kehr-list .kehr-item');
+    if(kamine.length > 0){
+      lines.push('');
+      lines.push('• Kamine / Fänge:');
+      kamine.forEach(function(item, idx){
+        var typ = item.dataset.typ;
+        var t = KEHR_TYPEN[typ];
+        if(!t) return;
+        var name = item.querySelector('.kehr-name')?.value || ('Kamin ' + (idx+1));
+        var anzahl = item.querySelector('.kehr-anzahl')?.value || '1';
+        var arbeit = item.querySelector('.kehr-item-arbeit')?.textContent || '';
+        var jahr = item.querySelector('.kehr-item-jahr')?.textContent || '';
+        var ges = item.querySelector('.kehr-geschosse')?.value;
+        var meter = item.querySelector('.kehr-meter')?.value;
+        var vstd = item.querySelector('.kehr-vstd')?.value;
+        var detail = '';
+        if(ges) detail = ges + ' Geschosse';
+        else if(meter) detail = meter + ' m';
+        else if(vstd) detail = vstd + ' ¼-Stunden';
+        lines.push('  ' + (idx+1) + '. ' + name + ' (' + t.name + ')');
+        lines.push('     ' + detail + ', ' + anzahl + 'x/Jahr');
+        lines.push('     Pro Kehrung: ' + arbeit + ' | Jahresentgelt: ' + jahr);
+      });
+    }
+    // Schritt 2
+    var s2 = [];
+    [{id:'zu-7',name:'Verbindungsstücke je m'},{id:'zu-8',name:'Ausbrennen je ¼h'},
+     {id:'zu-9',name:'Rohbau-/Gebrauchsabnahme'},{id:'zu-10',name:'Topograph. Bezeichnung'},
+     {id:'zu-11',name:'Überprüfung §10 KehrG'},{id:'zu-12',name:'Berichts. RFK-Wechsel'},
+     {id:'zu-13',name:'Aufgeteilte Rechnung'},{id:'zu-14',name:'Dichteprüfung je ¼h'},
+     {id:'zu-15',name:'An-/Abfahrt je ¼h'}].forEach(function(item){
+      var cb = document.getElementById(item.id);
+      if(cb && cb.checked){
+        var tarif = parseFloat(cb.dataset.tarif || cb.getAttribute('data-tarif')) || 0;
+        var nEl = document.getElementById(item.id + '-n');
+        var n = nEl ? (parseFloat(nEl.value)||1) : 1;
+        if(item.id === 'zu-11' || item.id === 'zu-12') n = 1;
+        var total = (tarif * n).toFixed(2).replace('.',',');
+        s2.push('  • ' + item.name + (n>1 ? ' (' + n + 'x)' : '') + ': ' + total + ' €');
+      }
+    });
+    if(s2.length > 0){
+      lines.push('');
+      lines.push('• Zusatz / Überprüfungen:');
+      lines = lines.concat(s2);
+    }
+    // OVGW
+    var s3 = [];
+    [{id:'zu-ovgw-k61',name:'ÖVGW G K61 (Erstprüfung)'},
+     {id:'zu-ovgw-k62',name:'ÖVGW G K62 (Wiederkehrend)'},
+     {id:'zu-ovgw-k32',name:'ÖVGW G K32 (Abgasführung)'},
+     {id:'zu-ovgw-k12',name:'ÖVGW G K12 (Geräteabnahme)'}].forEach(function(item){
+      var cb = document.getElementById(item.id);
+      if(cb && cb.checked){
+        var tarif = parseFloat(cb.dataset.tarif || cb.getAttribute('data-tarif')) || 0;
+        s3.push('  • ' + item.name + ': ' + tarif.toFixed(2).replace('.',',') + ' €');
+      }
+    });
+    if(s3.length > 0){
+      lines.push('');
+      lines.push('• ÖVGW Gas-Prüfungen:');
+      lines = lines.concat(s3);
+    }
+    // Summen
+    var obj = document.getElementById('sum-obj')?.textContent || '';
+    var kehr = document.getElementById('sum-kehr')?.textContent || '';
+    var zus = document.getElementById('sum-zusatz')?.textContent || '';
+    var ovgw = document.getElementById('sum-ovgw')?.textContent || '';
+    var netto = document.getElementById('sum-netto')?.textContent || '';
+    var ust = document.getElementById('sum-ust')?.textContent || '';
+    var brutto = document.getElementById('sum-brutto')?.textContent || '';
+    lines.push('');
+    lines.push('─────────────────────────');
+    if(obj) lines.push('Objekttarif:       ' + obj);
+    if(kehr) lines.push('Arbeitsentgelt:    ' + kehr);
+    if(zus) lines.push('Zusatz:            ' + zus);
+    if(ovgw) lines.push('ÖVGW:              ' + ovgw);
+    lines.push('Netto:             ' + netto);
+    lines.push('20% USt:           ' + ust);
+    lines.push('GESAMT brutto:     ' + brutto);
+    return lines.join('\n');
+  }
+  
+  // Allgemeine Positions-Extraktion für PV, Gas, Lüft, Brand, Kamin etc.
+  // Suche alle Zeilen mit nummerierter Position
+  var rows = pg.querySelectorAll('.pos, tr, label');
+  var posCnt = 0;
+  rows.forEach(function(row){
+    var cb = row.querySelector('input[type="checkbox"]');
+    var num = row.querySelector('input[type="number"]');
+    var endEl = row.querySelector('.ep, .ep-result, [class*="endpreis"], td:last-child, span[class*="result"]');
+    
+    // Bei Checkbox: nur angekreuzte
+    if(cb){
+      if(!cb.checked) return;
+      var txt = row.textContent.replace(/\s+/g, ' ').trim();
+      // Filter: muss einen Preis enthalten (€)
+      if(txt.indexOf('€') < 0 && txt.indexOf('EUR') < 0) return;
+      // Kürze auf max. 80 chars + Preis
+      var priceMatch = txt.match(/([\d.,]+)\s*€/);
+      var price = priceMatch ? priceMatch[1] + ' €' : '';
+      // Bereinige Text
+      var clean = txt.replace(/\d+[.,]\d+\s*€/g, '').replace(/^\d+/, '').trim();
+      if(clean.length > 80) clean = clean.substring(0, 77) + '...';
+      posCnt++;
+      lines.push('• ' + clean + (price ? '  → ' + price : ''));
+    }
+  });
+  
+  // Wenn keine Positionen gefunden: Fallback auf Berechnungs-Zusammenfassung
+  if(posCnt === 0){
+    // Versuche Berechnungs-Inputs zu lesen
+    pg.querySelectorAll('input[type="number"]').forEach(function(inp){
+      var v = inp.value;
+      if(!v || parseFloat(v) === 0) return;
+      var label = inp.closest('label, tr, div')?.textContent?.replace(/\s+/g,' ').trim();
+      if(label && label.length < 100){
+        lines.push('• ' + label.substring(0, 80) + ': ' + v);
+      }
+    });
+  }
+  
+  // Grand-Total / Gesamtsumme
+  var grand = pg.querySelector('.grand');
+  if(grand){
+    var grandTxt = grand.textContent.replace(/\s+/g, ' ').trim();
+    lines.push('');
+    lines.push('─────────────────────────');
+    lines.push(grandTxt);
+  } else {
+    // Suche andere Summen-IDs
+    var sumIds = ['sum-brutto', 'sum-gesamt', 'pv-grand', 'gas-grand', 'luft-grand'];
+    for(var i=0; i<sumIds.length; i++){
+      var el = document.getElementById(sumIds[i]);
+      if(el && el.textContent){
+        lines.push('');
+        lines.push('─────────────────────────');
+        lines.push('GESAMT: ' + el.textContent.trim());
+        break;
+      }
+    }
+  }
+  
+  return lines.join('\n');
+}
+
+
+
+
+
+function _grieerBuildHeader(k, title){
+  var nl='\n';
+  var msg = '═══════════════════════════' + nl
+    + '  GRIEER Rauchfangkehrermeister' + nl
+    + '═══════════════════════════' + nl + nl
+    + title + nl + nl;
+  if(k.nr) msg += 'KV-Nr: ' + k.nr + nl;
+  if(k.datum) msg += 'Datum: ' + k.datum + nl;
+  if(k.name || k.str){
+    msg += nl + 'KUNDE:' + nl;
+    if(k.name) msg += '  ' + k.name + nl;
+    if(k.str) msg += '  ' + k.str + nl;
+    if(k.plz || k.ort) msg += '  ' + [k.plz, k.ort].filter(Boolean).join(' ') + nl;
+    if(k.tel) msg += '  Tel: ' + k.tel + nl;
+  }
+  if(k.obj_str || k.obj_plz){
+    msg += nl + 'OBJEKT:' + nl;
+    if(k.obj_str) msg += '  ' + k.obj_str + nl;
+    if(k.obj_plz || k.obj_ort) msg += '  ' + [k.obj_plz, k.obj_ort].filter(Boolean).join(' ') + nl;
+  }
+  msg += nl + '─────────────────────────' + nl + 'POSITIONEN:' + nl;
+  return msg;
+}
+
+function _grieerBuildFooter(){
+  var nl='\n';
+  return nl + nl + '═══════════════════════════' + nl
+    + 'Grieer Rauchfangkehrermeister' + nl
+    + 'Neugebäu 10, 7201 Neudörfl' + nl
+    + 'Tel: +43 (0) 2622 77062' + nl
+    + 'Mail: office@grieer.com' + nl
+    + 'Web: www.grieer.com' + nl
+    + '═══════════════════════════';
+}
+
+
+function _grieerOpenUrl(url, displayName){
+  // Robuster URL-Öffner für iOS PWA + Android + Desktop
+  // Methode: <a> Tag mit synthetischem Click - funktioniert in allen Modi
+  try {
+    showToast('Öffne ' + (displayName || 'externe App') + '...', 1500);
+    var a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.style.cssText = 'position:fixed;left:-9999px;opacity:0';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function(){ try{ a.remove(); }catch(e){} }, 100);
+    return true;
+  } catch(e) {
+    // Fallback 1: window.open
+    try {
+      var w = window.open(url, '_blank');
+      if(w) return true;
+    } catch(e2){}
+    // Fallback 2: location.href (für mailto:, tel:, whatsapp://)
+    try {
+      window.location.href = url;
+      return true;
+    } catch(e3){
+      showToast('Konnte App nicht öffnen: ' + e3.message, 4000);
+      return false;
+    }
+  }
+}
+
+function _grieerShowVisualFeedback(message, color){
+  // Großes, gut sichtbares Visual-Feedback (mehr als Toast)
+  var existing = document.getElementById('grieer-feedback');
+  if(existing) existing.remove();
+  var div = document.createElement('div');
+  div.id = 'grieer-feedback';
+  div.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:' + (color||'#27AE60') + ';color:#fff;padding:20px 28px;border-radius:14px;font-size:15px;font-weight:700;box-shadow:0 6px 24px rgba(0,0,0,0.3);z-index:99999;text-align:center;max-width:80vw;line-height:1.4;animation:grieer-fade 0.2s ease';
+  div.innerHTML = message;
+  document.body.appendChild(div);
+  setTimeout(function(){ 
+    div.style.transition = 'opacity 0.3s'; 
+    div.style.opacity = '0';
+    setTimeout(function(){ try{ div.remove(); }catch(e){} }, 350);
+  }, 2200);
+}
+
+
+
+
+function kvWhatsAppSend(pageId){
+  var pid=pageId; if(pid&&pid.indexOf('page-')===0) pid=pid.replace('page-','');
+  if(!pid){var a=document.querySelector('.pg.active'); pid=a?a.id.replace('page-',''):null;}
+  var pg=document.getElementById('page-'+(pid||'aufnahme'));
+  if(!pg){_grieerShowVisualFeedback('⚠ Seite nicht gefunden', '#E74C3C'); return;}
+  try {
+    var k = _grieerGetKundendaten();
+    var title=pg.querySelector('.kv-title'); var t=title?title.textContent.trim():'Kostenvoranschlag';
+    var positionen = _kvBuildTextSummary(pid);
+    var msg = _grieerBuildHeader(k, '*' + t + '*');
+    msg += positionen || '(keine Positionen)';
+    msg += _grieerBuildFooter();
+    var url = 'https://wa.me/?text=' + encodeURIComponent(msg);
+    _grieerOpenUrl(url, 'WhatsApp');
+    _grieerShowVisualFeedback('💬 WhatsApp wird geöffnet...<br><span style="font-size:11px;font-weight:400;opacity:0.9">Nachricht ist fertig vorbereitet</span>', '#25D366');
+  } catch(e) {
+    _grieerShowVisualFeedback('⚠ Fehler: ' + e.message, '#E74C3C');
+  }
+}
+
+function kvMailSend(pageId){
+  var pid=pageId; if(pid&&pid.indexOf('page-')===0) pid=pid.replace('page-','');
+  if(!pid){var a=document.querySelector('.pg.active'); pid=a?a.id.replace('page-',''):null;}
+  var pg=document.getElementById('page-'+(pid||'aufnahme'));
+  if(!pg){_grieerShowVisualFeedback('⚠ Seite nicht gefunden', '#E74C3C'); return;}
+  try {
+    var k = _grieerGetKundendaten();
+    var title=pg.querySelector('.kv-title'); var t=title?title.textContent.trim():'Kostenvoranschlag';
+    var positionen = _kvBuildTextSummary(pid);
+    var anrede = k.name ? ('Sehr geehrte/r ' + k.name) : 'Sehr geehrte Damen und Herren';
+    var nl = '\r\n';
+    var body = anrede + ',' + nl + nl
+      + 'anbei der gewünschte Kostenvoranschlag:' + nl + nl
+      + positionen + nl + nl
+      + 'Bei Fragen stehen wir gerne zur Verfügung.' + nl + nl
+      + 'Mit freundlichen Grüßen' + nl
+      + 'Grieer Rauchfangkehrermeister' + nl
+      + 'Neugebäu 10, 7201 Neudörfl an der Leitha' + nl
+      + 'Tel: +43 (0) 2622 77062' + nl
+      + 'Mail: office@grieer.com' + nl
+      + 'Web: www.grieer.com';
+    var subj = 'Grieer - ' + t + (k.name ? ' für ' + k.name : '');
+    var to = k.email || '';
+    // mailto-URL ohne 'encodeURIComponent' für die "to" (nicht zwingend)
+    var url = 'mailto:' + to + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
+    // Für mailto: am besten direkt location.href (oder a-Tag)
+    _grieerOpenUrl(url, 'E-Mail-App');
+    _grieerShowVisualFeedback('✉️ Mail-App wird geöffnet...<br><span style="font-size:11px;font-weight:400;opacity:0.9">E-Mail ist fertig vorbereitet</span>', '#EA4335');
+  } catch(e) {
+    _grieerShowVisualFeedback('⚠ Fehler: ' + e.message, '#E74C3C');
+  }
 }
 
 function kvSpeichern(pageId){
   var pid=pageId; if(pid&&pid.indexOf('page-')===0) pid=pid.replace('page-','');
   if(!pid){var a=document.querySelector('.pg.active'); pid=a?a.id.replace('page-',''):null;}
   var pg=document.getElementById('page-'+pid);
-  if(!pg){showToast('Keine Seite', 3000); return;}
-  var data={};
-  pg.querySelectorAll('input,select,textarea').forEach(function(el){
-    // Erweiterte Key-Generierung: id → name → class (für .kd-* + .obj-*) → data-opt
-    var key = el.id || el.name || '';
-    if(!key && el.className){
-      // Suche kd-* oder obj-* Klassen
-      var m = el.className.match(/\b(kd-[\w-]+|obj-[\w-]+)\b/);
-      if(m) key = m[1];
-    }
-    if(!key && el.dataset && el.dataset.opt) key = 'opt-' + el.dataset.opt;
-    if(!key) return;
-    data[key] = el.type === 'checkbox' ? el.checked : (el.value || '');
-  });
-  // Auch globale Kundendaten aus aufnahme dazu nehmen
-  var kunde = _grieerGetKundendaten();
-  data.__kunde = kunde;
+  if(!pg){_grieerShowVisualFeedback('⚠ Keine Seite gewählt', '#E74C3C'); return;}
   try {
-    localStorage.setItem('grieer-kv-'+pid, JSON.stringify({data:data, ts:Date.now()}));
-    showToast('Daten gespeichert ✓');
+    var data={};
+    pg.querySelectorAll('input,select,textarea').forEach(function(el){
+      var key = el.id || el.name || '';
+      if(!key && el.className){
+        var m = el.className.match(/\b(kd-[\w-]+|obj-[\w-]+|opt-[\w-]+)\b/);
+        if(m) key = m[1];
+      }
+      if(!key && el.dataset && el.dataset.opt) key = 'opt-' + el.dataset.opt;
+      if(!key) return;
+      data[key] = el.type === 'checkbox' ? el.checked : (el.value || '');
+    });
+    data.__kunde = _grieerGetKundendaten();
+    var key = 'grieer-kv-' + pid;
+    var payload = JSON.stringify({data:data, ts:Date.now(), pid:pid});
+    
+    // Test ob localStorage verfügbar
+    if(typeof localStorage === 'undefined'){
+      _grieerShowVisualFeedback('⚠ Speicher nicht verfügbar<br><span style="font-size:11px">Bitte privates Surfen ausschalten</span>', '#E74C3C');
+      return;
+    }
+    
+    localStorage.setItem(key, payload);
+    var verify = localStorage.getItem(key);
+    if(!verify) throw new Error('localStorage leer nach setItem');
+    
+    var sizeKB = Math.round(payload.length/1024*10)/10;
+    _grieerShowVisualFeedback('💾 Gespeichert ✓<br><span style="font-size:11px;font-weight:400">' + sizeKB + ' KB - Bleibt im Browser</span>', '#27AE60');
   } catch(e){
-    showToast('Speichern fehlgeschlagen: ' + e.message, 4000);
+    var msg = e.message || e.name || 'Unbekannt';
+    if(msg.indexOf('Quota') >= 0 || msg.indexOf('quota') >= 0){
+      _grieerShowVisualFeedback('⚠ Speicher voll<br><span style="font-size:11px">Bitte Datei-Download (📤 Teilen) verwenden</span>', '#E74C3C');
+    } else if(msg.indexOf('SecurityError') >= 0 || msg.indexOf('access') >= 0){
+      _grieerShowVisualFeedback('⚠ Speicher gesperrt<br><span style="font-size:11px">Privates Surfen ausschalten</span>', '#E74C3C');
+    } else {
+      _grieerShowVisualFeedback('⚠ Speichern fehlgeschlagen<br><span style="font-size:11px">' + msg + '</span>', '#E74C3C');
+    }
   }
 }
 
@@ -10356,12 +10990,18 @@ function kvLaden(pageId){
   var pid=pageId; if(pid&&pid.indexOf('page-')===0) pid=pid.replace('page-','');
   if(!pid){var a=document.querySelector('.pg.active'); pid=a?a.id.replace('page-',''):null;}
   var pg=document.getElementById('page-'+pid);
-  if(!pg){showToast('Keine Seite', 3000); return;}
-  var raw=localStorage.getItem('grieer-kv-'+pid);
-  if(!raw){showToast('Keine gespeicherten Daten für diese Seite'); return;}
+  if(!pg){_grieerShowVisualFeedback('⚠ Keine Seite', '#E74C3C'); return;}
   try {
+    if(typeof localStorage === 'undefined'){
+      _grieerShowVisualFeedback('⚠ Speicher nicht verfügbar', '#E74C3C');
+      return;
+    }
+    var raw=localStorage.getItem('grieer-kv-'+pid);
+    if(!raw){
+      _grieerShowVisualFeedback('Keine gespeicherten Daten<br><span style="font-size:11px">Vorher mit 💾 Speichern sichern</span>', '#F39C12');
+      return;
+    }
     var saved=JSON.parse(raw); var data=saved.data||saved;
-    // Stelle Kunden-Daten in aufnahme-Seite wieder her
     if(data.__kunde){
       var auf = document.getElementById('page-aufnahme');
       if(auf){
@@ -10374,96 +11014,77 @@ function kvLaden(pageId){
         });
       }
     }
-    // Lade auch Felder in aktueller Seite
     pg.querySelectorAll('input,select,textarea').forEach(function(el){
       var key = el.id || el.name || '';
       if(!key && el.className){
-        var m = el.className.match(/\b(kd-[\w-]+|obj-[\w-]+)\b/);
+        var m = el.className.match(/\b(kd-[\w-]+|obj-[\w-]+|opt-[\w-]+)\b/);
         if(m) key = m[1];
       }
       if(!key && el.dataset && el.dataset.opt) key = 'opt-' + el.dataset.opt;
       if(!key || !(key in data)) return;
-      if(el.type === 'checkbox') el.checked = data[key];
-      else el.value = data[key];
+      if(el.type === 'checkbox'){
+        el.checked = data[key];
+        el.dispatchEvent(new Event('change', {bubbles:true}));
+      } else {
+        el.value = data[key];
+        el.dispatchEvent(new Event('input', {bubbles:true}));
+      }
     });
-    // Berechnungen aktualisieren
     try{ if(typeof ct === 'function') ct(pid); }catch(e){}
     try{ if(typeof kCalcTarif === 'function' && pid==='kehr') kCalcTarif(); }catch(e){}
     try{ if(typeof syncKunden === 'function') syncKunden(); }catch(e){}
-    showToast('Daten geladen ✓');
+    var ts = saved.ts ? new Date(saved.ts).toLocaleString('de-AT') : '';
+    _grieerShowVisualFeedback('📂 Geladen ✓<br><span style="font-size:11px;font-weight:400">' + (ts ? 'vom ' + ts : '') + '</span>', '#16A085');
   } catch(e){
-    showToast('Laden fehlgeschlagen: ' + e.message, 4000);
+    _grieerShowVisualFeedback('⚠ Laden fehlgeschlagen<br><span style="font-size:11px">' + e.message + '</span>', '#E74C3C');
   }
 }
 
-function kvWhatsAppSend(pageId){
-  var pid=pageId; if(pid&&pid.indexOf('page-')===0) pid=pid.replace('page-','');
-  var pg=document.getElementById('page-'+(pid||'aufnahme'));
-  if(!pg){showToast('Seite nicht gefunden', 3000); return;}
-  var k = _grieerGetKundendaten();
-  var title=pg.querySelector('.kv-title'); var t=title?title.textContent.trim():'KV';
-  var grand=pg.querySelector('.grand span:last-child'); var summe=grand?grand.textContent.trim():'';
-  if(!summe){
-    // Fallback: suche andere Summen
-    var sb = pg.querySelector('#sum-brutto, [id$="-brutto"], [id$="-gesamt"]');
-    if(sb) summe = sb.textContent.trim();
-  }
-  var nl='\n';
-  var msg = '*Grieer Rauchfangkehrermeister*' + nl
-    + t + nl
-    + '────────────────' + nl;
-  if(k.name) msg += 'Kunde: ' + k.name + nl;
-  if(k.str || k.plz || k.ort){
-    msg += 'Adresse: ' + [k.str, [k.plz, k.ort].filter(Boolean).join(' ')].filter(Boolean).join(', ') + nl;
-  }
-  if(k.tel) msg += 'Tel: ' + k.tel + nl;
-  if(summe) msg += nl + '*Gesamt: ' + summe + '*' + nl;
-  msg += nl + '────────────────' + nl
-    + 'Tel: +43 (0) 2622 77062' + nl
-    + 'Mail: office@grieer.com' + nl
-    + 'Web: www.grieer.com';
-  
-  var url = 'https://wa.me/?text=' + encodeURIComponent(msg);
-  // Versuche zuerst whatsapp:// (App), Fallback https
+function kvShareDatei(pageId){
+  var data = buildA4Html(pageId);
+  if(!data){_grieerShowVisualFeedback('⚠ Keine Daten', '#E74C3C'); return;}
+  var fn = 'Grieer_KV_' + (data.title || '').replace(/[^a-zA-Z0-9]/g,'_').substring(0,40) 
+    + '_' + new Date().toLocaleDateString('de-AT').replace(/\./g,'-') + '.html';
   try {
-    window.open(url, '_blank');
-  } catch(e) {
-    window.location.href = url;
+    var blob = new Blob([data.html], {type: 'text/html;charset=utf-8'});
+    var file = new File([blob], fn, {type: 'text/html'});
+    // Web Share API
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      _grieerShowVisualFeedback('📤 Teilen wird vorbereitet...', '#1565C0');
+      navigator.share({
+        files: [file],
+        title: data.title || 'Grieer Kostenvoranschlag',
+        text: 'Kostenvoranschlag von Grieer Rauchfangkehrermeister'
+      }).then(function(){
+        _grieerShowVisualFeedback('📤 Geteilt ✓', '#27AE60');
+      }).catch(function(err){
+        if(err.name !== 'AbortError'){
+          _grieerDownload(blob, fn);
+        }
+      });
+    } else {
+      _grieerDownload(blob, fn);
+    }
+  } catch(e){
+    _grieerShowVisualFeedback('⚠ Teilen fehlgeschlagen<br><span style="font-size:11px">' + e.message + '</span>', '#E74C3C');
   }
 }
 
-function kvMailSend(pageId){
-  var pid=pageId; if(pid&&pid.indexOf('page-')===0) pid=pid.replace('page-','');
-  var pg=document.getElementById('page-'+(pid||'aufnahme'));
-  if(!pg){showToast('Seite nicht gefunden', 3000); return;}
-  var k = _grieerGetKundendaten();
-  var title=pg.querySelector('.kv-title'); var t=title?title.textContent.trim():'KV';
-  var grand=pg.querySelector('.grand span:last-child'); var summe=grand?grand.textContent.trim():'';
-  if(!summe){
-    var sb = pg.querySelector('#sum-brutto, [id$="-brutto"], [id$="-gesamt"]');
-    if(sb) summe = sb.textContent.trim();
-  }
-  var nl = '\r\n';
-  var anrede = k.name ? ('Sehr geehrte/r ' + k.name) : 'Sehr geehrte Damen und Herren';
-  var body = anrede + ',' + nl + nl
-    + 'anbei der ' + t + ':' + nl + nl
-    + (k.str || k.plz ? 'Objekt: ' + [k.str, [k.plz, k.ort].filter(Boolean).join(' ')].filter(Boolean).join(', ') + nl : '')
-    + (summe ? 'Gesamtbetrag: ' + summe + nl + nl : nl)
-    + 'Bei Fragen stehen wir gerne zur Verfügung.' + nl + nl
-    + 'Mit freundlichen Grüßen' + nl
-    + 'Grieer Rauchfangkehrermeister' + nl
-    + 'Neugebäu 10, 7201 Neudörfl an der Leitha' + nl
-    + 'Tel: +43 (0) 2622 77062' + nl
-    + 'Mail: office@grieer.com' + nl
-    + 'Web: www.grieer.com';
-  var subj = 'Grieer - ' + t + (k.name ? ' für ' + k.name : '');
-  var to = k.email || '';
-  var url = 'mailto:' + encodeURIComponent(to) + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
-  // Mobile: location.href verwenden (öffnet Mail-App)
+function _grieerDownload(blob, fn){
   try {
-    window.location.href = url;
-  } catch(e) {
-    showToast('Mail-App nicht verfügbar: ' + e.message, 4000);
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = fn; a.style.display = 'none';
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){URL.revokeObjectURL(url); a.remove();}, 3000);
+    _grieerShowVisualFeedback('💾 Heruntergeladen ✓<br><span style="font-size:11px;font-weight:400">' + fn + '</span>', '#27AE60');
+  } catch(e){
+    _grieerShowVisualFeedback('⚠ Download fehlgeschlagen', '#E74C3C');
   }
 }
+
+function kvDateiSpeichern(pageId){
+  kvShareDatei(pageId);
+}
+
 </script>
