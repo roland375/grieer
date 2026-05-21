@@ -1,6 +1,26 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
+<script>
+// === CACHE-KILLER für iOS PWA: jedes Mal Cache löschen + Update ===
+(function(){
+  try {
+    // Service Workers deregistrieren
+    if('serviceWorker' in navigator){
+      navigator.serviceWorker.getRegistrations().then(function(regs){
+        regs.forEach(function(r){ r.unregister(); });
+      }).catch(function(){});
+    }
+    // Caches API leeren
+    if('caches' in window){
+      caches.keys().then(function(names){
+        names.forEach(function(n){ caches.delete(n); });
+      }).catch(function(){});
+    }
+  } catch(e){}
+})();
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Grieer App</title>
@@ -3605,7 +3625,9 @@ body {
 </div>
 </div>
 
-<script>
+<script>/* GRIEER VERSION 2026-05-20-PWA-FIX */
+var GRIEER_VERSION = "2026-05-20-PWA-FIX";
+
 /* === KEHRTARIF Berechnung — echte Tarife Bgld. HTVO LGBl 98/2025 === */
 var KEHR_TYPEN = {
   'ein10': {name:'Einzelraumheizgerät bis 10 kW', obj:21.95, g3:11.88, g_w:3.95, color:'#26A69A', modus:'geschoss'},
@@ -10838,53 +10860,158 @@ function _grieerBuildFooter(){
 }
 
 
-function _grieerOpenUrl(url, displayName){
-  // Robuster URL-Öffner für iOS PWA + Android + Desktop
-  // Methode: <a> Tag mit synthetischem Click - funktioniert in allen Modi
-  try {
-    showToast('Öffne ' + (displayName || 'externe App') + '...', 1500);
-    var a = document.createElement('a');
-    a.href = url;
-    a.target = '_blank';
-    a.rel = 'noopener noreferrer';
-    a.style.cssText = 'position:fixed;left:-9999px;opacity:0';
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(function(){ try{ a.remove(); }catch(e){} }, 100);
-    return true;
-  } catch(e) {
-    // Fallback 1: window.open
-    try {
-      var w = window.open(url, '_blank');
-      if(w) return true;
-    } catch(e2){}
-    // Fallback 2: location.href (für mailto:, tel:, whatsapp://)
-    try {
-      window.location.href = url;
-      return true;
-    } catch(e3){
-      showToast('Konnte App nicht öffnen: ' + e3.message, 4000);
-      return false;
-    }
-  }
-}
-
-function _grieerShowVisualFeedback(message, color){
-  // Großes, gut sichtbares Visual-Feedback (mehr als Toast)
+function _grieerShowVisualFeedback(message, color, duration){
   var existing = document.getElementById('grieer-feedback');
   if(existing) existing.remove();
   var div = document.createElement('div');
   div.id = 'grieer-feedback';
-  div.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:' + (color||'#27AE60') + ';color:#fff;padding:20px 28px;border-radius:14px;font-size:15px;font-weight:700;box-shadow:0 6px 24px rgba(0,0,0,0.3);z-index:99999;text-align:center;max-width:80vw;line-height:1.4;animation:grieer-fade 0.2s ease';
+  div.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:' + (color||'#27AE60') + ';color:#fff;padding:20px 28px;border-radius:14px;font-size:15px;font-weight:700;box-shadow:0 6px 24px rgba(0,0,0,0.4);z-index:99999;text-align:center;max-width:85vw;line-height:1.4';
   div.innerHTML = message;
   document.body.appendChild(div);
   setTimeout(function(){ 
     div.style.transition = 'opacity 0.3s'; 
     div.style.opacity = '0';
     setTimeout(function(){ try{ div.remove(); }catch(e){} }, 350);
-  }, 2200);
+  }, duration || 2500);
 }
 
+function _grieerShowSendDialog(title, text, opts){
+  // Großer modaler Dialog mit Send-Optionen für iOS PWA
+  var existing = document.getElementById('grieer-send-dialog');
+  if(existing) existing.remove();
+  
+  opts = opts || {};
+  var waUrl = opts.whatsappUrl || '';
+  var mailUrl = opts.mailUrl || '';
+  
+  var overlay = document.createElement('div');
+  overlay.id = 'grieer-send-dialog';
+  overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:99998;display:flex;align-items:center;justify-content:center;padding:16px';
+  
+  var inner = document.createElement('div');
+  inner.style.cssText = 'background:#fff;border-radius:16px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.5)';
+  
+  var html = '<div style="padding:18px 18px 12px;border-bottom:1px solid #ECEFF1;display:flex;align-items:center;justify-content:space-between">';
+  html += '<div style="font-size:16px;font-weight:700;color:#0D47A1">📤 ' + title + '</div>';
+  html += '<button type="button" onclick="document.getElementById(\'grieer-send-dialog\').remove()" style="background:#ECEFF1;color:#37474F;border:none;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer">✕</button>';
+  html += '</div>';
+  html += '<div style="padding:16px">';
+  
+  // Wichtigste Buttons: Native Share + WhatsApp + Mail
+  html += '<div style="display:grid;grid-template-columns:1fr;gap:10px">';
+  
+  // Native Share (iOS Share-Sheet)
+  if(navigator.share){
+    html += '<button type="button" id="grieer-native-share" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:10px;padding:14px 16px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:10px;touch-action:manipulation">';
+    html += '<span style="font-size:22px">📲</span>';
+    html += '<div style="flex:1;text-align:left"><div>iPhone Senden</div><div style="font-size:11px;opacity:0.85;font-weight:400">Öffnet WhatsApp, Mail, Nachrichten...</div></div>';
+    html += '</button>';
+  }
+  
+  // Direkte WhatsApp-Link (echter <a> mit href)
+  if(waUrl){
+    html += '<a href="' + waUrl + '" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;border-radius:10px;padding:14px 16px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:10px;text-decoration:none;touch-action:manipulation">';
+    html += '<span style="font-size:22px">💬</span>';
+    html += '<div style="flex:1;text-align:left"><div>Direkt zu WhatsApp</div><div style="font-size:11px;opacity:0.85;font-weight:400">Öffnet wa.me Link</div></div>';
+    html += '</a>';
+  }
+  
+  // Direkter Mail-Link
+  if(mailUrl){
+    html += '<a href="' + mailUrl + '" style="background:linear-gradient(135deg,#EA4335,#B71C1C);color:#fff;border:none;border-radius:10px;padding:14px 16px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:10px;text-decoration:none;touch-action:manipulation">';
+    html += '<span style="font-size:22px">✉️</span>';
+    html += '<div style="flex:1;text-align:left"><div>Direkt zur Mail-App</div><div style="font-size:11px;opacity:0.85;font-weight:400">Öffnet Apple Mail</div></div>';
+    html += '</a>';
+  }
+  
+  // Text zum Kopieren
+  html += '<button type="button" id="grieer-copy-text" style="background:linear-gradient(135deg,#F39C12,#E67E22);color:#fff;border:none;border-radius:10px;padding:14px 16px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:10px;touch-action:manipulation">';
+  html += '<span style="font-size:22px">📋</span>';
+  html += '<div style="flex:1;text-align:left"><div>Text kopieren</div><div style="font-size:11px;opacity:0.85;font-weight:400">In jede App einfügen</div></div>';
+  html += '</button>';
+  
+  html += '</div>'; // grid
+  
+  // Vorschau des Texts
+  html += '<div style="margin-top:14px;background:#F5F7FA;border:1px solid #E0E4E8;border-radius:8px;padding:10px;font-size:11px;color:#37474F;max-height:200px;overflow-y:auto;white-space:pre-wrap;font-family:monospace;line-height:1.4">';
+  html += text.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  html += '</div>';
+  
+  html += '</div>'; // padding
+  
+  inner.innerHTML = html;
+  overlay.appendChild(inner);
+  document.body.appendChild(overlay);
+  
+  // Click-Handler für Native Share
+  var nativeBtn = document.getElementById('grieer-native-share');
+  if(nativeBtn){
+    nativeBtn.addEventListener('click', function(){
+      if(navigator.share){
+        navigator.share({
+          title: title,
+          text: text
+        }).then(function(){
+          document.getElementById('grieer-send-dialog')?.remove();
+          _grieerShowVisualFeedback('✓ Geteilt', '#27AE60');
+        }).catch(function(err){
+          if(err.name !== 'AbortError'){
+            _grieerShowVisualFeedback('⚠ ' + err.message, '#E74C3C');
+          }
+        });
+      }
+    });
+  }
+  
+  // Copy-Button
+  var copyBtn = document.getElementById('grieer-copy-text');
+  if(copyBtn){
+    copyBtn.addEventListener('click', function(){
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(function(){
+          _grieerShowVisualFeedback('📋 Text kopiert ✓<br><span style="font-size:11px;font-weight:400">Jetzt in WhatsApp/Mail einfügen</span>', '#27AE60');
+        }).catch(function(err){
+          // Fallback: textarea
+          _grieerLegacyCopy(text);
+        });
+      } else {
+        _grieerLegacyCopy(text);
+      }
+    });
+  }
+  
+  // Outer click schließt
+  overlay.addEventListener('click', function(e){
+    if(e.target === overlay) overlay.remove();
+  });
+}
+
+function _grieerLegacyCopy(text){
+  try {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;left:-9999px';
+    document.body.appendChild(ta);
+    ta.focus(); ta.select();
+    var ok = document.execCommand('copy');
+    ta.remove();
+    if(ok) _grieerShowVisualFeedback('📋 Text kopiert ✓', '#27AE60');
+    else _grieerShowVisualFeedback('⚠ Kopieren fehlgeschlagen', '#E74C3C');
+  } catch(e){
+    _grieerShowVisualFeedback('⚠ Kopieren nicht möglich', '#E74C3C');
+  }
+}
+
+function _grieerStorageAvailable(){
+  try {
+    var testKey = '__grieer_test__';
+    localStorage.setItem(testKey, '1');
+    localStorage.removeItem(testKey);
+    return true;
+  } catch(e) {
+    return false;
+  }
+}
 
 
 
@@ -10900,11 +11027,10 @@ function kvWhatsAppSend(pageId){
     var msg = _grieerBuildHeader(k, '*' + t + '*');
     msg += positionen || '(keine Positionen)';
     msg += _grieerBuildFooter();
-    var url = 'https://wa.me/?text=' + encodeURIComponent(msg);
-    _grieerOpenUrl(url, 'WhatsApp');
-    _grieerShowVisualFeedback('💬 WhatsApp wird geöffnet...<br><span style="font-size:11px;font-weight:400;opacity:0.9">Nachricht ist fertig vorbereitet</span>', '#25D366');
+    var waUrl = 'https://wa.me/?text=' + encodeURIComponent(msg);
+    _grieerShowSendDialog(t, msg, {whatsappUrl: waUrl});
   } catch(e) {
-    _grieerShowVisualFeedback('⚠ Fehler: ' + e.message, '#E74C3C');
+    _grieerShowVisualFeedback('⚠ Fehler: ' + e.message, '#E74C3C', 5000);
   }
 }
 
@@ -10918,7 +11044,7 @@ function kvMailSend(pageId){
     var title=pg.querySelector('.kv-title'); var t=title?title.textContent.trim():'Kostenvoranschlag';
     var positionen = _kvBuildTextSummary(pid);
     var anrede = k.name ? ('Sehr geehrte/r ' + k.name) : 'Sehr geehrte Damen und Herren';
-    var nl = '\r\n';
+    var nl = '\n';
     var body = anrede + ',' + nl + nl
       + 'anbei der gewünschte Kostenvoranschlag:' + nl + nl
       + positionen + nl + nl
@@ -10931,13 +11057,51 @@ function kvMailSend(pageId){
       + 'Web: www.grieer.com';
     var subj = 'Grieer - ' + t + (k.name ? ' für ' + k.name : '');
     var to = k.email || '';
-    // mailto-URL ohne 'encodeURIComponent' für die "to" (nicht zwingend)
-    var url = 'mailto:' + to + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
-    // Für mailto: am besten direkt location.href (oder a-Tag)
-    _grieerOpenUrl(url, 'E-Mail-App');
-    _grieerShowVisualFeedback('✉️ Mail-App wird geöffnet...<br><span style="font-size:11px;font-weight:400;opacity:0.9">E-Mail ist fertig vorbereitet</span>', '#EA4335');
+    var mailUrl = 'mailto:' + to + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
+    var waUrl = 'https://wa.me/?text=' + encodeURIComponent(_grieerBuildHeader(k, '*' + t + '*') + positionen + _grieerBuildFooter());
+    _grieerShowSendDialog(t, body, {mailUrl: mailUrl, whatsappUrl: waUrl});
   } catch(e) {
-    _grieerShowVisualFeedback('⚠ Fehler: ' + e.message, '#E74C3C');
+    _grieerShowVisualFeedback('⚠ Fehler: ' + e.message, '#E74C3C', 5000);
+  }
+}
+
+function kvShareDatei(pageId){
+  // Diese öffnet das Send-Dialog mit allen Optionen
+  var pid=pageId; if(pid&&pid.indexOf('page-')===0) pid=pid.replace('page-','');
+  if(!pid){var a=document.querySelector('.pg.active'); pid=a?a.id.replace('page-',''):null;}
+  var pg=document.getElementById('page-'+(pid||'aufnahme'));
+  if(!pg){_grieerShowVisualFeedback('⚠ Seite nicht gefunden', '#E74C3C'); return;}
+  try {
+    var k = _grieerGetKundendaten();
+    var title=pg.querySelector('.kv-title'); var t=title?title.textContent.trim():'Kostenvoranschlag';
+    var positionen = _kvBuildTextSummary(pid);
+    var msg = _grieerBuildHeader(k, '*' + t + '*');
+    msg += positionen || '(keine Positionen)';
+    msg += _grieerBuildFooter();
+    var waUrl = 'https://wa.me/?text=' + encodeURIComponent(msg);
+    var mailUrl = 'mailto:' + (k.email||'') + '?subject=' + encodeURIComponent('Grieer - ' + t) + '&body=' + encodeURIComponent(msg);
+    _grieerShowSendDialog(t, msg, {whatsappUrl: waUrl, mailUrl: mailUrl});
+  } catch(e) {
+    _grieerShowVisualFeedback('⚠ Fehler: ' + e.message, '#E74C3C', 5000);
+  }
+}
+
+function kvDateiSpeichern(pageId){
+  // Datei-Download (HTML)
+  var data = buildA4Html(pageId);
+  if(!data){_grieerShowVisualFeedback('⚠ Keine Daten', '#E74C3C'); return;}
+  var fn = 'Grieer_KV_' + (data.title || '').replace(/[^a-zA-Z0-9]/g,'_').substring(0,40) 
+    + '_' + new Date().toLocaleDateString('de-AT').replace(/\./g,'-') + '.html';
+  try {
+    var blob = new Blob([data.html], {type: 'text/html;charset=utf-8'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = fn; a.style.display = 'none';
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){URL.revokeObjectURL(url); a.remove();}, 3000);
+    _grieerShowVisualFeedback('💾 Heruntergeladen ✓<br><span style="font-size:11px;font-weight:400">' + fn + '</span>', '#27AE60');
+  } catch(e){
+    _grieerShowVisualFeedback('⚠ Download fehlgeschlagen<br><span style="font-size:11px;font-weight:400">' + e.message + '</span>', '#E74C3C', 5000);
   }
 }
 
@@ -10946,6 +11110,12 @@ function kvSpeichern(pageId){
   if(!pid){var a=document.querySelector('.pg.active'); pid=a?a.id.replace('page-',''):null;}
   var pg=document.getElementById('page-'+pid);
   if(!pg){_grieerShowVisualFeedback('⚠ Keine Seite gewählt', '#E74C3C'); return;}
+  
+  if(!_grieerStorageAvailable()){
+    _grieerShowVisualFeedback('⚠ Speicher nicht verfügbar<br><span style="font-size:11px;font-weight:400">Privates Surfen aus? In Safari: Einstellungen → Privater Modus AUS</span>', '#E74C3C', 6000);
+    return;
+  }
+  
   try {
     var data={};
     pg.querySelectorAll('input,select,textarea').forEach(function(el){
@@ -10961,28 +11131,14 @@ function kvSpeichern(pageId){
     data.__kunde = _grieerGetKundendaten();
     var key = 'grieer-kv-' + pid;
     var payload = JSON.stringify({data:data, ts:Date.now(), pid:pid});
-    
-    // Test ob localStorage verfügbar
-    if(typeof localStorage === 'undefined'){
-      _grieerShowVisualFeedback('⚠ Speicher nicht verfügbar<br><span style="font-size:11px">Bitte privates Surfen ausschalten</span>', '#E74C3C');
-      return;
-    }
-    
     localStorage.setItem(key, payload);
     var verify = localStorage.getItem(key);
     if(!verify) throw new Error('localStorage leer nach setItem');
-    
     var sizeKB = Math.round(payload.length/1024*10)/10;
-    _grieerShowVisualFeedback('💾 Gespeichert ✓<br><span style="font-size:11px;font-weight:400">' + sizeKB + ' KB - Bleibt im Browser</span>', '#27AE60');
+    _grieerShowVisualFeedback('💾 Gespeichert ✓<br><span style="font-size:11px;font-weight:400">' + sizeKB + ' KB - Auf diesem Gerät</span>', '#27AE60');
   } catch(e){
-    var msg = e.message || e.name || 'Unbekannt';
-    if(msg.indexOf('Quota') >= 0 || msg.indexOf('quota') >= 0){
-      _grieerShowVisualFeedback('⚠ Speicher voll<br><span style="font-size:11px">Bitte Datei-Download (📤 Teilen) verwenden</span>', '#E74C3C');
-    } else if(msg.indexOf('SecurityError') >= 0 || msg.indexOf('access') >= 0){
-      _grieerShowVisualFeedback('⚠ Speicher gesperrt<br><span style="font-size:11px">Privates Surfen ausschalten</span>', '#E74C3C');
-    } else {
-      _grieerShowVisualFeedback('⚠ Speichern fehlgeschlagen<br><span style="font-size:11px">' + msg + '</span>', '#E74C3C');
-    }
+    var msg = e.message || 'Unbekannt';
+    _grieerShowVisualFeedback('⚠ Speichern fehlgeschlagen<br><span style="font-size:11px;font-weight:400">' + msg + '</span>', '#E74C3C', 5000);
   }
 }
 
@@ -10991,14 +11147,16 @@ function kvLaden(pageId){
   if(!pid){var a=document.querySelector('.pg.active'); pid=a?a.id.replace('page-',''):null;}
   var pg=document.getElementById('page-'+pid);
   if(!pg){_grieerShowVisualFeedback('⚠ Keine Seite', '#E74C3C'); return;}
+  
+  if(!_grieerStorageAvailable()){
+    _grieerShowVisualFeedback('⚠ Speicher nicht verfügbar', '#E74C3C');
+    return;
+  }
+  
   try {
-    if(typeof localStorage === 'undefined'){
-      _grieerShowVisualFeedback('⚠ Speicher nicht verfügbar', '#E74C3C');
-      return;
-    }
     var raw=localStorage.getItem('grieer-kv-'+pid);
     if(!raw){
-      _grieerShowVisualFeedback('Keine gespeicherten Daten<br><span style="font-size:11px">Vorher mit 💾 Speichern sichern</span>', '#F39C12');
+      _grieerShowVisualFeedback('Keine gespeicherten Daten<br><span style="font-size:11px;font-weight:400">Vorher 💾 Speichern verwenden</span>', '#F39C12');
       return;
     }
     var saved=JSON.parse(raw); var data=saved.data||saved;
@@ -11036,55 +11194,7 @@ function kvLaden(pageId){
     var ts = saved.ts ? new Date(saved.ts).toLocaleString('de-AT') : '';
     _grieerShowVisualFeedback('📂 Geladen ✓<br><span style="font-size:11px;font-weight:400">' + (ts ? 'vom ' + ts : '') + '</span>', '#16A085');
   } catch(e){
-    _grieerShowVisualFeedback('⚠ Laden fehlgeschlagen<br><span style="font-size:11px">' + e.message + '</span>', '#E74C3C');
+    _grieerShowVisualFeedback('⚠ Laden fehlgeschlagen<br><span style="font-size:11px;font-weight:400">' + e.message + '</span>', '#E74C3C', 5000);
   }
 }
-
-function kvShareDatei(pageId){
-  var data = buildA4Html(pageId);
-  if(!data){_grieerShowVisualFeedback('⚠ Keine Daten', '#E74C3C'); return;}
-  var fn = 'Grieer_KV_' + (data.title || '').replace(/[^a-zA-Z0-9]/g,'_').substring(0,40) 
-    + '_' + new Date().toLocaleDateString('de-AT').replace(/\./g,'-') + '.html';
-  try {
-    var blob = new Blob([data.html], {type: 'text/html;charset=utf-8'});
-    var file = new File([blob], fn, {type: 'text/html'});
-    // Web Share API
-    if(navigator.canShare && navigator.canShare({files:[file]})){
-      _grieerShowVisualFeedback('📤 Teilen wird vorbereitet...', '#1565C0');
-      navigator.share({
-        files: [file],
-        title: data.title || 'Grieer Kostenvoranschlag',
-        text: 'Kostenvoranschlag von Grieer Rauchfangkehrermeister'
-      }).then(function(){
-        _grieerShowVisualFeedback('📤 Geteilt ✓', '#27AE60');
-      }).catch(function(err){
-        if(err.name !== 'AbortError'){
-          _grieerDownload(blob, fn);
-        }
-      });
-    } else {
-      _grieerDownload(blob, fn);
-    }
-  } catch(e){
-    _grieerShowVisualFeedback('⚠ Teilen fehlgeschlagen<br><span style="font-size:11px">' + e.message + '</span>', '#E74C3C');
-  }
-}
-
-function _grieerDownload(blob, fn){
-  try {
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url; a.download = fn; a.style.display = 'none';
-    document.body.appendChild(a); a.click();
-    setTimeout(function(){URL.revokeObjectURL(url); a.remove();}, 3000);
-    _grieerShowVisualFeedback('💾 Heruntergeladen ✓<br><span style="font-size:11px;font-weight:400">' + fn + '</span>', '#27AE60');
-  } catch(e){
-    _grieerShowVisualFeedback('⚠ Download fehlgeschlagen', '#E74C3C');
-  }
-}
-
-function kvDateiSpeichern(pageId){
-  kvShareDatei(pageId);
-}
-
 </script>
