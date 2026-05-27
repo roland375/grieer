@@ -2,9 +2,13 @@
 <html lang="de">
 <head>
 <script>
-// === CACHE-KILLER für iOS PWA: jedes Mal Cache löschen + Update ===
+// === GRIEER CACHE-KILLER v2026-05-25-KI ===
 (function(){
   try {
+    var CURRENT_VER = "v2026-05-25-KI";
+    var lastVer = null;
+    try { lastVer = localStorage.getItem('__grieer_app_ver__'); } catch(e){}
+    
     // Service Workers deregistrieren
     if('serviceWorker' in navigator){
       navigator.serviceWorker.getRegistrations().then(function(regs){
@@ -16,6 +20,14 @@
       caches.keys().then(function(names){
         names.forEach(function(n){ caches.delete(n); });
       }).catch(function(){});
+    }
+    
+    // Speichere aktuelle Version
+    try { localStorage.setItem('__grieer_app_ver__', CURRENT_VER); } catch(e){}
+    
+    // Falls Version geändert: zeige kurzen Banner
+    if(lastVer && lastVer !== CURRENT_VER){
+      window.__grieerUpdated = lastVer + ' -> ' + CURRENT_VER;
     }
   } catch(e){}
 })();
@@ -539,12 +551,12 @@ input[type=radio].we-native-cb{border-radius:50%;}
   -webkit-tap-highlight-color:transparent}
 .ki-quick-btn:active{background:#1565C0;color:#fff}
 .ki-msg-user{background:#1565C0;color:#fff;border-radius:12px 12px 4px 12px;
-  padding:10px 14px;font-size:12.5px;line-height:1.55;max-width:85%;align-self:flex-end}
-.ki-msg-ai{background:#fff;border:1.5px solid #e0e0e0;border-radius:12px 12px 12px 4px;
-  padding:12px 14px;font-size:12.5px;line-height:1.65;max-width:95%;align-self:flex-start;
-  white-space:pre-wrap}
-.ki-msg-ai b{color:#1565C0}
-.ki-msg-ai .ki-norm{background:#F0F4F8;border-left:3px solid #1565C0;
+  padding:10px 14px;font-size:12.5px;line-height:1.55;max-width:90%;align-self:flex-end;width:auto;box-sizing:border-box;word-break:break-word;overflow-wrap:break-word}
+.ki-msg-ai, .ki-msg-bot{background:#fff;border:1.5px solid #e0e0e0;border-radius:12px 12px 12px 4px;
+  padding:12px 14px;font-size:12.5px;line-height:1.65;max-width:100%;width:auto;box-sizing:border-box;align-self:stretch;
+  white-space:pre-wrap;word-break:break-word;overflow-wrap:break-word}
+.ki-msg-ai b, .ki-msg-bot b{color:#1565C0}
+.ki-msg-ai .ki-norm, .ki-msg-bot .ki-norm{background:#F0F4F8;border-left:3px solid #1565C0;
   padding:4px 8px;border-radius:0 4px 4px 0;font-size:11px;color:#555;
   margin-top:5px;display:block}
 .ki-loading{display:flex;align-items:center;gap:8px;color:#888;font-size:12px;
@@ -578,6 +590,32 @@ body {
   pointer-events: auto !important;
   min-width: 44px !important;
   min-height: 44px !important;
+}
+
+/* === KI-CHAT vertikal-stacking ERZWINGEN === */
+#ki-chat, .ki-chat-fixed {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  align-items: stretch !important;
+  overflow-x: hidden !important;
+}
+#ki-chat > *, .ki-chat-fixed > * {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
+  align-self: stretch !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  overflow-x: hidden !important;
+}
+#ki-chat .ki-msg-bot, .ki-chat-fixed .ki-msg-bot {
+  margin: 8px 30px 8px 0 !important;
+}
+#ki-chat .ki-msg-user, .ki-chat-fixed .ki-msg-user {
+  margin: 8px 0 8px 30px !important;
 }
 </style>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -3597,7 +3635,7 @@ body {
 </div>
 
 <!-- Chat-Container -->
-<div id="ki-chat" style="min-height:120px;max-height:55vh;overflow-y:auto;margin-bottom:8px;display:flex;flex-direction:column;gap:8px"></div>
+<div id="ki-chat" class="ki-chat-fixed" style="min-height:120px;max-height:55vh;overflow-y:auto;overflow-x:hidden;margin-bottom:8px;width:100%;max-width:100%;box-sizing:border-box;padding:4px"></div>
 
 <!-- Wissensbasis-Box -->
 <div style="background:#E8F5E9;border-left:4px solid #27AE60;padding:8px 10px;border-radius:0 6px 6px 0;margin-bottom:8px;font-size:10px;color:#1B5E20;line-height:1.5">
@@ -3605,9 +3643,15 @@ body {
   Bgld. KehrG &middot; HK-VO &middot; OIB-RL 1-6 &middot; OENORM B 8200ff &middot; TRVB H105/118H/122S/124F &middot; OVGW G K11-K72
 </div>
 
-<div style="background:#fff;border:2px solid #1565C0;border-radius:10px;padding:6px;margin-bottom:10px;display:flex;gap:6px">
-  <input type="text" id="ki-input" placeholder="Frage eingeben..." onkeydown="if(event.key==='Enter'){kiSend();}" style="flex:1;border:none;font-size:13px;padding:8px 10px;outline:none;min-width:0">
-  <button onclick="kiSend()" style="background:#1565C0;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;min-height:38px;flex-shrink:0">Fragen</button>
+<div style="margin:8px 0 4px;padding:10px;background:linear-gradient(135deg,#E3F2FD,#BBDEFB);border-radius:10px;border:1px solid #90CAF9">
+  <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;color:#0D47A1;font-weight:600;touch-action:manipulation;min-height:44px">
+    <input type="checkbox" id="ki-online-toggle" style="width:24px;height:24px;cursor:pointer;flex-shrink:0">
+    <span style="flex:1">🌐 <b>Online-Suche aktivieren</b><br><span style="font-size:10px;font-weight:400;opacity:0.85">Sucht in RIS, ÖNORM, ÖVGW statt Wissensbasis</span></span>
+  </label>
+</div>
+<div style="background:#fff;border:2px solid #1565C0;border-radius:12px;padding:8px;margin-bottom:10px;display:flex;gap:8px;align-items:stretch">
+  <input type="text" id="ki-input" placeholder="Frage eingeben..." onkeydown="if(event.key==='Enter'){kiSend();}" autocomplete="off" autocorrect="off" autocapitalize="sentences" style="flex:1;border:none;font-size:16px;padding:10px 12px;outline:none;min-width:0;background:transparent;-webkit-appearance:none">
+  <button type="button" onclick="kiSend()" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:10px;padding:0 20px;font-size:14px;font-weight:700;cursor:pointer;min-height:50px;min-width:80px;flex-shrink:0;touch-action:manipulation;-webkit-tap-highlight-color:rgba(255,255,255,0.2);box-shadow:0 2px 6px rgba(21,101,192,0.3)">Fragen ▶</button>
 </div>
 
 <div style="margin-bottom:10px">
@@ -3628,7 +3672,7 @@ body {
 </div>
 
 <script>/* GRIEER VERSION 2026-05-20-PWA-FIX */
-var GRIEER_VERSION = "2026-05-20-PWA-FIX";
+var GRIEER_VERSION = "v2026-05-25-KI";
 
 /* === KEHRTARIF Berechnung — echte Tarife Bgld. HTVO LGBl 98/2025 === */
 var KEHR_TYPEN = {
@@ -3857,9 +3901,9 @@ function kiAddMessage(role, html){
   var div = document.createElement('div');
   div.className = 'ki-msg ki-msg-' + role;
   if(role === 'user'){
-    div.style.cssText = 'background:#E3F2FD;color:#0D47A1;padding:8px 12px;border-radius:12px 12px 4px 12px;margin:8px 0 8px 40px;font-size:12px;line-height:1.4;border-left:3px solid #1565C0';
+    div.style.cssText = 'background:#E3F2FD;color:#0D47A1;padding:8px 12px;border-radius:12px 12px 4px 12px;margin:8px 0 8px 40px;font-size:12px;line-height:1.4;border-left:3px solid #1565C0;max-width:calc(100% - 40px);width:auto;box-sizing:border-box;word-break:break-word;overflow-wrap:break-word;align-self:flex-end';
   } else {
-    div.style.cssText = 'background:#fff;color:#212121;padding:12px 14px;border-radius:12px 12px 12px 4px;margin:8px 40px 8px 0;font-size:12px;line-height:1.55;border:1px solid #ddd;box-shadow:0 1px 4px rgba(0,0,0,.06)';
+    div.style.cssText = 'background:#fff;color:#212121;padding:12px 14px;border-radius:12px 12px 12px 4px;margin:8px 0;font-size:12px;line-height:1.55;border:1px solid #ddd;max-width:100%;width:auto;box-sizing:border-box;word-break:break-word;overflow-wrap:break-word;align-self:stretch;box-shadow:0 1px 4px rgba(0,0,0,.06)';
   }
   div.innerHTML = html;
   chat.appendChild(div);
@@ -3952,15 +3996,46 @@ function kiSend(){
   var qSafe = query.replace(/[<>&]/g, function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;'}[c];});
   kiAddMessage('user', '<div style="font-size:9px;font-weight:700;color:#1565C0;text-transform:uppercase;margin-bottom:3px">Frage</div>' + qSafe);
   inp.value = '';
+  
+  // ONLINE-TOGGLE: Wenn aktiv, direkt online suchen
+  var onlineToggle = document.getElementById('ki-online-toggle');
+  var goOnline = onlineToggle && onlineToggle.checked;
+  
+  if(goOnline){
+    kiAskOnline(query);
+    return;
+  }
+  
   try {
     var result = kiSearchKnowledge(query);
     var queryType = (typeof kiClassifyQuestion === 'function') ? kiClassifyQuestion(query) : '';
+    
     if(!result){
       kiAskOnline(query);
       return;
     }
+    
+    // Prüfe Confidence: ist die Antwort eine "schwache" Match?
+    var resultLow = (typeof result === 'string' ? result : '').toLowerCase();
+    var queryLow = query.toLowerCase();
+    var queryWords = queryLow.split(/\s+/).filter(function(w){ return w.length > 3; });
+    var matchCount = 0;
+    queryWords.forEach(function(w){
+      if(resultLow.indexOf(w) >= 0) matchCount++;
+    });
+    var matchRatio = queryWords.length > 0 ? matchCount / queryWords.length : 0;
+    var isWeakMatch = matchRatio < 0.3 && queryWords.length >= 2;
+    
     if(typeof kiFormatAnswer === 'function'){
-      kiAddMessage('bot', kiFormatAnswer(result, queryType, query));
+      var formatted = kiFormatAnswer(result, queryType, query);
+      // Bei schwacher Confidence: füge Online-Suchen-Button automatisch hinzu
+      if(isWeakMatch){
+        formatted += '<div style="margin-top:12px;padding:10px;background:#FFF3E0;border-left:3px solid #FF9800;border-radius:6px">';
+        formatted += '<div style="font-size:10px;color:#E65100;font-weight:700;margin-bottom:6px">⚠ Antwort nicht ganz passend?</div>';
+        formatted += '<button type="button" onclick="kiAskOnline(\'' + query.replace(/[\\\']/g,'\\\$&') + '\')" style="background:linear-gradient(135deg,#FF9800,#E65100);color:#fff;border:none;border-radius:8px;padding:10px 14px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation;width:100%">🌐 Online weitersuchen</button>';
+        formatted += '</div>';
+      }
+      kiAddMessage('bot', formatted);
     } else {
       kiAddMessage('bot', '<div style="font-size:11px;line-height:1.55">' + result + '</div>');
     }
@@ -11128,5 +11203,6 @@ function kvShareDatei(pid){ kvSenden(pid); }
 function kvDateiSpeichern(pid){ kvSenden(pid); }
 </script>
 
+<div id="grieer-version-badge" style="position:fixed;bottom:4px;right:8px;font-size:9px;color:#90A4AE;background:rgba(255,255,255,0.85);padding:2px 6px;border-radius:8px;z-index:50;pointer-events:none;font-family:monospace">App v2026-05-25-KI</div>
 </body>
 </html>
