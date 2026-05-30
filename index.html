@@ -962,12 +962,17 @@ body {
 <body onload="pinInit()">
 <div id="grieer-print-zone" style="display:none"></div>
 
-<nav class="nav" style="display:flex;align-items:center;padding:8px 10px;background:#2C3E50;gap:6px;position:sticky;top:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.3);padding-top:max(env(safe-area-inset-top,12px),12px);min-height:54px"><img src="data:image/png;base64,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" alt="Grieer" style="height:36px;width:36px;object-fit:contain;flex-shrink:0;border-radius:6px"><div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center"><span style="font-size:14px;font-weight:800;color:#fff;line-height:1.1">Grieer App</span><span id="nav-current" style="font-size:10px;color:#B0BEC5;font-weight:600;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></span></div><button id="nav-aufnahme" onclick="show('aufnahme')" style="background:rgba(255,255,255,.1);color:#fff;border:none;border-radius:8px;padding:8px 12px;font-size:14px;font-weight:700;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;min-height:40px;white-space:nowrap">🏠</button><button id="nav-maengel" onclick="show('maengel')" style="background:rgba(255,255,255,.1);color:#fff;border:none;border-radius:8px;padding:8px 12px;font-size:14px;font-weight:700;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;min-height:40px;white-space:nowrap">⚠️</button>
-<button onclick="show('beschau')" style="background:#6B0E0E;position:relative">
-<span style="font-size:20px;line-height:1">🔍</span>
-<span style="text-align:center;font-size:10px">Feuerstätten-<br>beschau</span>
-</button><button id="nav-ki" onclick="show('ki')" style="background:rgba(255,255,255,.1);color:#fff;border:none;border-radius:8px;padding:8px 12px;font-size:14px;font-weight:700;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;min-height:40px;white-space:nowrap">🤖</button>
-<span id="nav-pv" style="display:none"></span><span id="nav-gas" style="display:none"></span><span id="nav-luft" style="display:none"></span><span id="nav-brand" style="display:none"></span><span id="nav-kamin" style="display:none"></span><span id="nav-kehr" style="display:none"></span><span id="nav-brandinfo" style="display:none"></span><span id="nav-gesamt" style="display:none"></span><span id="nav-wprot" style="display:none"></span><span id="nav-wart" style="display:none"></span><span id="nav-verr" style="display:none"></span></nav>
+<nav style="display:flex;flex-direction:row;align-items:center;gap:6px;padding:6px 8px;background:#1A2B45;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.25);min-height:48px">
+  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAPT0lEQVR4nO3de1xUZf4H8O8ZHC4DosjNUcIsMxQQlVRM5KZx8QZi6rqUtqS2pruJeSnNcEO77NbPaOtXaZSuq2ZrBBmBpihgKgqIgormJRRRQESQywAy5/cHSz/CmTNn7uLzef/D6zXnOed54Hk+85znzJkDl+fgwBMAoyTmbgCAOSEAwDQEAJiGAADTEABgGgIATEMAgGkIADANAQCmIQDANAQAmIYAANO4ri94BUTh5jh4aBVnp/xuzP9uBsDgh4dd1zGOUyBg2m8BwLs/sKLzWMcMAExDAIBpEiKc/gB7OsY8ZgBgGgIATONw+gMswwwATEMAgGkIADANAQCmIQDANAQAmIYAANMQAGAaAgBMQwCAaQgAMA0BAKYhAMA0BACYhgAA0xAAYBoCAExDAIBpCAAwDQEApiEAwDQEAJiGAADTEABgGgIATEMAgGkIADANAQCmIQDANAQAmIYAANMQAGAaAgBMQwCAaQgAMA0BAKYhAMA0BACYhgAA0xAAYBoCAExDAIBpCAAwDQEApiEAwDQEAJjWw9AHlEp70EjvITTCewh5PDGQ+stdycWxD8lsrMnS0pIUzc3U2KSg+voGKrtRQZdLy+jSr9foxMliulZ+09DNARDEeQVE8YY40ODHH6U50ZMoIsSfbGU2Oh2j/GYlZR3Jo+S0/VRy8YpgWZmNNeVm7NTq+EolT00KBTUpmulObR1duXqdLpeW0dG8U3Sy6BwplUqtjiemDU89M4uaW1p13l8XJ4tKaO6S19Vul/E85TaWGb5eCyuaa+2ius4HoL9U0XsGcHZ0oJVLYikseBxxHKfXsfr1daE50ZNoTvQkOnXmPD338mv6Nu93JBKObGU2ZCuzIac+vWnQQHciInpp7kyqqa2jLTtTaHtyGjU3txi0XtCNKfpLrzVA0NOjKPVf/6TwEH+9B39XQwY/ZtDjaeLQy57i/jyXdn72d3Jx6mPSukF7huovnQPwh6gIStzwOvW0s9W58gfRE48NoE0frCOp1ODLIzACfftLpwBMDQ2i1UsXkERi2Hf9B8Xjjz5Cc2dNM3czQCR9+kvr2Awa6E7xyxeJOuVpbFJQ+oEcOlFYTGfOX6La2rt0t6GBbGU21KtnT5L3dSafoYNp2NAnyc93GFlZWer0SxjD1NAgStqebO5mgEi69pdWAeA4jtateFnjQOV5nr76OoWStidT3d36+7bX1tVTbV09Xb1+g3LzTxMRkZ2tjCYE+FH05Ik00nuINs1Sq/MVGI5rX1C5u8lpYoAfzZsdSZZSqdp9H3/0EXJ06E3VNXcM0hZdCV1FMmq9tm7UTKad4c3RX1oFIOjpUeTj+aRgmZbWVlr25t8p60ieVg2pb2ik1PRMSk3PpDEjvWn+czO02l8TnuepvqGRzp6/RGfPX6ILl0rpH/GvCu7j4tTH7AFglan6S6s1QMyzUzSW2bBxk9aDv6vcgiJasGydXsfQZN+hn+lufYNgGZmOn2eA4Rmrv0QHwNGhN40a7iVYJregiJLT9mvdCHNQKnm6XVMrWEbTHxxMx1j9JToAY3yHabzq8+WO7rNolEg4cuzTW+321tZ79OvV66ZrEAgyVn+JDoCXxyDB7Y1NCsotKNK6AeYSMWE82dnK1G4/nFtALa2mX3yCasbqL9GLYPf+csHthcUl1NbWpnUDTIXjOJLZWJO7m5yeCRxL82ZHqi2rVPK0+d+7Tdg69fJ++kar8vUNjTR2Uoz+9TZod69QPSehsbL+etfbwVT9JToAzo4OgttvVFTp1ABj0nbwdEjctI2Kzv1i4NaAJuboL9EBsLGxFtxeq+J6f1cvxkTT0oXPi62SiIjCZr9E5TcrtdpHV00KBb2T+AV99+MBk9QH+jFEfxnuhhfeIHdVm0XlrWraszeL/vWf7zVeaQDzM2R/iV4EKxTNgtvt7Xvq1RBzamtTUn1jIy57dhOG7C/RAaiqrhHc3tfFSe/GmIvc1ZleWfAcJW1MIIde9uZuDmhgyP4SfQp09foNwe3DPZ8kiYQjpbL7ngqN8Pagj95+nV746xsPzBUtlu4F0pYh+kt0AIpLhFfZdrYyGjlsKOUVnlFbJml78n137C1/+QXBS1z66Bg8llIpyV2dyM/Xh2Jjoqmfq7PafYZ7edD852bQ51t1uyIBujNHf4k+BTpeUKTx3d1YA1lfLa2tVFp2g3alZtCzsXEav2+8IGYGyQX+6GBcpuwvrdYA+afVv7sTtd8tOjHAT6eGmMrd+gaKW/ue4KLeysqSXpo704StAnWM3V9a3Q2649s0jWUSXvuLxlumza2svIK27EoVLBMZHiI49YLpGLO/tApA5uFcKi65KFjGzlZGXyYm0PMzpwp+gcHctu5KFbyM1qOHBcXGRJuwRSDEWP2lVQCUSp7eev9Tam29J1jOUiqllUtiKf3rTynuz3PJf/QIkrs6k8zGmnr0sCCHXvY00L0/TQkNpBEG+vaXtuobGjXOaNMnTSAXJ0cTtQiEGKu/tP4k+Nwvl+ntxM0Uv3yRxrIuTo4UO2c6xc6Zrm01JrFt9x56ftY0kqm5zcNSKqU/zYmi9/6ZZOKW/T9d74+JWbSKTp+9oHu9Wt4M91u9Nq50WmKc73Ybo790eirE7j37aOPn23TZ9YFSW1dPu1IyBMvMnBpKjg69TdMgEGSM/tL5uUBf7kim1RsSNd4ioTcj32O0dVeq4JPFrKwsH9jLuywydH/p/WzQAW5y+lv61/ocAkBnvrdv3/daY5OCwmYtpDt1dzXur/fj0UvLhG+RADA1mY01PS/yQVn4/wDwUPpj9CRRj+3EAzChW/MO1O8KI2YAYJrB/kEGQHeEGQCYhgAA0xAAYBoCAExDAIBpCAAwDQEApiEAwDQEAJiGAADTmL4Zzr2/vCJtx/8uy80/7Tl/Wfzqzts4juNX/eXFbTEzJu8tLC4ZvGhlwor45YuSwkP8jy1+bf3y7KP5I9QdN/Dpp05+/M6a99MPHB678q0Plohtz5aP1if4+niWnCgsHhL7yto3hNrc+bXW1ns9Km9VOxzNO+X92dZvpldUVffRtiyrMAOoIJFw/LoVL38RM2Py3tyCIs+Fr/7ttfqGRllKemYgEVFkeEiO0P7TwoKziYhS0g8Eiq3TrZ9r5chhQ88TET3l41ni1s9V9DPhpdIe9/rLXauenRqa+c3mD9a4Ojve/y0RHcqyAAHowsLCou3dN5Z9Ej154qGsI3kjFq9KWNGkUFgRER3NK/SuvFXtEDRuVIF9TzuVz+iw72nXEDRu1MmKquo+x/JPCf9XwU6iwkOyOY7jdyb/GMpxHK8pZLn5pz29A6dv9w6cvn1M+Jyk+XFvri4tu9G3j0Ovuhf+EJWma1nWIACdWEqlrRsTVn4YMcH/6N6DP/stXftuXHNL628PN1Iqee77jEPjLaXS1ogQ/6OqjjFpwvgjllJp6/d7D45XKnlRT5flOI6fGh6cc7um1v6DT7f88XZNrf20sKAcjuNE3anb2KSwzi0o8nz3oy/mEhF5PjnosiHKsgAB+C9ra6uWT95b837wuNEFKekHAle+9T+L791rs+haLiUjM4CIKDIiJFvVcTpeT01vLyfG6JHeZ/u5Ot9Kzzw8trmlVZpx8PDYfn1dqkaP8Dqr6+8D4iAARCST2Sg+fz/+XT9fn+KdyT+GvvneJwuUSqXKv03ptXJ5YXHJYO8hT1wa6N6/vPO2xwa4XffyGHT5ZFHJ4NKyG33F1h8V3h6aH/Yd8m//mTWOSH3IurKxtm4eNdzr3KolsduIiM6cv/iYIcqygOmrQB28hzxxiYgo/9QZj7cTN8/TVD41PTNguJfHhcjwkJwPN22b3fF6ZHhwDpF2i187W1nTxAC/46XXyuXFJe2DsejcL4+XXiuXPxMw9viGjZv+1NDYdN+ToMb4DjtTlPXdff8O8nZNrf2Wr1Mm61qWNZgBiOjK1ev9Km9VO/j6eJaIWRRmHPzZT6FotpwaFpgjkbSfp0skHD8lNPCwQtFsuffgz6IfkR0ePO6YtbVVy56f2t/1O/zwU9bT1tZWLWHB445pOsa9e20W5TcrnXfv2Rcye+Hy9UKXNrUpywLMAERUWVXtkLDx82VfJa5f/+qieTva2tostv1nT7i68vUNjTb7s4+NnhIaeNjP16f4yIlC77FPDS9ycXKs2bPvkL+qd2x1Ok5z0u4PgP/i2DnfRkVMyEpO2x/UdT9Vn12oo01Z1iAA/1V6rVweu3TtG18lrl+/cknstnttbZKdyT+GqiufkpEZMCU08HBkREj2kROF3pHh2i9+BzzS78ZwL48LRETpOz+LU1VmhLfHhQFu8pvarClAPJwCdfLr1evyF5euXV1dc6fX6lcWbJ0dGb5fXdnjBUVDyyuqnCb4j8nr6+JUHeI/Or+8osrp+MnioWLr61j8aiJ2MQzawwzQxeXSsv7z4+JXf/lhwoY1cQu3tLW1Wez+4afgruV4nuf2ZBwc/9K8Wd/9I/7Vj62sLFu+zzgYwPPirv1LJBw/LTwoh4hoRmzcOxcu/eretcygge5l321JXDUtLDjn46QdM8V+rgDiYQZQ4eKVq26xS9euuVN31+7N5YuSpk+akKWqXEpGZgDP89xwL48LPM9zqRmZ48XW0bFmyD91xkPV4O9ox4nC4iGuzo63/Xx9inX9fUA9BECNi1euus2Pi19de7fedt2KxZs7LnF2VlZe4ZJ/6qwHEVH+qbMeZeUVLmKPHxURkkVEtENgnUFEtOPbtLD28qpDCPrBg7GAaZgBgGkIADANAQCmIQDANAQAmIYAANMQAGAaAgBMQwCAaQgAMA0BAKYhAMA0BACYhgAA0xAAYBoCAExDAIBpCAAwDQEApiEAwDQEAJiGAADTEABgGgIATEMAgGkIADANAQCmIQDANAQAmIYAANMQAGAaAgBMQwCAaQgAMA0BAKYhAMA0BACYhgAA0xAAYBoCAExDAIBpkuLsFM7cjQAwh+LsFA4zADANAQCmSYjapwJzNwTAlDrGPGYAYBoCAEz7LQA4DQJWdB7rmAGAab8LAGYBeNh1HeP3zQAIATysVI1tnAIB01QGALMAPGzUjWm1MwBCAA8LobEseAqEEEB3p2kMa1wDIATQXYkZu6IWwQgBdDdix6zoq0AIAXQX2oxVnQa1V0AUr8t+AMaky5u0Tp8DYDaAB42uY1LvgYzZAMxJ3zdjg76TIwxgCoY8AzHaqQzCAIZkrNPu/wMHe+MFOwx4YgAAAABJRU5ErkJggg==" alt="Grieer" style="height:32px;width:auto;border-radius:3px;flex-shrink:0">
+  <div style="flex:1;min-width:0;overflow:hidden">
+    <div id="nav-title" style="font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Grieer App</div>
+    <div id="nav-current" style="font-size:9px;color:#94A3B8;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+  </div>
+  <button id="nav-aufnahme" onclick="show('aufnahme')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;border-radius:6px;padding:6px 8px;font-size:15px;min-height:36px;min-width:36px;cursor:pointer;touch-action:manipulation">🏠</button>
+  <button id="nav-maengel" onclick="show('maengel')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;border-radius:6px;padding:6px 8px;font-size:15px;min-height:36px;min-width:36px;cursor:pointer;touch-action:manipulation">⚠️</button>
+  <button id="nav-ki" onclick="show('ki')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;border-radius:6px;padding:6px 8px;font-size:15px;min-height:36px;min-width:36px;cursor:pointer;touch-action:manipulation">🧠</button>
+  <button id="nav-settings" onclick="showSettings()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;border-radius:6px;padding:6px 8px;font-size:15px;min-height:36px;min-width:36px;cursor:pointer;touch-action:manipulation" title="Einstellungen">⚙️</button>
+</nav>
 
 
 <div class="pg active" id="page-aufnahme">
@@ -1004,13 +1009,13 @@ body {
 
 <button onclick="show('maengel')" style="background:#7C1D1D;position:relative"><span style="font-size:20px;line-height:1">⚠</span><span style="text-align:center;font-size:10px">Mängel</span></button>
 
-<button onclick="show('wart')" style="background:#2D3748;position:relative"><span style="font-size:20px;line-height:1">🔔</span><span style="text-align:center;font-size:10px">Erinnerung</span></button>
+<button onclick="show('wart')" style="background:#2D3748;position:relative"><span style="font-size:20px;line-height:1">🔔</span><span style="text-align:center;font-size:10px">Wartungs-<br>erinnerung</span></button>
 
 <button onclick="show('verr')" style="background:#1E3A5F;position:relative"><span style="position:absolute;top:4px;right:4px;font-size:8px;opacity:.5">🔒</span><span style="font-size:20px;line-height:1">💶</span><span style="text-align:center;font-size:10px">Preisliste</span></button>
 
 <button onclick="show('brandinfo')" style="background:#2D3748;position:relative"><span style="font-size:20px;line-height:1">ℹ</span><span style="text-align:center;font-size:10px">BS-Info</span></button>
 
-<button onclick="show('ki')" style="background:#1A365D;position:relative"><span style="font-size:20px;line-height:1">🤖</span><span style="text-align:center;font-size:10px">KI-Assistent</span></button>
+<button onclick="show('ki')" style="background:linear-gradient(135deg,#1A365D,#2563EB);position:relative"><span style="font-size:20px;line-height:1">🧠</span><span style="text-align:center;font-size:10px">KI-Berater</span></button>
 <button onclick="show('auftrag')" style="background:#1A2B45;position:relative"><span style="font-size:20px;line-height:1">📄</span><span style="text-align:center;font-size:10px">Auftrags-<br>formular</span></button>
 
 </div>
@@ -3507,7 +3512,35 @@ body {
 <td class="einh">pauschal</td>
 <td class="ep-c-verr" style="padding:2px 4px;text-align:right"><input type="number" class="verr-ep-inp" id="vlbl-s13a" min="0" step="0.01" value="17.58" style="width:70px;text-align:right;font-weight:600;color:#1E5C99;border:1px solid transparent;border-radius:3px;padding:2px 4px;font-size:12px;background:transparent;outline:none;cursor:pointer;font-family:inherit" title="Preis ändern – Klick zum Bearbeiten" onfocus="this.style.border='1.5px solid #27AE60';this.style.background='#fff'" onblur="verrEpSave(this,'s13a')" onchange="verrEpSave(this,'s13a')"></td>
 <td class="c" style="padding:2px 4px"><input type="number" min="0" step="1" id="vq-s13a" placeholder="0" style="width:46px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px;font-size:12px;outline:none" oninput="calcVerr()"></td>
-<td class="c"><input type="number" id="vrab-s13a" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-s13a">—</td></tr><tr><td colspan="7" style="background:#2471A3;color:#fff;font-weight:700;font-size:11px;padding:4px 8px">HKG-Tarife netto (LGBl. 104/2025)</td></tr>
+<td class="c"><input type="number" id="vrab-s13a" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-s13a">—</td></tr>
+<tr style="background:#F5F7F9" id="vrow-s14">
+<td class="pos">14</td>
+<td class="bez">An-/Abfahrt anderes Kehrgebiet</td>
+<td class="einh">pauschal</td>
+<td class="ep-c-verr" style="padding:2px 4px;text-align:right"><input type="number" class="verr-ep-inp" id="vlbl-s14" min="0" step="0.01" value="0.00" style="width:70px;text-align:right;font-weight:600;color:#1E5C99;border:1px solid transparent;border-radius:3px;padding:2px 4px;font-size:12px;background:transparent;outline:none;cursor:pointer;font-family:inherit" title="Preis ändern – Klick zum Bearbeiten" onfocus="this.style.border='1.5px solid #27AE60';this.style.background='#fff'" onblur="verrEpSave(this,'s14')" onchange="verrEpSave(this,'s14')"></td>
+<td class="c" style="padding:2px 4px"><input type="number" min="0" step="1" id="vq-s14" placeholder="0" style="width:46px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px;font-size:12px;outline:none" oninput="calcVerr()"></td>
+<td class="c"><input type="number" id="vrab-s14" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-s14">—</td></tr>
+<tr style="background:#fff" id="vrow-s15">
+<td class="pos">15</td>
+<td class="bez">Pro verlangter aufgeteilter Rechnung</td>
+<td class="einh">pauschal</td>
+<td class="ep-c-verr" style="padding:2px 4px;text-align:right"><input type="number" class="verr-ep-inp" id="vlbl-s15" min="0" step="0.01" value="10.00" style="width:70px;text-align:right;font-weight:600;color:#1E5C99;border:1px solid transparent;border-radius:3px;padding:2px 4px;font-size:12px;background:transparent;outline:none;cursor:pointer;font-family:inherit" title="Preis ändern – Klick zum Bearbeiten" onfocus="this.style.border='1.5px solid #27AE60';this.style.background='#fff'" onblur="verrEpSave(this,'s15')" onchange="verrEpSave(this,'s15')"></td>
+<td class="c" style="padding:2px 4px"><input type="number" min="0" step="1" id="vq-s15" placeholder="0" style="width:46px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px;font-size:12px;outline:none" oninput="calcVerr()"></td>
+<td class="c"><input type="number" id="vrab-s15" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-s15">—</td></tr>
+<tr style="background:#F5F7F9" id="vrow-s16">
+<td class="pos">16</td>
+<td class="bez">Kilometergeld</td>
+<td class="einh">je km</td>
+<td class="ep-c-verr" style="padding:2px 4px;text-align:right"><input type="number" class="verr-ep-inp" id="vlbl-s16" min="0" step="0.01" value="0.42" style="width:70px;text-align:right;font-weight:600;color:#1E5C99;border:1px solid transparent;border-radius:3px;padding:2px 4px;font-size:12px;background:transparent;outline:none;cursor:pointer;font-family:inherit" title="Preis ändern – Klick zum Bearbeiten" onfocus="this.style.border='1.5px solid #27AE60';this.style.background='#fff'" onblur="verrEpSave(this,'s16')" onchange="verrEpSave(this,'s16')"></td>
+<td class="c" style="padding:2px 4px"><input type="number" min="0" step="1" id="vq-s16" placeholder="0" style="width:46px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px;font-size:12px;outline:none" oninput="calcVerr()"></td>
+<td class="c"><input type="number" id="vrab-s16" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-s16">—</td></tr>
+<tr style="background:#fff" id="vrow-s17">
+<td class="pos">17</td>
+<td class="bez">3-fach Berichterstellung</td>
+<td class="einh">pauschal</td>
+<td class="ep-c-verr" style="padding:2px 4px;text-align:right"><input type="number" class="verr-ep-inp" id="vlbl-s17" min="0" step="0.01" value="0.00" style="width:70px;text-align:right;font-weight:600;color:#1E5C99;border:1px solid transparent;border-radius:3px;padding:2px 4px;font-size:12px;background:transparent;outline:none;cursor:pointer;font-family:inherit" title="Preis ändern – Klick zum Bearbeiten" onfocus="this.style.border='1.5px solid #27AE60';this.style.background='#fff'" onblur="verrEpSave(this,'s17')" onchange="verrEpSave(this,'s17')"></td>
+<td class="c" style="padding:2px 4px"><input type="number" min="0" step="1" id="vq-s17" placeholder="0" style="width:46px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px;font-size:12px;outline:none" oninput="calcVerr()"></td>
+<td class="c"><input type="number" id="vrab-s17" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-s17">—</td></tr><tr><td colspan="7" style="background:#2471A3;color:#fff;font-weight:700;font-size:11px;padding:4px 8px">HKG-Tarife netto (LGBl. 104/2025)</td></tr>
 <tr style="background:#fff" id="vrow-h0">
 <td class="pos">A.1a</td>
 <td class="bez">Heizungsanlage bis 26 kW</td>
@@ -3569,7 +3602,21 @@ body {
 <td class="einh">pauschal</td>
 <td class="ep-c-verr" style="padding:2px 4px;text-align:right"><input type="number" class="verr-ep-inp" id="vlbl-r4" min="0" step="0.01" value="33.33" style="width:70px;text-align:right;font-weight:600;color:#1A7A3A;border:1px solid transparent;border-radius:3px;padding:2px 4px;font-size:12px;background:transparent;outline:none;cursor:pointer;font-family:inherit" title="Preis ändern – Klick zum Bearbeiten" onfocus="this.style.border='1.5px solid #27AE60';this.style.background='#fff'" onblur="verrEpSave(this,'r4')" onchange="verrEpSave(this,'r4')"></td>
 <td class="c" style="padding:2px 4px"><input type="number" min="0" step="1" id="vq-r4" placeholder="0" style="width:46px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px;font-size:12px;outline:none" oninput="calcVerr()"></td>
-<td class="c"><input type="number" id="vrab-r4" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-r4">—</td></tr><tr><td colspan="7" style="background:#7D3C98;color:#fff;font-weight:700;font-size:11px;padding:4px 8px">Sonstiges / Material</td></tr>
+<td class="c"><input type="number" id="vrab-r4" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-r4">—</td></tr>
+<tr style="background:#F5F7F9" id="vrow-r5">
+<td class="pos">E</td>
+<td class="bez">Kesselkonservierung</td>
+<td class="einh">pauschal</td>
+<td class="ep-c-verr" style="padding:2px 4px;text-align:right"><input type="number" class="verr-ep-inp" id="vlbl-r5" min="0" step="0.01" value="0.00" style="width:70px;text-align:right;font-weight:600;color:#1E5C99;border:1px solid transparent;border-radius:3px;padding:2px 4px;font-size:12px;background:transparent;outline:none;cursor:pointer;font-family:inherit" title="Preis ändern – Klick zum Bearbeiten" onfocus="this.style.border='1.5px solid #27AE60';this.style.background='#fff'" onblur="verrEpSave(this,'r5')" onchange="verrEpSave(this,'r5')"></td>
+<td class="c" style="padding:2px 4px"><input type="number" min="0" step="1" id="vq-r5" placeholder="0" style="width:46px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px;font-size:12px;outline:none" oninput="calcVerr()"></td>
+<td class="c"><input type="number" id="vrab-r5" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-r5">—</td></tr>
+<tr style="background:#fff" id="vrow-r6">
+<td class="pos">F</td>
+<td class="bez">Staubsauger</td>
+<td class="einh">pauschal</td>
+<td class="ep-c-verr" style="padding:2px 4px;text-align:right"><input type="number" class="verr-ep-inp" id="vlbl-r6" min="0" step="0.01" value="15.00" style="width:70px;text-align:right;font-weight:600;color:#1E5C99;border:1px solid transparent;border-radius:3px;padding:2px 4px;font-size:12px;background:transparent;outline:none;cursor:pointer;font-family:inherit" title="Preis ändern – Klick zum Bearbeiten" onfocus="this.style.border='1.5px solid #27AE60';this.style.background='#fff'" onblur="verrEpSave(this,'r6')" onchange="verrEpSave(this,'r6')"></td>
+<td class="c" style="padding:2px 4px"><input type="number" min="0" step="1" id="vq-r6" placeholder="0" style="width:46px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px;font-size:12px;outline:none" oninput="calcVerr()"></td>
+<td class="c"><input type="number" id="vrab-r6" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-r6">—</td></tr><tr><td colspan="7" style="background:#7D3C98;color:#fff;font-weight:700;font-size:11px;padding:4px 8px">Sonstiges / Material</td></tr>
 <tr style="background:#fff" id="vrow-m0">
 <td class="pos">F</td>
 <td class="bez">An-/Abfahrt anderes Kehrgebiet je ¼ Std.</td>
@@ -3821,52 +3868,25 @@ body {
       <div class="btl">Durchgeführte Arbeiten</div>
       <div style="display:grid;grid-template-columns:1fr;gap:5px">
 
-        <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#F0F4FF;border:1px solid #C5CAE9;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
-          <input type="checkbox" id="ap-w-kehr" style="width:20px;height:20px;flex-shrink:0">
-          <span style="font-size:12px;font-weight:600">🏠 Kehrtarif / Kehrarbeit</span>
-          <button type="button" onclick="show('kehr')" class="no-print" style="margin-left:auto;background:#1565C0;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;white-space:nowrap;touch-action:manipulation">KV öffnen</button>
-        </label>
-
-        <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#F0F4FF;border:1px solid #C5CAE9;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
-          <input type="checkbox" id="ap-w-gas" style="width:20px;height:20px;flex-shrink:0">
-          <span style="font-size:12px;font-weight:600">🔥 Gas-Service / Wartung</span>
-          <button type="button" onclick="show('gas')" class="no-print" style="margin-left:auto;background:#1565C0;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;white-space:nowrap;touch-action:manipulation">KV öffnen</button>
-        </label>
-
-        <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#F0F4FF;border:1px solid #C5CAE9;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
-          <input type="checkbox" id="ap-w-wprot" style="width:20px;height:20px;flex-shrink:0">
-          <span style="font-size:12px;font-weight:600">📝 Gas-Wartungsprotokoll</span>
-          <button type="button" onclick="show('wprot')" class="no-print" style="margin-left:auto;background:#1565C0;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;white-space:nowrap;touch-action:manipulation">Prot. öffnen</button>
-        </label>
-
-        <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#F0F4FF;border:1px solid #C5CAE9;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
-          <input type="checkbox" id="ap-w-pv" style="width:20px;height:20px;flex-shrink:0">
-          <span style="font-size:12px;font-weight:600">☀️ PV-Reinigung</span>
-          <button type="button" onclick="show('pv')" class="no-print" style="margin-left:auto;background:#1565C0;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;white-space:nowrap;touch-action:manipulation">KV öffnen</button>
-        </label>
-
-        <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#F0F4FF;border:1px solid #C5CAE9;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
+        <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#E3F2FD;border:1px solid #90CAF9;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
           <input type="checkbox" id="ap-w-luft" style="width:20px;height:20px;flex-shrink:0">
-          <span style="font-size:12px;font-weight:600">💨 Lüftungsreinigung</span>
-          <button type="button" onclick="show('luft')" class="no-print" style="margin-left:auto;background:#1565C0;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;white-space:nowrap;touch-action:manipulation">KV öffnen</button>
+          <span style="flex:1;font-size:12px;font-weight:600">💨 Luftmessung (ÖVGW G K62)</span>
+          <button type="button" onclick="show('luft2')" class="no-print" style="margin-left:auto;background:#0D3B6E;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap">Formular</button>
         </label>
-
-        <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#F0F4FF;border:1px solid #C5CAE9;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
-          <input type="checkbox" id="ap-w-brand" style="width:20px;height:20px;flex-shrink:0">
-          <span style="font-size:12px;font-weight:600">🛡️ Brandschutz / Melder</span>
-          <button type="button" onclick="show('brand')" class="no-print" style="margin-left:auto;background:#1565C0;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;white-space:nowrap;touch-action:manipulation">KV öffnen</button>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#EDE7F6;border:1px solid #B39DDB;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
+          <input type="checkbox" id="ap-w-b8201" style="width:20px;height:20px;flex-shrink:0">
+          <span style="flex:1;font-size:12px;font-weight:600">🏠 B 8201 Fangprüfung (Dichtheit + Querschnitt)</span>
+          <button type="button" onclick="show('b8201')" class="no-print" style="margin-left:auto;background:#4527A0;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap">Formular</button>
         </label>
-
-        <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#F0F4FF;border:1px solid #C5CAE9;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
-          <input type="checkbox" id="ap-w-kamin" style="width:20px;height:20px;flex-shrink:0">
-          <span style="font-size:12px;font-weight:600">🚪 Kamintürchen</span>
-          <button type="button" onclick="show('kamin')" class="no-print" style="margin-left:auto;background:#1565C0;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;white-space:nowrap;touch-action:manipulation">KV öffnen</button>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#FFEBEE;border:1px solid #EF9A9A;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
+          <input type="checkbox" id="ap-w-maengel" style="width:20px;height:20px;flex-shrink:0">
+          <span style="flex:1;font-size:12px;font-weight:600">⚠️ Mängelmeldung</span>
+          <button type="button" onclick="show('maengel')" class="no-print" style="margin-left:auto;background:#C62828;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap">Formular</button>
         </label>
-
-        <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#F0F4FF;border:1px solid #C5CAE9;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
-          <input type="checkbox" id="ap-w-verr" style="width:20px;height:20px;flex-shrink:0">
-          <span style="font-size:12px;font-weight:600">💶 Allg. Verrechnung / Preisliste</span>
-          <button type="button" onclick="show('verr')" class="no-print" style="margin-left:auto;background:#1565C0;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;white-space:nowrap;touch-action:manipulation">KV öffnen</button>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
+          <input type="checkbox" id="ap-w-mess" style="width:20px;height:20px;flex-shrink:0">
+          <span style="flex:1;font-size:12px;font-weight:600">📊 Messprotokoll (Prüfbericht HK-VO)</span>
+          <button type="button" onclick="show('mess')" class="no-print" style="margin-left:auto;background:#2E7D32;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap">Formular</button>
         </label>
 
       </div>
@@ -5523,6 +5543,7 @@ function show(id){
   var diso = d.toISOString().split('T')[0];
   document.querySelectorAll('.adate').forEach(function(el){ if(!el.value) el.value = diso; });
   if(id === 'auftrag') setTimeout(function(){ if(typeof apInit === 'function') apInit(); }, 150);
+  if(id === 'verr')   setTimeout(function(){ if(typeof verrAccordionInit==='function') verrAccordionInit(); }, 150);
   if(id === 'mess')    setTimeout(function(){ if(typeof messInit === 'function') messInit(); }, 150);
   if(id === 'luft2')   setTimeout(function(){ if(typeof l2Init === 'function') l2Init(); }, 150);
   if(id === 'b8201')  setTimeout(function(){ if(typeof b82Init === 'function') b82Init(); }, 150);
@@ -7053,6 +7074,8 @@ function buildA4Html(pid){
   var html, title;
   if(clean === 'wprot'){
     html = buildWprotHtml(); title = 'Wartungsprotokoll Gasheizung';
+  } else if(clean === 'wart'){
+    html = buildWartHtml(); title = 'Wartungserinnerung';
   } else if(clean === 'kehr'){
     html = buildKehrHtml(); title = 'Kehrtarif KV';
   } else if(clean === 'b8201'){
@@ -7076,7 +7099,7 @@ function buildA4Html(pid){
 // ═══════════════════════════════════════════════════════════════
 
 
-var VPRICES={"pvr1":15.0,"pvr2":25.0,"pvr3":30.0,"s0":49.34,"s1":4.77,"s2":3.21,"s3":13.44,"s4":36.0,"s5":24.58,"s6":15.79,"s6b":24.58,"s7":24.67,"s7a":15.2,"s7b":14.3,"s8":24.58,"s9":24.58,"s10":17.58,"s11":69.92,"s11a":17.58,"s12":69.92,"s12b":105.0,"s12c":160.0,"s12d":105.0,"s12e":139.92,"s12f":125.0,"s13":17.58,"s13a":17.58,"h0":69.92,"h1":105.0,"h2":139.92,"h3":17.58,"h4":17.58,"r0":20.83,"r1":50.0,"r2":50.0,"r3":20.83,"r4":33.33,"m0":7.83,"m1":3.44,"m2":29.86,"m3":50.0,"m4":8.33,"m5":10.0,"m6":8.33,"m7":4.17,"m8":5.83,"m9":5.83,"m10":5.83,"m11":5.0,"m12":0.52,"m13":110.0,"m14":50.0,"m15":4.17,"m16":2.08,"m17":0,"g0":112.5,"g1":130.83,"g2":112.5,"b0":40.58,"b1":24.75,"b2":20.83,"b3":14.33,"b4":10.83,"b5":1.81};
+var VPRICES={"pvr1":15.0,"pvr2":25.0,"pvr3":30.0,"s0":49.34,"s1":4.77,"s2":3.21,"s3":13.44,"s4":36.0,"s5":24.58,"s6":15.79,"s6b":24.58,"s7":24.67,"s7a":15.2,"s7b":14.3,"s8":24.58,"s9":24.58,"s10":17.58,"s11":69.92,"s11a":17.58,"s12":69.92,"s12b":105.0,"s12c":160.0,"s12d":105.0,"s12e":139.92,"s12f":125.0,"s13":17.58,"s13a":17.58,"s14":0.0,"s15":10.0,"s16":0.42,"s17":15.0,"r5":0.0,"r6":15.0,"h0":69.92,"h1":105.0,"h2":139.92,"h3":17.58,"h4":17.58,"r0":20.83,"r1":50.0,"r2":50.0,"r3":20.83,"r4":33.33,"m0":7.83,"m1":3.44,"m2":29.86,"m3":50.0,"m4":8.33,"m5":10.0,"m6":8.33,"m7":4.17,"m8":5.83,"m9":5.83,"m10":5.83,"m11":5.0,"m12":0.52,"m13":110.0,"m14":50.0,"m15":4.17,"m16":2.08,"m17":0,"g0":112.5,"g1":130.83,"g2":112.5,"b0":40.58,"b1":24.75,"b2":20.83,"b3":14.33,"b4":10.83,"b5":1.81};
 var VBASE=Object.assign({},VPRICES);
 var VIDX=['pvr1', 'pvr2', 'pvr3', 's0', 's1', 's2', 's3', 's4', 's5', 's6', 's6b', 's7', 's7a', 's7b', 's8', 's9', 's10', 's11', 's11a', 's12', 's12b', 's12c', 's12d', 's12e', 's12f', 's13', 's13a', 'r0', 'r1', 'r2', 'r3', 'r4', 'm0', 'm1', 'm2', 'm3', 'm4', 'm5', 'm6', 'm7', 'm8', 'm9', 'm10', 'm11', 'm12', 'm13', 'm14', 'm15', 'm16'];
 
@@ -9325,7 +9348,13 @@ function wpCheckGrenzwerte(){
 
 // ── PIN-Schutz ──────────────────────────────────────────────
 var _pinUnlocked = sessionStorage.getItem('grieer-unlocked') === '1';
-var _pinWords = ['roland','grieer'];
+var _pinWords = (function(){
+  try {
+    var saved = localStorage.getItem('grieer-passwords');
+    if(saved) return JSON.parse(saved);
+  } catch(e){}
+  return ['roland','grieer'];
+})();
 var _pendingTab = null;
 var _pinProtectedTabs = ['pv','gas','luft','brand','kamin','kehr','gesamt','verr'];
 
@@ -15786,8 +15815,207 @@ function kAddKehrung(typ, isGas){
     kAccAddItem(typ, isGas||false);
   }
 }
+
+
+// ── EINSTELLUNGEN ──────────────────────────────────────────
+function showSettings(){
+  var ov = document.getElementById('settings-overlay');
+  if(!ov) return;
+  ov.style.display = 'flex';
+  // Aktuelle Passwörter anzeigen (als Hinweis)
+  try {
+    var pws = JSON.parse(localStorage.getItem('grieer-passwords') || '[]');
+    var h1 = document.getElementById('set-pw1-hint');
+    var h2 = document.getElementById('set-pw2-hint');
+    if(h1) h1.textContent = pws[0] ? 'Aktuell: gesetzt ✓' : 'Aktuell: Standard (roland/grieer)';
+    if(h2) h2.textContent = pws[1] ? 'Aktuell: gesetzt ✓' : 'Aktuell: leer';
+  } catch(e){}
+}
+
+function savePasswords(){
+  var pw1 = (document.getElementById('set-pw1')?.value || '').trim().toLowerCase();
+  var pw2 = (document.getElementById('set-pw2')?.value || '').trim().toLowerCase();
+  
+  if(!pw1){ 
+    showSettingsMsg('Passwort 1 ist Pflicht!', '#DC2626');
+    return;
+  }
+  if(pw1.length < 3){
+    showSettingsMsg('Passwort muss mind. 3 Zeichen haben!', '#DC2626');
+    return;
+  }
+  
+  var pws = pw2 ? [pw1, pw2] : [pw1];
+  localStorage.setItem('grieer-passwords', JSON.stringify(pws));
+  
+  // _pinWords aktualisieren (sofort wirksam)
+  if(typeof _pinWords !== 'undefined') {
+    _pinWords.length = 0;
+    pws.forEach(function(p){ _pinWords.push(p); });
+  }
+  
+  document.getElementById('set-pw1').value = '';
+  document.getElementById('set-pw2').value = '';
+  var h1 = document.getElementById('set-pw1-hint');
+  var h2 = document.getElementById('set-pw2-hint');
+  if(h1) h1.textContent = 'Aktuell: gesetzt ✓';
+  if(h2) h2.textContent = pw2 ? 'Aktuell: gesetzt ✓' : 'Aktuell: leer';
+  
+  showSettingsMsg('✓ Passwörter gespeichert!', '#059669');
+}
+
+function showSettingsMsg(msg, col){
+  var el = document.getElementById('settings-msg');
+  if(!el) return;
+  el.textContent = msg;
+  el.style.color = col;
+  el.style.background = col==='#059669' ? '#ECFDF5' : '#FFEBEE';
+  el.style.border = '1.5px solid ' + (col==='#059669' ? '#6EE7B7' : '#EF9A9A');
+  el.style.display = 'block';
+  setTimeout(function(){ el.style.display='none'; }, 3000);
+}
+
+
+// ── PREISLISTE ACCORDION ─────────────────────────────────
+function verrAccordionInit(){
+  var tbody = document.getElementById('vbody');
+  if(!tbody || tbody.dataset.accInit) return;
+  tbody.dataset.accInit = '1';
+  
+  var rows = Array.from(tbody.querySelectorAll('tr'));
+  var cats = [];
+  
+  rows.forEach(function(tr){
+    var td7 = tr.querySelector('td[colspan="7"],td[colspan="6"],td[colspan="5"]');
+    if(td7 && !tr.id){
+      // Kategorie-Header-Zeile
+      var catObj = {header: tr, items: [], open: false};
+      cats.push(catObj);
+      
+      // Stil anpassen
+      tr.style.cssText += ';cursor:pointer;user-select:none;touch-action:manipulation;';
+      td7.style.cssText += ';display:flex;align-items:center;justify-content:space-between;gap:8px;';
+      
+      // Pfeil-Icon
+      var arrow = document.createElement('span');
+      arrow.className = 'verr-acc-arrow';
+      arrow.textContent = '▶';
+      arrow.style.cssText = 'font-size:10px;transition:transform .2s;flex-shrink:0;color:#1A2B45;';
+      td7.appendChild(arrow);
+      
+      tr.addEventListener('click', function(){
+        catObj.open = !catObj.open;
+        catObj.items.forEach(function(r){ r.style.display = catObj.open ? '' : 'none'; });
+        arrow.style.transform = catObj.open ? 'rotate(90deg)' : '';
+        arrow.textContent = catObj.open ? '▼' : '▶';
+        tr.style.background = catObj.open ? '#E8EDF5' : '';
+      });
+    } else if(tr.id && cats.length > 0){
+      // Positions-Zeile → letzter Kategorie zuordnen
+      cats[cats.length-1].items.push(tr);
+      tr.style.display = 'none'; // Startzustand: zugeklappt
+    }
+  });
+  
+  // Erste Kategorie automatisch aufklappen
+  if(cats.length > 0){
+    cats[0].open = true;
+    cats[0].items.forEach(function(r){ r.style.display = ''; });
+    var arr0 = cats[0].header.querySelector('.verr-acc-arrow');
+    if(arr0){ arr0.style.transform='rotate(90deg)'; arr0.textContent='▼'; }
+    cats[0].header.style.background = '#E8EDF5';
+  }
+}
+
+
+function buildWartHtml(){
+  var g = function(id){ var e=document.getElementById(id); return e?e.value||'':''; };
+  var gsel = function(id){ var e=document.getElementById(id); return e&&e.selectedIndex>=0?e.options[e.selectedIndex].text:''; };
+  var fmtD = function(s){ if(!s) return '—'; var p=s.split('-'); return p.length===3?p[2]+'.'+p[1]+'.'+p[0]:s; };
+  var gClass = function(cls){ var e=document.querySelector('.'+cls); return e?e.value||'':''; };
+  var today = _today ? _today() : new Date().toLocaleDateString('de-AT');
+  
+  var body = '';
+  body += '<div class="hdr"><div><img src="'+_GRIEER_LOGO+'" alt="Grieer" style="height:40px;width:auto" onerror="this.style.display=\'none\'"><div class="hdr-t">Wartungserinnerung</div>';
+  body += '<div class="hdr-sub">Gas- &amp; Heizungsservice · '+_GRIEER_FIRMA+'</div></div>';
+  body += '<div style="text-align:right;font-size:11px;color:#546E7A"><div class="hdr-nr">'+(g('we-nr')||'—')+'</div><div>'+fmtD(g('we-meta-datum'))+'</div><div>'+(g('we-bearbeiter')||'Grieer')+'</div></div></div>';
+  
+  body += '<div class="grid2" style="margin-bottom:12px"><div class="sec"><div class="sec-t">Kundendaten</div>';
+  body += '<div class="field"><label>Kd.-Nr.</label><div class="val">'+(gClass('kd-nr')||'—')+'</div></div>';
+  body += '<div class="field"><label>Name / Firma</label><div class="val">'+(gClass('kd-name')||'—')+'</div></div>';
+  body += '<div class="field"><label>Adresse</label><div class="val">'+(gClass('kd-str')||'—')+'</div></div>';
+  body += '<div class="field"><label>PLZ / Ort</label><div class="val">'+(gClass('kd-plz')||'—')+'</div></div>';
+  body += '<div class="field"><label>Telefon</label><div class="val">'+(gClass('kd-tel')||'—')+'</div></div>';
+  body += '<div class="field"><label>E-Mail</label><div class="val">'+(gClass('kd-email')||'—')+'</div></div></div>';
+  body += '<div class="sec"><div class="sec-t">Anlage / Objekt</div>';
+  body += '<div class="field"><label>Anlagenart</label><div class="val">'+(gsel('we-anlage')||'—')+'</div></div>';
+  body += '<div class="field"><label>Baujahr</label><div class="val">'+(g('we-baujahr')||'—')+'</div></div>';
+  body += '<div class="field"><label>Hersteller</label><div class="val">'+(g('we-hersteller')||'—')+'</div></div>';
+  body += '<div class="field"><label>Modell / Typ</label><div class="val">'+(g('we-modell')||'—')+'</div></div>';
+  body += '<div class="field"><label>Standort</label><div class="val">'+(g('we-standort')||'—')+'</div></div>';
+  body += '<div class="field"><label>Adresse Objekt</label><div class="val">'+(g('we-obj-adr')||'—')+'</div></div></div></div>';
+  
+  // Erinnerungstext
+  var erText = document.querySelector('#page-wart .kv-sub')?.textContent || '';
+  body += '<div class="sec" style="margin-bottom:12px;background:#E3F2FD;border:1px solid #90CAF9"><div class="sec-t" style="color:#1565C0">Erinnerungstext</div>';
+  body += '<p style="font-size:12px;color:#1A2B45;line-height:1.6">Wir erinnern Sie gerne an die nächste Überprüfung Ihrer Gasheizungsanlage. Bitte vereinbaren Sie rechtzeitig Ihren Servicetermin.</p></div>';
+  
+  // Weitere Felder (Intervall, Termin, usw.)
+  var intervallEl = document.querySelector('#page-wart select[id*="intervall"],#page-wart select');
+  var terminEl = document.querySelector('#page-wart input[id*="termin"],#page-wart input[type="date"]');
+  if(intervallEl || terminEl){
+    body += '<div class="sec" style="margin-bottom:12px"><div class="sec-t">Serviceinformationen</div>';
+    if(intervallEl) body += '<div class="field"><label>Intervall</label><div class="val">'+(intervallEl.options[intervallEl.selectedIndex]?.text||'—')+'</div></div>';
+    if(terminEl) body += '<div class="field"><label>Nächster Termin</label><div class="val">'+fmtD(terminEl.value)+'</div></div>';
+    body += '</div>';
+  }
+  
+  // Bemerkungen
+  var bemEl = document.querySelector('#page-wart textarea');
+  if(bemEl && bemEl.value){
+    body += '<div class="sec" style="margin-bottom:12px"><div class="sec-t">Bemerkungen</div>';
+    body += '<div style="font-size:12px;white-space:pre-wrap">'+bemEl.value.replace(/</g,'&lt;')+'</div></div>';
+  }
+  
+  body += '<div style="margin-top:24px;padding-top:12px;border-top:2px solid #1A2B45;display:flex;justify-content:space-between">';
+  body += '<div><div style="font-size:9px;color:#78909C;margin-bottom:30px">Datum/Unterschrift Betrieb</div><div style="border-top:1px solid #333;width:180px;font-size:10px;padding-top:3px">Grieer Rauchfangkehrermeister · '+today+'</div></div>';
+  body += '<div><div style="font-size:9px;color:#78909C;margin-bottom:30px">Kenntnisnahme Betreiber/in</div><div style="border-top:1px solid #333;width:180px;font-size:10px;padding-top:3px">__________________</div></div></div>';
+  
+  return _wrapHtml('Wartungserinnerung', body);
+}
 </script>
 
 <div id="grieer-version-badge" style="position:fixed;bottom:4px;right:8px;font-size:9px;color:#90A4AE;background:rgba(255,255,255,0.85);padding:2px 6px;border-radius:8px;z-index:50;pointer-events:none;font-family:monospace">App v2026-05-25-KI</div>
+
+<div id="settings-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.65);z-index:99998;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:14px;padding:20px;width:min(92vw,380px);max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.4)">
+    <div style="font-size:16px;font-weight:800;color:#1A2B45;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
+      ⚙️ Einstellungen
+      <button onclick="document.getElementById('settings-overlay').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer;color:#94A3B8;line-height:1">✕</button>
+    </div>
+    <div style="font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">🔑 Passwörter ändern</div>
+    <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:14px;margin-bottom:14px">
+      <div style="font-size:11px;color:#64748B;margin-bottom:10px">Zwei Passwörter möglich (z.B. Admin + Mitarbeiter).</div>
+      <div style="margin-bottom:10px">
+        <label style="font-size:11px;font-weight:600;color:#334155;display:block;margin-bottom:4px">Passwort 1</label>
+        <input type="password" id="set-pw1" placeholder="Neues Passwort..." autocomplete="new-password" style="width:100%;padding:9px 12px;border:1.5px solid #CBD5E1;border-radius:7px;font-size:14px;box-sizing:border-box">
+        <div id="set-pw1-hint" style="font-size:10px;color:#94A3B8;margin-top:3px"></div>
+      </div>
+      <div style="margin-bottom:14px">
+        <label style="font-size:11px;font-weight:600;color:#334155;display:block;margin-bottom:4px">Passwort 2 (optional)</label>
+        <input type="password" id="set-pw2" placeholder="Zweites Passwort..." autocomplete="new-password" style="width:100%;padding:9px 12px;border:1.5px solid #CBD5E1;border-radius:7px;font-size:14px;box-sizing:border-box">
+        <div id="set-pw2-hint" style="font-size:10px;color:#94A3B8;margin-top:3px"></div>
+      </div>
+      <button onclick="savePasswords()" style="width:100%;background:#1A2B45;color:#fff;border:none;border-radius:8px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:48px">💾 Passwörter speichern</button>
+    </div>
+    <div style="font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">🔐 Sitzung</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+      <button onclick="sessionStorage.setItem('grieer-unlocked','1'); document.getElementById('settings-overlay').style.display='none'; show('aufnahme');" style="background:#059669;color:#fff;border:none;border-radius:8px;padding:11px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:46px">🔓 Entsperren</button>
+      <button onclick="sessionStorage.removeItem('grieer-unlocked'); document.getElementById('settings-overlay').style.display='none'; var ov=document.getElementById('pin-overlay'); if(ov){ov.classList.remove('hidden');ov.style.display='';}" style="background:#DC2626;color:#fff;border:none;border-radius:8px;padding:11px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:46px">🔒 Sperren</button>
+    </div>
+    <div id="settings-msg" style="display:none;padding:10px;border-radius:7px;font-size:12px;font-weight:600;text-align:center"></div>
+  </div>
+</div>
+
 </body>
 </html>
