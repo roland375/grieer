@@ -685,6 +685,19 @@ body {
     font-size:9.5px;
   }
 }
+
+/* ── KEHRTARIF ACCORDION ── */
+.kacc-item{border:1px solid var(--border);border-radius:7px;margin-bottom:5px;overflow:hidden;background:#fff}
+.kacc-header{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;touch-action:manipulation;user-select:none;background:#F8FAFC}
+.kacc-header:active{background:#E8EDF5}
+.kacc-chk{width:20px;height:20px;flex-shrink:0;accent-color:var(--navy);cursor:pointer}
+.kacc-icon{font-size:16px;flex-shrink:0}
+.kacc-name{flex:1;font-size:12px;font-weight:600;color:var(--slate)}
+.kacc-badge{font-size:10px;color:var(--grey);background:#EEF2F6;border-radius:4px;padding:2px 6px;white-space:nowrap}
+.kacc-body{display:none;border-top:1px solid var(--border);padding:10px;background:#FAFBFC}
+.kacc-body.open{display:block}
+.kacc-row{display:flex;align-items:center;gap:8px;padding:8px;background:#fff;border:1px solid var(--border);border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.kacc-row-result{font-size:11px;color:var(--blue);font-weight:700;white-space:nowrap;margin-left:auto}
 </style>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -1933,19 +1946,27 @@ body {
 </div>
 
 <!-- Kundendaten -->
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">
-  <div class="ibox" style="background:#fff;border:1px solid #ccc;border-radius:6px;padding:7px 9px">
-    <div style="font-size:9px;font-weight:700;color:#2C3E50;text-transform:uppercase;border-bottom:1px solid #ddd;padding-bottom:3px;margin-bottom:4px">Kunde</div>
-    <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:3px"><label style="font-size:8px;color:#888;min-width:50px">Name</label><input type="text" class="fin kd-name" oninput="syncKunden()" style="flex:1;border:none;border-bottom:1px solid #ddd;font-size:10px;padding:1px 3px;outline:none;background:transparent"></div>
-    <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:3px"><label style="font-size:8px;color:#888;min-width:50px">Adresse</label><input type="text" class="fin kd-str" oninput="syncKunden()" style="flex:1;border:none;border-bottom:1px solid #ddd;font-size:10px;padding:1px 3px;outline:none;background:transparent"></div>
-    <div style="display:flex;align-items:baseline;gap:4px"><label style="font-size:8px;color:#888;min-width:50px">PLZ/Ort</label><input type="text" class="fin kd-plz" oninput="syncKunden()" style="flex:1;border:none;border-bottom:1px solid #ddd;font-size:10px;padding:1px 3px;outline:none;background:transparent"></div>
+<div style="background:#FFF8E1;border:1px solid #FFB74D;border-radius:8px;padding:8px 12px;margin-bottom:8px;display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+  <div style="font-size:9px;font-weight:700;color:#E65100;text-transform:uppercase;width:100%;padding-bottom:4px;border-bottom:1px solid #FFD180;margin-bottom:2px">Objekt / KV</div>
+  <div style="display:flex;align-items:baseline;gap:4px;flex:1;min-width:100px"><label style="font-size:9px;color:#888;white-space:nowrap">KV-Nr</label><input type="text" class="fin" placeholder="2026-001" style="border:none;border-bottom:1px solid #FFD180;font-size:12px;padding:2px 4px;outline:none;background:transparent;width:100%"></div>
+  <div style="display:flex;align-items:baseline;gap:4px;flex:1;min-width:90px"><label style="font-size:9px;color:#888;white-space:nowrap">Datum</label><input type="text" class="fin adate" style="border:none;border-bottom:1px solid #FFD180;font-size:12px;padding:2px 4px;outline:none;background:transparent;width:100%"></div>
+  <div style="display:flex;align-items:baseline;gap:4px;flex:1;min-width:80px"><label style="font-size:9px;color:#888;white-space:nowrap">Bearbeiter</label><input type="text" class="fin" placeholder="Grieer" style="border:none;border-bottom:1px solid #FFD180;font-size:12px;padding:2px 4px;outline:none;background:transparent;width:100%"></div>
+</div>
+
+<div class="ibox" style="margin-bottom:10px">
+  <div class="btl">SCHRITT 1B — Kamine / Fänge (Arbeitsentgelt)</div>
+  <div style="font-size:10.5px;color:#546E7A;margin-bottom:10px;line-height:1.5">
+    Benötigte Kamintypen <b>☑ anhaken</b> → Zeile öffnet sich. Mehrere Kamine gleichen Typs mit <b>+ Weiterer Kamin</b>.
   </div>
-  <div class="ibox ibox-b" style="background:#FFF8E1;border:1px solid #FFB74D;border-radius:6px;padding:7px 9px">
-    <div style="font-size:9px;font-weight:700;color:#E65100;text-transform:uppercase;border-bottom:1px solid #FFD180;padding-bottom:3px;margin-bottom:4px">Objekt</div>
-    <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:3px"><label style="font-size:8px;color:#888;min-width:50px">KV-Nr</label><input type="text" class="fin" placeholder="2026-001" style="flex:1;border:none;border-bottom:1px solid #FFD180;font-size:10px;padding:1px 3px;outline:none;background:transparent"></div>
-    <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:3px"><label style="font-size:8px;color:#888;min-width:50px">Datum</label><input type="text" class="fin adate" style="flex:1;border:none;border-bottom:1px solid #FFD180;font-size:10px;padding:1px 3px;outline:none;background:transparent"></div>
-    <div style="display:flex;align-items:baseline;gap:4px"><label style="font-size:8px;color:#888;min-width:50px">Bearbeiter</label><input type="text" class="fin" placeholder="Grieer" style="flex:1;border:none;border-bottom:1px solid #FFD180;font-size:10px;padding:1px 3px;outline:none;background:transparent"></div>
-  </div>
+
+  <!-- ACCORDION FESTBRENNSTOFF -->
+  <div style="font-size:10px;font-weight:700;color:#78350F;margin-bottom:6px;padding:4px 0;border-bottom:1px solid #FED7AA;text-transform:uppercase;letter-spacing:.5px">🪵 Festbrennstoffe (Holz, Kohle, Pellets)</div>
+  <div id="kehr-accordion" style="margin-bottom:10px"></div>
+
+  <!-- ACCORDION GAS -->
+  <div style="font-size:10px;font-weight:700;color:#1E40AF;margin-bottom:4px;margin-top:6px;padding:4px 0;border-bottom:1px solid #BFDBFE;text-transform:uppercase;letter-spacing:.5px">🔥 Gasfeuerung (alle 2 Jahre gem. Bgld. KehrG)</div>
+  <div style="font-size:10px;color:#64748B;margin-bottom:6px;padding:4px 8px;background:#EFF6FF;border-radius:4px">Arbeitsentgelt × 0,5 (1 Kehrung alle 2 Jahre)</div>
+  <div id="kehr-accordion-gas" style="margin-bottom:4px"></div>
 </div>
 
 <!-- ABRECHNUNGSPERIODE -->
@@ -1999,39 +2020,7 @@ body {
   </div>
 </div>
 
-<div style="background:#F8F9FA;border:2px solid #1565C0;border-radius:10px;padding:12px;margin-bottom:10px">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-    <span style="background:#1565C0;color:#fff;padding:3px 10px;border-radius:14px;font-size:11px;font-weight:700">SCHRITT 1B</span>
-    <b style="color:#0D47A1;font-size:13px">🔥 Kamine / Fänge (nur Arbeitsentgelt)</b>
-  </div>
-  <div style="font-size:10.5px;color:#546E7A;margin-bottom:8px;line-height:1.5">
-    Beliebige Anzahl Fänge/Kamine anlegbar. Pro Kamin: Anlagenklasse, Geschosse + Anzahl Kehrungen pro Jahr wählen. Anzeige zeigt Preis je Kehrung + Jahresentgelt für diesen Kamin.
-  </div>
-  <div id="kehr-list" style="margin-bottom:10px">
-    <div id="kehr-empty" style="text-align:center;color:#999;padding:18px;font-size:11px;border:1.5px dashed #CFD8DC;border-radius:8px">Noch keine Kamine angelegt — Buttons unten zum Hinzufügen.</div>
-  </div>
-  <div>
-  <div style="font-size:10px;font-weight:700;color:#546E7A;margin-bottom:6px;margin-top:2px;letter-spacing:0.5px">🪵 FESTBRENNSTOFFE (Holz, Kohle, Pellets – jährl. Intervall)</div>
-  <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px">
-    <button type="button" id="kbtn-ein10" onclick="kAddKehrung('ein10')" style="background:#1565C0;color:#fff;border:none;border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:36px">+ bis 10 kW</button>
-    <button type="button" id="kbtn-ein50" onclick="kAddKehrung('ein50')" style="background:#1565C0;color:#fff;border:none;border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:36px">+ bis 50 kW</button>
-    <button type="button" id="kbtn-fst150" onclick="kAddKehrung('fst150')" style="background:#1565C0;color:#fff;border:none;border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:36px">+ bis 150 kW</button>
-    <button type="button" id="kbtn-fst150up" onclick="kAddKehrung('fst150up')" style="background:#1565C0;color:#fff;border:none;border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:36px">+ über 150 kW</button>
-    <button type="button" id="kbtn-beschloffen" onclick="kAddKehrung('beschloffen')" style="background:#0D47A1;color:#fff;border:none;border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:36px">+ Beschloffen</button>
-    <button type="button" id="kbtn-bestiegen" onclick="kAddKehrung('bestiegen')" style="background:#0D47A1;color:#fff;border:none;border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:36px">+ Bestiegen</button>
-  </div>
-  <div style="font-size:10px;font-weight:700;color:#E65100;margin-bottom:6px;letter-spacing:0.5px">🔥 GASFEUERUNG (alle 2 Jahre gem. Bgld. KehrG)</div>
-  <div style="background:#FFF3E0;border:1.5px solid #FFB74D;border-radius:6px;padding:6px 10px;margin-bottom:6px;font-size:10px;color:#E65100">
-    ⚠ Laut Bgld. Kehrgesetz gilt für Gasfeuerungen ein Kehrintervall von <b>2 Jahren</b> – das Arbeitsentgelt pro Kehrung wird bei der Jahresabrechnung automatisch mit 0,5 multipliziert (= 1 Kehrung alle 2 Jahre).
-  </div>
-  <div style="display:flex;flex-wrap:wrap;gap:5px">
-    <button type="button" id="kbtn-gas-ein10" onclick="kAddKehrung('ein10', true)" style="background:#E65100;color:#fff;border:none;border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:36px">🔥 Gas bis 10 kW</button>
-    <button type="button" id="kbtn-gas-ein50" onclick="kAddKehrung('ein50', true)" style="background:#E65100;color:#fff;border:none;border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:36px">🔥 Gas bis 50 kW</button>
-    <button type="button" id="kbtn-gas-fst150" onclick="kAddKehrung('fst150', true)" style="background:#E65100;color:#fff;border:none;border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:36px">🔥 Gas bis 150 kW</button>
-    <button type="button" id="kbtn-gas-fst150up" onclick="kAddKehrung('fst150up', true)" style="background:#BF360C;color:#fff;border:none;border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:36px">🔥 Gas über 150 kW</button>
-  </div>
-</div>
-</div>
+
 
 </div>
     </label>
@@ -5395,7 +5384,116 @@ body {
 </div>
 </div>
 
-<script>// === GRIEER KERNFUNKTIONEN ===
+<script>
+// ─────────────────────────────────────────────────────────────
+//  FEHLENDE FUNKTIONEN – DRUCK / SENDEN / SPEICHERN
+// ─────────────────────────────────────────────────────────────
+
+// Direkt drucken (ohne Vorschau-Overlay)
+function kvPrint(pid){
+  try {
+    var data = buildA4Html(pid);
+    if(!data || !data.html){ _grieerToast('Fehler: Kein Inhalt', '#E53935', 3000); return; }
+    _grieerPrintDoc = {html: data.html, title: data.title || 'Grieer Dokument'};
+    _grieerDoPrint();
+  } catch(e){ _grieerToast('Druckfehler: '+e.message, '#E53935', 3000); }
+}
+
+// Auftragsprotokoll-HTML bauen (apSenden Alias)
+function apBuildHTML(){
+  var t = buildA4Html('auftrag');
+  if(!t) return null;
+  return {html: t.html, title: t.title || 'Auftragsprotokoll'};
+}
+
+// aufSenden: Vorschau öffnen (nicht mehr direkt Share)
+function aufSenden(){
+  try {
+    var data = typeof aufBuildHTML === 'function' ? aufBuildHTML() : buildA4Html('auftrag');
+    if(!data || !data.html){ _grieerToast('Fehler: Kein Inhalt', '#E53935', 2000); return; }
+    _grieerOpenPreview(data.html, data.title || 'Auftragsformular');
+  } catch(e){ _grieerToast('Fehler: '+e.message, '#E53935', 2000); }
+}
+
+// apSenden: Auftragsprotokoll senden
+function apSenden(){
+  try {
+    var data = buildA4Html('auftrag');
+    if(!data || !data.html){ _grieerToast('Fehler: Kein Inhalt', '#E53935', 2000); return; }
+    _grieerOpenPreview(data.html, data.title || 'Auftragsprotokoll');
+  } catch(e){ _grieerToast('Fehler: '+e.message, '#E53935', 2000); }
+}
+
+// messSenden: Vorschau öffnen (unified)
+function messSenden(){
+  try {
+    var html = buildMessHtml();
+    if(!html){ _grieerToast('Fehler: Kein Inhalt', '#E53935', 2000); return; }
+    _grieerOpenPreview(html, 'Prüfbericht – Anlage 2.3 Bgld. HK-VO 2019');
+  } catch(e){ _grieerToast('Fehler: '+e.message, '#E53935', 2000); }
+}
+
+// l2Senden: Luftmessung senden
+function l2Senden(){
+  try {
+    var html = buildLuft2Html();
+    if(!html){ _grieerToast('Fehler: Kein Inhalt', '#E53935', 2000); return; }
+    _grieerOpenPreview(html, 'Verbrennungsluft-Messbericht ÖVGW G K62');
+  } catch(e){ _grieerToast('Fehler: '+e.message, '#E53935', 2000); }
+}
+
+// b82Senden: B8201 Fangprüfbericht senden
+function b82Senden(){
+  try {
+    var html = buildB8201Html();
+    if(!html){ _grieerToast('Fehler: Kein Inhalt', '#E53935', 2000); return; }
+    _grieerOpenPreview(html, 'Fang-Prüfbericht ÖNORM B 8201');
+  } catch(e){ _grieerToast('Fehler: '+e.message, '#E53935', 2000); }
+}
+
+// Allgemeine Hilfsfunktionen Speichern/Laden (verbessert)
+function kvSpeichern(pid){
+  try {
+    var saveData = {};
+    var pg = document.getElementById('page-'+pid);
+    if(!pg){ _grieerToast('Seite nicht gefunden', '#E53935', 2000); return; }
+    pg.querySelectorAll('input,select,textarea').forEach(function(el){
+      if(el.id) saveData[el.id] = (el.type==='checkbox'||el.type==='radio') ? el.checked : el.value;
+    });
+    localStorage.setItem('grieer-kv-'+pid, JSON.stringify(saveData));
+    _grieerToast('✓ Gespeichert', '#27AE60', 2000);
+  } catch(e){ _grieerToast('Fehler: '+e.message, '#E53935', 3000); }
+}
+
+function kvLaden(pid){
+  try {
+    var raw = localStorage.getItem('grieer-kv-'+pid);
+    if(!raw){ _grieerToast('Keine gespeicherten Daten', '#F39C12', 2500); return; }
+    var d = JSON.parse(raw);
+    var pg = document.getElementById('page-'+pid);
+    if(!pg) return;
+    Object.keys(d).forEach(function(id){
+      var el = document.getElementById(id); if(!el) return;
+      if(el.type==='checkbox'||el.type==='radio'){ el.checked = d[id]; }
+      else { el.value = d[id]; }
+      el.dispatchEvent(new Event('change',{bubbles:true}));
+      el.dispatchEvent(new Event('input',{bubbles:true}));
+    });
+    _grieerToast('✓ Geladen', '#27AE60', 2000);
+  } catch(e){ _grieerToast('Fehler: '+e.message, '#E53935', 3000); }
+}
+
+// kvSenden: Vorschau öffnen (unified, alle Formulare)
+function kvSenden(pid){
+  try {
+    var data = buildA4Html(pid);
+    if(!data || !data.html){ _grieerToast('Fehler: Kein Inhalt', '#E53935', 3000); return; }
+    _grieerOpenPreview(data.html, data.title || 'Grieer Dokument');
+  } catch(e){ _grieerToast('Fehler: '+e.message, '#E53935', 3000); }
+}
+
+
+// === GRIEER KERNFUNKTIONEN ===
 var PAGE_LABELS = {
   aufnahme:'Startseite', pv:'PV-Reinigung', gas:'Gas-Service', luft:'Lüftung',
   brand:'Brandschutz', kamin:'Kamintürchen', kehr:'Kehrtarif', brandinfo:'BS-Info',
@@ -5429,7 +5527,7 @@ function show(id){
   if(id === 'luft2')   setTimeout(function(){ if(typeof l2Init === 'function') l2Init(); }, 150);
   if(id === 'b8201')  setTimeout(function(){ if(typeof b82Init === 'function') b82Init(); }, 150);
   if(id === 'wprot')   setTimeout(function(){ if(typeof wpCalc === 'function') wpCalc(); }, 150);
-  if(id === 'kehr')    setTimeout(function(){ if(typeof kCalcTarif === 'function') kCalcTarif(); }, 150);
+  if(id === 'kehr')    setTimeout(function(){ if(typeof kAccInit==='function') kAccInit(); if(typeof kCalcTarif === 'function') kCalcTarif(); }, 150);
 }
 
 function checkPin(){
@@ -5634,87 +5732,102 @@ function kRemoveKehrung(id){
   kCalcTarif();
 }
 function kCalcTarif(){
-  // Objekttarif separat (1× jährlich pro Gebäude)
+  // Schritt 1A: Objekttarif
   var objektAktiv = document.getElementById('obj-aktiv');
   objektAktiv = objektAktiv ? objektAktiv.checked : false;
-  var objektTypEl = document.querySelector('input[name="obj-typ"]:checked');
-  var objektTyp = objektTypEl ? objektTypEl.value : 'ein50';
-  var objektTarif = 0;
-  if(objektAktiv && KEHR_TYPEN[objektTyp]) objektTarif = KEHR_TYPEN[objektTyp].obj;
-  
-  // Arbeitsentgelt pro Kamin × Anzahl Kehrungen/Jahr
+  var objTypEl = document.querySelector('input[name="obj-typ"]:checked');
+  var objTyp = objTypEl ? objTypEl.value : 'ein10';
+  var t0 = KEHR_TYPEN[objTyp];
+  var objBetrag = (objektAktiv && t0) ? t0.obj : 0;
+
+  // Abrechnungsperiode
+  var halbjahr = document.getElementById('kehr-period-halb') && document.getElementById('kehr-period-halb').checked;
+
+  // ── Schritt 1B: Accordion-Rows lesen ──────────────────────────
   var arbeitGesamt = 0;
-  var items = document.querySelectorAll('#kehr-list .kehr-item');
-  items.forEach(function(item){
-    var typ = item.dataset.typ;
+  var kaminZeilen = []; // für Zusammenfassung
+
+  document.querySelectorAll('.kacc-row').forEach(function(row){
+    var typ  = row.dataset.typ;
+    var isGas = row.dataset.gas === 'true';
     var t = KEHR_TYPEN[typ];
     if(!t) return;
-    var anzahl = parseInt(item.querySelector('.kehr-anzahl')?.value)||3;
+
     var arbeit = 0;
-    if(typ === 'fst150up'){
-      var m = parseFloat(item.querySelector('.kehr-meter')?.value)||0;
-      arbeit = m * t.m;
-    } else if(typ === 'bestiegen'){
-      var vstd = parseInt(item.querySelector('.kehr-vstd')?.value)||0;
-      arbeit = vstd * t.q;
-    } else {
-      var ges = parseInt(item.querySelector('.kehr-geschosse')?.value)||3;
-      // Erschwernis: +1 Geschoss wenn Checkbox angehakt (gem. Bgld. HTVO)
-      var erschCb = item.querySelector('.kehr-erschwernis');
-      if(erschCb && erschCb.checked) ges = ges + 1;
+    var anzahl = parseInt(row.querySelector('.kehr-anzahl') ? row.querySelector('.kehr-anzahl').value : 3) || 3;
+    var ersch  = row.querySelector('.kehr-ersch') ? row.querySelector('.kehr-ersch').checked : false;
+
+    if(t.modus === 'geschoss'){
+      var ges = parseInt(row.querySelector('.kehr-geschoss') ? row.querySelector('.kehr-geschoss').value : 3) || 3;
+      if(ersch) ges += 1;
       if(ges <= 3){
         arbeit = t.g3;
       } else {
         arbeit = t.g3 + (ges - 3) * t.g_w;
       }
+    } else if(t.modus === 'meter'){
+      var meter = parseFloat(row.querySelector('.kehr-meter') ? row.querySelector('.kehr-meter').value : 10) || 10;
+      arbeit = t.obj + meter * t.m;
+    } else if(t.modus === 'bestiegen'){
+      var vstd = parseInt(row.querySelector('.kehr-vstd') ? row.querySelector('.kehr-vstd').value : 2) || 2;
+      var vstdPreis = 22.02;
+      arbeit = vstd * vstdPreis;
     }
-    var arbeitEl = item.querySelector('.kehr-item-arbeit');
-    var jahrEl = item.querySelector('.kehr-item-jahr');
-    if(arbeitEl) arbeitEl.textContent = arbeit.toFixed(2).replace('.',',')+' €';
-    if(jahrEl) jahrEl.textContent = (arbeit * anzahl).toFixed(2).replace('.',',')+' €';
-    arbeitGesamt += arbeit * anzahl;
+
+    // Gas: × 0.5 (alle 2 Jahre)
+    if(isGas) arbeit = arbeit * 0.5;
+
+    var jahrBetrag = arbeit * anzahl;
+    arbeitGesamt += jahrBetrag;
+    kaminZeilen.push({name: t.name + (isGas?' (Gas)':''), arbeit: arbeit, anzahl: anzahl, jahr: jahrBetrag});
+
+    // Einzelzeile aktualisieren
+    var resEl = row.querySelector('.kacc-row-result');
+    if(resEl) resEl.textContent = arbeit.toFixed(2).replace('.',',')+' € | '+jahrBetrag.toFixed(2).replace('.',',')+' €/Jahr';
   });
-  
-  // Zusatz Schritt 2 - LGBl 98/2025 Anlage 1 Punkte 7-15
-  var zusatz = 0;
-  ['7','8','9','10','11','12','13','14','15'].forEach(function(nr){
-    var cb = document.getElementById('zu-'+nr);
-    if(cb && cb.checked){
-      // WICHTIG: data-tarif (nicht data-preis!) ist das HTML-Attribut
-      var preis = parseFloat(cb.dataset.tarif || cb.dataset.preis || cb.getAttribute('data-tarif'))||0;
-      var nEl = document.getElementById('zu-'+nr+'-n');
-      // Pauschalen: §10 KehrG (11) + RFK-Wechsel (12) = nur 1×
-      var mult = 1;
-      if(nr === '11' || nr === '12'){
-        mult = 1;
-      } else if(nEl){
-        mult = parseFloat(nEl.value) || 0;
-      }
-      zusatz += preis * mult;
-    }
+
+  // Badges (Summe pro Typ) aktualisieren
+  document.querySelectorAll('.kacc-item').forEach(function(item){
+    var typId = item.id.replace('kacc-item-','');
+    var badge = item.querySelector('.kacc-badge');
+    if(!badge) return;
+    var rows = item.querySelectorAll('.kacc-row');
+    if(!rows.length){ badge.textContent = '—'; return; }
+    var sum = 0;
+    rows.forEach(function(r){ sum += parseFloat(r.querySelector('.kacc-row-result')?.textContent?.split('|')[1]?.replace(' €/Jahr','').replace(',','.') || 0); });
+    badge.textContent = sum > 0 ? sum.toFixed(2).replace('.',',') + ' €/J' : '—';
   });
-  
-    var netto = objektTarif + arbeitGesamt + zusatz;
-  var ust = netto * 0.20;
-  var brutto = netto + ust;
-  
-  var setSum = function(id, val){
-    var el = document.getElementById(id);
-    if(el) el.textContent = val.toFixed(2).replace('.',',')+' €';
-  };
-  setSum('sum-obj', objektTarif);
-  setSum('sum-kehr', arbeitGesamt);
-  setSum('sum-zusatz', zusatz);
-  setSum('sum-netto', netto);
-  setSum('sum-ust', ust);
-  setSum('sum-brutto', brutto);
-  
-  var period = document.querySelector('input[name="kehr-period"]:checked');
-  period = period ? period.value : 'jahr';
-  var halbEl = document.getElementById('sum-halb-betrag');
-  if(halbEl) halbEl.textContent = (brutto/2).toFixed(2).replace('.',',')+' €';
-  var halbRow = document.getElementById('sum-halb-row');
-  if(halbRow) halbRow.style.display = (period === 'halb') ? 'flex' : 'none';
+
+  // Schritt 2: Zusatzleistungen
+  var zusatzGesamt = 0;
+  document.querySelectorAll('#kehr-zusatz input[type="checkbox"]').forEach(function(chk){
+    if(!chk.checked) return;
+    var tarif = parseFloat(chk.dataset.tarif) || 0;
+    var multId = chk.dataset.mult;
+    var mult = multId ? (parseFloat(document.getElementById(multId)?.value) || 1) : 1;
+    zusatzGesamt += tarif * mult;
+  });
+
+  // Gesamtberechnung
+  var netto = objBetrag + arbeitGesamt + zusatzGesamt;
+  var mwst  = netto * 0.20;
+  var brutto = netto + mwst;
+
+  if(halbjahr){ netto = netto/2; mwst = mwst/2; brutto = brutto/2; }
+
+  // Anzeige
+  var fmt = function(n){ return n.toFixed(2).replace('.',',')+' €'; };
+  var set = function(id, val){ var el=document.getElementById(id); if(el) el.textContent=val; };
+  set('kehr-obj-betrag',    fmt(objBetrag));
+  set('kehr-arbeit-betrag', fmt(arbeitGesamt));
+  set('kehr-zusatz-betrag', fmt(zusatzGesamt));
+  set('kehr-netto',  fmt(netto));
+  set('kehr-mwst',   fmt(mwst));
+  set('kehr-brutto', fmt(brutto));
+
+  // Periode
+  var periodEl = document.getElementById('kehr-period-label');
+  if(periodEl) periodEl.textContent = halbjahr ? 'Halbjährlich' : 'Jährlich';
 }
 
 var GRIEER_PDFS = {
@@ -13789,28 +13902,7 @@ function aufBuildHTML(){
   return {html: html, title: 'Auftrag ' + nr};
 }
 
-function aufSenden(){
-  var data = aufBuildHTML();
-  if(!data) return;
-  var fileName = 'Grieer_Auftrag_' + ((document.getElementById('auf-nr')||{}).value||'NEU').replace(/[^a-zA-Z0-9]/g,'-') + '.html';
-  var blob = new Blob([data.html], {type: 'text/html;charset=utf-8'});
-  var file = new File([blob], fileName, {type: 'text/html'});
-  if(navigator.canShare && navigator.canShare({files: [file]})){
-    _grieerToast('Wird vorbereitet...', '#1565C0', 1500);
-    navigator.share({
-      files: [file],
-      title: data.title,
-      text: 'Auftrag von Grieer Rauchfangkehrermeister'
-    }).then(function(){
-      _grieerToast('✓ Gesendet', '#27AE60', 2000);
-    }).catch(function(err){
-      if(err.name !== 'AbortError') _grieerDownloadAndExplain(blob, fileName);
-    });
-  } else {
-    _grieerDownloadAndExplain(blob, fileName);
-  }
-}
-
+/* aufSenden replaced */
 function aufDrucken(){
   var data = aufBuildHTML();
   if(!data) return;
@@ -13854,52 +13946,12 @@ function _grieerPrintFrame(){
   }
 }
 
-function kvSenden(pid){
-  try {
-    var data = buildA4Html(pid);
-    if(!data || !data.html){ _grieerToast('Fehler: Kein Inhalt', '#E53935', 3000); return; }
-    _grieerOpenPreview(data.html, data.title || 'Grieer Dokument');
-  } catch(e){ _grieerToast('Fehler: ' + e.message, '#E53935', 3000); }
-}
-
-function kvSpeichern(pid){
-  try {
-    var saveData = {};
-    var page = document.getElementById('page-' + pid);
-    if(page){
-      page.querySelectorAll('input,select,textarea').forEach(function(el){
-        if(el.id) saveData[el.id] = (el.type==='checkbox'||el.type==='radio') ? el.checked : el.value;
-      });
-    }
-    localStorage.setItem('grieer-kv-' + pid, JSON.stringify(saveData));
-    _grieerToast('&#x2713; Gespeichert', '#27AE60', 2000);
-  } catch(e){ _grieerToast('Fehler: ' + e.message, '#E53935', 3000); }
-}
-
-function kvLaden(pid){
-  try {
-    var raw = localStorage.getItem('grieer-kv-' + pid);
-    if(!raw){ _grieerToast('Keine gespeicherten Daten', '#F39C12', 2500); return; }
-    var saveData = JSON.parse(raw);
-    var page = document.getElementById('page-' + pid);
-    if(page){
-      Object.keys(saveData).forEach(function(id){
-        var el = document.getElementById(id); if(!el) return;
-        if(el.type==='checkbox'||el.type==='radio') el.checked = saveData[id];
-        else el.value = saveData[id];
-        el.dispatchEvent(new Event('change',{bubbles:true}));
-        el.dispatchEvent(new Event('input',{bubbles:true}));
-      });
-    }
-    _grieerToast('&#x2713; Geladen', '#27AE60', 2000);
-  } catch(e){ _grieerToast('Fehler: ' + e.message, '#E53935', 3000); }
-}
-
+/* kvSenden replaced */
 function kvWhatsAppSend(pid){ kvSenden(pid); }
 function kvMailSend(pid){ kvSenden(pid); }
 function aufSenden(){ var d = typeof aufBuildHTML==='function' ? aufBuildHTML() : null; if(d) _grieerOpenPreview(d.html, d.title||'Auftragsformular'); }
 function aufDrucken(){ aufSenden(); }
-function apSenden(){ var d = typeof apBuildHTML==='function' ? apBuildHTML() : null; if(d) _grieerOpenPreview(d.html, d.title||'Auftragsprotokoll'); }
+/* apSenden replaced */
 function _grieerDownloadAndExplain(blob, fileName){ var r = new FileReader(); r.onload = function(e){ _grieerOpenPreview(e.target.result, fileName); }; r.readAsText(blob); }
 function _grieerHtmlToPdfPrint(htmlContent, title){ _grieerOpenPreview(htmlContent, title); }
 
@@ -14494,14 +14546,7 @@ function messCalc(){
   }
 }
 
-function messSenden(){
-  var html = buildMessHtml();
-  if(!html) { _grieerToast('Fehler: Kein Inhalt', '#E53935', 2000); return; }
-  _grieerOpenPreview(html, 'Prüfbericht – Anlage 2.3 Bgld. HK-VO 2019');
-}
-
-
-// ─── MESSPROTOKOLL HTML-BUILDER ───────────────────
+/* messSenden replaced */
 function buildMessHtml(){
   var g = function(id){ var e=document.getElementById(id); return e?e.value||'':''; };
   var gt = function(id){ var e=document.getElementById(id); return e?e.textContent||'':''; };
@@ -15277,13 +15322,7 @@ function l2Calc(){
   }
 }
 
-function l2Senden(){
-  var html = buildLuft2Html();
-  if(html) _grieerOpenPreview(html, 'Verbrennungsluft-Messbericht · ÖVGW G K62');
-  else _grieerToast('Fehler beim Erstellen', '#E53935', 2000);
-}
-
-// HTML-Builder für Ausdruck
+/* l2Senden replaced */
 function buildLuft2Html(){
   var today = _today ? _today() : new Date().toLocaleDateString('de-AT');
   var g = function(id){ var e=document.getElementById(id); return e?e.value||'':''; };
@@ -15504,12 +15543,7 @@ function b82Calc(){
   }
 }
 
-function b82Senden(){
-  var h = buildB8201Html();
-  if(h) _grieerOpenPreview(h, 'Fang-Prüfbericht ÖNORM B 8201');
-  else _grieerToast('Fehler', '#E53935', 2000);
-}
-
+/* b82Senden replaced */
 function buildB8201Html(){
   var g   = function(id){ var e=document.getElementById(id); return e?e.value||'':''; };
   var gt  = function(id){ var e=document.getElementById(id); return e?e.innerText||e.textContent||'':''; };
@@ -15591,6 +15625,166 @@ function buildB8201Html(){
   body+='<div><div class="sig-box"><img src="'+sig2+'" style="width:100%;max-height:60px;object-fit:contain"></div><div class="sig-lbl">Betreiber/in · '+today+'</div></div></div>';
   
   return _wrapHtml('Fang-Prüfbericht ÖNORM B 8201', body);
+}
+
+
+// ═══════════════════════════════════════════════════
+//  KEHRTARIF ACCORDION — kAccInit / kAccToggle / kAccAddItem
+// ═══════════════════════════════════════════════════
+
+var _kAccCounter = 0; // Zähler für unique IDs
+
+// Geschoss-Select HTML
+function _kGeschossOpts(val){
+  val = val || 3;
+  var html = '';
+  for(var i=1;i<=15;i++) html += '<option value="'+i+'"'+(i===val?' selected':'')+'>'+i+' Gesch.</option>';
+  return html;
+}
+// Kehrungen-Select HTML
+function _kAnzahlOpts(val){
+  val = val || 3;
+  var opts = [1,2,3,4,5,6];
+  return opts.map(function(n){ return '<option value="'+n+'"'+(n===val?' selected':'')+'>'+n+'× p.a.</option>'; }).join('');
+}
+
+// Eine Konfigurationszeile erzeugen
+function _kAccRow(typ, isGas){
+  _kAccCounter++;
+  var t = KEHR_TYPEN[typ];
+  if(!t) return '';
+  var rowId = 'kacc-row-' + _kAccCounter;
+  var body = '';
+
+  if(t.modus === 'geschoss'){
+    body = '<select class="kehr-anzahl" onchange="kCalcTarif()" title="Kehrungen/Jahr" style="padding:5px 4px;border:1.5px solid #CBD5E1;border-radius:5px;font-size:12px;background:#fff">'+_kAnzahlOpts(3)+'</select>'+
+           '<select class="kehr-geschoss" onchange="kCalcTarif()" title="Geschosse" style="padding:5px 4px;border:1.5px solid #CBD5E1;border-radius:5px;font-size:12px;background:#fff">'+_kGeschossOpts(3)+'</select>'+
+           '<label style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer;white-space:nowrap"><input type="checkbox" class="kehr-ersch" onchange="kCalcTarif()" style="width:16px;height:16px;accent-color:#1A2B45"> Erschw.</label>';
+  } else if(t.modus === 'meter'){
+    body = '<label style="font-size:11px;white-space:nowrap">Höhe (m):</label><input type="number" class="kehr-meter" min="1" step="0.5" value="10" oninput="kCalcTarif()" style="width:70px;padding:5px;border:1.5px solid #CBD5E1;border-radius:5px;font-size:13px;font-weight:700">';
+  } else if(t.modus === 'bestiegen'){
+    body = '<label style="font-size:11px;white-space:nowrap">¼-Std.:</label><input type="number" class="kehr-vstd" min="1" step="1" value="2" oninput="kCalcTarif()" style="width:60px;padding:5px;border:1.5px solid #CBD5E1;border-radius:5px;font-size:13px;font-weight:700">';
+  }
+
+  return '<div class="kacc-row" id="'+rowId+'" data-typ="'+typ+'" data-gas="'+(isGas?'true':'false')+'">'+
+    '<span style="font-size:11px;color:#94A3B8;white-space:nowrap">Kamin '+_kAccCounter+'</span>'+
+    body+
+    '<span class="kacc-row-result">—</span>'+
+    '<button type="button" onclick="kAccRemoveRow(this)" style="background:#FFEBEE;border:1px solid #EF9A9A;border-radius:5px;padding:4px 8px;font-size:12px;cursor:pointer;color:#C62828;flex-shrink:0;touch-action:manipulation;min-width:30px;min-height:30px">✕</button>'+
+  '</div>';
+}
+
+// Accordion aufbauen (wird bei show('kehr') aufgerufen)
+function kAccInit(){
+  var festContainer = document.getElementById('kehr-accordion');
+  var gasContainer  = document.getElementById('kehr-accordion-gas');
+  if(!festContainer || !gasContainer) return;
+  if(festContainer.dataset.built) return; // nur einmal aufbauen
+  festContainer.dataset.built = '1';
+
+  var festTypes = ['ein10','ein50','fst150','fst150up','beschloffen','bestiegen'];
+  var gasTypes  = ['ein10','ein50','fst150','fst150up'];
+
+  function buildItem(typ, isGas, container){
+    var t = KEHR_TYPEN[typ];
+    if(!t) return;
+    var itemId = 'kacc-item-' + typ + (isGas ? '-gas' : '');
+    var chkId  = 'kacc-chk-'  + typ + (isGas ? '-gas' : '');
+    var bodyId = 'kacc-body-' + typ + (isGas ? '-gas' : '');
+    var badgeId= 'kacc-badge-'+ typ + (isGas ? '-gas' : '');
+    var icon   = isGas ? '🔥' : '🪵';
+    var preisHint = t.modus==='geschoss' ? t.g3.toFixed(2).replace('.',',')+' €/Kehr' :
+                    t.modus==='meter'    ? t.obj.toFixed(2).replace('.',',')+' €' :
+                                           '22,02 €/¼Std';
+    var div = document.createElement('div');
+    div.className = 'kacc-item'; div.id = itemId;
+    div.innerHTML =
+      '<label class="kacc-header" for="'+chkId+'" style="display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;touch-action:manipulation;user-select:none;background:#F8FAFC;border-bottom:1px solid transparent">'+
+        '<input type="checkbox" class="kacc-chk" id="'+chkId+'"'+
+               ' onchange="kAccToggle(\''+typ+'\','+isGas+',this)"'+
+               ' style="width:20px;height:20px;flex-shrink:0;accent-color:#1A2B45;cursor:pointer">'+
+        '<span class="kacc-icon" style="font-size:16px;flex-shrink:0">'+icon+'</span>'+
+        '<span class="kacc-name" style="flex:1;font-size:12px;font-weight:600;color:#334155">'+t.name+'</span>'+
+        '<span style="font-size:10px;color:#94A3B8;margin-right:4px">(ab '+preisHint+')</span>'+
+        '<span class="kacc-badge" id="'+badgeId+'" style="font-size:10px;color:#1A2B45;background:#E8EDF5;border-radius:4px;padding:2px 7px;font-weight:700;white-space:nowrap">—</span>'+
+      '</label>'+
+      '<div class="kacc-body" id="'+bodyId+'" style="display:none;border-top:1px solid #E2E8F0;padding:10px;background:#FAFBFC">'+
+        '<div class="kacc-rows" id="'+bodyId+'-rows"></div>'+
+        '<button type="button" onclick="kAccAddItem(\''+typ+'\','+isGas+')" style="margin-top:6px;background:#EFF6FF;border:1.5px solid #BFDBFE;border-radius:6px;padding:6px 12px;font-size:11px;font-weight:700;color:#1D4ED8;cursor:pointer;touch-action:manipulation;min-height:36px">+ Weiterer Kamin</button>'+
+      '</div>';
+    container.appendChild(div);
+  }
+
+  festTypes.forEach(function(typ){ buildItem(typ, false, festContainer); });
+  gasTypes.forEach(function(typ){  buildItem(typ, true,  gasContainer); });
+}
+
+// Checkbox: auf/zu
+function kAccToggle(typ, isGas, chkEl){
+  var bodyId  = 'kacc-body-'  + typ + (isGas ? '-gas' : '');
+  var rowsId  = bodyId + '-rows';
+  var badgeId = 'kacc-badge-' + typ + (isGas ? '-gas' : '');
+  var body    = document.getElementById(bodyId);
+  var rows    = document.getElementById(rowsId);
+  var badge   = document.getElementById(badgeId);
+  var header  = chkEl.closest('.kacc-header');
+  if(!body || !rows) return;
+
+  if(chkEl.checked){
+    // Aufklappen + erste Zeile hinzufügen
+    body.style.display = 'block';
+    if(header) header.style.borderBottomColor = '#CBD5E1';
+    rows.innerHTML = _kAccRow(typ, isGas);
+  } else {
+    // Zuklappen + alle Zeilen entfernen
+    body.style.display = 'none';
+    if(header) header.style.borderBottomColor = 'transparent';
+    rows.innerHTML = '';
+    if(badge) badge.textContent = '—';
+  }
+  kCalcTarif();
+}
+
+// Weiteren Kamin hinzufügen
+function kAccAddItem(typ, isGas){
+  var bodyId = 'kacc-body-' + typ + (isGas ? '-gas' : '') + '-rows';
+  var rows   = document.getElementById(bodyId);
+  if(!rows) return;
+  var newRow = document.createElement('div');
+  newRow.outerHTML = ''; // dummy
+  rows.insertAdjacentHTML('beforeend', _kAccRow(typ, isGas));
+  kCalcTarif();
+}
+
+// Kamin-Zeile entfernen
+function kAccRemoveRow(btn){
+  var row = btn.closest('.kacc-row');
+  if(!row) return;
+  // Wenn letzte Zeile im Body → Checkbox deaktivieren
+  var body = btn.closest('.kacc-body');
+  var allRows = body ? body.querySelectorAll('.kacc-row') : [];
+  if(allRows.length <= 1){
+    // Letzten → Checkbox aus, Body zu
+    var item = btn.closest('.kacc-item');
+    if(item){
+      var chk = item.querySelector('.kacc-chk');
+      if(chk){ chk.checked = false; kAccToggle(row.dataset.typ, row.dataset.gas==='true', chk); return; }
+    }
+  }
+  row.remove();
+  kCalcTarif();
+}
+
+// kAddKehrung Kompatibilität (für ältere Aufrufe aus Druckvorschau etc.)
+function kAddKehrung(typ, isGas){
+  var chkId = 'kacc-chk-' + typ + (isGas ? '-gas' : '');
+  var chk = document.getElementById(chkId);
+  if(chk && !chk.checked){
+    chk.checked = true;
+    kAccToggle(typ, isGas||false, chk);
+  } else if(chk && chk.checked){
+    kAccAddItem(typ, isGas||false);
+  }
 }
 </script>
 
