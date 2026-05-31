@@ -856,7 +856,7 @@ function kvRender(){
     if(kvFilterAkt==='faellig')return hatFaelligkeit(k);
     if(kvFilterAkt==='fotovoltaik')return k.rhythmus_fotovoltaik||k.letzt_fotovoltaik||(k.pv_module>0);
     if(kvFilterAkt==='lueftung')return k.rhythmus_lueftung||k.letzt_lueftung||(k.lueftungsanlagen>0);
-    if(kvFilterAkt==='heizung')return k.rhythmus_heizung||k.letzt_heizung||(k.heizungsanlagen>0);
+    if(kvFilterAkt==='heizung')return k.rhythmus_heizung||k.letzt_heizung;
     if(kvFilterAkt==='wartung')return k.rhythmus_wartung||k.letzt_wartung;
     return true;
   });
@@ -864,11 +864,12 @@ function kvRender(){
   if(liste.length===0){el.innerHTML='<div class="emptyState"><div class="ei">👥</div><p>Keine Kunden gefunden</p></div>';return;}
   el.innerHTML=liste.map(k=>{
     const name=(k.anrede?k.anrede+' ':'')+(k.vorname?k.vorname+' ':'')+k.nachname;
+    const hatNotiz=k.notiz&&k.notiz.trim().length>0;
     return`<div class="listItem" onclick="kundeDetail('${k.id}')" tabindex="0" onkeydown="if(event.key==='Enter')kundeDetail('${k.id}')">
       <div class="listAvatar" style="background:var(--red2);color:var(--pri);font-weight:800">${k.nachname.charAt(0).toUpperCase()}</div>
       <div class="listMain">
-        <strong>${esc(name)}${k.firma?' <span style="font-weight:400;color:var(--text2)">· '+esc(k.firma)+'</span>':''}</strong>
-        <span>${esc(k.ort||'')}${k.telefon?' · '+esc(k.telefon):''}${k.hinweis?' · ⚠️ Hinweis':''}</span>
+        <strong>${esc(name)}${k.firma?' · '+esc(k.firma):''}</strong>
+        <span>${esc(k.ort||'')}${k.telefon?' · '+esc(k.telefon):''}${hatNotiz?' · ⚠️':''}</span>
       </div>
       <div class="listRight">${hatFaelligkeit(k)?'<span class="badge bRed">Fällig</span>':'<span class="badge bGrn">OK</span>'}</div>
     </div>`;
@@ -880,7 +881,7 @@ function kvFilter(f){
   Object.entries(chipMap).forEach(([v,id])=>document.getElementById(id)?.classList.toggle('ak',v===f));
   kvRender();
 }
-function hatFaelligkeit(k){return['lueftung','fotovoltaik','heizung','wartung','elektro'].some(l=>{const r=k['rhythmus_'+l],d=k['letzt_'+l];if(!r||!d)return false;const fd=new Date(d);fd.setFullYear(fd.getFullYear()+r);return fd<=new Date(Date.now()+90*864e5);});}
+function hatFaelligkeit(k){return['lueftung','fotovoltaik'].some(l=>{const r=k['rhythmus_'+l],d=k['letzt_'+l];if(!r||!d)return false;const fd=new Date(d);fd.setFullYear(fd.getFullYear()+r);return fd<=new Date(Date.now()+90*864e5);});}
 
 function kundeNeu(){modalOffen('👤 Neuer Kunde',kvFormHTML(null));}
 function kvFormHTML(k){
@@ -920,7 +921,7 @@ function kvFormHTML(k){
     <div class="fGrid fg3">
       <div class="fRow"><label>PV-Module</label><input id="fPv" type="number" min="0" value="${v.pv_module||0}"></div>
       <div class="fRow"><label>Lüftungen</label><input id="fLueft" type="number" min="0" value="${v.lueftungsanlagen||0}"></div>
-      <div class="fRow"><label>Heizungen</label><input id="fHeiz" type="number" min="0" value="${v.heizungsanlagen||0}"></div>
+
     </div>
     <hr style="margin:12px 0;border:none;border-top:2px solid var(--border)">
     <p style="font-size:.74rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">🔄 Rhythmus & letzte Durchführung</p>
@@ -997,7 +998,7 @@ function kundeDetail(id){
       <p>${esc(k.firma||'')}${k.ort?' · '+esc(k.ort):''}</p>
     </div>
     <div class="detailBody">
-      ${k.hinweis?`<div class="hinweisBox"><div class="hb-icon">⚠️</div><div class="hb-label">Hinweis & Besonderheit</div><p>${esc(k.hinweis)}</p></div>`:''}
+      ${k.notiz?`<div class="hinweisBox"><div class="hb-icon">⚠️</div><div class="hb-label">Hinweis & Besonderheit</div><p>${esc(k.notiz)}</p></div>`:''}
       <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
         ${k.telefon?`<a href="tel:${k.telefon}" class="btn btnP btnSm">📞 Anrufen</a>`:''}
         ${k.email?`<a href="mailto:${k.email}" class="btn btnOut btnSm">✉️ E-Mail</a>`:''}
@@ -1011,11 +1012,11 @@ function kundeDetail(id){
         ${k.email?`<div class="detailRow"><span>E-Mail</span><span>${esc(k.email)}</span></div>`:''}
         ${k.nummer?`<div class="detailRow"><span>Kundennr.</span><span>${esc(k.nummer)}</span></div>`:''}
       </div>
-      ${(k.pv_module||k.lueftungsanlagen||k.heizungsanlagen)?`
+      ${(k.pv_module||k.lueftungsanlagen)?`
       <div class="detailSection"><h4>🏠 Anlagen</h4>
         ${k.pv_module?`<div class="detailRow"><span>PV-Module</span><span>${k.pv_module} Stk.</span></div>`:''}
         ${k.lueftungsanlagen?`<div class="detailRow"><span>Lüftungsanlagen</span><span>${k.lueftungsanlagen} Stk.</span></div>`:''}
-        ${k.heizungsanlagen?`<div class="detailRow"><span>Heizungsanlagen</span><span>${k.heizungsanlagen} Stk.</span></div>`:''}
+
       </div>`:''}
       <div class="detailSection"><h4>🔄 Fälligkeiten</h4>
         ${['fotovoltaik','lueftung','heizung','wartung'].map(l=>{
@@ -1927,7 +1928,7 @@ function kundeAkteDetail(id){
       </div>
       ${k.strasse?`<p style="font-size:.84rem;color:var(--text2);margin-top:8px">📍 ${esc(k.strasse)}, ${esc(k.plz||'')} ${esc(k.ort||'')}</p>`:''}
     </div>
-    ${k.hinweis?`<div class="akteSection"><div class="hinweisBox" style="margin:0"><div class="hb-icon">⚠️</div><div class="hb-label">Wichtiger Hinweis</div><p>${esc(k.hinweis)}</p></div></div>`:''}
+    ${k.notiz?`<div class="akteSection"><div class="hinweisBox" style="margin:0"><div class="hb-icon">⚠️</div><div class="hb-label">Wichtiger Hinweis</div><p>${esc(k.notiz)}</p></div></div>`:''}
     ${isAdmin()&&auftraege.length>0?`
     <div class="akteSection" style="background:#fdf5f5">
       <h4>💰 Finanzübersicht (nur Admin)</h4>
@@ -1939,13 +1940,13 @@ function kundeAkteDetail(id){
       ${Object.keys(letztePreise).length>0?`<div class="preisHistorie">${Object.entries(letztePreise).map(([t,v])=>`
         <div class="ph-row"><span class="ph-typ">${TYPEN[t]?.l||t}</span><span class="ph-preis">€${v.preis.toFixed(2)}</span><span class="ph-datum">${v.datum?.split('-').reverse().join('.')||''}</span></div>`).join('')}</div>`:''}
     </div>`:''}
-    ${(k.pv_module||k.lueftungsanlagen||k.heizungsanlagen)?`
+    ${(k.pv_module||k.lueftungsanlagen)?`
     <div class="akteSection">
       <h4>🏠 Anlagen</h4>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         ${k.pv_module?`<span class="badge bOrange">☀️ ${k.pv_module} PV-Module</span>`:''}
         ${k.lueftungsanlagen?`<span class="badge bGrn">💨 ${k.lueftungsanlagen} Lüftung(en)</span>`:''}
-        ${k.heizungsanlagen?`<span class="badge bBlue">🔧 ${k.heizungsanlagen} Heizung(en)</span>`:''}
+
       </div>
     </div>`:''}
     <div class="akteSection">
