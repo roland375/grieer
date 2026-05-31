@@ -797,9 +797,9 @@ async function appStart(){
 async function laden(){
   try{
     const [k,a,t,m]=await Promise.all([
-      api('/kunden?order=nachname.asc&aktiv=eq.true&bereich=eq.energie'),
-      api('/auftraege?order=datum.desc&bereich=eq.energie'),
-      api('/termine?order=datum.asc&bereich=eq.energie'),
+      api('/kunden?order=nachname.asc&aktiv=eq.true'),
+      api('/auftraege?order=datum.desc'),
+      api('/termine?order=datum.asc'),
       api('/mitarbeiter?order=name.asc'),
     ]);
     DB={kunden:k,auftraege:a,termine:t,mitarbeiter:m};
@@ -959,19 +959,28 @@ async function kvSpeichern(id){
     notiz:(document.getElementById('fHinweis')?.value||'')+(document.getElementById('fNotiz')?.value?'\n'+document.getElementById('fNotiz').value:''),
     pv_module:parseInt(document.getElementById('fPv')?.value)||0,
     lueftungsanlagen:parseInt(document.getElementById('fLueft')?.value)||0,
-    bereich:'energie',
-    aktiv:true,
     geaendert_am:new Date().toISOString()
   };
-  ['fotovoltaik','lueftung','heizung','wartung'].forEach(l=>{
-    d['rhythmus_'+l]=document.getElementById('fr_'+l)?.value?parseInt(document.getElementById('fr_'+l).value):null;
-    d['letzt_'+l]=document.getElementById('fl_'+l)?.value||null;
+  // Rhythmus-Felder (nur die die in DB existieren)
+  ['fotovoltaik','lueftung'].forEach(l=>{
+    const rv=document.getElementById('fr_'+l)?.value;
+    const lv=document.getElementById('fl_'+l)?.value;
+    if(rv) d['rhythmus_'+l]=parseInt(rv);
+    if(lv) d['letzt_'+l]=lv;
   });
+  // Bereinige null-Werte um Spalten-Fehler zu vermeiden
+  Object.keys(d).forEach(k=>{ if(d[k]===null||d[k]===undefined||d[k]==='') delete d[k]; });
   try{
-    if(id){await api('/kunden?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});toast('Kunde aktualisiert ✓');}
-    else{await api('/kunden',{method:'POST',body:JSON.stringify({...d,aktiv:true})});toast('Kunde angelegt ✓');}
+    if(id){
+      await api('/kunden?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});
+      toast('Kunde aktualisiert ✓');
+    } else {
+      d.aktiv=true;
+      await api('/kunden',{method:'POST',body:JSON.stringify(d)});
+      toast('Kunde angelegt ✓');
+    }
     modalZu();await laden();
-  }catch(e){toast('Fehler beim Speichern: '+e.message,'err');}
+  }catch(e){toast('Fehler: '+e.message,'err');console.error('kvSpeichern:',e);}
 }
 
 function kundeDetail(id){
@@ -1138,7 +1147,7 @@ async function auftragSpeichern(id){
     naechste_faelligkeit:document.getElementById('aFaellig')?.value||null,
     bezahlt:document.getElementById('aBezahlt')?.value==='true',
     notiz:document.getElementById('aNotiz')?.value||null,
-    bereich:'energie',geaendert_am:new Date().toISOString()
+    geaendert_am:new Date().toISOString()
   };
   try{
     if(id){await api('/auftraege?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});toast('Auftrag aktualisiert ✓');}
@@ -1306,6 +1315,9 @@ function terminNeu(){
     <div class="fRow"><label>Beschreibung</label>
       <textarea id="tBeschreibung" placeholder="Was ist geplant?"></textarea>
     </div>
+    <div class="fRow"><label>Preis (€) — optional</label>
+      <input type="number" id="tPreis" step=".01" min="0" placeholder="z.B. 85.00">
+    </div>
     <div style="display:flex;gap:10px;margin-top:18px">
       <button class="btn btnGrn" style="flex:1" onclick="terminSpeichern()">💾 Speichern</button>
       <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
@@ -1330,8 +1342,10 @@ async function terminSpeichern(){
     uhrzeit_bis:ganztag?null:(document.getElementById('tBis')?.value||null),
     kunde:document.getElementById('tKunde')?.value||null,
     typ:document.getElementById('tTyp')?.value||null,
-    beschreibung:beschreibungFinal,
-    farbe:'#c0392b',bereich:'energie'
+    beschreibung: document.getElementById('tPreis')?.value
+      ? (beschreibungFinal ? beschreibungFinal + ' | Preis: €'+parseFloat(document.getElementById('tPreis').value||0).toFixed(2) : 'Preis: €'+parseFloat(document.getElementById('tPreis').value||0).toFixed(2))
+      : beschreibungFinal,
+    farbe:'#c0392b'
   };
   try{
     await api('/termine',{method:'POST',body:JSON.stringify(d)});
@@ -1559,7 +1573,7 @@ async function fInJournal(typ,preisId){
       ort:document.getElementById('fOrt')?.value||null,
       typ,
       arbeit:document.getElementById('fNotiz')?.value||TYPEN[typ]?.l||typ,
-      bezahlt:false,bereich:'energie',
+      bezahlt:false,
     };
     if(preis) fDaten.preis=preis;
     if(document.getElementById('fFaellig')?.value) fDaten.naechste_faelligkeit=document.getElementById('fFaellig').value;
