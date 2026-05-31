@@ -908,10 +908,6 @@ body {
   }
 }
 
-@keyframes sbPulse{
-  0%,100%{opacity:1;transform:scale(1)}
-  50%{opacity:.5;transform:scale(1.3)}
-}
 </style>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -1171,7 +1167,6 @@ body {
   overflow-x: hidden !important;
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="manifest" href="manifest.json">
 </head>
 <body onload="pinInit()">
@@ -5754,33 +5749,12 @@ function kvSpeichern(pid){
     });
     localStorage.setItem('grieer-kv-'+pid, JSON.stringify(saveData));
     _grieerToast('✓ Gespeichert', '#27AE60', 2000);
-    // Supabase Sync
-    if(_sbOnline) sbSave(pid, saveData).then(function(ok){ 
-      if(ok){ var ind=document.getElementById('sb-sync-indicator'); if(ind) ind.style.background='#16A34A'; }
-    });
   } catch(e){ _grieerToast('Fehler: '+e.message, '#E53935', 3000); }
 }
 
 function kvLaden(pid){
   try {
-    // Versuche zuerst von Supabase zu laden
-    if(_sbOnline){
-      sbLoad(pid).then(function(sbData){
-        if(sbData && sbData.daten){
-          var localRaw = localStorage.getItem('grieer-kv-'+pid);
-          var localTs = localRaw ? JSON.parse(localRaw)['_saved_at'] || 0 : 0;
-          var sbTs = new Date(sbData.geaendert_am||0).getTime();
-          if(sbTs > localTs){
-            localStorage.setItem('grieer-kv-'+pid, JSON.stringify(sbData.daten));
-            _kvLadenApply(pid);
-            _grieerToast('✓ Von Supabase geladen (neu)', '#1D4ED8', 2500);
-            return;
-          }
-        }
-        _kvLadenApply(pid);
-      }).catch(function(){ _kvLadenApply(pid); });
-      return;
-    }
+
     var raw = localStorage.getItem('grieer-kv-'+pid);
     if(!raw){ _grieerToast('Keine gespeicherten Daten', '#F39C12', 2500); return; }
     var d = JSON.parse(raw);
@@ -16285,173 +16259,6 @@ function buildWartHtml(){
 }
 
 
-// ══════════════════════════════════════════════════════════════════
-//  SUPABASE SYNC — Grieer App Cloud-Synchronisation
-// ══════════════════════════════════════════════════════════════════
-
-var _sb = null; // Supabase Client Instanz
-var _sbOnline = false;
-
-// Supabase initialisieren (beim App-Start automatisch)
-function sbInit(){
-  try {
-    var cfg = JSON.parse(localStorage.getItem('grieer-sb-config') || '{}');
-    if(!cfg.url || !cfg.key){ _sbOnline = false; return; }
-    if(typeof window.supabase === 'undefined'){ _sbOnline = false; return; }
-    _sb = window.supabase.createClient(cfg.url, cfg.key);
-    _sbOnline = true;
-    // Status anzeigen
-    var el = document.getElementById('sb-sync-indicator');
-    if(el){ el.style.display='block'; el.title='Supabase verbunden'; }
-  } catch(e){ _sbOnline = false; console.warn('Supabase Init Fehler:', e.message); }
-}
-
-// Konfiguration speichern + testen
-async function saveSbConfig(){
-  var url = (document.getElementById('set-sb-url')?.value||'').trim();
-  var key = (document.getElementById('set-sb-key')?.value||'').trim();
-  var statusEl = document.getElementById('sb-status');
-  
-  if(!url || !key){ 
-    if(statusEl) statusEl.innerHTML='<span style="color:#DC2626">URL und Key erforderlich!</span>';
-    return;
-  }
-  
-  if(statusEl) statusEl.innerHTML='<span style="color:#0891B2">🔄 Teste Verbindung...</span>';
-  
-  try {
-    if(typeof window.supabase === 'undefined') throw new Error('Supabase CDN nicht geladen');
-    var testClient = window.supabase.createClient(url, key);
-    // Test-Abfrage
-    var { error } = await testClient.from('grieer_formulare').select('id').limit(1);
-    if(error && error.code !== 'PGRST116') throw new Error(error.message);
-    
-    // Speichern
-    localStorage.setItem('grieer-sb-config', JSON.stringify({url:url, key:key}));
-    _sb = testClient; _sbOnline = true;
-    if(statusEl) statusEl.innerHTML='<span style="color:#16A34A">✓ Verbindung erfolgreich!</span>';
-    _grieerToast('✓ Supabase verbunden', '#16A34A', 3000);
-    // Sync-Indikator einblenden
-    var ind = document.getElementById('sb-sync-indicator');
-    if(ind) ind.style.display='block';
-    
-    // Bestehende Konfigurationsfelder ausfüllen
-    document.getElementById('set-sb-url').value = '';
-    document.getElementById('set-sb-key').value = '';
-    var h = document.getElementById('set-sb-status-hint');
-    if(h) h.textContent = 'Aktuell: verbunden ✓';
-    
-  } catch(e){
-    if(statusEl) statusEl.innerHTML=`<span style="color:#DC2626">✗ Fehler: ${e.message}</span>`;
-    _sbOnline = false;
-  }
-}
-
-// Formular in Supabase speichern
-async function sbSave(pid, daten){
-  if(!_sb || !_sbOnline) return false;
-  try {
-    var { error } = await _sb.from('grieer_formulare').upsert({
-      formular_id: pid,
-      protokoll_nr: daten['ap-nr'] || daten['kv-nr'] || null,
-      daten: daten,
-      geraet: navigator.userAgent.substring(0,50),
-      geaendert_am: new Date().toISOString()
-    }, { onConflict: 'formular_id' });
-    if(error) throw new Error(error.message);
-    return true;
-  } catch(e){ console.warn('sbSave Fehler:', e.message); return false; }
-}
-
-// Formular von Supabase laden
-async function sbLoad(pid){
-  if(!_sb || !_sbOnline) return null;
-  try {
-    var { data, error } = await _sb.from('grieer_formulare')
-      .select('daten, geaendert_am')
-      .eq('formular_id', pid)
-      .order('geaendert_am', {ascending: false})
-      .limit(1)
-      .single();
-    if(error) return null;
-    return data;
-  } catch(e){ return null; }
-}
-
-// ALLES hochladen (alle gespeicherten Formulare)
-async function sbSyncAll(){
-  if(!_sb || !_sbOnline){ _grieerToast('Supabase nicht verbunden', '#F59E0B', 2000); return; }
-  _grieerToast('⬆️ Lade Daten hoch...', '#0891B2', 1500);
-  var count = 0;
-  var pids = ['kehr','pv','gas','luft','brand','kamin','gesamt','wprot','mess','luft2','b8201','maengel','wart','auftrag','verr'];
-  for(var pid of pids){
-    var raw = localStorage.getItem('grieer-kv-'+pid);
-    if(raw){
-      try {
-        var d = JSON.parse(raw);
-        var ok = await sbSave(pid, d);
-        if(ok) count++;
-      } catch(e){}
-    }
-  }
-  _grieerToast('✓ ' + count + ' Formulare hochgeladen', '#16A34A', 3000);
-}
-
-// ALLES laden (neueste Version von Supabase)
-async function sbLoadAll(){
-  if(!_sb || !_sbOnline){ _grieerToast('Supabase nicht verbunden', '#F59E0B', 2000); return; }
-  _grieerToast('⬇️ Lade Daten herunter...', '#1D4ED8', 1500);
-  var count = 0;
-  try {
-    var { data, error } = await _sb.from('grieer_formulare').select('formular_id, daten');
-    if(error) throw new Error(error.message);
-    for(var row of (data||[])){
-      localStorage.setItem('grieer-kv-'+row.formular_id, JSON.stringify(row.daten));
-      count++;
-    }
-    _grieerToast('✓ ' + count + ' Formulare geladen', '#16A34A', 3000);
-  } catch(e){ _grieerToast('Fehler: '+e.message, '#DC2626', 3000); }
-}
-
-// Kundendaten in Supabase speichern
-async function sbSaveKunde(kdData){
-  if(!_sb || !_sbOnline) return;
-  try {
-    await _sb.from('grieer_kunden').upsert({
-      kd_nr: kdData.nr,
-      name: kdData.name,
-      adresse: kdData.adresse,
-      plz_ort: kdData.plzOrt,
-      telefon: kdData.tel,
-      email: kdData.email,
-      geaendert_am: new Date().toISOString()
-    }, { onConflict: 'kd_nr' });
-  } catch(e){ console.warn('sbSaveKunde:', e.message); }
-}
-
-// Sync-Indikator in Nav-Bar
-function sbAddIndicator(){
-  var nav = document.querySelector('nav');
-  if(!nav || document.getElementById('sb-sync-indicator')) return;
-  var ind = document.createElement('div');
-  ind.id = 'sb-sync-indicator';
-  ind.title = 'Supabase Sync aktiv';
-  ind.style.cssText = 'display:none;width:8px;height:8px;border-radius:50%;background:#16A34A;flex-shrink:0;align-self:center;animation:sbPulse 2s infinite;cursor:pointer';
-  ind.onclick = function(){ showSettings(); };
-  nav.appendChild(ind);
-}
-
-
-
-// Supabase initialisieren wenn DOM bereit
-(function(){
-  function _onReady(fn){ if(document.readyState!=='loading') fn(); else document.addEventListener('DOMContentLoaded',fn); }
-  _onReady(function(){ 
-    sbInit(); 
-    sbAddIndicator();
-  });
-})();
--top:3px">__________________</div></div></div>';
   
   return _wrapHtml('Wartungserinnerung', body);
 }
@@ -16486,25 +16293,6 @@ function sbAddIndicator(){
       <button onclick="sessionStorage.removeItem('grieer-unlocked'); document.getElementById('settings-overlay').style.display='none'; var ov=document.getElementById('pin-overlay'); if(ov){ov.classList.remove('hidden');ov.style.display='';}" style="background:#DC2626;color:#fff;border:none;border-radius:8px;padding:11px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:46px">🔒 Sperren</button>
     </div>
     
-    <div style="font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">☁️ Supabase Sync</div>
-    <div style="background:#F0FDF4;border:1px solid #86EFAC;border-radius:10px;padding:14px;margin-bottom:14px">
-      <div style="font-size:11px;color:#166534;margin-bottom:10px">Gerät übergreifend synchronisieren — iPhone ↔ PC ↔ Laptop</div>
-      <div style="margin-bottom:8px">
-        <label style="font-size:11px;font-weight:600;color:#334155;display:block;margin-bottom:4px">Supabase URL</label>
-        <input type="text" id="set-sb-url" placeholder="https://xyz.supabase.co" autocomplete="off" style="width:100%;padding:8px 10px;border:1.5px solid #CBD5E1;border-radius:7px;font-size:12px;box-sizing:border-box">
-      </div>
-      <div style="margin-bottom:12px">
-        <label style="font-size:11px;font-weight:600;color:#334155;display:block;margin-bottom:4px">Anon Key (öffentlicher API-Schlüssel)</label>
-        <input type="password" id="set-sb-key" placeholder="eyJ..." autocomplete="off" style="width:100%;padding:8px 10px;border:1.5px solid #CBD5E1;border-radius:7px;font-size:12px;box-sizing:border-box">
-      </div>
-      <button onclick="saveSbConfig()" style="width:100%;background:#166534;color:#fff;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:44px;margin-bottom:8px">🔗 Verbindung speichern &amp; testen</button>
-      <div id="sb-status" style="font-size:11px;text-align:center;color:#64748B;min-height:20px"></div>
-      <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <button onclick="sbSyncAll()" style="background:#0D9488;color:#fff;border:none;border-radius:8px;padding:9px;font-size:12px;font-weight:600;cursor:pointer;touch-action:manipulation;min-height:40px">⬆️ Alles hochladen</button>
-        <button onclick="sbLoadAll()" style="background:#1D4ED8;color:#fff;border:none;border-radius:8px;padding:9px;font-size:12px;font-weight:600;cursor:pointer;touch-action:manipulation;min-height:40px">⬇️ Alles laden</button>
-      </div>
-    </div>
-
     <div id="settings-msg" style="display:none;padding:10px;border-radius:7px;font-size:12px;font-weight:600;text-align:center"></div>
   </div>
 </div>
