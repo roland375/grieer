@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Grieer ET">
+<meta name="theme-color" content="#d4670a">
+<title>Grieer Energietechnik OG</title>
+<style>
+:root{
+  --nav:#d4670a;--nav2:#b85500;--gold:#c9a84c;
+  --bg:#f4f6fb;--card:#fff;--border:#e2e8f0;--text:#1a1a1a;--text2:#64748b;
+  --grn:#1e8a4c;--red:#c0392b;--orange:#d4670a;--blue:#1a6eb5;--purple:#8e44ad;
+  --grn2:#e8f5ee;--red2:#fdecea;--orange2:#fff3e0;--blue2:#e8f0fb;
+  --r:14px;--r2:8px;--sh:0 2px 16px rgba(212,103,10,.10);
+  --font:'Segoe UI',system-ui,sans-serif;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bot:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
+
+/* HEADER */
+#appHeader{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--nav);padding:calc(var(--safe-top)+12px) 16px 12px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+#appHeader h1{color:#fff;font-size:1.05rem;font-weight:700}
+#appHeader span{color:rgba(255,255,255,.75);font-size:.7rem;display:block}
+#headerRight{display:flex;align-items:center;gap:8px}
+#headerUser{color:rgba(255,255,255,.85);font-size:.78rem}
+#logoutBtn{background:rgba(255,255,255,.15);border:none;color:#fff;padding:5px 10px;border-radius:20px;font-size:.75rem;cursor:pointer}
+
+/* NAV */
+#navBar{position:fixed;bottom:0;left:0;right:0;z-index:100;background:#1a1a2e;padding:8px 0 calc(var(--safe-bot)+4px);display:flex;justify-content:space-around;box-shadow:0 -2px 12px rgba(0,0,0,.2)}
+.navBtn{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;color:rgba(255,255,255,.5);font-size:.6rem;font-weight:700;letter-spacing:.3px;padding:4px 6px;cursor:pointer;transition:.2s;min-width:48px;text-transform:uppercase}
+.navBtn .ni{font-size:1.3rem;line-height:1}
+.navBtn.ak{color:var(--orange)}
+
+/* MAIN */
+#main{padding-top:calc(var(--safe-top)+68px);padding-bottom:calc(var(--safe-bot)+72px);min-height:100vh}
+
+/* LOGIN */
+#loginScreen{position:fixed;inset:0;z-index:200;background:linear-gradient(135deg,#b85500 0%,#d4670a 100%);display:flex;align-items:center;justify-content:center;padding:24px}
+.loginBox{background:#fff;border-radius:20px;padding:32px 24px;max-width:340px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center}
+.loginLogo{width:64px;height:64px;border-radius:14px;background:linear-gradient(135deg,#b85500,#d4670a);display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 16px}
+.loginBox h2{color:#1a1a1a;font-size:1.3rem;font-weight:800;margin-bottom:2px}
+.loginBox p{color:var(--text2);font-size:.82rem;margin-bottom:20px}
+.pinDots{display:flex;gap:10px;justify-content:center;margin-bottom:16px}
+.pinDot{width:13px;height:13px;border-radius:50%;border:2px solid var(--border);transition:.2s}
+.pinDot.filled{background:var(--orange);border-color:var(--orange)}
+.pinGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:220px;margin:0 auto 12px}
+.pinKey{padding:14px;border-radius:12px;border:2px solid var(--border);background:#fff;font-size:1.2rem;font-weight:700;color:#1a1a1a;cursor:pointer;transition:.15s}
+.pinKey:active{background:var(--orange);color:#fff;border-color:var(--orange)}
+.pinError{color:var(--red);font-size:.82rem;min-height:18px;margin-top:4px}
+
+/* CARDS */
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:14px;overflow:hidden}
+.cardHead{padding:13px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.cardHead h3{font-size:.92rem;font-weight:700;color:#1a1a1a}
+.cardBody{padding:14px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:8px;border:none;font-size:.84rem;font-weight:600;cursor:pointer;transition:.15s;font-family:var(--font)}
+.btn:active{opacity:.8;transform:scale(.97)}
+.btnP{background:var(--orange);color:#fff}
+.btnG{background:var(--gold);color:#1a1a1a}
+.btnGrn{background:var(--grn);color:#fff}
+.btnRed{background:var(--red);color:#fff}
+.btnOut{background:transparent;color:#1a1a1a;border:2px solid var(--border)}
+.btnSm{padding:6px 11px;font-size:.77rem}
+
+/* INPUTS */
+.fRow{margin-bottom:13px}
+.fRow label{display:block;font-size:.76rem;font-weight:700;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px}
+.fRow input,.fRow select,.fRow textarea{width:100%;padding:10px 12px;border:2px solid var(--border);border-radius:var(--r2);font-size:.88rem;font-family:var(--font);background:#fff;color:var(--text);transition:.2s}
+.fRow input:focus,.fRow select:focus,.fRow textarea:focus{outline:none;border-color:var(--orange)}
+.fRow textarea{min-height:76px;resize:vertical}
+.fGrid{display:grid;gap:10px}
+.fg2{grid-template-columns:1fr 1fr}
+.fg3{grid-template-columns:1fr 1fr 1fr}
+
+/* TAB */
+.tabContent{display:none;padding:14px}
+.tabContent.ak{display:block}
+.secHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.secHead h2{font-size:1.1rem;font-weight:700;color:#1a1a1a}
+
+/* BADGES */
+.badge{display:inline-block;padding:3px 8px;border-radius:20px;font-size:.7rem;font-weight:700}
+.bGrn{background:var(--grn2);color:var(--grn)}
+.bRed{background:var(--red2);color:var(--red)}
+.bOrange{background:var(--orange2);color:var(--orange)}
+.bBlue{background:var(--blue2);color:var(--blue)}
+
+/* LIST */
+.listItem{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px;cursor:pointer;transition:.15s}
+.listItem:last-child{border-bottom:none}
+.listItem:active{background:var(--bg)}
+.listAvatar{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;flex-shrink:0}
+.listMain{flex:1;min-width:0}
+.listMain strong{display:block;font-size:.88rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.listMain span{font-size:.76rem;color:var(--text2)}
+.listRight{text-align:right;flex-shrink:0}
+
+/* STATS */
+.statsRow{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+.statCard{background:var(--card);border-radius:var(--r);padding:14px;box-shadow:var(--sh);text-align:center}
+.statCard .sv{font-size:1.5rem;font-weight:800;color:var(--orange)}
+.statCard .sl{font-size:.72rem;color:var(--text2);font-weight:600;text-transform:uppercase}
+
+/* DETAIL */
+#detailOverlay{position:fixed;inset:0;z-index:150;background:#fff;overflow-y:auto;padding-top:calc(var(--safe-top)+68px);padding-bottom:calc(var(--safe-bot)+20px);display:none}
+.detailHead{padding:16px;color:#fff}
+.detailHead h2{font-size:1.05rem;font-weight:700}
+.detailHead p{font-size:.8rem;opacity:.8;margin-top:2px}
+.detailBody{padding:14px}
+.detailSection{margin-bottom:18px}
+.detailSection h4{font-size:.73rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);padding-bottom:5px;margin-bottom:8px}
+.detailRow{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f1f5f9}
+.detailRow:last-child{border-bottom:none}
+.detailRow span:first-child{color:var(--text2);font-size:.83rem}
+.detailRow span:last-child{font-weight:600;font-size:.83rem;text-align:right}
+
+/* MODAL */
+#modal{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
+#modal.open{display:flex}
+.modalBox{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:580px;max-height:92vh;overflow-y:auto;padding:0 0 calc(var(--safe-bot)+16px)}
+.modalHead{position:sticky;top:0;background:#fff;z-index:1;padding:14px 16px 11px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modalHead h3{font-size:.96rem;font-weight:700;color:#1a1a1a}
+.modalClose{background:var(--bg);border:none;width:28px;height:28px;border-radius:50%;font-size:1rem;cursor:pointer}
+.modalBody{padding:14px}
+
+/* TOAST */
+#toast{position:fixed;bottom:calc(var(--safe-bot)+78px);left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a2e;color:#fff;padding:10px 20px;border-radius:20px;font-size:.83rem;font-weight:600;opacity:0;transition:.3s;z-index:999;white-space:nowrap;pointer-events:none}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* AMPEL */
+.ampelRed{background:var(--red2);border-left:4px solid var(--red)}
+.ampelOrange{background:var(--orange2);border-left:4px solid var(--orange)}
+.ampelGrn{background:var(--grn2);border-left:4px solid var(--grn)}
+
+/* KALENDER */
+.kalGrid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.kalTag{text-align:center;font-size:.68rem;font-weight:700;color:var(--text2);padding:3px 0}
+.kalZelle{min-height:38px;border-radius:6px;padding:2px;font-size:.76rem;cursor:pointer;position:relative}
+.kalZelle.heute{background:var(--orange);color:#fff;font-weight:700}
+.kalZelle.hatTermin::after{content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--orange)}
+.kalZelle.heute.hatTermin::after{background:#fff}
+.kalNavRow{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+
+/* SUCHE */
+.searchBar{display:flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--border);border-radius:10px;padding:8px 12px;margin-bottom:12px}
+.searchBar input{border:none;outline:none;flex:1;font-size:.88rem;font-family:var(--font)}
+
+/* CHIPS */
+.chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:.73rem;font-weight:600;background:var(--bg);color:var(--text2);border:1px solid var(--border);cursor:pointer;transition:.15s}
+.chip.ak{background:var(--orange);color:#fff;border-color:var(--orange)}
+
+/* EMPTY */
+.emptyState{text-align:center;padding:40px 20px;color:var(--text2)}
+.emptyState .ei{font-size:2.8rem;margin-bottom:10px}
+
+/* RHYTHMUS */
+.rhythmusGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rhythmusItem{background:var(--bg);border-radius:var(--r2);padding:9px}
+.rhythmusItem label{font-size:.72rem;font-weight:700;color:var(--text2);text-transform:uppercase;display:block;margin-bottom:3px}
+.rhythmusItem select,.rhythmusItem input{width:100%;border:1px solid var(--border);border-radius:6px;padding:5px 7px;font-size:.83rem;background:#fff}
+
+/* PREIS BOX */
+.preisBox{background:linear-gradient(135deg,var(--orange2),#fff);border:2px solid var(--orange);border-radius:var(--r2);padding:12px;margin:10px 0}
+.preisBox .pb-row{display:flex;justify-content:space-between;padding:3px 0}
+.preisBox .pb-total{display:flex;justify-content:space-between;padding:6px 0 0;border-top:2px solid var(--orange);margin-top:4px}
+.preisBox .pb-total span:last-child{font-weight:800;font-size:1.1rem;color:var(--orange)}
+
+@media(min-width:600px){
+  #main,#appHeader,#navBar{max-width:700px;margin-left:auto;margin-right:auto}
+  #appHeader,#navBar{left:50%;transform:translateX(-50%)}
+  .statsRow{grid-template-columns:repeat(4,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="loginBox">
+    <div class="loginLogo">⚡</div>
+    <h2>Grieer Energietechnik OG</h2>
+    <p>Haustechnik · Burgenland</p>
+    <div class="pinDots" id="pinDots">
+      <div class="pinDot" id="pd0"></div><div class="pinDot" id="pd1"></div>
+      <div class="pinDot" id="pd2"></div><div class="pinDot" id="pd3"></div>
+    </div>
+    <div class="pinGrid" id="pinGrid"></div>
+    <div class="pinError" id="pinError"></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div id="appHeader" style="display:none">
+  <div>
+    <h1>Grieer Energietechnik OG</h1>
+    <span>Haustechnik · Burgenland</span>
+  </div>
+  <div id="headerRight">
+    <span id="headerUser"></span>
+    <button id="logoutBtn" onclick="logout()">Abmelden</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="navBar" style="display:none">
+  <button class="navBtn ak" onclick="zeigeTab('home')" id="nb-home"><span class="ni">🏠</span>Home</button>
+  <button class="navBtn" onclick="zeigeTab('kunden')" id="nb-kunden"><span class="ni">👥</span>Kunden</button>
+  <button class="navBtn" onclick="zeigeTab('journal')" id="nb-journal"><span class="ni">📋</span>Journal</button>
+  <button class="navBtn" onclick="zeigeTab('kalender')" id="nb-kalender"><span class="ni">📅</span>Kalender</button>
+  <button class="navBtn" onclick="zeigeTab('formulare')" id="nb-formulare"><span class="ni">📄</span>Formulare</button>
+  <button class="navBtn" onclick="zeigeTab('admin')" id="nb-admin" style="display:none"><span class="ni">⚙️</span>Admin</button>
+</nav>
+
+<!-- MAIN -->
+<div id="main" style="display:none">
+
+  <!-- HOME -->
+  <div id="tab-home" class="tabContent ak">
+    <div class="statsRow" id="homeStats"></div>
+    <div class="card">
+      <div class="cardHead"><h3>⚡ Schnellerfassung</h3></div>
+      <div class="cardBody">
+        <div class="fGrid fg2" style="gap:8px">
+          <button class="btn btnP" style="width:100%;justify-content:center" onclick="schnellAuftrag('fotovoltaik')">☀️ Fotovoltaik</button>
+          <button class="btn btnP" style="width:100%;justify-content:center" onclick="schnellAuftrag('lueftung')">💨 Lüftung</button>
+          <button class="btn btnP" style="width:100%;justify-content:center" onclick="schnellAuftrag('heizung')">🌡️ Heizung</button>
+          <button class="btn btnP" style="width:100%;justify-content:center" onclick="schnellAuftrag('wartung')">🔧 Wartung</button>
+          <button class="btn btnP" style="width:100%;justify-content:center" onclick="schnellAuftrag('elektro')">⚡ Elektro</button>
+          <button class="btn btnP" style="width:100%;justify-content:center" onclick="schnellAuftrag('sonstiges')">📋 Sonstiges</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="cardHead"><h3>⏰ Nächste Fälligkeiten</h3></div>
+      <div id="homeFaellig"></div>
+    </div>
+    <div class="card">
+      <div class="cardHead"><h3>📅 Heutige Termine</h3></div>
+      <div id="homeTermine"></div>
+    </div>
+  </div>
+
+  <!-- KUNDEN -->
+  <div id="tab-kunden" class="tabContent">
+    <div class="secHead"><h2>👥 Kunden</h2><button class="btn btnG" onclick="kundeNeu()">+ Neu</button></div>
+    <div class="searchBar"><span>🔍</span><input type="text" id="kvSuche" placeholder="Name, Ort, Telefon…" oninput="kvRender()"></div>
+    <div style="display:flex;gap:6px;margin-bottom:10px">
+      <span class="chip ak" id="kfAlle" onclick="kvFilter('alle')">Alle</span>
+      <span class="chip" id="kfFaellig" onclick="kvFilter('faellig')">⚠️ Fällig</span>
+    </div>
+    <div class="card" id="kundenListe"></div>
+  </div>
+
+  <!-- JOURNAL -->
+  <div id="tab-journal" class="tabContent">
+    <div class="secHead"><h2>📋 Arbeitsjournal</h2><button class="btn btnG" onclick="auftragNeu()">+ Neu</button></div>
+    <div class="searchBar"><span>🔍</span><input type="text" id="jSuche" placeholder="Kunde, Leistung…" oninput="jRender()"></div>
+    <div style="display:flex;gap:6px;margin-bottom:10px">
+      <span class="chip ak" id="jfAlle" onclick="jFilter('alle')">Alle</span>
+      <span class="chip" id="jfOffen" onclick="jFilter('offen')">Offen</span>
+      <span class="chip" id="jfBezahlt" onclick="jFilter('bezahlt')">✅ Bezahlt</span>
+    </div>
+    <div id="journalListe"></div>
+  </div>
+
+  <!-- KALENDER -->
+  <div id="tab-kalender" class="tabContent">
+    <div class="secHead">
+      <h2>📅 Kalender</h2>
+      <div style="display:flex;gap:6px">
+        <button class="btn btnOut btnSm" onclick="icalExport()">📤 iCal</button>
+        <button class="btn btnG" onclick="terminNeu()">+ Termin</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="cardBody" style="padding:10px">
+        <div class="kalNavRow">
+          <button class="btn btnOut btnSm" onclick="kalMonat(-1)">‹</button>
+          <h3 id="kalMonatTitel" style="font-size:.95rem;font-weight:700"></h3>
+          <button class="btn btnOut btnSm" onclick="kalMonat(1)">›</button>
+        </div>
+        <div class="kalGrid" style="margin-bottom:4px">
+          <div class="kalTag">Mo</div><div class="kalTag">Di</div><div class="kalTag">Mi</div>
+          <div class="kalTag">Do</div><div class="kalTag">Fr</div><div class="kalTag">Sa</div><div class="kalTag">So</div>
+        </div>
+        <div class="kalGrid" id="kalZellen"></div>
+      </div>
+    </div>
+    <div id="kalTerminListe"></div>
+  </div>
+
+  <!-- FORMULARE -->
+  <div id="tab-formulare" class="tabContent">
+    <div class="secHead"><h2>📄 Formulare & KV</h2></div>
+    <div id="formListe">
+      <div class="card">
+        <div class="listItem" onclick="formOeffnen('pv')">
+          <div class="listAvatar" style="background:#f3e8ff;color:var(--purple)">☀️</div>
+          <div class="listMain"><strong>Fotovoltaik Reinigung KV</strong><span>PV-Anlage berechnen & dokumentieren</span></div>
+          <span style="color:var(--text2)">›</span>
+        </div>
+        <div class="listItem" onclick="formOeffnen('lueftung')">
+          <div class="listAvatar" style="background:var(--grn2);color:var(--grn)">💨</div>
+          <div class="listMain"><strong>Lüftungsanlage Wartung KV</strong><span>Lüftung Service & Kostenvoranschlag</span></div>
+          <span style="color:var(--text2)">›</span>
+        </div>
+        <div class="listItem" onclick="formOeffnen('heizung')">
+          <div class="listAvatar" style="background:var(--orange2);color:var(--orange)">🌡️</div>
+          <div class="listMain"><strong>Heizung Service Protokoll</strong><span>Heizungsanlage Wartung dokumentieren</span></div>
+          <span style="color:var(--text2)">›</span>
+        </div>
+        <div class="listItem" onclick="formOeffnen('wartung')">
+          <div class="listAvatar" style="background:var(--blue2);color:var(--blue)">🔧</div>
+          <div class="listMain"><strong>Allgemeines Wartungsprotokoll</strong><span>Service & Wartung für alle Anlagen</span></div>
+          <span style="color:var(--text2)">›</span>
+        </div>
+        <div class="listItem" onclick="formOeffnen('elektro')">
+          <div class="listAvatar" style="background:#fef9c3;color:#854d0e">⚡</div>
+          <div class="listMain"><strong>Elektro Protokoll</strong><span>Elektrische Anlagen & Installationen</span></div>
+          <span style="color:var(--text2)">›</span>
+        </div>
+        <div class="listItem" onclick="formOeffnen('maengel')">
+          <div class="listAvatar" style="background:var(--red2);color:var(--red)">⚠️</div>
+          <div class="listMain"><strong>Mängelbericht</strong><span>Mängel dokumentieren & melden</span></div>
+          <span style="color:var(--text2)">›</span>
+        </div>
+      </div>
+    </div>
+    <div id="formAnzeige" style="display:none">
+      <button class="btn btnOut btnSm" onclick="formZurueck()" style="margin-bottom:12px">‹ Zurück zur Übersicht</button>
+      <div id="formInhalt"></div>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+  <div id="tab-admin" class="tabContent">
+    <div class="secHead"><h2>⚙️ Administration</h2></div>
+    <div class="card">
+      <div class="cardHead"><h3>📊 Statistik</h3></div>
+      <div class="cardBody" id="adminStats"></div>
+    </div>
+    <div class="card">
+      <div class="cardHead"><h3>👤 Mitarbeiter</h3><button class="btn btnSm btnG" onclick="maModalOffen()">+ Neu</button></div>
+      <div id="maListe"></div>
+    </div>
+    <div class="card">
+      <div class="cardHead"><h3>📤 iCal Export</h3></div>
+      <div class="cardBody">
+        <p style="font-size:.83rem;color:var(--text2);margin-bottom:12px">Termine für Apple Calendar exportieren.</p>
+        <div style="display:flex;gap:8px">
+          <button class="btn btnP" onclick="icalExport()">📅 Aktueller Monat</button>
+          <button class="btn btnOut" onclick="icalExportAlle()">📋 Alle Termine</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="cardHead"><h3>💰 Preisliste</h3></div>
+      <div class="cardBody" id="adminPreise"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- DETAIL -->
+<div id="detailOverlay"><div id="detailInhalt"></div></div>
+
+<!-- MODAL -->
+<div id="modal">
+  <div class="modalBox">
+    <div class="modalHead"><h3 id="modalTitel"></h3><button class="modalClose" onclick="modalZu()">✕</button></div>
+    <div class="modalBody" id="modalBody"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const SB='https://bvodhzacatfuduwtlwut.supabase.co/rest/v1';
+const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2b2RoemFjYXRmdWR1d3Rsd3V0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxODUwMjcsImV4cCI6MjA5NTc2MTAyN30.kX03LLhpIm-iD1VQqreIpCCwAHzsT0pmYdIsl8uSeuY';
+const BEREICH='energie';
+const MONATE=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+const TYPEN={fotovoltaik:{l:'☀️ Fotovoltaik',p:120},lueftung:{l:'💨 Lüftung',p:8.50},heizung:{l:'🌡️ Heizung',p:85},wartung:{l:'🔧 Wartung',p:55},elektro:{l:'⚡ Elektro',p:75},sonstiges:{l:'📋 Sonstiges',p:0}};
+const PREISE={'PV bis 20 Module':120,'PV je Modul':8,'Lüftung je m':8.50,'Heizung Service':85,'Wartung Grundgebühr':55,'Elektro Stundensatz':75};
+
+let user=null,DB={kunden:[],auftraege:[],termine:[],mitarbeiter:[]};
+let aktivTab='home',kalJahr,kalMonatIdx,kvFilterAkt='alle',jFilterAkt='alle';
+let pinEingabe='';
+
+async function api(p,o={}){
+  const h={'Content-Type':'application/json','apikey':KEY,'Authorization':'Bearer '+KEY,'Prefer':'return=representation'};
+  const r=await fetch(SB+p,{...o,headers:{...h,...(o.headers||{})}});
+  if(!r.ok){const t=await r.text();throw new Error(t||r.statusText);}
+  const t=await r.text();return t?JSON.parse(t):[];
+}
+
+// LOGIN
+function pinBauen(){
+  const g=document.getElementById('pinGrid');g.innerHTML='';
+  [1,2,3,4,5,6,7,8,9,'⌫',0,'✓'].forEach(k=>{
+    const b=document.createElement('button');b.className='pinKey';b.textContent=k;b.onclick=()=>pinTaste(k);g.appendChild(b);
+  });
+}
+function pinTaste(k){
+  if(k==='⌫')pinEingabe=pinEingabe.slice(0,-1);
+  else if(k==='✓'){pinPruefen();return;}
+  else if(pinEingabe.length<4)pinEingabe+=k;
+  if(pinEingabe.length===4)pinPruefen();
+  pinAnzeigen();
+}
+function pinAnzeigen(){for(let i=0;i<4;i++)document.getElementById('pd'+i).classList.toggle('filled',i<pinEingabe.length);}
+async function pinPruefen(){
+  if(pinEingabe.length<4)return;
+  const err=document.getElementById('pinError');
+  err.textContent='Prüfe PIN...';
+  const PINS={'3010':{id:'roland',name:'Roland',pin:'3010',rolle:'admin',aktiv:true},'1234':{id:'ma1',name:'Mitarbeiter',pin:'1234',rolle:'mitarbeiter',aktiv:true}};
+  try{
+    const ma=await Promise.race([api('/mitarbeiter?pin=eq.'+pinEingabe+'&aktiv=eq.true'),new Promise((_,r)=>setTimeout(()=>r(new Error('Timeout')),5000))]);
+    if(ma&&ma.length>0){user=ma[0];sessionStorage.setItem('grieerUser',JSON.stringify(user));err.textContent='';await appStart();return;}
+  }catch(e){console.log('Supabase Timeout, nutze lokale PINs');}
+  if(PINS[pinEingabe]){user=PINS[pinEingabe];sessionStorage.setItem('grieerUser',JSON.stringify(user));err.textContent='';await appStart();return;}
+  err.textContent='Falscher PIN — bitte nochmals versuchen';pinEingabe='';pinAnzeigen();
+}
+function logout(){sessionStorage.removeItem('grieerUser');user=null;location.reload();}
+
+async function appStart(){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('appHeader').style.display='flex';
+  document.getElementById('navBar').style.display='flex';
+  document.getElementById('main').style.display='block';
+  document.getElementById('headerUser').textContent=user.name;
+  if(user.rolle==='admin')document.getElementById('nb-admin').style.display='flex';
+  const d=new Date();kalJahr=d.getFullYear();kalMonatIdx=d.getMonth();
+  await laden();setInterval(laden,60000);
+}
+
+async function laden(){
+  try{
+    const [k,a,t,m]=await Promise.all([
+      api('/kunden?order=nachname.asc&aktiv=eq.true&bereich=eq.energie'),
+      api('/auftraege?order=datum.desc&bereich=eq.energie'),
+      api('/termine?order=datum.asc&bereich=eq.energie'),
+      api('/mitarbeiter?order=name.asc'),
+    ]);
+    DB.kunden=k;DB.auftraege=a;DB.termine=t;DB.mitarbeiter=m;
+    renderAlles();
+  }catch(e){toast('Verbindungsfehler: '+e.message,'err');}
+}
+
+function renderAlles(){homeRender();kvRender();jRender();kalRender();if(user?.rolle==='admin')adminRender();}
+
+// HOME
+function homeRender(){
+  const heute=new Date().toISOString().split('T')[0];
+  const offen=DB.auftraege.filter(a=>!a.bezahlt).length;
+  const umsatz=DB.auftraege.filter(a=>a.bezahlt&&a.datum?.startsWith(new Date().getFullYear())).reduce((s,a)=>s+(a.preis||0),0);
+  document.getElementById('homeStats').innerHTML=`
+    <div class="statCard"><div class="sv">${DB.kunden.length}</div><div class="sl">Kunden</div></div>
+    <div class="statCard"><div class="sv">${offen}</div><div class="sl">Offen</div></div>
+    <div class="statCard"><div class="sv">${DB.auftraege.length}</div><div class="sl">Aufträge</div></div>
+    <div class="statCard"><div class="sv">${isAdmin()?'€'+umsatz.toFixed(0):'—'}</div><div class="sl">Umsatz ${new Date().getFullYear()}</div></div>`;
+  const ht=DB.termine.filter(t=>t.datum===heute);
+  document.getElementById('homeTermine').innerHTML=ht.length===0?'<div style="padding:12px 14px;color:var(--text2);font-size:.83rem">Keine Termine heute</div>':ht.map(t=>`<div class="listItem"><div class="listMain"><strong>${esc(t.titel)}</strong><span>${t.ganztag?'Ganztag':(t.uhrzeit_von||'')+' – '+(t.uhrzeit_bis||'')} · ${esc(t.kunde||'')}</span></div></div>`).join('');
+  const bald=getFaelligkeiten().filter(f=>f.status!=='ok').slice(0,4);
+  document.getElementById('homeFaellig').innerHTML=bald.length===0?'<div style="padding:12px 14px;color:var(--text2);font-size:.83rem">Keine fälligen Einträge</div>':bald.map(f=>`<div class="listItem ${f.status==='ueber'?'ampelRed':'ampelOrange'}" style="margin:4px 8px;border-radius:8px"><div class="listMain"><strong>${esc(f.name)}</strong><span>${f.leistung} · Fällig: ${f.datum}</span></div><div class="listRight"><span class="badge ${f.status==='ueber'?'bRed':'bOrange'}">${f.status==='ueber'?'Überfällig':'Bald'}</span></div></div>`).join('');
+}
+
+// KUNDEN
+function kvRender(){
+  const suche=(document.getElementById('kvSuche')?.value||'').toLowerCase();
+  let liste=DB.kunden.filter(k=>{if(suche){const h=(k.nachname+k.vorname+k.ort+k.telefon+k.firma).toLowerCase();if(!h.includes(suche))return false;}if(kvFilterAkt==='faellig')return hatFaelligkeit(k);return true;});
+  const el=document.getElementById('kundenListe');if(!el)return;
+  if(liste.length===0){el.innerHTML='<div class="emptyState"><div class="ei">👥</div><p>Keine Kunden</p></div>';return;}
+  el.innerHTML=liste.map(k=>{const name=(k.anrede?k.anrede+' ':'')+(k.vorname?k.vorname+' ':'')+k.nachname;return`<div class="listItem" onclick="kundeDetail('${k.id}')"><div class="listAvatar" style="background:var(--orange2);color:var(--orange)">${k.nachname.charAt(0).toUpperCase()}</div><div class="listMain"><strong>${esc(name)}${k.firma?' · '+esc(k.firma):''}</strong><span>${esc(k.ort||'')}${k.telefon?' · '+esc(k.telefon):''}</span></div><div class="listRight">${hatFaelligkeit(k)?'<span class="badge bOrange">Fällig</span>':'<span class="badge bGrn">OK</span>'}</div></div>`;}).join('');
+}
+function kvFilter(f){kvFilterAkt=f;['alle','faellig'].forEach(x=>document.getElementById('kf'+x.charAt(0).toUpperCase()+x.slice(1))?.classList.toggle('ak',x===f));kvRender();}
+function hatFaelligkeit(k){return['lueftung','fotovoltaik','ueberpruefung','wartung','heizung'].some(l=>{const r=k['rhythmus_'+l],d=k['letzt_'+l];if(!r||!d)return false;const fd=new Date(d);fd.setFullYear(fd.getFullYear()+r);return fd<=new Date(Date.now()+90*864e5);});}
+
+function kundeNeu(){modalOffen('👤 Neuer Kunde',kvFormHTML(null));}
+function kvFormHTML(k){
+  const v=k||{};
+  return`<div class="fGrid fg2"><div class="fRow"><label>Anrede</label><select id="fAnrede"><option value="">—</option><option ${v.anrede==='Herr'?'selected':''}>Herr</option><option ${v.anrede==='Frau'?'selected':''}>Frau</option><option ${v.anrede==='Firma'?'selected':''}>Firma</option></select></div><div class="fRow"><label>Kundennummer</label><input id="fNummer" value="${esc(v.nummer||'')}"></div></div>
+    <div class="fGrid fg2"><div class="fRow"><label>Vorname</label><input id="fVorname" value="${esc(v.vorname||'')}"></div><div class="fRow"><label>Nachname *</label><input id="fNachname" value="${esc(v.nachname||'')}"></div></div>
+    <div class="fRow"><label>Firma</label><input id="fFirma" value="${esc(v.firma||'')}"></div>
+    <div class="fRow"><label>Straße</label><input id="fStrasse" value="${esc(v.strasse||'')}"></div>
+    <div class="fGrid fg2"><div class="fRow"><label>PLZ</label><input id="fPlz" value="${esc(v.plz||'')}"></div><div class="fRow"><label>Ort</label><input id="fOrt" value="${esc(v.ort||'')}"></div></div>
+    <div class="fGrid fg2"><div class="fRow"><label>Telefon</label><input id="fTel" type="tel" value="${esc(v.telefon||'')}"></div><div class="fRow"><label>E-Mail</label><input id="fEmail" type="email" value="${esc(v.email||'')}"></div></div>
+    <hr style="margin:10px 0;border:none;border-top:1px solid var(--border)">
+    <p style="font-size:.75rem;font-weight:700;color:var(--text2);text-transform:uppercase;margin-bottom:8px">🏠 Anlagen</p>
+    <div class="fGrid fg2"><div class="fRow"><label>PV-Module</label><input id="fPv" type="number" min="0" value="${v.pv_module||0}"></div><div class="fRow"><label>Lüftungsanlagen</label><input id="fLueft" type="number" min="0" value="${v.lueftungsanlagen||0}"></div></div>
+    <hr style="margin:10px 0;border:none;border-top:1px solid var(--border)">
+    <p style="font-size:.75rem;font-weight:700;color:var(--text2);text-transform:uppercase;margin-bottom:8px">🔄 Wiederholungsrhythmus & letzte Durchführung</p>
+    <div class="rhythmusGrid">
+      ${['fotovoltaik','lueftung','heizung','wartung'].map(l=>`<div class="rhythmusItem"><label>${TYPEN[l]?.l||l}</label><select id="fr_${l}"><option value="">—</option>${[1,2,3,4,5].map(j=>`<option value="${j}" ${v['rhythmus_'+l]==j?'selected':''}>${j} ${j===1?'Jahr':'Jahre'}</option>`).join('')}</select><input type="date" id="fl_${l}" value="${v['letzt_'+l]||''}" style="margin-top:4px"></div>`).join('')}
+    </div>
+    <div class="fRow" style="margin-top:10px"><label>Notiz</label><textarea id="fNotiz">${esc(v.notiz||'')}</textarea></div>
+    <div style="display:flex;gap:8px;margin-top:14px"><button class="btn btnGrn" style="flex:1" onclick="kvSpeichern('${v.id||''}')">💾 Speichern</button><button class="btn btnOut" onclick="modalZu()">Abbrechen</button></div>`;
+}
+async function kvSpeichern(id){
+  const nn=document.getElementById('fNachname')?.value?.trim();if(!nn){toast('Bitte Nachname eingeben','err');return;}
+  const d={anrede:document.getElementById('fAnrede').value||null,nummer:document.getElementById('fNummer').value||null,vorname:document.getElementById('fVorname').value||null,nachname:nn,firma:document.getElementById('fFirma').value||null,strasse:document.getElementById('fStrasse').value||null,plz:document.getElementById('fPlz').value||null,ort:document.getElementById('fOrt').value||null,telefon:document.getElementById('fTel').value||null,email:document.getElementById('fEmail').value||null,notiz:document.getElementById('fNotiz').value||null,pv_module:parseInt(document.getElementById('fPv').value)||0,lueftungsanlagen:parseInt(document.getElementById('fLueft').value)||0,bereich:'energie',geaendert_am:new Date().toISOString()};
+  ['fotovoltaik','lueftung','heizung','wartung'].forEach(l=>{const rv=document.getElementById('fr_'+l)?.value;const lv=document.getElementById('fl_'+l)?.value;d['rhythmus_'+l]=rv?parseInt(rv):null;d['letzt_'+l]=lv||null;});
+  try{if(id){await api('/kunden?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});toast('Kunde aktualisiert ✓');}else{await api('/kunden',{method:'POST',body:JSON.stringify({...d,aktiv:true})});toast('Kunde angelegt ✓');}modalZu();await laden();}catch(e){toast('Fehler: '+e.message,'err');}
+}
+function kundeDetail(id){
+  const k=DB.kunden.find(x=>x.id===id);if(!k)return;
+  const name=(k.anrede?k.anrede+' ':'')+(k.vorname?k.vorname+' ':'')+k.nachname;
+  const auftraege=DB.auftraege.filter(a=>a.kunde&&a.kunde.toLowerCase().includes(k.nachname.toLowerCase()));
+  document.getElementById('detailInhalt').innerHTML=`
+    <div class="detailHead" style="background:var(--orange)">
+      <button class="btn btnSm" style="background:rgba(255,255,255,.2);color:#fff;margin-bottom:10px" onclick="detailZu()">‹ Zurück</button>
+      <h2>${esc(name)}</h2><p>${esc(k.firma||'')} ${esc(k.ort||'')}</p>
+    </div>
+    <div class="detailBody">
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+        ${k.telefon?`<a href="tel:${k.telefon}" class="btn btnP btnSm">📞 Anrufen</a>`:''}
+        ${k.email?`<a href="mailto:${k.email}" class="btn btnOut btnSm">✉️ E-Mail</a>`:''}
+        <button class="btn btnG btnSm" onclick="kundeBearbeiten('${k.id}')">✏️ Bearbeiten</button>
+        <button class="btn btnGrn btnSm" onclick="schnellAuftragKunde('${k.id}')">+ Auftrag</button>
+        <button class="btn btnRed btnSm" onclick="kundeLoeschen('${k.id}')">🗑</button>
+      </div>
+      <div class="detailSection"><h4>Kontakt</h4>
+        ${k.strasse?`<div class="detailRow"><span>Adresse</span><span>${esc(k.strasse)}, ${esc(k.plz||'')} ${esc(k.ort||'')}</span></div>`:''}
+        ${k.telefon?`<div class="detailRow"><span>Telefon</span><span>${esc(k.telefon)}</span></div>`:''}
+        ${k.email?`<div class="detailRow"><span>E-Mail</span><span>${esc(k.email)}</span></div>`:''}
+      </div>
+      <div class="detailSection"><h4>🏠 Anlagen</h4>
+        <div class="detailRow"><span>PV-Module</span><span>${k.pv_module||0}</span></div>
+        <div class="detailRow"><span>Lüftungsanlagen</span><span>${k.lueftungsanlagen||0}</span></div>
+      </div>
+      <div class="detailSection"><h4>🔄 Fälligkeiten</h4>
+        ${['fotovoltaik','lueftung','heizung','wartung'].map(l=>{const r=k['rhythmus_'+l],d=k['letzt_'+l];if(!r&&!d)return'';let fs='—',st='ok';if(r&&d){const fd=new Date(d);fd.setFullYear(fd.getFullYear()+r);fs=fd.toLocaleDateString('de-AT');const diff=(fd-new Date())/864e5;if(diff<0)st='ueber';else if(diff<90)st='bald';}return`<div class="detailRow"><span>${TYPEN[l]?.l||l}${r?' ('+r+' J.)':''}</span><span><span class="badge ${st==='ueber'?'bRed':st==='bald'?'bOrange':'bGrn'}">${fs}</span></span></div>`;}).join('')}
+      </div>
+      ${auftraege.length?`<div class="detailSection"><h4>📋 Letzte Aufträge</h4>${auftraege.slice(0,5).map(a=>`<div class="detailRow"><span>${a.datum?.split('-').reverse().join('.')||''} ${TYPEN[a.typ]?.l||a.typ||''}</span><span>${isAdmin()&&a.preis?'€'+a.preis.toFixed(2):''} <span class="badge ${a.bezahlt?'bGrn':'bOrange'}">${a.bezahlt?'✓':'Offen'}</span></span></div>`).join('')}</div>`:''}
+      ${k.notiz?`<div class="detailSection"><h4>Notiz</h4><p style="font-size:.85rem;color:var(--text2)">${esc(k.notiz)}</p></div>`:''}
+    </div>`;
+  document.getElementById('detailOverlay').style.display='block';
+}
+function kundeBearbeiten(id){const k=DB.kunden.find(x=>x.id===id);if(!k)return;modalZu();setTimeout(()=>modalOffen('✏️ Kunde bearbeiten',kvFormHTML(k)),200);}
+async function kundeLoeschen(id){if(!confirm('Kunde wirklich löschen?'))return;try{await api('/kunden?id=eq.'+id,{method:'DELETE'});toast('Kunde gelöscht');detailZu();await laden();}catch(e){toast('Fehler: '+e.message,'err');}}
+
+// JOURNAL
+function jRender(){
+  const suche=(document.getElementById('jSuche')?.value||'').toLowerCase();
+  let liste=DB.auftraege.filter(a=>{if(suche){const h=(a.kunde+a.arbeit+a.typ).toLowerCase();if(!h.includes(suche))return false;}if(jFilterAkt==='offen')return!a.bezahlt;if(jFilterAkt==='bezahlt')return a.bezahlt;return true;});
+  const el=document.getElementById('journalListe');if(!el)return;
+  if(liste.length===0){el.innerHTML='<div class="emptyState"><div class="ei">📋</div><p>Keine Einträge</p></div>';return;}
+  let html='',lM='';
+  liste.forEach(a=>{
+    const d=a.datum?new Date(a.datum):null;const monat=d?d.toLocaleDateString('de-AT',{month:'long',year:'numeric'}):'—';
+    if(monat!==lM){if(lM)html+='</div>';html+=`<div style="font-size:.72rem;font-weight:700;color:var(--text2);text-transform:uppercase;padding:8px 2px 3px">${monat}</div><div class="card">`;lM=monat;}
+    html+=`<div class="listItem" onclick="auftragDetail('${a.id}')">
+      <div class="listAvatar" style="background:var(--orange2);color:var(--orange)">${(TYPEN[a.typ]?.l||'📋').split(' ')[0]}</div>
+      <div class="listMain"><strong>${esc(a.kunde||'—')}</strong><span>${a.datum?.split('-').reverse().join('.')||''} · ${esc(a.arbeit||TYPEN[a.typ]?.l||'')}</span></div>
+      <div class="listRight">${isAdmin()&&a.preis?`<div style="font-weight:700;font-size:.86rem">€${a.preis.toFixed(2)}</div>`:''}
+        <span class="badge ${a.bezahlt?'bGrn':'bOrange'}">${a.bezahlt?'✓':'Offen'}</span></div>
+    </div>`;
+  });
+  if(lM)html+='</div>';el.innerHTML=html;
+}
+function jFilter(f){jFilterAkt=f;['alle','offen','bezahlt'].forEach(x=>document.getElementById('jf'+x.charAt(0).toUpperCase()+x.slice(1))?.classList.toggle('ak',x===f));jRender();}
+
+function auftragNeu(vorKunde){
+  const heute=new Date().toISOString().split('T')[0];
+  const kvOpt=DB.kunden.map(k=>`<option value="${esc(k.nachname+(k.vorname?' '+k.vorname:'')+(k.ort?', '+k.ort:''))}">`).join('');
+  modalOffen('📋 Neuer Auftrag',`
+    <div class="fRow"><label>Datum *</label><input type="date" id="aDatum" value="${heute}"></div>
+    <div class="fRow"><label>Kunde *</label><input id="aKunde" list="kvA" value="${vorKunde||''}" placeholder="Name eingeben…"><datalist id="kvA">${kvOpt}</datalist></div>
+    <div class="fGrid fg2"><div class="fRow"><label>Straße</label><input id="aStrasse"></div><div class="fRow"><label>Ort</label><input id="aOrt"></div></div>
+    <div class="fRow"><label>Leistungsart</label><select id="aTyp" onchange="aTypWechsel()">${Object.entries(TYPEN).map(([k,v])=>`<option value="${k}">${v.l}</option>`).join('')}</select></div>
+    <div class="fRow"><label>Beschreibung</label><input id="aArbeit" placeholder="Was wurde gemacht?"></div>
+    <div class="fGrid fg2"><div class="fRow"><label>Dauer (h)</label><input id="aDauer" type="number" step=".5" min="0"></div><div class="fRow"><label>Preis (€)</label><input id="aPreis" type="number" step=".01" min="0" ${!isAdmin()?'disabled':''}></div></div>
+    <div class="fGrid fg2"><div class="fRow"><label>Nächste Fälligkeit</label><input type="date" id="aFaellig"></div><div class="fRow"><label>Bezahlt</label><select id="aBezahlt"><option value="false">Nein</option><option value="true">Ja</option></select></div></div>
+    <div class="fRow"><label>Notiz</label><textarea id="aNotiz"></textarea></div>
+    <div style="display:flex;gap:8px;margin-top:14px"><button class="btn btnGrn" style="flex:1" onclick="auftragSpeichern('')">💾 Speichern</button><button class="btn btnOut" onclick="modalZu()">Abbrechen</button></div>`);
+}
+function aTypWechsel(){const t=document.getElementById('aTyp')?.value;if(TYPEN[t]&&isAdmin()){const p=document.getElementById('aPreis');if(p&&!p.value&&TYPEN[t].p)p.value=TYPEN[t].p.toFixed(2);}}
+async function auftragSpeichern(id){
+  const datum=document.getElementById('aDatum')?.value;const kunde=document.getElementById('aKunde')?.value?.trim();
+  if(!datum||!kunde){toast('Datum und Kunde erforderlich','err');return;}
+  const d={datum,kunde,strasse:document.getElementById('aStrasse')?.value||null,ort:document.getElementById('aOrt')?.value||null,typ:document.getElementById('aTyp')?.value||null,arbeit:document.getElementById('aArbeit')?.value||null,dauer:parseFloat(document.getElementById('aDauer')?.value)||null,preis:isAdmin()?parseFloat(document.getElementById('aPreis')?.value)||null:null,naechste_faelligkeit:document.getElementById('aFaellig')?.value||null,bezahlt:document.getElementById('aBezahlt')?.value==='true',notiz:document.getElementById('aNotiz')?.value||null,bereich:'energie',geaendert_am:new Date().toISOString()};
+  try{if(id){await api('/auftraege?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});toast('Auftrag aktualisiert ✓');}else{await api('/auftraege',{method:'POST',body:JSON.stringify(d)});toast('Auftrag gespeichert ✓');}modalZu();await laden();}catch(e){toast('Fehler: '+e.message,'err');}
+}
+function auftragDetail(id){
+  const a=DB.auftraege.find(x=>x.id===id);if(!a)return;
+  document.getElementById('detailInhalt').innerHTML=`
+    <div class="detailHead" style="background:var(--orange)">
+      <button class="btn btnSm" style="background:rgba(255,255,255,.2);color:#fff;margin-bottom:10px" onclick="detailZu()">‹ Zurück</button>
+      <h2>${esc(a.kunde||'—')}</h2><p>${TYPEN[a.typ]?.l||a.typ||''} · ${a.datum?.split('-').reverse().join('.')||''}</p>
+    </div>
+    <div class="detailBody">
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+        <button class="btn btnG btnSm" onclick="auftragBearbeiten('${a.id}')">✏️ Bearbeiten</button>
+        ${!a.bezahlt&&isAdmin()?`<button class="btn btnGrn btnSm" onclick="auftragBezahlt('${a.id}')">✅ Bezahlt</button>`:''}
+        <button class="btn btnRed btnSm" onclick="auftragLoeschen('${a.id}')">🗑 Löschen</button>
+      </div>
+      <div class="detailSection"><h4>Details</h4>
+        <div class="detailRow"><span>Datum</span><span>${a.datum?.split('-').reverse().join('.')||'—'}</span></div>
+        ${a.ort?`<div class="detailRow"><span>Ort</span><span>${esc(a.ort)}</span></div>`:''}
+        <div class="detailRow"><span>Leistung</span><span>${TYPEN[a.typ]?.l||a.typ||'—'}</span></div>
+        ${a.arbeit?`<div class="detailRow"><span>Beschreibung</span><span>${esc(a.arbeit)}</span></div>`:''}
+        ${a.dauer?`<div class="detailRow"><span>Dauer</span><span>${a.dauer} h</span></div>`:''}
+        ${isAdmin()&&a.preis?`<div class="detailRow"><span>Preis</span><span style="font-weight:800;color:var(--orange)">€${a.preis.toFixed(2)}</span></div>`:''}
+        <div class="detailRow"><span>Status</span><span><span class="badge ${a.bezahlt?'bGrn':'bOrange'}">${a.bezahlt?'✓ Bezahlt':'Offen'}</span></span></div>
+      </div>
+    </div>`;
+  document.getElementById('detailOverlay').style.display='block';
+}
+function auftragBearbeiten(id){
+  const a=DB.auftraege.find(x=>x.id===id);if(!a)return;
+  const kvOpt=DB.kunden.map(k=>`<option value="${esc(k.nachname+(k.vorname?' '+k.vorname:'')+(k.ort?', '+k.ort:''))}">`).join('');
+  detailZu();setTimeout(()=>modalOffen('✏️ Auftrag bearbeiten',`
+    <div class="fRow"><label>Datum</label><input type="date" id="aDatum" value="${a.datum||''}"></div>
+    <div class="fRow"><label>Kunde</label><input id="aKunde" list="kvB" value="${esc(a.kunde||'')}"><datalist id="kvB">${kvOpt}</datalist></div>
+    <div class="fGrid fg2"><div class="fRow"><label>Straße</label><input id="aStrasse" value="${esc(a.strasse||'')}"></div><div class="fRow"><label>Ort</label><input id="aOrt" value="${esc(a.ort||'')}"></div></div>
+    <div class="fRow"><label>Leistungsart</label><select id="aTyp">${Object.entries(TYPEN).map(([k,v])=>`<option value="${k}" ${a.typ===k?'selected':''}>${v.l}</option>`).join('')}</select></div>
+    <div class="fRow"><label>Beschreibung</label><input id="aArbeit" value="${esc(a.arbeit||'')}"></div>
+    <div class="fGrid fg2"><div class="fRow"><label>Dauer (h)</label><input id="aDauer" type="number" step=".5" value="${a.dauer||''}"></div><div class="fRow"><label>Preis (€)</label><input id="aPreis" type="number" step=".01" value="${a.preis||''}" ${!isAdmin()?'disabled':''}></div></div>
+    <div class="fGrid fg2"><div class="fRow"><label>Fälligkeit</label><input type="date" id="aFaellig" value="${a.naechste_faelligkeit||''}"></div><div class="fRow"><label>Bezahlt</label><select id="aBezahlt"><option value="false" ${!a.bezahlt?'selected':''}>Nein</option><option value="true" ${a.bezahlt?'selected':''}>Ja</option></select></div></div>
+    <div class="fRow"><label>Notiz</label><textarea id="aNotiz">${esc(a.notiz||'')}</textarea></div>
+    <div style="display:flex;gap:8px;margin-top:14px"><button class="btn btnGrn" style="flex:1" onclick="auftragSpeichern('${a.id}')">💾 Aktualisieren</button><button class="btn btnOut" onclick="modalZu()">Abbrechen</button></div>`),200);
+}
+async function auftragBezahlt(id){try{await api('/auftraege?id=eq.'+id,{method:'PATCH',body:JSON.stringify({bezahlt:true,geaendert_am:new Date().toISOString()})});toast('Als bezahlt markiert ✓');detailZu();await laden();}catch(e){toast('Fehler: '+e.message,'err');}}
+async function auftragLoeschen(id){if(!confirm('Auftrag wirklich löschen?'))return;try{await api('/auftraege?id=eq.'+id,{method:'DELETE'});toast('Auftrag gelöscht');detailZu();await laden();}catch(e){toast('Fehler: '+e.message,'err');}}
+
+function schnellAuftrag(typ){
+  const heute=new Date().toISOString().split('T')[0];
+  const kvOpt=DB.kunden.map(k=>`<option value="${esc(k.nachname+(k.vorname?' '+k.vorname:'')+(k.ort?', '+k.ort:''))}">`).join('');
+  modalOffen('⚡ '+TYPEN[typ]?.l,`
+    <div class="fRow"><label>Datum *</label><input type="date" id="aDatum" value="${heute}"></div>
+    <div class="fRow"><label>Kunde *</label><input id="aKunde" list="kvS" placeholder="Name eingeben…"><datalist id="kvS">${kvOpt}</datalist></div>
+    <div class="fRow"><label>Ort</label><input id="aOrt"></div>
+    <div class="fRow"><label>Beschreibung</label><input id="aArbeit"></div>
+    ${isAdmin()?`<div class="fRow"><label>Preis (€)</label><input id="aPreis" type="number" step=".01" value="${TYPEN[typ]?.p?.toFixed(2)||''}"></div>`:'<input type="hidden" id="aPreis">'}
+    <input type="hidden" id="aTyp" value="${typ}"><input type="hidden" id="aStrasse"><input type="hidden" id="aDauer"><input type="hidden" id="aFaellig"><input type="hidden" id="aNotiz">
+    <select id="aBezahlt" style="display:none"><option value="false">Nein</option></select>
+    <div style="display:flex;gap:8px;margin-top:14px"><button class="btn btnGrn" style="flex:1" onclick="auftragSpeichern('')">💾 Speichern</button><button class="btn btnOut" onclick="modalZu()">Abbrechen</button></div>`);
+}
+function schnellAuftragKunde(kid){const k=DB.kunden.find(x=>x.id===kid);if(!k)return;detailZu();const name=k.nachname+(k.vorname?' '+k.vorname:'')+(k.ort?', '+k.ort:'');setTimeout(()=>auftragNeu(name),200);}
+
+// KALENDER
+function kalRender(){
+  const el=document.getElementById('kalMonatTitel');if(el)el.textContent=MONATE[kalMonatIdx]+' '+kalJahr;
+  const zEl=document.getElementById('kalZellen');if(!zEl)return;
+  const erster=new Date(kalJahr,kalMonatIdx,1);const letzter=new Date(kalJahr,kalMonatIdx+1,0);
+  const startTag=(erster.getDay()+6)%7;const heute=new Date().toISOString().split('T')[0];
+  let html='';for(let i=0;i<startTag;i++)html+='<div></div>';
+  for(let t=1;t<=letzter.getDate();t++){
+    const d=kalJahr+'-'+String(kalMonatIdx+1).padStart(2,'0')+'-'+String(t).padStart(2,'0');
+    const hatT=DB.termine.some(x=>x.datum===d);const istH=d===heute;
+    html+=`<div class="kalZelle ${istH?'heute':''} ${hatT?'hatTermin':''}" onclick="kalTagKlick('${d}')"><div style="text-align:center;line-height:34px">${t}</div></div>`;
+  }
+  zEl.innerHTML=html;kalTerminListe(heute);
+}
+function kalMonat(d){kalMonatIdx+=d;if(kalMonatIdx<0){kalMonatIdx=11;kalJahr--;}if(kalMonatIdx>11){kalMonatIdx=0;kalJahr++;}kalRender();}
+function kalTagKlick(d){kalTerminListe(d);}
+function kalTerminListe(datum){
+  const el=document.getElementById('kalTerminListe');if(!el)return;
+  const termine=DB.termine.filter(t=>t.datum===datum);
+  if(termine.length===0){el.innerHTML=`<div style="text-align:center;padding:16px;color:var(--text2);font-size:.83rem">Keine Termine am ${datum?.split('-').reverse().join('.')}</div>`;return;}
+  el.innerHTML='<div class="card">'+termine.map(t=>`<div class="listItem"><div class="listMain"><strong>${esc(t.titel)}</strong><span>${t.ganztag?'Ganztag':(t.uhrzeit_von||'')+'–'+(t.uhrzeit_bis||'')} · ${esc(t.kunde||'')}</span></div><button class="btn btnRed btnSm" onclick="terminLoeschen('${t.id}')">🗑</button></div>`).join('')+'</div>';
+}
+function terminNeu(){
+  const heute=new Date().toISOString().split('T')[0];
+  const kvOpt=DB.kunden.map(k=>`<option value="${esc(k.nachname+(k.vorname?' '+k.vorname:'')+(k.ort?', '+k.ort:''))}">`).join('');
+  modalOffen('📅 Neuer Termin',`
+    <div class="fRow"><label>Bezeichnung *</label><input id="tTitel" placeholder="z.B. Wartung bei Müller"></div>
+    <div class="fRow"><label>Datum *</label><input type="date" id="tDatum" value="${heute}"></div>
+    <div class="fRow"><label>Ganztägig</label><select id="tGanztag" onchange="terminGanztag()"><option value="true">Ja — Ganztag</option><option value="false">Nein — Uhrzeit</option></select></div>
+    <div id="tZeitenDiv" style="display:none"><div class="fGrid fg2"><div class="fRow"><label>Von</label><input type="time" id="tVon" value="08:00"></div><div class="fRow"><label>Bis</label><input type="time" id="tBis" value="10:00"></div></div></div>
+    <div class="fRow"><label>Kunde</label><input id="tKunde" list="kvT" placeholder="Optional…"><datalist id="kvT">${kvOpt}</datalist></div>
+    <div class="fRow"><label>Leistungsart</label><select id="tTyp"><option value="">—</option>${Object.entries(TYPEN).map(([k,v])=>`<option value="${k}">${v.l}</option>`).join('')}</select></div>
+    <div class="fRow"><label>Beschreibung</label><textarea id="tBeschreibung" placeholder="Was ist geplant?"></textarea></div>
+    <div style="display:flex;gap:8px;margin-top:14px"><button class="btn btnGrn" style="flex:1" onclick="terminSpeichern()">💾 Speichern</button><button class="btn btnOut" onclick="modalZu()">Abbrechen</button></div>`);
+}
+function terminGanztag(){document.getElementById('tZeitenDiv').style.display=document.getElementById('tGanztag')?.value==='true'?'none':'block';}
+async function terminSpeichern(){
+  const titel=document.getElementById('tTitel')?.value?.trim();const datum=document.getElementById('tDatum')?.value;
+  if(!titel){toast('Bitte Bezeichnung eingeben','err');return;}
+  if(!datum){toast('Bitte Datum eingeben','err');return;}
+  const ganztag=document.getElementById('tGanztag')?.value==='true';
+  const d={titel,datum,ganztag,uhrzeit_von:ganztag?null:(document.getElementById('tVon')?.value||null),uhrzeit_bis:ganztag?null:(document.getElementById('tBis')?.value||null),kunde:document.getElementById('tKunde')?.value||null,typ:document.getElementById('tTyp')?.value||null,beschreibung:document.getElementById('tBeschreibung')?.value||null,farbe:'#d4670a',bereich:'energie'};
+  try{await api('/termine',{method:'POST',body:JSON.stringify(d)});toast('Termin gespeichert ✓');modalZu();await laden();zeigeTab('kalender');}catch(e){toast('Speicherfehler: '+e.message,'err');console.error(e);}
+}
+async function terminLoeschen(id){if(!confirm('Termin wirklich löschen?'))return;try{await api('/termine?id=eq.'+id,{method:'DELETE'});toast('Termin gelöscht');await laden();}catch(e){toast('Fehler: '+e.message,'err');}}
+
+// FÄLLIGKEITEN
+function getFaelligkeiten(){
+  const heute=new Date();const result=[];
+  DB.kunden.forEach(k=>{
+    ['fotovoltaik','lueftung','heizung','wartung'].forEach(l=>{
+      const r=k['rhythmus_'+l],d=k['letzt_'+l];if(!r||!d)return;
+      const fd=new Date(d);fd.setFullYear(fd.getFullYear()+r);const diff=(fd-heute)/864e5;
+      let status='ok';if(diff<0)status='ueber';else if(diff<90)status='bald';
+      result.push({name:(k.vorname?k.vorname+' ':'')+k.nachname,leistung:TYPEN[l]?.l||l,datum:fd.toLocaleDateString('de-AT'),status,diff,kid:k.id});
+    });
+  });
+  DB.auftraege.filter(a=>a.naechste_faelligkeit).forEach(a=>{
+    const fd=new Date(a.naechste_faelligkeit);const diff=(fd-heute)/864e5;
+    let status='ok';if(diff<0)status='ueber';else if(diff<90)status='bald';
+    result.push({name:a.kunde||'—',leistung:TYPEN[a.typ]?.l||'Auftrag',datum:a.naechste_faelligkeit?.split('-').reverse().join('.')||'',status,diff,aid:a.id});
+  });
+  return result.sort((a,b)=>a.diff-b.diff);
+}
+
+// FORMULARE
+function formOeffnen(typ){
+  document.getElementById('formListe').style.display='none';
+  document.getElementById('formAnzeige').style.display='block';
+  const kvOpt=DB.kunden.map(k=>`<option value="${esc(k.nachname+(k.vorname?' '+k.vorname:'')+(k.ort?', '+k.ort:''))}">`).join('');
+  const heute=new Date().toISOString().split('T')[0];
+  const forms={
+    pv:{t:'☀️ Fotovoltaik Reinigung KV',html:`
+      <div class="card"><div class="cardHead"><h3>☀️ Fotovoltaik Reinigung</h3></div><div class="cardBody">
+        <div class="fRow"><label>Kunde *</label><input id="fKunde" list="kvF1" placeholder="Name eingeben…"><datalist id="kvF1">${kvOpt}</datalist></div>
+        <div class="fGrid fg2"><div class="fRow"><label>Straße</label><input id="fStrasse"></div><div class="fRow"><label>Ort</label><input id="fOrt"></div></div>
+        <div class="fRow"><label>Datum</label><input type="date" id="fDatum" value="${heute}"></div>
+        <div class="fRow"><label>Anzahl Module</label><input id="fModule" type="number" min="1" value="20" oninput="pvBer()"></div>
+        <div class="preisBox">
+          <div class="pb-row"><span style="font-size:.83rem;color:var(--text2)">Netto</span><span id="pvN" style="font-weight:600">€ 0,00</span></div>
+          <div class="pb-row"><span style="font-size:.83rem;color:var(--text2)">MwSt 20%</span><span id="pvM" style="font-weight:600">€ 0,00</span></div>
+          <div class="pb-total"><span style="font-weight:700">Gesamt Brutto</span><span id="pvB">€ 0,00</span></div>
+        </div>
+        <div class="fRow"><label>Bemerkungen</label><textarea id="fNotiz" placeholder="Zustand, Verschmutzungsgrad…"></textarea></div>
+        <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btnGrn" style="flex:1" onclick="fInJournal('fotovoltaik','pvB')">📋 In Journal</button><button class="btn btnP" onclick="window.print()">🖨️ Drucken</button></div>
+      </div></div>`},
+    lueftung:{t:'💨 Lüftungsanlage Wartung KV',html:`
+      <div class="card"><div class="cardHead"><h3>💨 Lüftung Wartungsprotokoll</h3></div><div class="cardBody">
+        <div class="fRow"><label>Kunde *</label><input id="fKunde" list="kvF2" placeholder="Name eingeben…"><datalist id="kvF2">${kvOpt}</datalist></div>
+        <div class="fGrid fg2"><div class="fRow"><label>Straße</label><input id="fStrasse"></div><div class="fRow"><label>Ort</label><input id="fOrt"></div></div>
+        <div class="fRow"><label>Datum</label><input type="date" id="fDatum" value="${heute}"></div>
+        <div class="fRow"><label>Lüftungslänge (m)</label><input id="fMeter" type="number" min="1" value="10" oninput="lBer()"></div>
+        <div class="preisBox">
+          <div class="pb-row"><span style="font-size:.83rem;color:var(--text2)">Netto</span><span id="lN" style="font-weight:600">€ 0,00</span></div>
+          <div class="pb-row"><span style="font-size:.83rem;color:var(--text2)">MwSt 20%</span><span id="lM" style="font-weight:600">€ 0,00</span></div>
+          <div class="pb-total"><span style="font-weight:700">Gesamt Brutto</span><span id="lB">€ 0,00</span></div>
+        </div>
+        <div class="fRow"><label>Filter gewechselt</label><select id="fFilter"><option>Ja</option><option>Nein</option></select></div>
+        <div class="fRow"><label>Bemerkungen</label><textarea id="fNotiz"></textarea></div>
+        <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btnGrn" style="flex:1" onclick="fInJournal('lueftung','lB')">📋 In Journal</button><button class="btn btnP" onclick="window.print()">🖨️ Drucken</button></div>
+      </div></div>`},
+    heizung:{t:'🌡️ Heizung Service Protokoll',html:`
+      <div class="card"><div class="cardHead"><h3>🌡️ Heizung Service</h3></div><div class="cardBody">
+        <div class="fRow"><label>Kunde *</label><input id="fKunde" list="kvF3" placeholder="Name eingeben…"><datalist id="kvF3">${kvOpt}</datalist></div>
+        <div class="fGrid fg2"><div class="fRow"><label>Straße</label><input id="fStrasse"></div><div class="fRow"><label>Ort</label><input id="fOrt"></div></div>
+        <div class="fRow"><label>Datum</label><input type="date" id="fDatum" value="${heute}"></div>
+        <div class="fRow"><label>Heizungsart</label><select id="fHeizArt"><option>Gas-Therme</option><option>Öl-Heizung</option><option>Wärmepumpe</option><option>Pellets</option><option>Sonstiges</option></select></div>
+        <div class="fGrid fg2"><div class="fRow"><label>Baujahr</label><input id="fBaujahr" type="number" placeholder="z.B. 2015"></div><div class="fRow"><label>Preis (€)</label><input id="fPreis" type="number" step=".01" value="85.00" ${!isAdmin()?'disabled':''}></div></div>
+        <div class="fRow"><label>Ergebnis</label><select id="fErgebnis"><option value="ok">✅ Einwandfrei</option><option value="maengel">⚠️ Mängel</option><option value="tausch">🔄 Austausch empfohlen</option></select></div>
+        <div class="fRow"><label>Durchgeführte Arbeiten</label><textarea id="fNotiz" placeholder="Was wurde gemacht?"></textarea></div>
+        <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btnGrn" style="flex:1" onclick="fInJournal('heizung','fPreis')">📋 In Journal</button><button class="btn btnP" onclick="window.print()">🖨️ Drucken</button></div>
+      </div></div>`},
+    wartung:{t:'🔧 Allgemeines Wartungsprotokoll',html:`
+      <div class="card"><div class="cardHead"><h3>🔧 Wartungsprotokoll</h3></div><div class="cardBody">
+        <div class="fRow"><label>Kunde *</label><input id="fKunde" list="kvF4" placeholder="Name eingeben…"><datalist id="kvF4">${kvOpt}</datalist></div>
+        <div class="fGrid fg2"><div class="fRow"><label>Straße</label><input id="fStrasse"></div><div class="fRow"><label>Ort</label><input id="fOrt"></div></div>
+        <div class="fRow"><label>Datum</label><input type="date" id="fDatum" value="${heute}"></div>
+        <div class="fRow"><label>Anlage / Gerät</label><input id="fAnlage" placeholder="Was wurde gewartet?"></div>
+        <div class="fGrid fg2"><div class="fRow"><label>Dauer (h)</label><input id="fDauer" type="number" step=".5" value="1"></div><div class="fRow"><label>Preis (€)</label><input id="fPreis" type="number" step=".01" value="55.00" ${!isAdmin()?'disabled':''}></div></div>
+        <div class="fRow"><label>Durchgeführte Arbeiten</label><textarea id="fNotiz" placeholder="Beschreibung der Wartung…"></textarea></div>
+        <div class="fRow"><label>Nächste Wartung</label><input type="date" id="fFaellig"></div>
+        <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btnGrn" style="flex:1" onclick="fInJournal('wartung','fPreis')">📋 In Journal</button><button class="btn btnP" onclick="window.print()">🖨️ Drucken</button></div>
+      </div></div>`},
+    elektro:{t:'⚡ Elektro Protokoll',html:`
+      <div class="card"><div class="cardHead"><h3>⚡ Elektro Protokoll</h3></div><div class="cardBody">
+        <div class="fRow"><label>Kunde *</label><input id="fKunde" list="kvF5" placeholder="Name eingeben…"><datalist id="kvF5">${kvOpt}</datalist></div>
+        <div class="fGrid fg2"><div class="fRow"><label>Straße</label><input id="fStrasse"></div><div class="fRow"><label>Ort</label><input id="fOrt"></div></div>
+        <div class="fRow"><label>Datum</label><input type="date" id="fDatum" value="${heute}"></div>
+        <div class="fRow"><label>Art der Arbeit</label><input id="fArt" placeholder="z.B. Unterverteilung, Steckdosen…"></div>
+        <div class="fGrid fg2"><div class="fRow"><label>Dauer (h)</label><input id="fDauer" type="number" step=".5" value="1" oninput="elektroBer()"></div><div class="fRow"><label>Preis (€)</label><input id="fPreis" type="number" step=".01" value="75.00" ${!isAdmin()?'disabled':''}></div></div>
+        <div class="fRow"><label>Ergebnis</label><select id="fErgebnis"><option>✅ Einwandfrei</option><option>⚠️ Mängel festgestellt</option></select></div>
+        <div class="fRow"><label>Bemerkungen</label><textarea id="fNotiz"></textarea></div>
+        <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btnGrn" style="flex:1" onclick="fInJournal('elektro','fPreis')">📋 In Journal</button><button class="btn btnP" onclick="window.print()">🖨️ Drucken</button></div>
+      </div></div>`},
+    maengel:{t:'⚠️ Mängelbericht',html:`
+      <div class="card"><div class="cardHead"><h3>⚠️ Mängelbericht</h3></div><div class="cardBody">
+        <div class="fRow"><label>Kunde *</label><input id="fKunde" list="kvF6" placeholder="Name eingeben…"><datalist id="kvF6">${kvOpt}</datalist></div>
+        <div class="fGrid fg2"><div class="fRow"><label>Straße</label><input id="fStrasse"></div><div class="fRow"><label>Ort</label><input id="fOrt"></div></div>
+        <div class="fRow"><label>Datum</label><input type="date" id="fDatum" value="${heute}"></div>
+        <div class="fRow"><label>Schwere</label><select id="fSchwere"><option value="gering">🟡 Gering</option><option value="mittel">🟠 Mittel</option><option value="hoch">🔴 Hoch — sofort beheben</option><option value="gesperrt">⛔ Kritisch — gesperrt</option></select></div>
+        <div class="fRow"><label>Beschreibung *</label><textarea id="fNotiz" placeholder="Mängel genau beschreiben…" style="min-height:100px"></textarea></div>
+        <div class="fRow"><label>Behebung bis</label><input type="date" id="fFaellig"></div>
+        <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btnGrn" style="flex:1" onclick="fInJournal('sonstiges',null)">📋 In Journal</button><button class="btn btnP" onclick="window.print()">🖨️ Drucken</button></div>
+      </div></div>`},
+  };
+  const f=forms[typ];if(!f)return;
+  document.getElementById('formInhalt').innerHTML=`<h3 style="font-size:1rem;font-weight:700;color:var(--orange);margin-bottom:12px">${f.t}</h3>${f.html}`;
+  setTimeout(()=>{pvBer();lBer();},100);
+}
+function formZurueck(){document.getElementById('formAnzeige').style.display='none';document.getElementById('formListe').style.display='block';}
+function pvBer(){const m=parseInt(document.getElementById('fModule')?.value)||0;const n=m<=20?120:m*8;const mw=n*.2;const b=n+mw;const fmt=v=>'€ '+v.toFixed(2).replace('.',',');document.getElementById('pvN')&&(document.getElementById('pvN').textContent=fmt(n));document.getElementById('pvM')&&(document.getElementById('pvM').textContent=fmt(mw));document.getElementById('pvB')&&(document.getElementById('pvB').textContent=fmt(b));}
+function lBer(){const m=parseInt(document.getElementById('fMeter')?.value)||0;const n=m*8.5;const mw=n*.2;const b=n+mw;const fmt=v=>'€ '+v.toFixed(2).replace('.',',');document.getElementById('lN')&&(document.getElementById('lN').textContent=fmt(n));document.getElementById('lM')&&(document.getElementById('lM').textContent=fmt(mw));document.getElementById('lB')&&(document.getElementById('lB').textContent=fmt(b));}
+
+async function fInJournal(typ,preisId){
+  const kunde=document.getElementById('fKunde')?.value?.trim();const datum=document.getElementById('fDatum')?.value;
+  if(!kunde){toast('Bitte Kunden eingeben','err');return;}
+  let preis=null;
+  if(isAdmin()&&preisId){const el=document.getElementById(preisId);if(el){const t=el.textContent||el.value||'';preis=parseFloat(t.replace('€','').replace(',','.').trim())||null;}}
+  const notiz=document.getElementById('fNotiz')?.value||'';
+  const faellig=document.getElementById('fFaellig')?.value||null;
+  try{
+    await api('/auftraege',{method:'POST',body:JSON.stringify({datum:datum||new Date().toISOString().split('T')[0],kunde,strasse:document.getElementById('fStrasse')?.value||null,ort:document.getElementById('fOrt')?.value||null,typ,arbeit:notiz||TYPEN[typ]?.l||typ,preis,bezahlt:false,bereich:'energie',naechste_faelligkeit:faellig})});
+    toast('✓ In Journal gespeichert!');await laden();
+  }catch(e){toast('Fehler: '+e.message,'err');}
+}
+
+// ADMIN
+function adminRender(){
+  const jahr=new Date().getFullYear();
+  const umsatz=DB.auftraege.filter(a=>a.bezahlt&&a.datum?.startsWith(jahr)).reduce((s,a)=>s+(a.preis||0),0);
+  const offen=DB.auftraege.filter(a=>!a.bezahlt).reduce((s,a)=>s+(a.preis||0),0);
+  const stunden=DB.auftraege.reduce((s,a)=>s+(a.dauer||0),0);
+  document.getElementById('adminStats').innerHTML=`<div class="statsRow" style="margin:0"><div class="statCard"><div class="sv">€${umsatz.toFixed(0)}</div><div class="sl">Umsatz ${jahr}</div></div><div class="statCard"><div class="sv">€${offen.toFixed(0)}</div><div class="sl">Offen</div></div><div class="statCard"><div class="sv">${stunden.toFixed(1)}h</div><div class="sl">Stunden</div></div><div class="statCard"><div class="sv">${DB.kunden.length}</div><div class="sl">Kunden</div></div></div>`;
+  document.getElementById('maListe').innerHTML=DB.mitarbeiter.map(m=>`<div class="listItem"><div class="listAvatar" style="background:var(--orange2);color:var(--orange)">👤</div><div class="listMain"><strong>${esc(m.name)}</strong><span>${m.rolle==='admin'?'Administrator':'Mitarbeiter'} · PIN: ${m.pin}</span></div><div class="listRight"><span class="badge ${m.aktiv?'bGrn':'bRed'}">${m.aktiv?'Aktiv':'Inaktiv'}</span></div></div>`).join('');
+  document.getElementById('adminPreise').innerHTML=Object.entries(PREISE).map(([l,p])=>`<div class="detailRow"><span>${l}</span><span style="font-weight:700;color:var(--orange)">€${p.toFixed(2)}</span></div>`).join('');
+}
+function maModalOffen(){
+  modalOffen('👤 Neuer Mitarbeiter',`
+    <div class="fRow"><label>Name *</label><input id="maName" placeholder="Vorname Nachname"></div>
+    <div class="fRow"><label>PIN (4-stellig) *</label><input id="maPin" type="number" placeholder="z.B. 5678" maxlength="4"></div>
+    <div class="fRow"><label>Rolle</label><select id="maRolle"><option value="mitarbeiter">Mitarbeiter</option><option value="admin">Administrator</option></select></div>
+    <div style="display:flex;gap:8px;margin-top:14px"><button class="btn btnGrn" style="flex:1" onclick="maSpeichern()">💾 Speichern</button><button class="btn btnOut" onclick="modalZu()">Abbrechen</button></div>`);
+}
+async function maSpeichern(){
+  const name=document.getElementById('maName')?.value?.trim();const pin=String(document.getElementById('maPin')?.value||'').trim();
+  if(!name||pin.length!==4){toast('Name und 4-stelliger PIN erforderlich','err');return;}
+  try{await api('/mitarbeiter',{method:'POST',body:JSON.stringify({name,pin,rolle:document.getElementById('maRolle')?.value||'mitarbeiter',aktiv:true,bereiche:['energie']})});toast('Mitarbeiter angelegt ✓');modalZu();await laden();}catch(e){toast('Fehler: '+e.message,'err');}
+}
+
+// iCAL
+function icalExport(){
+  const termine=DB.termine.filter(t=>t.datum?.startsWith(kalJahr+'-'+String(kalMonatIdx+1).padStart(2,'0')));
+  if(termine.length===0){toast('Keine Termine in diesem Monat','err');return;}
+  icalDownload(termine,'Grieer_ET_'+MONATE[kalMonatIdx]+'_'+kalJahr);
+}
+function icalExportAlle(){if(DB.termine.length===0){toast('Keine Termine','err');return;}icalDownload(DB.termine,'Grieer_ET_AlleTermine');}
+function icalDownload(termine,name){
+  const z=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Grieer Energietechnik OG//DE","CALSCALE:GREGORIAN","METHOD:PUBLISH","X-WR-CALNAME:Grieer Energietechnik"];
+  const now=new Date().toISOString().replace(/[-:.]/g,'').slice(0,15)+'Z';
+  termine.forEach(t=>{const d=(t.datum||'').replace(/-/g,'');if(!d)return;z.push("BEGIN:VEVENT","UID:"+t.id+"@grieer.at","DTSTAMP:"+now);if(t.ganztag){z.push("DTSTART;VALUE=DATE:"+d,"DTEND;VALUE=DATE:"+d);}else{const von=(t.uhrzeit_von||'08:00').replace(':','')+'00';const bis=(t.uhrzeit_bis||'09:00').replace(':','')+'00';z.push("DTSTART;TZID=Europe/Vienna:"+d+"T"+von,"DTEND;TZID=Europe/Vienna:"+d+"T"+bis);}z.push("SUMMARY:"+(t.titel||'Termin'));if(t.kunde)z.push("DESCRIPTION:Kunde: "+t.kunde);z.push("END:VEVENT");});
+  z.push("END:VCALENDAR");
+  const blob=new Blob([z.join("\r\n")],{type:"text/calendar;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=name+".ics";document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);toast("iCal heruntergeladen ✓");
+}
+
+// NAVIGATION
+function zeigeTab(t){aktivTab=t;document.querySelectorAll('.tabContent').forEach(el=>el.classList.remove('ak'));document.querySelectorAll('.navBtn').forEach(el=>el.classList.remove('ak'));document.getElementById('tab-'+t)?.classList.add('ak');document.getElementById('nb-'+t)?.classList.add('ak');if(t==='kalender')kalRender();}
+function modalOffen(titel,body){document.getElementById('modalTitel').textContent=titel;document.getElementById('modalBody').innerHTML=body;document.getElementById('modal').classList.add('open');}
+function modalZu(){document.getElementById('modal').classList.remove('open');}
+function detailZu(){document.getElementById('detailOverlay').style.display='none';}
+function toast(msg,typ){const el=document.getElementById('toast');el.textContent=msg;el.style.background=typ==='err'?'var(--red)':'#1a1a2e';el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3000);}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function isAdmin(){return user?.rolle==='admin';}
+
+(function init(){
+  pinBauen();
+  const saved=sessionStorage.getItem('grieerUser');
+  if(saved){try{user=JSON.parse(saved);appStart();}catch{sessionStorage.removeItem('grieerUser');}}
+})();
+</script>
+</body>
+</html>
