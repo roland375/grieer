@@ -536,7 +536,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <button class="btn btnP btnBlock" onclick="schnellAuftrag('lueftung')">💨 Lüftung</button>
           <button class="btn btnP btnBlock" onclick="schnellAuftrag('heizservice')">🔧 Heizungs Service</button>
           <button class="btn btnP btnBlock" onclick="schnellAuftrag('brandschutz')">🔥 Brandschutz</button>
-
           <button class="btn btnP btnBlock" onclick="schnellAuftrag('sonstiges')">📋 Sonstiges</button>
         </div>
       </div>
@@ -642,19 +641,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <div class="listMain"><strong>Lüftungsanlage Wartung KV</strong><span>Service & Kostenvoranschlag</span></div>
           <span style="color:var(--text2);font-size:1.3rem;font-weight:300">›</span>
         </div>
-        <div class="listItem" onclick="formOeffnen('heizung')" tabindex="0" onkeydown="if(event.key==='Enter')formOeffnen('heizung')">
-          <div class="listAvatar" style="background:var(--orange2);color:var(--orange)">🌡️</div>
-          <div class="listMain"><strong>Heizung Service Protokoll</strong><span>Wartung & Dokumentation</span></div>
-          <span style="color:var(--text2);font-size:1.3rem;font-weight:300">›</span>
-        </div>
-        <div class="listItem" onclick="formOeffnen('wartung')" tabindex="0" onkeydown="if(event.key==='Enter')formOeffnen('wartung')">
+        <div class="listItem" onclick="formOeffnen('heizservice')" tabindex="0" onkeydown="if(event.key==='Enter')formOeffnen('heizservice')">
           <div class="listAvatar" style="background:var(--blue2);color:var(--blue)">🔧</div>
-          <div class="listMain"><strong>Allgemeines Wartungsprotokoll</strong><span>Für alle Anlagen & Geräte</span></div>
+          <div class="listMain"><strong>Heizungs Service</strong><span>Service Protokoll & Dokumentation</span></div>
           <span style="color:var(--text2);font-size:1.3rem;font-weight:300">›</span>
         </div>
-        <div class="listItem" onclick="formOeffnen('elektro')" tabindex="0" onkeydown="if(event.key==='Enter')formOeffnen('elektro')">
-          <div class="listAvatar" style="background:#fef9c3;color:#854d0e">⚡</div>
-          <div class="listMain"><strong>Elektro Protokoll</strong><span>Anlagen & Installationen</span></div>
+        <div class="listItem" onclick="formOeffnen('brandschutz')" tabindex="0" onkeydown="if(event.key==='Enter')formOeffnen('brandschutz')">
+          <div class="listAvatar" style="background:var(--red2);color:var(--pri)">🔥</div>
+          <div class="listMain"><strong>Brandschutz Installation</strong><span>Installation & Überprüfung</span></div>
           <span style="color:var(--text2);font-size:1.3rem;font-weight:300">›</span>
         </div>
 
@@ -918,8 +912,8 @@ function kvFormHTML(k){
       <div class="fRow"><label>E-Mail</label><input id="fEmail" type="email" value="${esc(v.email||'')}"></div>
     </div>
     <div class="fRow">
-      <label>⚠️ Hinweise & Besonderheiten</label>
-      <textarea id="fHinweis" placeholder="z.B. Hund im Garten, Tor klingeln, Schlüssel beim Nachbarn, schwer erreichbar…">${esc(v.hinweis||'')}</textarea>
+      <label>⚠️ Hinweise & Notizen</label>
+      <textarea id="fHinweis" placeholder="z.B. Hund im Garten, Tor klingeln, Schlüssel beim Nachbarn, schwer erreichbar…">${esc(v.notiz||'')}</textarea>
     </div>
     <hr style="margin:12px 0;border:none;border-top:2px solid var(--border)">
     <p style="font-size:.74rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">🏠 Anlagen</p>
@@ -941,7 +935,7 @@ function kvFormHTML(k){
           <input type="date" id="fl_${l}" value="${v['letzt_'+l]||''}" style="margin-top:6px" placeholder="Letzte Durchf.">
         </div>`).join('')}
     </div>
-    <div class="fRow" style="margin-top:12px"><label>Allgemeine Notiz</label><textarea id="fNotiz">${esc(v.notiz||'')}</textarea></div>
+
     <div style="display:flex;gap:10px;margin-top:18px">
       <button class="btn btnGrn" style="flex:1" onclick="kvSpeichern('${v.id||''}')">💾 Speichern</button>
       <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
@@ -950,23 +944,23 @@ function kvFormHTML(k){
 async function kvSpeichern(id){
   const nn=document.getElementById('fNachname')?.value?.trim();
   if(!nn){toast('Bitte Nachname eingeben','err');document.getElementById('fNachname')?.focus();return;}
+  // Nur Spalten die definitiv in DB existieren
   const d={
-    anrede:document.getElementById('fAnrede').value||null,
-    nummer:document.getElementById('fNummer').value||null,
-    vorname:document.getElementById('fVorname').value||null,
+    anrede:document.getElementById('fAnrede')?.value||null,
+    nummer:document.getElementById('fNummer')?.value||null,
+    vorname:document.getElementById('fVorname')?.value||null,
     nachname:nn,
-    firma:document.getElementById('fFirma').value||null,
-    strasse:document.getElementById('fStrasse').value||null,
-    plz:document.getElementById('fPlz').value||null,
-    ort:document.getElementById('fOrt').value||null,
-    telefon:document.getElementById('fTel').value||null,
-    email:document.getElementById('fEmail').value||null,
-    hinweis:document.getElementById('fHinweis').value||null,
-    notiz:document.getElementById('fNotiz').value||null,
-    pv_module:parseInt(document.getElementById('fPv').value)||0,
-    lueftungsanlagen:parseInt(document.getElementById('fLueft').value)||0,
-    heizungsanlagen:parseInt(document.getElementById('fHeiz')?.value)||0,
+    firma:document.getElementById('fFirma')?.value||null,
+    strasse:document.getElementById('fStrasse')?.value||null,
+    plz:document.getElementById('fPlz')?.value||null,
+    ort:document.getElementById('fOrt')?.value||null,
+    telefon:document.getElementById('fTel')?.value||null,
+    email:document.getElementById('fEmail')?.value||null,
+    notiz:(document.getElementById('fHinweis')?.value||'')+(document.getElementById('fNotiz')?.value?'\n'+document.getElementById('fNotiz').value:''),
+    pv_module:parseInt(document.getElementById('fPv')?.value)||0,
+    lueftungsanlagen:parseInt(document.getElementById('fLueft')?.value)||0,
     bereich:'energie',
+    aktiv:true,
     geaendert_am:new Date().toISOString()
   };
   ['fotovoltaik','lueftung','heizung','wartung'].forEach(l=>{
@@ -1113,12 +1107,7 @@ function auftragNeu(vorKunde){
         ${Object.entries(TYPEN).filter(([k])=>isAdmin()||(user?.typen||Object.keys(TYPEN)).includes(k)).map(([k,v])=>`<option value="${k}">${v.l}</option>`).join('')}
       </select>
     </div>
-    <div class="fRow"><label>Durchgeführt von</label>
-      <select id="aDurchgefuehrt">
-        <option value="${user?.id||''}">${esc(user?.name||'Ich')}</option>
-        ${isAdmin()?DB.mitarbeiter.filter(m=>m.aktiv&&m.id!==user?.id).map(m=>`<option value="${m.id}">${esc(m.name)}</option>`).join(''):''}
-      </select>
-    </div>
+
     <div class="fRow"><label>Beschreibung</label><input id="aArbeit" placeholder="Was wurde gemacht?"></div>
     <div class="fGrid fg2">
       <div class="fRow"><label>Dauer (h)</label><input id="aDauer" type="number" step=".5" min="0"></div>
@@ -1149,7 +1138,6 @@ async function auftragSpeichern(id){
     naechste_faelligkeit:document.getElementById('aFaellig')?.value||null,
     bezahlt:document.getElementById('aBezahlt')?.value==='true',
     notiz:document.getElementById('aNotiz')?.value||null,
-    durchgefuehrt_von:document.getElementById('aDurchgefuehrt')?.value||user?.id||null,
     bereich:'energie',geaendert_am:new Date().toISOString()
   };
   try{
@@ -1224,7 +1212,7 @@ function schnellAuftrag(typ){
     <div class="fRow"><label>Beschreibung</label><input id="aArbeit"></div>
     ${isAdmin()?`<div class="fRow"><label>Preis (€)</label><input id="aPreis" type="number" step=".01" value="${TYPEN[typ]?.p?.toFixed(2)||''}"></div>`:'<input type="hidden" id="aPreis">'}
     <input type="hidden" id="aTyp" value="${typ}">
-    <input type="hidden" id="aDurchgefuehrt" value="${user?.id||''}">
+
     <input type="hidden" id="aStrasse"><input type="hidden" id="aDauer">
     <input type="hidden" id="aFaellig"><input type="hidden" id="aNotiz">
     <select id="aBezahlt" style="display:none"><option value="false">Nein</option></select>
@@ -1313,12 +1301,7 @@ function terminNeu(){
         ${Object.entries(TYPEN).map(([k,v])=>`<option value="${k}">${v.l}</option>`).join('')}
       </select>
     </div>
-    <div class="fRow"><label>Zugewiesen an</label>
-      <select id="tZugewiesen">
-        <option value="">— Alle —</option>
-        ${DB.mitarbeiter.filter(m=>m.aktiv).map(m=>`<option value="${m.id}">${esc(m.name)}</option>`).join('')}
-      </select>
-    </div>
+
     <div class="fRow"><label>Beschreibung</label>
       <textarea id="tBeschreibung" placeholder="Was ist geplant?"></textarea>
     </div>
@@ -1340,7 +1323,6 @@ async function terminSpeichern(){
     kunde:document.getElementById('tKunde')?.value||null,
     typ:document.getElementById('tTyp')?.value||null,
     beschreibung:document.getElementById('tBeschreibung')?.value||null,
-    zugewiesen:document.getElementById('tZugewiesen')?.value||null,
     farbe:'#c0392b',bereich:'energie'
   };
   try{
@@ -1563,16 +1545,17 @@ async function fInJournal(typ,preisId){
     if(el){const t=(el.textContent||el.value||'').replace(/[€\s]/g,'').replace(',','.');preis=parseFloat(t)||null;}
   }
   try{
-    await api('/auftraege',{method:'POST',body:JSON.stringify({
+    const fDaten={
       datum:datum||new Date().toISOString().split('T')[0],
       kunde,
-      strasse:document.getElementById('fStrasse')?.value||null,
       ort:document.getElementById('fOrt')?.value||null,
       typ,
       arbeit:document.getElementById('fNotiz')?.value||TYPEN[typ]?.l||typ,
-      preis,bezahlt:false,bereich:'energie',
-      naechste_faelligkeit:document.getElementById('fFaellig')?.value||null
-    })});
+      bezahlt:false,bereich:'energie',
+    };
+    if(preis) fDaten.preis=preis;
+    if(document.getElementById('fFaellig')?.value) fDaten.naechste_faelligkeit=document.getElementById('fFaellig').value;
+    await api('/auftraege',{method:'POST',body:JSON.stringify(fDaten)});
     toast('✓ In Journal gespeichert!');
     await laden();
   }catch(e){toast('Fehler: '+e.message,'err');}
