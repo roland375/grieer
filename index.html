@@ -8,30 +8,24 @@
     var CURRENT_VER = "v2026-05-25-KI";
     var lastVer = null;
     try { lastVer = localStorage.getItem('__grieer_app_ver__'); } catch(e){}
-    
-    // Service Workers deregistrieren
     if('serviceWorker' in navigator){
       navigator.serviceWorker.getRegistrations().then(function(regs){
         regs.forEach(function(r){ r.unregister(); });
       }).catch(function(){});
     }
-    // Caches API leeren
     if('caches' in window){
       caches.keys().then(function(names){
         names.forEach(function(n){ caches.delete(n); });
       }).catch(function(){});
     }
-    
-    // Speichere aktuelle Version
     try { localStorage.setItem('__grieer_app_ver__', CURRENT_VER); } catch(e){}
-    
-    // Falls Version geändert: zeige kurzen Banner
     if(lastVer && lastVer !== CURRENT_VER){
       window.__grieerUpdated = lastVer + ' -> ' + CURRENT_VER;
     }
   } catch(e){}
 })();
 </script>
+>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -5671,7 +5665,14 @@ body {
     <button onclick="kiQuick(this)" style="background:#fff;border:1px solid #6D4C41;color:#6D4C41;border-radius:14px;padding:5px 11px;font-size:10.5px;font-weight:600;cursor:pointer;touch-action:manipulation">Pelletslager Belüftung</button>
     <button onclick="kiQuick(this)" style="background:#fff;border:1px solid #D32F2F;color:#D32F2F;border-radius:14px;padding:5px 11px;font-size:10.5px;font-weight:600;cursor:pointer;touch-action:manipulation">CO-Melder Pflicht §</button>
     <button onclick="kiQuick(this)" style="background:#fff;border:1px solid #2C3E50;color:#2C3E50;border-radius:14px;padding:5px 11px;font-size:10.5px;font-weight:600;cursor:pointer;touch-action:manipulation">§ 11 KehrG Mängelmeldung</button>
-    <button onclick="kiShowPDFs()" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:5px 11px;font-size:10.5px;fon
+    <button onclick="kiShowPDFs()" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:5px 11px;font-size:10.5px;font-weight:600;cursor:pointer;touch-action:manipulation">📄 Wissens-PDFs</button>
+  </div>
+  </div>
+  </div>
+</div>
+
+<script>
+
 // ─────────────────────────────────────────────────────────────
 //  FEHLENDE FUNKTIONEN – DRUCK / SENDEN / SPEICHERN
 // ─────────────────────────────────────────────────────────────
@@ -16257,12 +16258,8 @@ function buildWartHtml(){
   
   return _wrapHtml('Wartungserinnerung', body);
 }
-
-
-  
-  return _wrapHtml('Wartungserinnerung', body);
-}
 </script>
+
 
 <div id="grieer-version-badge" style="position:fixed;bottom:4px;right:8px;font-size:9px;color:#90A4AE;background:rgba(255,255,255,0.85);padding:2px 6px;border-radius:8px;z-index:50;pointer-events:none;font-family:monospace">App v2026-05-25-KI</div>
 
