@@ -926,14 +926,19 @@ function kvFormHTML(k){
     <hr style="margin:12px 0;border:none;border-top:2px solid var(--border)">
     <p style="font-size:.74rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">🔄 Rhythmus & letzte Durchführung</p>
     <div class="rhythmusGrid">
-      ${['fotovoltaik','lueftung','heizung','wartung'].map(l=>`
+      ${[
+        {dbKey:'fotovoltaik', label:'☀️ PV Reinigung',    formId:'fotovoltaik'},
+        {dbKey:'lueftung',    label:'💨 Lüftung',         formId:'lueftung'},
+        {dbKey:'heizung',     label:'🔧 Heizungs Service',formId:'heizservice'},
+        {dbKey:'wartung',     label:'🔥 Brandschutz',     formId:'brandschutz'},
+      ].map(({dbKey,label,formId})=>`
         <div class="rhythmusItem">
-          <label>${TYPEN[l].l}</label>
-          <select id="fr_${l}">
+          <label>${label}</label>
+          <select id="fr_${formId}">
             <option value="">— kein —</option>
-            ${[1,2,3,4,5].map(j=>`<option value="${j}" ${v['rhythmus_'+l]==j?'selected':''}>${j} ${j===1?'Jahr':'Jahre'}</option>`).join('')}
+            ${[1,2,3,4,5].map(j=>`<option value="${j}" ${v['rhythmus_'+dbKey]==j?'selected':''}>${j} ${j===1?'Jahr':'Jahre'}</option>`).join('')}
           </select>
-          <input type="date" id="fl_${l}" value="${v['letzt_'+l]||''}" style="margin-top:6px" placeholder="Letzte Durchf.">
+          <input type="date" id="fl_${formId}" value="${v['letzt_'+dbKey]||''}" style="margin-top:6px" placeholder="Letzte Durchf.">
         </div>`).join('')}
     </div>
 
@@ -942,46 +947,84 @@ function kvFormHTML(k){
       <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
     </div>`;
 }
+async function journalEintragErstellen(kunde){
+  // Erstellt automatisch einen offenen Journaleintrag für den neuen Kunden
+  const heute = new Date().toISOString().split('T')[0];
+  const name = (kunde.vorname?kunde.vorname+' ':'')+kunde.nachname;
+  const eintrag = {
+    datum: heute,
+    kunde: name,
+    ort: kunde.ort||null,
+    arbeit: 'Neuer Kunde — Leistung noch offen',
+    bezahlt: false,
+  };
+  try {
+    await api('/auftraege', {method:'POST', body:JSON.stringify(eintrag)});
+  } catch(e) {
+    console.log('Journal-Auto-Eintrag fehlgeschlagen:', e.message);
+  }
+}
+
 async function kvSpeichern(id){
   const nn=document.getElementById('fNachname')?.value?.trim();
   if(!nn){toast('Bitte Nachname eingeben','err');document.getElementById('fNachname')?.focus();return;}
-  // Nur Spalten die definitiv in DB existieren
-  const d={
-    anrede:document.getElementById('fAnrede')?.value||null,
-    nummer:document.getElementById('fNummer')?.value||null,
-    vorname:document.getElementById('fVorname')?.value||null,
-    nachname:nn,
-    firma:document.getElementById('fFirma')?.value||null,
-    strasse:document.getElementById('fStrasse')?.value||null,
-    plz:document.getElementById('fPlz')?.value||null,
-    ort:document.getElementById('fOrt')?.value||null,
-    telefon:document.getElementById('fTel')?.value||null,
-    email:document.getElementById('fEmail')?.value||null,
-    notiz:(document.getElementById('fHinweis')?.value||'')+(document.getElementById('fNotiz')?.value?'\n'+document.getElementById('fNotiz').value:''),
-    pv_module:parseInt(document.getElementById('fPv')?.value)||0,
-    lueftungsanlagen:parseInt(document.getElementById('fLueft')?.value)||0,
-    geaendert_am:new Date().toISOString()
-  };
-  // Rhythmus-Felder (nur die die in DB existieren)
-  ['fotovoltaik','lueftung'].forEach(l=>{
-    const rv=document.getElementById('fr_'+l)?.value;
-    const lv=document.getElementById('fl_'+l)?.value;
-    if(rv) d['rhythmus_'+l]=parseInt(rv);
-    if(lv) d['letzt_'+l]=lv;
-  });
-  // Bereinige null-Werte um Spalten-Fehler zu vermeiden
-  Object.keys(d).forEach(k=>{ if(d[k]===null||d[k]===undefined||d[k]==='') delete d[k]; });
+  // Nur absolut sichere Basis-Felder
+  const d = {};
+  d.nachname = nn;
+  const fAnrede = document.getElementById('fAnrede')?.value;
+  const fNummer = document.getElementById('fNummer')?.value;
+  const fVorname = document.getElementById('fVorname')?.value;
+  const fFirma = document.getElementById('fFirma')?.value;
+  const fStrasse = document.getElementById('fStrasse')?.value;
+  const fPlz = document.getElementById('fPlz')?.value;
+  const fOrt = document.getElementById('fOrt')?.value;
+  const fTel = document.getElementById('fTel')?.value;
+  const fEmail = document.getElementById('fEmail')?.value;
+  const fNotizVal = document.getElementById('fHinweis')?.value || document.getElementById('fNotiz')?.value || '';
+  if(fAnrede) d.anrede = fAnrede;
+  if(fNummer) d.nummer = fNummer;
+  if(fVorname) d.vorname = fVorname;
+  if(fFirma) d.firma = fFirma;
+  if(fStrasse) d.strasse = fStrasse;
+  if(fPlz) d.plz = fPlz;
+  if(fOrt) d.ort = fOrt;
+  if(fTel) d.telefon = fTel;
+  if(fEmail) d.email = fEmail;
+  if(fNotizVal) d.notiz = fNotizVal;
   try{
     if(id){
       await api('/kunden?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});
       toast('Kunde aktualisiert ✓');
+      modalZu();await laden();
     } else {
       d.aktiv=true;
       await api('/kunden',{method:'POST',body:JSON.stringify(d)});
-      toast('Kunde angelegt ✓');
+      // Automatisch Journaleintrag erstellen
+      await journalEintragErstellen(d);
+      toast('Kunde angelegt — Journaleintrag offen ✓');
+      modalZu();await laden();
+      // Direkt zum Journal mit Preis-Eingabe
+      zeigeTab('journal');
     }
-    modalZu();await laden();
-  }catch(e){toast('Fehler: '+e.message,'err');console.error('kvSpeichern:',e);}
+  }catch(e){
+    // Zeige vollständige Fehlermeldung
+    const msg = e.message || 'Unbekannter Fehler';
+    toast('Fehler: '+msg.substring(0,100),'err');
+    console.error('kvSpeichern Fehler:', e);
+    // Versuche minimal - nur Pflichtfelder
+    try {
+      const minimal = {nachname:nn, aktiv:true};
+      if(id) {
+        await api('/kunden?id=eq.'+id, {method:'PATCH', body:JSON.stringify({nachname:nn})});
+      } else {
+        await api('/kunden', {method:'POST', body:JSON.stringify(minimal)});
+      }
+      toast('Minimal gespeichert - bitte Fehlermeldung notieren','err');
+      modalZu(); await laden();
+    } catch(e2){
+      toast('Auch minimal fehlgeschlagen: '+e2.message.substring(0,80),'err');
+    }
+  }
 }
 
 function kundeDetail(id){
@@ -1023,7 +1066,7 @@ function kundeDetail(id){
           const r=k['rhythmus_'+l],d=k['letzt_'+l];if(!r&&!d)return'';
           let fs='—',st='ok';
           if(r&&d){const fd=new Date(d);fd.setFullYear(fd.getFullYear()+r);fs=fd.toLocaleDateString('de-AT');const diff=(fd-new Date())/864e5;if(diff<0)st='ueber';else if(diff<90)st='bald';}
-          return`<div class="detailRow"><span>${TYPEN[l].l}${r?' (alle '+r+' J.)':''}</span><span><span class="badge ${st==='ueber'?'bRed':st==='bald'?'bOrange':'bGrn'}">${fs}</span></span></div>`;
+          return`<div class="detailRow"><span>${TYPEN[l]?.l||l}${r?' (alle '+r+' J.)':''}</span><span><span class="badge ${st==='ueber'?'bRed':st==='bald'?'bOrange':'bGrn'}">${fs}</span></span></div>`;
         }).join('')}
       </div>
       ${isAdmin()&&Object.keys(letztePreise).length>0?`
@@ -1082,7 +1125,8 @@ function jRender(){
     const monat=d?d.toLocaleDateString('de-AT',{month:'long',year:'numeric'}):'—';
     if(monat!==lM){if(lM)html+='</div>';html+=`<div style="font-size:.72rem;font-weight:700;color:var(--text2);text-transform:uppercase;padding:10px 2px 4px;letter-spacing:.4px">${monat}</div><div class="card">`;lM=monat;}
     const farbe=TYPEN[a.typ]?.c||'#7f5a5a';
-    html+=`<div class="listItem" onclick="auftragDetail('${a.id}')" tabindex="0" onkeydown="if(event.key==='Enter')auftragDetail('${a.id}')">
+    const istAuto = !a.bezahlt && !a.preis && (a.arbeit||'').includes('Neuer Kunde');
+    html+=`<div class="listItem ${istAuto?'ampelOrange':''}" onclick="${isAdmin()&&!a.bezahlt&&!a.preis?`preisUndBezahlt('${a.id}','${esc(a.kunde||'')}')`:``}auftragDetail('${a.id}')" tabindex="0">
       <div class="listAvatar" style="background:${farbe}18;color:${farbe}">${(TYPEN[a.typ]?.l||'📋').split(' ')[0]}</div>
       <div class="listMain">
         <strong>${esc(a.kunde||'—')}</strong>
@@ -1090,7 +1134,7 @@ function jRender(){
       </div>
       <div class="listRight">
         ${isAdmin()&&a.preis?`<div style="font-weight:800;font-size:.9rem;color:var(--pri)">€${a.preis.toFixed(2)}</div>`:''}
-        <span class="badge ${a.bezahlt?'bGrn':'bOrange'}">${a.bezahlt?'✓':'Offen'}</span>
+        ${isAdmin()&&!a.bezahlt&&!a.preis?`<span class="badge bOrange">💰 Preis eintragen</span>`:`<span class="badge ${a.bezahlt?'bGrn':'bOrange'}">${a.bezahlt?'✓':'Offen'}</span>`}
       </div>
     </div>`;
   });
@@ -1168,7 +1212,7 @@ function auftragDetail(id){
     <div class="detailBody">
       <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
         <button class="btn btnG btnSm" onclick="auftragBearbeiten('${a.id}')">✏️ Bearbeiten</button>
-        ${!a.bezahlt&&isAdmin()?`<button class="btn btnGrn btnSm" onclick="auftragBezahlt('${a.id}')">✅ Als bezahlt markieren</button>`:''}
+        ${!a.bezahlt&&isAdmin()?`<button class="btn btnGrn btnSm" onclick="preisUndBezahlt('${a.id}','${esc(a.kunde||'')}')">💰 Preis & Bezahlt</button>`:''}
         <button class="btn btnRed btnSm" onclick="auftragLoeschen('${a.id}')">🗑 Löschen</button>
       </div>
       <div class="detailSection"><h4>Details</h4>
@@ -1209,6 +1253,56 @@ function auftragBearbeiten(id){
       <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
     </div>`),200);
 }
+function preisUndBezahlt(id, kunde){
+  const a = DB.auftraege.find(x=>x.id===id);
+  modalOffen('💰 Preis eintragen & Bezahlt markieren',`
+    <div style="background:var(--grn2);border-radius:var(--r2);padding:14px;margin-bottom:16px;border-left:4px solid var(--grn)">
+      <div style="font-weight:700;font-size:.95rem;color:var(--grn)">✅ Auftrag abschließen</div>
+      <div style="font-size:.84rem;color:var(--text2);margin-top:3px">${esc(kunde)}</div>
+    </div>
+    <div class="fRow"><label>Leistungsart</label>
+      <select id="pbTyp">
+        ${Object.entries(TYPEN).map(([k,v])=>'<option value="'+k+'" '+(a?.typ===k?'selected':'')+'>'+v.l+'</option>').join('')}
+      </select>
+    </div>
+    <div class="fRow"><label>Beschreibung der Arbeit</label>
+      <input id="pbArbeit" value="${esc(a?.arbeit||'')}" placeholder="Was wurde gemacht?">
+    </div>
+    <div class="fRow"><label>💰 Preis (€) *</label>
+      <input type="number" id="pbPreis" step=".01" min="0" placeholder="z.B. 120.00"
+        style="font-size:1.2rem;font-weight:700;border-color:var(--grn)"
+        value="${a?.preis||''}">
+    </div>
+    <div class="fRow"><label>Datum der Durchführung</label>
+      <input type="date" id="pbDatum" value="${new Date().toISOString().split('T')[0]}">
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px">
+      <button class="btn btnGrn" style="flex:1;font-size:1rem" onclick="preisUndBezahltSpeichern('${id}')">
+        💾 Speichern & Bezahlt markieren
+      </button>
+      <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
+    </div>`);
+  setTimeout(()=>document.getElementById('pbPreis')?.focus(),200);
+}
+
+async function preisUndBezahltSpeichern(id){
+  const preis = parseFloat(document.getElementById('pbPreis')?.value);
+  if(!preis||preis<=0){toast('Bitte Preis eingeben','err');document.getElementById('pbPreis')?.focus();return;}
+  const daten = {
+    bezahlt: true,
+    preis: preis,
+    typ: document.getElementById('pbTyp')?.value||null,
+    arbeit: document.getElementById('pbArbeit')?.value||null,
+    datum: document.getElementById('pbDatum')?.value||new Date().toISOString().split('T')[0],
+    geaendert_am: new Date().toISOString()
+  };
+  try{
+    await api('/auftraege?id=eq.'+id,{method:'PATCH',body:JSON.stringify(daten)});
+    toast('✓ Gespeichert & als bezahlt markiert!');
+    modalZu();detailZu();await laden();
+  }catch(e){toast('Fehler: '+e.message,'err');}
+}
+
 async function auftragBezahlt(id){try{await api('/auftraege?id=eq.'+id,{method:'PATCH',body:JSON.stringify({bezahlt:true,geaendert_am:new Date().toISOString()})});toast('Als bezahlt markiert ✓');detailZu();await laden();}catch(e){toast('Fehler: '+e.message,'err');}}
 async function auftragLoeschen(id){if(!confirm('Auftrag wirklich löschen?'))return;try{await api('/auftraege?id=eq.'+id,{method:'DELETE'});toast('Auftrag gelöscht');detailZu();await laden();}catch(e){toast('Fehler: '+e.message,'err');}}
 
@@ -1358,13 +1452,16 @@ async function terminLoeschen(id){if(!confirm('Termin wirklich löschen?'))retur
 // FÄLLIGKEITEN
 function getFaelligkeiten(){
   const heute=new Date();const result=[];
+  // DB-Felder -> Anzeigetext Mapping
+  const dbToTypen={fotovoltaik:'pv',lueftung:'lueftung',heizung:'heizservice',wartung:'brandschutz'};
   DB.kunden.forEach(k=>{
     ['fotovoltaik','lueftung','heizung','wartung'].forEach(l=>{
       const r=k['rhythmus_'+l],d=k['letzt_'+l];if(!r||!d)return;
       const fd=new Date(d);fd.setFullYear(fd.getFullYear()+r);
       const diff=(fd-heute)/864e5;let status='ok';
       if(diff<0)status='ueber';else if(diff<90)status='bald';
-      result.push({name:(k.vorname?k.vorname+' ':'')+k.nachname,leistung:TYPEN[l].l,datum:fd.toLocaleDateString('de-AT'),status,diff,kid:k.id});
+      const typLabel=TYPEN[dbToTypen[l]]?.l||l;
+      result.push({name:(k.vorname?k.vorname+' ':'')+k.nachname,leistung:typLabel,datum:fd.toLocaleDateString('de-AT'),status,diff,kid:k.id});
     });
   });
   DB.auftraege.filter(a=>a.naechste_faelligkeit).forEach(a=>{
@@ -1951,12 +2048,12 @@ function kundeAkteDetail(id){
     </div>`:''}
     <div class="akteSection">
       <h4>🔄 Fälligkeiten</h4>
-      ${['pv','lueftung','heizservice','brandschutz'].map(l=>{
-        const r=k['rhythmus_'+l]||k['rhythmus_fotovoltaik'],d=k['letzt_'+l]||k['letzt_fotovoltaik'];
+      ${[['pv','fotovoltaik'],['lueftung','lueftung'],['heizservice','heizung'],['brandschutz','wartung']].map(([label,dbKey])=>{
+        const l=label; const r=k['rhythmus_'+dbKey],d=k['letzt_'+dbKey];
         if(!r&&!d)return'';
         let fs='—',st='ok';
         if(r&&d){const fd=new Date(d);fd.setFullYear(fd.getFullYear()+r);fs=fd.toLocaleDateString('de-AT');const diff=(fd-new Date())/864e5;if(diff<0)st='ueber';else if(diff<90)st='bald';}
-        return`<div class="detailRow"><span>${TYPEN[l]?.l||l}${r?' (alle '+r+' J.)':''}</span><span><span class="badge ${st==='ueber'?'bRed':st==='bald'?'bOrange':'bGrn'}">${fs}</span></span></div>`;
+        return`<div class="detailRow"><span>${TYPEN[label]?.l||label}${r?' (alle '+r+' J.)':''}</span><span><span class="badge ${st==='ueber'?'bRed':st==='bald'?'bOrange':'bGrn'}">${fs}</span></span></div>`;
       }).join('')}
     </div>
     ${auftraege.length>0?`
