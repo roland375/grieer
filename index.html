@@ -698,6 +698,215 @@ body {
 .kacc-body.open{display:block}
 .kacc-row{display:flex;align-items:center;gap:8px;padding:8px;background:#fff;border:1px solid var(--border);border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
 .kacc-row-result{font-size:11px;color:var(--blue);font-weight:700;white-space:nowrap;margin-left:auto}
+
+/* ── PORTRAIT-FIXES ── */
+
+/* Accordion: Badge unter den Namen wenn schmal */
+.kacc-header{flex-wrap:wrap;gap:6px 10px}
+.kacc-name{flex:1;min-width:120px;white-space:normal;word-break:break-word;line-height:1.3}
+.kacc-badge{font-size:10px;margin-left:auto;white-space:nowrap}
+
+/* 2-Spalten Grids: auf kleinem Screen 1 Spalte */
+@media(max-width:450px){
+  /* Formulare: 2er-Grids → 1 Spalte */
+  .ig{grid-template-columns:1fr !important}
+  .grid2{grid-template-columns:1fr !important}
+  .grid3{grid-template-columns:1fr 1fr !important}
+  
+  /* Accordion Body Rows: kompakter */
+  .kacc-row{gap:4px}
+  .kacc-row select{font-size:11px;padding:3px 4px;min-width:70px}
+  
+  /* Messprotokoll Anlass 2-Spalten OK → bleibt */
+  
+  /* KV-Header: kompakter */
+  .kv-hdr{gap:8px}
+  .kv-hdr .contact{font-size:10px}
+  .kv-title{font-size:16px !important}
+  
+  /* Formular Rows: Label etwas schmaler */
+  .frow label{width:88px !important;font-size:10px}
+  
+  /* Mess/Luft/B8201: Messfelder groß bleiben */
+  .mess-feld-gross{font-size:20px !important}
+}
+
+/* Accordion offener Body: vernünftiger Whitespace */
+.kacc-body.open{padding:10px}
+.kacc-rows .kacc-row:last-child{margin-bottom:6px}
+
+/* ── VERRECHNUNG TABELLE PORTRAIT ── */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:6px;border:1px solid #E2E8F0}
+.tbl-wrap table{min-width:480px;border-collapse:collapse;width:100%}
+
+/* Kompaktere Spalten auf Mobile */
+@media(max-width:520px){
+  .tbl-wrap table{min-width:360px;font-size:10px}
+  thead th{font-size:8.5px !important;padding:3px 2px !important;white-space:nowrap}
+  /* Einheit-Spalte ausblenden */
+  .einh{display:none !important}
+  thead th.c:first-of-type{display:none !important}
+  /* Pos schmaler */
+  .pos{width:22px !important;padding:2px 1px !important;font-size:9px !important}
+  /* Bezeichnung breiter da Einheit weg */
+  .bez{font-size:9px !important;min-width:100px;word-break:break-word}
+  /* EP und GP kompakter */
+  .ep-c-verr{padding:1px 2px !important}
+  .ep-c-verr input[type=number]{width:56px !important;font-size:10px !important}
+  .gp-c{font-size:10px !important;min-width:44px}
+  /* Menge Input */
+  td.c input[type=number]{width:38px !important;font-size:10px !important}
+  /* Rabatt Input */
+  td.c input[type=number][id^=vrab]{width:36px !important;font-size:9px !important}
+  /* Kategorie-Header Zeilen */
+  td[colspan]{padding:4px 6px !important;font-size:10px !important}
+}
+/* Totals-Bereich */
+.verr-total-grid{display:flex;flex-direction:column;gap:4px}
+@media(max-width:520px){
+  .verr-total-grid{gap:3px;font-size:12px}
+}
+
+/* ── PORTRAIT: Inline 2-Spalten Grids → 1 Spalte ── */
+@media(max-width:480px){
+  /* B8201 und andere Formulare: 1fr 1fr → 1fr */
+  #page-b8201 div[style*="grid-template-columns:1fr 1fr"],
+  #page-b8201 div[style*="grid-template-columns: 1fr 1fr"],
+  #page-luft2 div[style*="grid-template-columns:1fr 1fr"],
+  #page-luft2 div[style*="grid-template-columns: 1fr 1fr"],
+  #page-mess  div[style*="grid-template-columns:1fr 1fr"],
+  #page-wart  div[style*="grid-template-columns:1fr 1fr"],
+  #page-brand div[style*="grid-template-columns:1fr 1fr"],
+  #page-luft  div[style*="grid-template-columns:1fr 1fr"],
+  #page-kamin div[style*="grid-template-columns:1fr 1fr"],
+  #page-pv    div[style*="grid-template-columns:1fr 1fr"],
+  #page-gesamt div[style*="grid-template-columns:1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Mängelmeldung: B+C Sektionen nebeneinander → untereinander */
+  #page-maengel div[style*="grid-template-columns:1fr 1fr"],
+  #page-maengel div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+  /* 3-Spalten auch reduzieren */
+  #page-maengel div[style*="grid-template-columns:1fr 1fr 1fr"],
+  #page-b8201  div[style*="grid-template-columns:1fr 1fr 1fr"],
+  #page-luft2  div[style*="grid-template-columns:1fr 1fr 1fr"] {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  /* 4-Spalten (B8201 Ergebnis-Boxen) → 2 Spalten */
+  #page-b8201 div[style*="grid-template-columns:1fr 1fr 1fr 1fr"] {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  /* ibox-Pairs nebeneinander → untereinander */
+  #page-b8201 .grid2,
+  #page-luft2 .grid2 {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   DESKTOP / LAPTOP LAYOUT  (≥ 860px)
+   ══════════════════════════════════════════════════════════ */
+@media(min-width:860px){
+  /* Seiten-Container breiter */
+  .pg{max-width:1100px !important;padding:16px 24px}
+  .card{padding:20px 24px}
+
+  /* KV-Header: Logo + Adresse horizontal */
+  .kv-hdr{flex-direction:row;align-items:flex-start}
+  .kv-hdr img.logo{height:48px}
+  .contact{font-size:11px}
+
+  /* KV-Metafelder: 4-spaltig nebeneinander */
+  .kv-meta-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px 16px}
+
+  /* Formular-Rows: Label breiter, Input weiter */
+  .frow label{width:140px;font-size:11px}
+  .fin{font-size:13px;padding:6px 10px}
+
+  /* ibox-Paare: 2 Spalten nebeneinander */
+  .ig{grid-template-columns:1fr 1fr}
+  .grid2{grid-template-columns:1fr 1fr}
+
+  /* Kundendaten + Objekt nebeneinander */
+  .kd-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  
+  /* Accordion Kehrtarif: breitere Badges */
+  .kacc-header{padding:12px 16px}
+  .kacc-name{font-size:13px}
+  .kacc-badge{font-size:11px;padding:3px 10px}
+
+  /* Buttons größer */
+  .btn{min-height:52px;font-size:14px}
+
+  /* Verrechnung Tabelle: Einheit wieder anzeigen */
+  .einh{display:table-cell !important}
+  thead th.einh{display:table-cell !important}
+
+  /* B8201 Ergebnis-Boxen: 4 Spalten */
+  #page-b8201 div[style*="grid-template-columns:1fr 1fr 1fr 1fr"]{
+    grid-template-columns:1fr 1fr 1fr 1fr !important;
+  }
+  /* B8201 / Luft2: 2-Spalten wieder aktivieren */
+  #page-b8201 div[style*="grid-template-columns:1fr 1fr"],
+  #page-luft2  div[style*="grid-template-columns:1fr 1fr"],
+  #page-mess   div[style*="grid-template-columns:1fr 1fr"]{
+    grid-template-columns:1fr 1fr !important;
+  }
+  /* Mängelmeldung B+C: wieder nebeneinander */
+  #page-maengel div[style*="grid-template-columns:1fr 1fr"]{
+    grid-template-columns:1fr 1fr !important;
+  }
+
+  /* Nav: mehr Platz */
+  nav{padding:8px 20px;gap:10px}
+  nav button{padding:8px 14px;font-size:15px;min-height:42px;min-width:42px}
+  #nav-title{font-size:16px}
+  #nav-current{font-size:10px}
+}
+
+/* TABLET 600-859px */
+@media(min-width:600px) and (max-width:859px){
+  .pg{max-width:860px;padding:14px}
+  .frow label{width:120px}
+  .kacc-name{font-size:12px}
+}
+
+/* Desktop: KV-Header Meta-Felder horizontal */
+@media(min-width:860px){
+  .meta{display:grid;grid-template-columns:repeat(4,1fr);gap:6px 16px;width:100%}
+  .mrow{display:flex;flex-direction:column;gap:2px;padding:0;border:none;font-size:12px}
+  .mrow label{font-size:10px;color:#64748B;font-weight:500;width:auto !important}
+  .mrow input{
+    width:100% !important;flex:1;
+    font-size:14px;padding:6px 8px;
+    border:1.5px solid #CBD5E1;border-radius:6px;
+    background:#fff;outline:none;box-sizing:border-box;
+    font-weight:500;color:#1A2B45
+  }
+  .mrow input:focus{border-color:#1A2B45}
+  
+  /* title-row auf Desktop: nebeneinander */
+  .title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px}
+  .title-row > div:first-child{flex:1}
+  .title-row .meta{flex-shrink:0;min-width:500px;max-width:580px}
+  
+  /* kv-hdr: Logo + Adresse gut ausgerichtet */
+  .kv-hdr{gap:16px;padding-bottom:12px;margin-bottom:12px}
+  .kv-hdr img.logo{height:52px}
+  .contact{font-size:11.5px;line-height:1.6}
+  
+  /* Formular-Rows breiter */
+  .frow label{width:150px;font-size:11px}
+  
+  /* Generell: .ig/.grid2 2-Spalten auf Desktop */
+  .ig:not([style*="grid-template-columns:1fr"]),
+  .grid2:not([style*="grid-template-columns:1fr"]){
+    grid-template-columns:1fr 1fr !important
+  }
+}
 </style>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -1951,12 +2160,18 @@ body {
 </div>
 
 <!-- Kundendaten -->
-<div style="background:#FFF8E1;border:1px solid #FFB74D;border-radius:8px;padding:8px 12px;margin-bottom:8px;display:flex;flex-wrap:wrap;gap:8px;align-items:center">
-  <div style="font-size:9px;font-weight:700;color:#E65100;text-transform:uppercase;width:100%;padding-bottom:4px;border-bottom:1px solid #FFD180;margin-bottom:2px">Objekt / KV</div>
-  <div style="display:flex;align-items:baseline;gap:4px;flex:1;min-width:100px"><label style="font-size:9px;color:#888;white-space:nowrap">KV-Nr</label><input type="text" class="fin" placeholder="2026-001" style="border:none;border-bottom:1px solid #FFD180;font-size:12px;padding:2px 4px;outline:none;background:transparent;width:100%"></div>
-  <div style="display:flex;align-items:baseline;gap:4px;flex:1;min-width:90px"><label style="font-size:9px;color:#888;white-space:nowrap">Datum</label><input type="text" class="fin adate" style="border:none;border-bottom:1px solid #FFD180;font-size:12px;padding:2px 4px;outline:none;background:transparent;width:100%"></div>
-  <div style="display:flex;align-items:baseline;gap:4px;flex:1;min-width:80px"><label style="font-size:9px;color:#888;white-space:nowrap">Bearbeiter</label><input type="text" class="fin" placeholder="Grieer" style="border:none;border-bottom:1px solid #FFD180;font-size:12px;padding:2px 4px;outline:none;background:transparent;width:100%"></div>
+
+<div style="background:#FFF8E1;border:1px solid #FFB74D;border-radius:8px;padding:10px 12px;margin-bottom:8px">
+  <div style="font-size:9px;font-weight:700;color:#E65100;text-transform:uppercase;padding-bottom:5px;border-bottom:1px solid #FFD180;margin-bottom:8px;letter-spacing:.5px">OBJEKT / KV</div>
+  <div style="margin-bottom:8px"><label style="font-size:10px;color:#888;display:block;margin-bottom:2px">KV-Nr.</label><input type="text" class="fin" placeholder="2026-001" style="width:100%;border:none;border-bottom:1px solid #FFD180;font-size:14px;font-weight:600;padding:4px 2px;outline:none;background:transparent;box-sizing:border-box"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div><label style="font-size:10px;color:#888;display:block;margin-bottom:2px">Datum</label><input type="text" class="fin adate" style="width:100%;border:none;border-bottom:1px solid #FFD180;font-size:13px;padding:4px 2px;outline:none;background:transparent;box-sizing:border-box"></div>
+    <div><label style="font-size:10px;color:#888;display:block;margin-bottom:2px">Bearbeiter</label><input type="text" class="fin" placeholder="Grieer" style="width:100%;border:none;border-bottom:1px solid #FFD180;font-size:13px;padding:4px 2px;outline:none;background:transparent;box-sizing:border-box"></div>
+  </div>
 </div>
+
+
+
 
 <div class="ibox" style="margin-bottom:10px">
   <div class="btl">SCHRITT 1B — Kamine / Fänge (Arbeitsentgelt)</div>
@@ -2139,9 +2354,7 @@ body {
   </div>
 </div>
 
-<div class="kv-foot" style="font-size:8px;color:#999;text-align:center;border-top:0.5px solid #eee;margin-top:8px;padding-top:4px">
-  Grieer Rauchfangkehrermeister &middot; Tarife gem. Bgld. HTVO 2011 i.d.F. LGBl. 98/2025
-</div>
+
 
 </div>
 </div><div class="pg" id="page-brandinfo">
@@ -3314,7 +3527,7 @@ body {
 <thead><tr>
   <th style="width:32px;text-align:center">Pos.</th>
   <th>Leistung</th>
-  <th class="c" style="width:55px">Einheit</th>
+  <th class="c einh" style="width:55px">Einheit</th>
   <th class="r" style="width:82px">EP netto</th>
   <th class="c" style="width:54px">Menge</th>
   <th class="r" style="width:92px">GP brutto</th>
@@ -3890,6 +4103,65 @@ body {
         </label>
 
       </div>
+
+      <!-- KV-FORMULARE -->
+      <div class="ibox" style="margin-bottom:10px;border:2px solid #1A2B45;margin-top:10px">
+        <div class="btl" style="color:#1A2B45;margin-bottom:6px">📋 Kostenvoranschläge &amp; Formulare</div>
+        <div style="font-size:10px;color:#64748B;margin-bottom:8px">Ausgeführten KV anhaken — direkt öffnen zum Befüllen &amp; Drucken</div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+        <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#FFF8E1;border:1px solid #FFD180;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
+          <input type="checkbox" id="ap-kv-kehr" style="width:20px;height:20px;flex-shrink:0">
+          <span style="flex:1;font-size:12px;font-weight:600">🏠 Kehrtarif KV (Rauchfangkehren)</span>
+          <button type="button" onclick="show('kehr')" class="no-print" style="margin-left:auto;background:#E65100;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#FFF3E0;border:1px solid #FFCC80;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
+          <input type="checkbox" id="ap-kv-gas" style="width:20px;height:20px;flex-shrink:0">
+          <span style="flex:1;font-size:12px;font-weight:600">🔥 Gas-Service KV</span>
+          <button type="button" onclick="show('gas')" class="no-print" style="margin-left:auto;background:#E65100;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#FFFDE7;border:1px solid #FFF176;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
+          <input type="checkbox" id="ap-kv-pv" style="width:20px;height:20px;flex-shrink:0">
+          <span style="flex:1;font-size:12px;font-weight:600">☀️ PV-Reinigung KV</span>
+          <button type="button" onclick="show('pv')" class="no-print" style="margin-left:auto;background:#F57F17;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#FBE9E7;border:1px solid #FFAB91;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
+          <input type="checkbox" id="ap-kv-brand" style="width:20px;height:20px;flex-shrink:0">
+          <span style="flex:1;font-size:12px;font-weight:600">🛡️ Brandschutz / Melder KV</span>
+          <button type="button" onclick="show('brand')" class="no-print" style="margin-left:auto;background:#BF360C;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#E3F2FD;border:1px solid #90CAF9;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
+          <input type="checkbox" id="ap-kv-luft" style="width:20px;height:20px;flex-shrink:0">
+          <span style="flex:1;font-size:12px;font-weight:600">💨 Lüftung KV</span>
+          <button type="button" onclick="show('luft')" class="no-print" style="margin-left:auto;background:#1565C0;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#F3E5F5;border:1px solid #CE93D8;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
+          <input type="checkbox" id="ap-kv-kamin" style="width:20px;height:20px;flex-shrink:0">
+          <span style="flex:1;font-size:12px;font-weight:600">🚪 Kamintürl KV</span>
+          <button type="button" onclick="show('kamin')" class="no-print" style="margin-left:auto;background:#6A1B9A;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
+          <input type="checkbox" id="ap-kv-gesamt" style="width:20px;height:20px;flex-shrink:0">
+          <span style="flex:1;font-size:12px;font-weight:600">📊 Gesamt-KV</span>
+          <button type="button" onclick="show('gesamt')" class="no-print" style="margin-left:auto;background:#2E7D32;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#EDE7F6;border:1px solid #B39DDB;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
+          <input type="checkbox" id="ap-kv-wprot" style="width:20px;height:20px;flex-shrink:0">
+          <span style="flex:1;font-size:12px;font-weight:600">📝 Wartungsprotokoll Gasheizung</span>
+          <button type="button" onclick="show('wprot')" class="no-print" style="margin-left:auto;background:#4527A0;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#E0F2F1;border:1px solid #80CBC4;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
+          <input type="checkbox" id="ap-kv-verr" style="width:20px;height:20px;flex-shrink:0">
+          <span style="flex:1;font-size:12px;font-weight:600">💶 Allg. Verrechnung / Preisliste</span>
+          <button type="button" onclick="show('verr')" class="no-print" style="margin-left:auto;background:#00695C;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#FCE4EC;border:1px solid #F48FB1;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
+          <input type="checkbox" id="ap-kv-wart" style="width:20px;height:20px;flex-shrink:0">
+          <span style="flex:1;font-size:12px;font-weight:600">🔔 Wartungserinnerung</span>
+          <button type="button" onclick="show('wart')" class="no-print" style="margin-left:auto;background:#880E4F;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
+        </label>
+        </div>
+      </div>
+
       <div style="margin-top:8px">
         <label style="font-size:10px;color:#78909C;display:block;margin-bottom:3px">Sonstige durchgeführte Arbeiten:</label>
         <textarea id="ap-arbeiten" placeholder="z.B. Verbindungsstücke kontrolliert, Filter gereinigt, ..." rows="3" style="width:100%;padding:8px;border:1.5px solid #E0E4E8;border-radius:6px;font-size:14px;box-sizing:border-box;resize:vertical;background:#fff;font-family:inherit"></textarea>
@@ -15886,48 +16158,54 @@ function verrAccordionInit(){
   var cats = [];
   
   rows.forEach(function(tr){
-    var td7 = tr.querySelector('td[colspan="7"],td[colspan="6"],td[colspan="5"]');
-    if(td7 && !tr.id){
-      // Kategorie-Header-Zeile
+    var tdCols = tr.querySelector('td[colspan]');
+    if(tdCols && !tr.id){
       var catObj = {header: tr, items: [], open: false};
       cats.push(catObj);
       
-      // Stil anpassen
-      tr.style.cssText += ';cursor:pointer;user-select:none;touch-action:manipulation;';
-      td7.style.cssText += ';display:flex;align-items:center;justify-content:space-between;gap:8px;';
+      // Inneres Div für Flex-Layout statt TD direkt
+      var inner = document.createElement('div');
+      inner.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:6px;cursor:pointer;user-select:none;touch-action:manipulation;';
       
-      // Pfeil-Icon
       var arrow = document.createElement('span');
       arrow.className = 'verr-acc-arrow';
       arrow.textContent = '▶';
-      arrow.style.cssText = 'font-size:10px;transition:transform .2s;flex-shrink:0;color:#1A2B45;';
-      td7.appendChild(arrow);
+      arrow.style.cssText = 'font-size:10px;flex-shrink:0;color:#1A2B45;transition:transform .15s';
+      
+      // Text aus td holen und in span wickeln
+      var txt = tdCols.innerHTML;
+      tdCols.innerHTML = '';
+      var textSpan = document.createElement('span');
+      textSpan.innerHTML = txt;
+      textSpan.style.cssText = 'flex:1;font-size:11px;font-weight:700;white-space:normal;word-break:break-word;line-height:1.3;';
+      
+      inner.appendChild(textSpan);
+      inner.appendChild(arrow);
+      tdCols.appendChild(inner);
+      tdCols.style.cssText = 'padding:6px 8px;';
+      tr.style.cssText += ';cursor:pointer;';
       
       tr.addEventListener('click', function(){
         catObj.open = !catObj.open;
         catObj.items.forEach(function(r){ r.style.display = catObj.open ? '' : 'none'; });
         arrow.style.transform = catObj.open ? 'rotate(90deg)' : '';
-        arrow.textContent = catObj.open ? '▼' : '▶';
         tr.style.background = catObj.open ? '#E8EDF5' : '';
       });
     } else if(tr.id && cats.length > 0){
-      // Positions-Zeile → letzter Kategorie zuordnen
       cats[cats.length-1].items.push(tr);
-      tr.style.display = 'none'; // Startzustand: zugeklappt
+      tr.style.display = 'none';
     }
   });
   
-  // Erste Kategorie automatisch aufklappen
+  // Erste Kategorie aufklappen
   if(cats.length > 0){
     cats[0].open = true;
     cats[0].items.forEach(function(r){ r.style.display = ''; });
     var arr0 = cats[0].header.querySelector('.verr-acc-arrow');
-    if(arr0){ arr0.style.transform='rotate(90deg)'; arr0.textContent='▼'; }
+    if(arr0){ arr0.style.transform='rotate(90deg)'; }
     cats[0].header.style.background = '#E8EDF5';
   }
 }
-
-
 function buildWartHtml(){
   var g = function(id){ var e=document.getElementById(id); return e?e.value||'':''; };
   var gsel = function(id){ var e=document.getElementById(id); return e&&e.selectedIndex>=0?e.options[e.selectedIndex].text:''; };
