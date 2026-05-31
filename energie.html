@@ -536,7 +536,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <button class="btn btnP btnBlock" onclick="schnellAuftrag('lueftung')">💨 Lüftung</button>
           <button class="btn btnP btnBlock" onclick="schnellAuftrag('heizservice')">🔧 Heizungs Service</button>
           <button class="btn btnP btnBlock" onclick="schnellAuftrag('brandschutz')">🔥 Brandschutz</button>
-          <button class="btn btnP btnBlock" onclick="schnellAuftrag('maengel')">⚠️ Mängel</button>
+
           <button class="btn btnP btnBlock" onclick="schnellAuftrag('sonstiges')">📋 Sonstiges</button>
         </div>
       </div>
@@ -657,11 +657,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <div class="listMain"><strong>Elektro Protokoll</strong><span>Anlagen & Installationen</span></div>
           <span style="color:var(--text2);font-size:1.3rem;font-weight:300">›</span>
         </div>
-        <div class="listItem" onclick="formOeffnen('maengel')" tabindex="0" onkeydown="if(event.key==='Enter')formOeffnen('maengel')">
-          <div class="listAvatar" style="background:var(--red2);color:var(--pri)">⚠️</div>
-          <div class="listMain"><strong>Mängelbericht</strong><span>Mängel dokumentieren & melden</span></div>
-          <span style="color:var(--text2);font-size:1.3rem;font-weight:300">›</span>
-        </div>
+
       </div>
     </div>
     <div id="formAnzeige" style="display:none">
@@ -698,7 +694,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       </div>
     </div>
     <div class="card">
-      <div class="cardHead"><h3>💰 Preisliste</h3></div>
+      <div class="cardHead"><h3>💰 Preisliste (automatisch)</h3><span style="font-size:.74rem;color:var(--text2)">aus bezahlten Aufträgen</span></div>
       <div class="cardBody" id="adminPreise"></div>
     </div>
   </div>
@@ -730,14 +726,12 @@ const TYPEN={
   lueftung:    {l:'💨 Lüftung',              p:85,  c:'#1e8a4c'},
   heizservice: {l:'🔧 Heizungs Service',     p:85,  c:'#2980b9'},
   brandschutz: {l:'🔥 Brandschutz',          p:65,  c:'#c0392b'},
-  maengel:     {l:'⚠️ Mängel',              p:0,   c:'#e67e22'},
+
   sonstiges:   {l:'📋 Sonstiges',            p:0,   c:'#7f5a5a'}
 };
-// SQL benötigt: ALTER TABLE mitarbeiter ADD COLUMN IF NOT EXISTS typen JSONB DEFAULT '["pv","lueftung","heizservice","brandschutz","maengel","sonstiges"]';
-// SQL benötigt: ALTER TABLE termine ADD COLUMN IF NOT EXISTS zugewiesen TEXT;
-// SQL benötigt: ALTER TABLE auftraege ADD COLUMN IF NOT EXISTS durchgefuehrt_von TEXT;
-// Preise werden in PREISLISTE definiert (weiter unten in FORMULARE Sektion)
-const PREISE={'PV bis 20 Module':120,'PV je Modul (>20)':8,'Lüftung je m':8.5,'Heizung Service':85,'Wartung Grundgebühr':55,'Elektro Stundensatz':75};
+// SQL: ALTER TABLE mitarbeiter ADD COLUMN IF NOT EXISTS typen JSONB DEFAULT '["pv","lueftung","heizservice","brandschutz","sonstiges"]';
+// SQL: ALTER TABLE termine ADD COLUMN IF NOT EXISTS zugewiesen TEXT;
+// SQL: ALTER TABLE auftraege ADD COLUMN IF NOT EXISTS durchgefuehrt_von TEXT;
 
 let user=null;
 let DB={kunden:[],auftraege:[],termine:[],mitarbeiter:[]};
@@ -1383,18 +1377,11 @@ const ALLE_FORMULARE = {
   lueftung:    {t:'💨 Lüftungsanlage Wartung KV', gruppe:'energie', icon:'💨', bg:'#e8f5ee', c:'#1e8a4c'},
   heizservice: {t:'🔧 Heizungs Service',           gruppe:'energie', icon:'🔧', bg:'#e8f0fb', c:'#2980b9'},
   brandschutz: {t:'🔥 Brandschutz Installation',  gruppe:'energie', icon:'🔥', bg:'#fdecea', c:'#c0392b'},
-  maengel:     {t:'⚠️ Mängelbericht',             gruppe:'beide',   icon:'⚠️', bg:'#fff3e0', c:'#e67e22'},
+
 };
 
 // Preisliste vollständig
-const PREISLISTE = {
-  'PV Reinigung bis 20 Module': {preis:120.00, gruppe:'energie'},
-  'PV Reinigung je Modul (>20)':{preis:8.00,  gruppe:'energie'},
-  'Lüftung je m':               {preis:8.50,  gruppe:'energie'},
-  'Heizungs Service':           {preis:85.00, gruppe:'energie'},
-  'Brandschutz Grundgebühr':    {preis:65.00, gruppe:'energie'},
-  'Brandschutz je Gerät':       {preis:18.00, gruppe:'energie'},
-};
+// Preisliste wird automatisch aus Aufträgen generiert
 
 function formListeRender(){
   const el=document.getElementById('formListe');if(!el)return;
@@ -1532,24 +1519,7 @@ function formOeffnen(typ){
         ${saveBtns('brandschutz','bsB')}
       </div></div>`},
 
-    maengel:{t:'⚠️ Mängelbericht',html:`
-      <div class="card"><div class="cardHead"><h3>⚠️ Mängelbericht</h3></div><div class="cardBody">
-        ${base}
-        <div class="fRow"><label>Anlage / Bereich</label><input id="fAnlage" placeholder="Welche Anlage betrifft es?"></div>
-        <div class="fRow"><label>Schwere des Mangels</label>
-          <select id="fSchwere">
-            <option value="gering">🟡 Gering — Keine unmittelbare Gefahr</option>
-            <option value="mittel">🟠 Mittel — Baldige Behebung nötig</option>
-            <option value="hoch">🔴 Hoch — Sofort beheben!</option>
-            <option value="gesperrt">⛔ Kritisch — Anlage wurde gesperrt</option>
-          </select>
-        </div>
-        <div class="fRow"><label>Detaillierte Beschreibung *</label>
-          <textarea id="fNotiz" placeholder="Mängel genau beschreiben…" style="min-height:110px"></textarea>
-        </div>
-        <div class="fRow"><label>Behebung bis spätestens</label><input type="date" id="fFaellig"></div>
-        ${saveBtns('sonstiges',null)}
-      </div></div>`},
+
   };
 
   const f=forms[typ];if(!f)return;
@@ -1622,81 +1592,156 @@ function adminRender(){
       <div class="statCard"><div class="sv">${stunden.toFixed(1)}h</div><div class="sl">Stunden</div></div>
       <div class="statCard"><div class="sv">${DB.kunden.length}</div><div class="sl">Kunden</div></div>
     </div>`;
-  document.getElementById('maListe').innerHTML=DB.mitarbeiter.map(m=>{
-    const fAnz=(m.formulare||Object.keys(ALLE_FORMULARE)).length;
-    const tAnz=(m.typen||Object.keys(TYPEN)).length;
-    return`<div class="listItem">
-      <div class="listAvatar" style="background:var(--red2);color:var(--pri)">${m.rolle==='admin'?'👑':'👤'}</div>
-      <div class="listMain">
-        <strong>${esc(m.name)}</strong>
-        <span>${m.rolle==='admin'?'Administrator':'Mitarbeiter'} · PIN: ${m.pin}</span>
-        <span style="font-size:.72rem;color:var(--text2)">${m.rolle==='admin'?'Alles freigeschaltet':fAnz+' Formular(e) · '+tAnz+' Leistungsart(en)'}</span>
-      </div>
-      <div class="listRight" style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
-        <span class="badge ${m.aktiv?'bGrn':'bRed'}">${m.aktiv?'Aktiv':'Inaktiv'}</span>
-        <button class="btn btnOut btnSm" onclick="maModalOffen('${m.id}')">✏️ Bearbeiten</button>
-      </div>
-    </div>`;}).join('');
-  document.getElementById('adminPreise').innerHTML=`
-    <div style="font-size:.74rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">⚡ Energietechnik</div>
-    `+Object.entries(PREISLISTE).map(([l,v])=>`
-    <div class="detailRow">
-      <span>${l}</span>
-      <span style="font-weight:800;color:var(--pri)">€${v.preis.toFixed(2)}</span>
-    </div>`).join('');
+  const FORM_LABELS = {pv:'☀️ PV',lueftung:'💨 Lüftung',heizservice:'🔧 Heizung',brandschutz:'🔥 Brand'};
+  const TYP_LABELS  = {pv:'☀️ PV',lueftung:'💨 Lüftung',heizservice:'🔧 Heizung',brandschutz:'🔥 Brand',sonstiges:'📋 Sonst.'};
+  document.getElementById('maListe').innerHTML = DB.mitarbeiter.map(m=>{
+    const isAd = m.rolle==='admin';
+    const erlF = m.formulare || Object.keys(ALLE_FORMULARE);
+    const erlT = m.typen || Object.keys(TYPEN);
+    let html = '<div style="padding:13px 16px;border-bottom:1px solid var(--border)">';
+    html += '<div style="display:flex;align-items:center;gap:10px">';
+    html += '<div class="listAvatar" style="background:var(--red2);color:var(--pri)">'+(isAd?'👑':'👤')+'</div>';
+    html += '<div style="flex:1;min-width:0">';
+    html += '<div style="font-weight:700;font-size:.9rem">'+esc(m.name)+'</div>';
+    html += '<div style="font-size:.76rem;color:var(--text2)">'+(isAd?'Administrator':'Mitarbeiter')+' · PIN: '+m.pin+'</div>';
+    html += '</div>';
+    html += '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">';
+    html += '<span class="badge '+(m.aktiv?'bGrn':'bRed')+'">'+(m.aktiv?'Aktiv':'Inaktiv')+'</span>';
+    html += '<button class="btn btnOut btnSm" data-maid="'+m.id+'" onclick="maModalOffen(this.dataset.maid)">✏️ Bearbeiten</button>';
+    html += '</div></div>';
+    if(!isAd){
+      html += '<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">';
+      // Formulare
+      html += '<div style="font-size:.72rem;font-weight:700;color:var(--text2);text-transform:uppercase;margin-bottom:4px">📄 Formulare</div>';
+      html += '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px">';
+      Object.entries(FORM_LABELS).forEach(([k,l])=>{
+        const hat = erlF.includes(k);
+        html += '<span style="font-size:.72rem;padding:3px 8px;border-radius:12px;font-weight:600;background:'+(hat?'var(--grn2)':'var(--red2)')+';color:'+(hat?'var(--grn)':'var(--pri)')+'">'+l+(hat?' ✓':' ✗')+'</span>';
+      });
+      html += '</div>';
+      // Kalender/Aufträge
+      html += '<div style="font-size:.72rem;font-weight:700;color:var(--text2);text-transform:uppercase;margin-bottom:4px">📅 Kalender & Aufträge</div>';
+      html += '<div style="display:flex;flex-wrap:wrap;gap:4px">';
+      Object.entries(TYP_LABELS).forEach(([k,l])=>{
+        const hat = erlT.includes(k);
+        html += '<span style="font-size:.72rem;padding:3px 8px;border-radius:12px;font-weight:600;background:'+(hat?'var(--grn2)':'var(--red2)')+';color:'+(hat?'var(--grn)':'var(--pri)')+'">'+l+(hat?' ✓':' ✗')+'</span>';
+      });
+      html += '</div></div>';
+    } else {
+      html += '<div style="margin-top:6px;font-size:.76rem;color:var(--grn);font-weight:600">✅ Alle Formulare · Alle Leistungsarten · Preise sichtbar</div>';
+    }
+    html += '</div>';
+    return html;
+  }).join('');
+  // Automatische Preisliste aus echten Aufträgen
+  const preisMap = {};
+  DB.auftraege.filter(a=>a.preis&&a.bezahlt).forEach(a=>{
+    const key = (TYPEN[a.typ]?.l||a.typ||'Sonstiges');
+    if(!preisMap[key]){
+      preisMap[key] = {preise:[], typ:a.typ};
+    }
+    preisMap[key].preise.push({preis:a.preis, datum:a.datum, kunde:a.kunde});
+  });
+
+  if(Object.keys(preisMap).length===0){
+    document.getElementById('adminPreise').innerHTML='<div style="padding:12px;color:var(--text2);font-size:.85rem">Noch keine bezahlten Aufträge — die Preisliste füllt sich automatisch wenn Aufträge als bezahlt markiert werden.</div>';
+  } else {
+    document.getElementById('adminPreise').innerHTML=Object.entries(preisMap).map(([typ,data])=>{
+      const pp=data.preise.map(p=>p.preis).sort((a,b)=>a-b);
+      const min=pp[0],max=pp[pp.length-1],avg=pp.reduce((s,p)=>s+p,0)/pp.length;
+      const letzt=data.preise.sort((a,b)=>new Date(b.datum)-new Date(a.datum))[0];
+      return '<div style="padding:12px 0;border-bottom:1px solid var(--border)">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">'
+        +'<span style="font-weight:700;font-size:.9rem">'+esc(typ)+'</span>'
+        +'<span style="font-weight:800;color:var(--pri);font-size:1rem">Ø €'+avg.toFixed(2)+'</span>'
+        +'</div>'
+        +'<div style="display:flex;gap:12px;font-size:.77rem;color:var(--text2)">'
+        +'<span>Min: €'+min.toFixed(2)+'</span>'
+        +'<span>Max: €'+max.toFixed(2)+'</span>'
+        +'<span>'+pp.length+'× verrechnet</span>'
+        +'</div>'
+        +'<div style="font-size:.74rem;color:var(--text2);margin-top:3px">'
+        +'Zuletzt: €'+letzt.preis.toFixed(2)+' am '+(letzt.datum?.split('-').reverse().join('.')||'')+' · '+esc(letzt.kunde||'')
+        +'</div></div>';
+    }).join('');
+  }
 }
+let _maEditId = null;
 function maModalOffen(editId){
+  _maEditId = editId || null;
   const m = editId ? DB.mitarbeiter.find(x=>x.id===editId) : null;
-  const erlaubtF  = m?.formulare  || Object.keys(ALLE_FORMULARE);
-  const erlaubtT  = m?.typen      || Object.keys(TYPEN);
-  const maRolle   = m?.rolle || 'mitarbeiter';
+  const erlF = m?.formulare || Object.keys(ALLE_FORMULARE);
+  const erlT = m?.typen || Object.keys(TYPEN);
+  const rol = m?.rolle || 'mitarbeiter';
+  const isAd = rol === 'admin';
 
-  modalOffen(m ? '✏️ Mitarbeiter bearbeiten' : '👤 Neuer Mitarbeiter / Admin', `
-    <div class="fRow"><label>Name *</label>
-      <input id="maName" value="${esc(m?.name||'')}" placeholder="Vorname Nachname">
-    </div>
-    <div class="fRow"><label>PIN (4-stellig) *</label>
-      <input id="maPin" type="number" value="${m?.pin||''}" placeholder="z.B. 5678" maxlength="4">
-    </div>
-    <div class="fRow"><label>Rolle / Berechtigung</label>
-      <select id="maRolle" onchange="maRolleWechsel()">
-        <option value="mitarbeiter" ${maRolle!=='admin'?'selected':''}>Mitarbeiter — kein Zugang zu Preisen</option>
-        <option value="admin" ${maRolle==='admin'?'selected':''}>Administrator — sieht alles inkl. Preise</option>
-      </select>
-    </div>
+  // Formulare Beschreibungen
+  const FORM_DESC = {
+    pv:          '☀️ PV Reinigung — KV erstellen & berechnen',
+    lueftung:    '💨 Lüftung Wartung — Service & KV',
+    heizservice: '🔧 Heizungs Service — Protokoll & Wartung',
+    brandschutz: '🔥 Brandschutz Installation — Protokoll & KV',
+  };
 
-    <div id="maPermSection" style="${maRolle==='admin'?'display:none':''}">
-      <div style="background:var(--bg);border-radius:10px;padding:14px;margin-bottom:12px">
+  // Typen Beschreibungen
+  const TYP_DESC = {
+    pv:          '☀️ PV Reinigung — im Kalender & Journal sehen',
+    lueftung:    '💨 Lüftung — im Kalender & Journal sehen',
+    heizservice: '🔧 Heizungs Service — im Kalender & Journal sehen',
+    brandschutz: '🔥 Brandschutz — im Kalender & Journal sehen',
+    sonstiges:   '📋 Sonstiges — im Kalender & Journal sehen',
+  };
 
-        <p style="font-size:.74rem;font-weight:700;color:var(--pri);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">📄 Formulare freischalten</p>
-        ${Object.entries(ALLE_FORMULARE).map(([k,f])=>`
-          <label style="display:flex;align-items:center;gap:8px;padding:7px 0;cursor:pointer;font-size:.86rem;border-bottom:1px solid var(--border)">
-            <input type="checkbox" id="maf_${k}" ${erlaubtF.includes(k)?'checked':''} style="width:16px;height:16px;accent-color:var(--pri)">
-            <span>${f.icon} ${f.t}</span>
-          </label>`).join('')}
+  let html = '<div class="fRow"><label>Name *</label><input id="maName" value="'+esc(m?.name||'')+'" placeholder="Vorname Nachname"></div>';
+  html += '<div class="fRow"><label>PIN (4-stellig) *</label><input id="maPin" type="number" value="'+(m?.pin||'')+'" placeholder="z.B. 5678" maxlength="4"></div>';
+  html += '<div class="fRow"><label>Rolle</label><select id="maRolle" onchange="maRolleWechsel()">';
+  html += '<option value="mitarbeiter" '+(rol!=='admin'?'selected':'')+'>Mitarbeiter — sieht keine Preise</option>';
+  html += '<option value="admin" '+(rol==='admin'?'selected':'')+'>Administrator — sieht alles inkl. Preise</option>';
+  html += '</select></div>';
 
-        <p style="font-size:.74rem;font-weight:700;color:var(--pri);text-transform:uppercase;letter-spacing:.4px;margin:14px 0 10px">📅 Kalender & Aufträge zuweisen</p>
-        <p style="font-size:.77rem;color:var(--text2);margin-bottom:10px">Welche Leistungsarten kann dieser Mitarbeiter im Kalender sehen und als Aufträge durchführen?</p>
-        ${Object.entries(TYPEN).map(([k,v])=>`
-          <label style="display:flex;align-items:center;gap:8px;padding:7px 0;cursor:pointer;font-size:.86rem;border-bottom:1px solid var(--border)">
-            <input type="checkbox" id="mat_${k}" ${erlaubtT.includes(k)?'checked':''} style="width:16px;height:16px;accent-color:var(--pri)">
-            <span>${v.l}</span>
-          </label>`).join('')}
+  // Berechtigungen Sektion (nur für Mitarbeiter sichtbar)
+  html += '<div id="maPermSection" style="'+(isAd?'display:none':'')+'">';
+  html += '<div style="background:var(--bg);border-radius:10px;padding:14px;margin-bottom:12px">';
 
-      </div>
-    </div>
+  // Formulare
+  html += '<p style="font-size:.74rem;font-weight:700;color:var(--pri);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">📄 Formulare freischalten</p>';
+  html += '<p style="font-size:.76rem;color:var(--text2);margin-bottom:10px">Welche Formulare darf dieser Mitarbeiter öffnen und ausfüllen?</p>';
+  Object.entries(FORM_DESC).forEach(([k,desc])=>{
+    const checked = erlF.includes(k) ? 'checked' : '';
+    html += '<label style="display:flex;align-items:center;gap:10px;padding:8px;margin-bottom:4px;background:#fff;border-radius:8px;cursor:pointer;border:1px solid var(--border)">';
+    html += '<input type="checkbox" id="maf_'+k+'" '+checked+' style="width:18px;height:18px;accent-color:var(--pri);flex-shrink:0">';
+    html += '<span style="font-size:.86rem">'+desc+'</span></label>';
+  });
 
-    ${m?`<div class="fRow"><label>Status</label>
-      <select id="maAktiv">
-        <option value="true" ${m.aktiv?'selected':''}>✅ Aktiv</option>
-        <option value="false" ${!m.aktiv?'selected':''}>❌ Inaktiv</option>
-      </select>
-    </div>`:''}
+  // Trennlinie
+  html += '<div style="height:1px;background:var(--border);margin:12px 0"></div>';
 
-    <div style="display:flex;gap:10px;margin-top:18px">
-      <button class="btn btnGrn" style="flex:1" onclick="maSpeichern('${editId||''}')">💾 Speichern</button>
-      <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
-    </div>`);
+  // Leistungsarten / Kalender
+  html += '<p style="font-size:.74rem;font-weight:700;color:var(--pri);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">📅 Kalender & Aufträge</p>';
+  html += '<p style="font-size:.76rem;color:var(--text2);margin-bottom:10px">Welche Leistungsarten sieht dieser Mitarbeiter im Kalender und darf als Auftrag eintragen?</p>';
+  Object.entries(TYP_DESC).forEach(([k,desc])=>{
+    const checked = erlT.includes(k) ? 'checked' : '';
+    html += '<label style="display:flex;align-items:center;gap:10px;padding:8px;margin-bottom:4px;background:#fff;border-radius:8px;cursor:pointer;border:1px solid var(--border)">';
+    html += '<input type="checkbox" id="mat_'+k+'" '+checked+' style="width:18px;height:18px;accent-color:var(--pri);flex-shrink:0">';
+    html += '<span style="font-size:.86rem">'+desc+'</span></label>';
+  });
+
+  html += '</div></div>'; // close maPermSection
+
+  // Status (nur beim Bearbeiten)
+  if(m){
+    html += '<div class="fRow"><label>Status</label><select id="maAktiv">';
+    html += '<option value="true" '+(m.aktiv?'selected':'')+'>✅ Aktiv — kann sich einloggen</option>';
+    html += '<option value="false" '+(!m.aktiv?'selected':'')+'>❌ Inaktiv — kein Login möglich</option>';
+    html += '</select></div>';
+  }
+
+  html += '<div style="display:flex;gap:10px;margin-top:18px">';
+    html += '<button class="btn btnGrn" style="flex:1" onclick="maSpeichern(_maEditId)">💾 Speichern</button>';
+  html += '<button class="btn btnOut" onclick="modalZu()">Abbrechen</button>';
+  html += '</div>';
+
+  modalOffen(m ? '✏️ Mitarbeiter bearbeiten' : '👤 Neuer Mitarbeiter / Admin', html);
 }
 
 function maRolleWechsel(){
@@ -1706,32 +1751,49 @@ function maRolleWechsel(){
 }
 
 async function maSpeichern(id){
-  const name=document.getElementById('maName')?.value?.trim();
-  const pin=String(document.getElementById('maPin')?.value||'').trim();
-  if(!name||pin.length!==4){toast('Name und 4-stelliger PIN erforderlich','err');return;}
-  const rolle=document.getElementById('maRolle')?.value||'mitarbeiter';
-  const aktiv=document.getElementById('maAktiv')?.value!=='false';
-  // Formulare & Typen nur für Mitarbeiter relevant (Admin sieht immer alles)
-  const formulare = rolle==='admin'
-    ? Object.keys(ALLE_FORMULARE)
-    : Object.keys(ALLE_FORMULARE).filter(k=>document.getElementById('maf_'+k)?.checked);
-  const typen = rolle==='admin'
-    ? Object.keys(TYPEN)
-    : Object.keys(TYPEN).filter(k=>document.getElementById('mat_'+k)?.checked);
-  const daten={name,pin,rolle,formulare,typen,bereiche:['energie'],aktiv};
+  const name = document.getElementById('maName')?.value?.trim();
+  const pin = String(document.getElementById('maPin')?.value||'').trim();
+  if(!name){ toast('Bitte Namen eingeben','err'); return; }
+  if(pin.length!==4){ toast('PIN muss genau 4 Stellen haben','err'); return; }
+  const rolle = document.getElementById('maRolle')?.value || 'mitarbeiter';
+  const aktiv = document.getElementById('maAktiv') ? document.getElementById('maAktiv').value !== 'false' : true;
+
+  const ALLE_F_KEYS = Object.keys(ALLE_FORMULARE);
+  const ALLE_T_KEYS = Object.keys(TYPEN);
+
+  const formulare = rolle==='admin' ? ALLE_F_KEYS : ALLE_F_KEYS.filter(k=>{
+    const el = document.getElementById('maf_'+k);
+    return el ? el.checked : false;
+  });
+  const typen = rolle==='admin' ? ALLE_T_KEYS : ALLE_T_KEYS.filter(k=>{
+    const el = document.getElementById('mat_'+k);
+    return el ? el.checked : false;
+  });
+
+  const daten = {name, pin, rolle, formulare, typen, bereiche:['energie'], aktiv};
+
   try{
     if(id){
-      await api('/mitarbeiter?id=eq.'+id,{method:'PATCH',body:JSON.stringify(daten)});
-      toast('Gespeichert ✓');
-    }else{
-      await api('/mitarbeiter',{method:'POST',body:JSON.stringify(daten)});
-      toast('Angelegt ✓');
+      await api('/mitarbeiter?id=eq.'+id, {method:'PATCH', body:JSON.stringify(daten)});
+      toast('Mitarbeiter aktualisiert ✓');
+      // Session aktualisieren falls eigener Account
+      try{
+        const saved = sessionStorage.getItem('gu');
+        if(saved){
+          const u = JSON.parse(saved);
+          if(u.id === id){ u.formulare=formulare; u.typen=typen; u.rolle=rolle; sessionStorage.setItem('gu',JSON.stringify(u)); user=u; }
+        }
+      }catch(e2){}
+    } else {
+      await api('/mitarbeiter', {method:'POST', body:JSON.stringify(daten)});
+      toast('Mitarbeiter angelegt ✓');
     }
-    // Session aktualisieren falls eigener Account
-    const saved=sessionStorage.getItem('gu');
-    if(saved){const u=JSON.parse(saved);if(u.id===id){u.formulare=formulare;u.typen=typen;sessionStorage.setItem('gu',JSON.stringify(u));user=u;}}
-    modalZu();await laden();
-  }catch(e){toast('Fehler: '+e.message,'err');}
+    modalZu();
+    await laden();
+  } catch(e){
+    toast('Fehler beim Speichern: '+e.message, 'err');
+    console.error('maSpeichern Fehler:', e);
+  }
 }
 
 // ══ WOCHENANSICHT ════════════════════════════════════════
