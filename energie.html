@@ -1802,10 +1802,8 @@ function benachrichtigungenPruefen(){
   const morgenTermine=DB.termine.filter(t=>t.datum===morgenStr&&(!t.zugewiesen||isAdmin()||t.zugewiesen===user?.id)&&(!t.typ||erlaubtT.includes(t.typ)));
   const faellig=getFaelligkeiten().filter(f=>f.status==='ueber').slice(0,3);
   if(Notification.permission==='granted'){
-    if(morgenTermine.length>0)new Notification('🔔 Grieer — Morgen '+morgenTermine.length+' Termin(e)',{body:morgenTermine.map(t=>t.titel+(t.kunde?' bei '+t.kunde:'')).join('
-'),tag:'termin-morgen'});
-    if(faellig.length>0)new Notification('⚠️ Grieer — '+faellig.length+' überfällige Einträge',{body:faellig.map(f=>f.name+': '+f.leistung).join('
-'),tag:'faellig'});
+    if(morgenTermine.length>0)new Notification('Grieer - Morgen '+morgenTermine.length+' Termin(e)',{body:morgenTermine.map(t=>t.titel+(t.kunde?' bei '+t.kunde:'')).join(', '),tag:'termin-morgen'});
+    if(faellig.length>0)new Notification('Grieer - '+faellig.length+' ueberfaellige Eintraege',{body:faellig.map(f=>f.name+': '+f.leistung).join(', '),tag:'faellig'});
   }
   inAppBannerZeigen(morgenTermine,faellig);
 }
