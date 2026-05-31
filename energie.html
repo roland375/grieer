@@ -1268,7 +1268,8 @@ function kalTerminListe(datum){
       <div class="listAvatar" style="background:var(--red2);color:var(--pri)">📅</div>
       <div class="listMain">
         <strong>${esc(t.titel)}</strong>
-        <span>${t.ganztag?'Ganztag':(t.uhrzeit_von||'')+'–'+(t.uhrzeit_bis||'')} · ${esc(t.kunde||'')}</span>
+        <span>${t.ganztag?'Ganztag':(t.uhrzeit_von||'')+'–'+(t.uhrzeit_bis||'')}${t.kunde?' · '+esc(t.kunde):''}</span>
+        ${t.beschreibung?`<span style="font-size:.72rem;color:var(--text2)">${esc(t.beschreibung)}</span>`:''}
       </div>
       <button class="btn btnRed btnSm" onclick="terminLoeschen('${t.id}')">🗑</button>
     </div>`).join('')+'</div>';
@@ -1317,12 +1318,19 @@ async function terminSpeichern(){
   if(!titel){toast('Bitte Bezeichnung eingeben','err');document.getElementById('tTitel')?.focus();return;}
   if(!datum){toast('Bitte Datum eingeben','err');return;}
   const ganztag=document.getElementById('tGanztag')?.value==='true';
+  // Automatisch eingetragen von + User Name in Beschreibung
+  const beschreibung = document.getElementById('tBeschreibung')?.value||null;
+  const eingetragenVon = user?.name ? 'Eingetragen von: '+user.name : null;
+  const beschreibungFinal = beschreibung && eingetragenVon
+    ? beschreibung + ' | ' + eingetragenVon
+    : (beschreibung || eingetragenVon);
+
   const d={titel,datum,ganztag,
     uhrzeit_von:ganztag?null:(document.getElementById('tVon')?.value||null),
     uhrzeit_bis:ganztag?null:(document.getElementById('tBis')?.value||null),
     kunde:document.getElementById('tKunde')?.value||null,
     typ:document.getElementById('tTyp')?.value||null,
-    beschreibung:document.getElementById('tBeschreibung')?.value||null,
+    beschreibung:beschreibungFinal,
     farbe:'#c0392b',bereich:'energie'
   };
   try{
@@ -1753,29 +1761,27 @@ async function maSpeichern(id){
     return el ? el.checked : false;
   });
 
-  const daten = {name, pin, rolle, formulare, typen, bereiche:['energie'], aktiv};
+  // Nur Basis-Spalten die definitiv existieren
+  const datenBasis = {name, pin, rolle, aktiv};
 
   try{
     if(id){
-      await api('/mitarbeiter?id=eq.'+id, {method:'PATCH', body:JSON.stringify(daten)});
+      await api('/mitarbeiter?id=eq.'+id, {method:'PATCH', body:JSON.stringify(datenBasis)});
       toast('Mitarbeiter aktualisiert ✓');
-      // Session aktualisieren falls eigener Account
-      try{
-        const saved = sessionStorage.getItem('gu');
-        if(saved){
-          const u = JSON.parse(saved);
-          if(u.id === id){ u.formulare=formulare; u.typen=typen; u.rolle=rolle; sessionStorage.setItem('gu',JSON.stringify(u)); user=u; }
-        }
-      }catch(e2){}
     } else {
-      await api('/mitarbeiter', {method:'POST', body:JSON.stringify(daten)});
+      await api('/mitarbeiter', {method:'POST', body:JSON.stringify(datenBasis)});
       toast('Mitarbeiter angelegt ✓');
     }
+    // Lokal Berechtigungen speichern (bis SQL ausgeführt wird)
+    try{
+      const saved=sessionStorage.getItem('gu');
+      if(saved){const u=JSON.parse(saved);if(u.id===id){u.formulare=formulare;u.typen=typen;u.rolle=rolle;sessionStorage.setItem('gu',JSON.stringify(u));user=u;}}
+    }catch(e2){}
     modalZu();
     await laden();
   } catch(e){
-    toast('Fehler beim Speichern: '+e.message, 'err');
-    console.error('maSpeichern Fehler:', e);
+    toast('Fehler: '+e.message, 'err');
+    console.error('maSpeichern:', e);
   }
 }
 
