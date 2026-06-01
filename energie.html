@@ -867,7 +867,7 @@ function kvRender(){
   if(liste.length===0){el.innerHTML='<div class="emptyState"><div class="ei">👥</div><p>Keine Kunden gefunden</p></div>';return;}
   el.innerHTML=liste.map(k=>{
     const name=(k.anrede?k.anrede+' ':'')+(k.vorname?k.vorname+' ':'')+k.nachname;
-    const hatNotiz=k.notiz&&k.notiz.trim().length>0;
+    const hatNotiz=k.notiz&&k.notiz.replace(/\[ANLAGEN:[^\]]*\]/g,'').trim().length>0;
     return`<div class="listItem" onclick="kundeDetail('${k.id}')" tabindex="0" onkeydown="if(event.key==='Enter')kundeDetail('${k.id}')">
       <div class="listAvatar" style="background:var(--red2);color:var(--pri);font-weight:800">${k.nachname.charAt(0).toUpperCase()}</div>
       <div class="listMain">
@@ -1123,7 +1123,7 @@ function kundeDetail(id){
       <p>${esc(k.firma||'')}${k.ort?' · '+esc(k.ort):''}</p>
     </div>
     <div class="detailBody">
-      ${k.notiz?`<div class="hinweisBox"><div class="hb-icon">⚠️</div><div class="hb-label">Hinweis & Besonderheit</div><p>${escNotiz(k.notiz)}</p></div>`:''}
+      ${(()=>{const n=escNotiz(k.notiz);return n?`<div class="hinweisBox"><div class="hb-icon">⚠️</div><div class="hb-label">Hinweis & Besonderheit</div><p>${n}</p></div>`:''})()}
       <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
         ${k.telefon?`<a href="tel:${k.telefon}" class="btn btnP btnSm">📞 Anrufen</a>`:''}
         ${k.email?`<a href="mailto:${k.email}" class="btn btnOut btnSm">✉️ E-Mail</a>`:''}
@@ -1181,7 +1181,7 @@ function kundeDetail(id){
             <span><span class="badge ${a.bezahlt?'bGrn':'bOrange'}">${a.bezahlt?'✓ Bezahlt':'Offen'}</span></span>
           </div>`).join('')}
       </div>`:''}
-      ${k.notiz?`<div class="detailSection"><h4>Notiz</h4><p style="font-size:.86rem;color:var(--text2);line-height:1.6">${escNotiz(k.notiz)}</p></div>`:''}
+
     </div>`;
   document.getElementById('detailOverlay').style.display='block';
 }
@@ -1307,7 +1307,7 @@ function auftragDetail(id){
         <div class="detailRow"><span>Status</span><span><span class="badge ${a.bezahlt?'bGrn':'bOrange'}">${a.bezahlt?'✓ Bezahlt':'Offen'}</span></span></div>
         ${a.naechste_faelligkeit?`<div class="detailRow"><span>Nächste Fälligkeit</span><span>${a.naechste_faelligkeit?.split('-').reverse().join('.')||''}</span></div>`:''}
       </div>
-      ${a.notiz?`<div class="detailSection"><h4>Notiz</h4><p style="font-size:.86rem;color:var(--text2);line-height:1.6">${esc(a.notiz)}</p></div>`:''}
+      ${a.notiz&&!a.notiz.includes('Erstellt von')?`<div class="detailSection"><h4>Notiz</h4><p style="font-size:.86rem;color:var(--text2);line-height:1.6">${esc(a.notiz)}</p></div>`:a.notiz?.includes('Erstellt von')?`<div class="detailSection"><h4>Info</h4><p style="font-size:.82rem;color:var(--text2)">${esc(a.notiz)}</p></div>`:''}
     </div>`;
   document.getElementById('detailOverlay').style.display='block';
 }
@@ -1455,8 +1455,8 @@ function kalTerminListe(datum){
     const bText=bp.filter(p=>!['Eingetragen von:','Wiederholung:','Faellig:','Preis:'].some(x=>p.startsWith(x))).join(' ').trim();
     const bVon=bp.find(p=>p.startsWith('Eingetragen von:'))?.replace('Eingetragen von:','').trim()||'';
     const bWh=bp.find(p=>p.startsWith('Wiederholung:'))?.replace('Wiederholung:','').trim()||'';
-    const bFaellig=bp.find(p=>p.startsWith('Faellig:'))?.replace('Faellig:','').trim()||'';
-    const bPreis=bp.find(p=>p.startsWith('Preis:'))?.replace('Preis:','').trim()||'';
+    const bFaellig=t.naechste_faelligkeit||'';
+    const bPreis=isAdmin()&&t.preis?t.preis:null;
     return`<div class="listItem">
       <div class="listAvatar" style="background:var(--red2);color:var(--p)">📅</div>
       <div class="listMain" style="min-width:0">
@@ -1578,25 +1578,21 @@ async function terminSpeichern(){
   const preis=document.getElementById('tPreis')?.value;
   const wiederholung=document.getElementById('tWiederholung')?.value||'';
   const faellig=document.getElementById('tFaellig')?.value||null;
-  // Beschreibung wird unten zusammengebaut
-  // Alles in beschreibung speichern (sicherste Methode)
-  const teileVoll=[
-    beschreibung||null,
-    `Eingetragen von: ${user.name}`,
-    wiederholung?`Wiederholung: ${wiederholung}`:null,
-    faellig?`Faellig: ${faellig}`:null,
-    preis&&isAdmin()?`Preis: ${parseFloat(preis).toFixed(2)}`:null,
-  ].filter(Boolean);
+  // Saubere Beschreibung - nur Text
+  const bVon='Eingetragen von: '+user.name;
+  const bWh=wiederholung?'Wiederholung: '+wiederholung:'';
+  const beschFinal=[beschreibung||null, bVon, bWh||null].filter(Boolean).join(' | ');
   const d={
     titel,datum,ganztag,
     uhrzeit_von:ganztag?null:(document.getElementById('tVon')?.value||null),
     uhrzeit_bis:ganztag?null:(document.getElementById('tBis')?.value||null),
     kunde:document.getElementById('tKunde')?.value||null,
     typ:document.getElementById('tTyp')?.value||null,
-    beschreibung:teileVoll.join('§§'),
+    beschreibung:beschFinal,
     farbe:'#991b1b',
   };
-  // Null-Werte entfernen
+  if(faellig)d.naechste_faelligkeit=faellig;
+  if(preis&&isAdmin()&&parseFloat(preis))d.preis=parseFloat(preis);
   Object.keys(d).forEach(k=>{if(d[k]===null||d[k]===undefined||d[k]==='')delete d[k];});
   try{
     await api('/termine',{method:'POST',body:JSON.stringify(d)});
@@ -2258,39 +2254,28 @@ function kundeAkteDetail(id){
 
 // ══ CSV IMPORT ══
 function csvImportOeffnen(){
-  modalOffen('📥 Kunden importieren',`
-    <div style="background:#eff6ff;border-radius:10px;padding:14px;margin-bottom:16px;border-left:4px solid #3b82f6">
-      <p style="font-weight:700;font-size:.87rem;color:#1e3a8a;margin-bottom:8px">📋 Möglichkeiten zum Import</p>
-      <p style="font-size:.82rem;color:#1e40af;line-height:1.8">
-        <strong>1. CSV hier importieren</strong> — Excel als CSV speichern, hier einfügen<br>
-        <strong>2. Text aus Excel kopieren</strong> — direkt in das Feld unten einfügen<br>
-        <strong>3. Supabase direkt</strong> — Table Editor → kunden → Import CSV (einfachster Weg!)
+  modalOffen('📥 Kunden CSV Import',`
+    <div style="background:#f0fdf4;border-radius:10px;padding:13px;margin-bottom:14px;border-left:4px solid var(--grn3)">
+      <p style="font-weight:700;font-size:.85rem;color:var(--grn);margin-bottom:6px">📋 CSV Format</p>
+      <p style="font-size:.8rem;color:var(--grn);font-family:monospace;background:rgba(0,0,0,.04);padding:8px;border-radius:6px;margin-bottom:6px">
+        Nachname;Vorname;Firma;Straße;PLZ;Ort;Telefon;E-Mail
       </p>
+      <p style="font-size:.77rem;color:var(--text2)">Trennzeichen: Semikolon (;) oder Komma (,) · Erste Zeile kann Überschrift sein</p>
     </div>
     <div class="fRow">
-      <label>Spaltenreihenfolge (Komma oder Semikolon getrennt)</label>
-      <div style="background:#f9fafb;border-radius:8px;padding:10px;font-size:.74rem;font-family:monospace;color:var(--text2);margin-bottom:8px;line-height:1.6">
-        Nachname, Vorname, Firma, Straße, PLZ, Ort, Telefon, E-Mail
-      </div>
+      <label>📁 CSV-Datei auswählen</label>
+      <input type="file" id="csvDatei" accept=".csv,.txt,.xlsx" style="padding:8px;border:1.5px solid #e5e7eb;border-radius:10px;width:100%;background:#fff" onchange="csvDateiLesen(this)">
     </div>
     <div class="fRow">
-      <label>CSV-Datei hochladen</label>
-      <input type="file" id="csvDatei" accept=".csv,.txt" style="padding:6px" onchange="csvDateiLesen(this)">
+      <label>Oder Text direkt einfügen</label>
+      <textarea id="csvText" style="min-height:120px;font-family:monospace;font-size:.78rem" 
+        placeholder="Müller;Hans;Musterfirma;Hauptstraße 1;7000;Eisenstadt;0664123456;hans@email.at"></textarea>
     </div>
-    <div class="fRow">
-      <label>Oder Text direkt einfügen / eingeben</label>
-      <textarea id="csvText" style="min-height:130px;font-family:monospace;font-size:.79rem"
-        placeholder="Müller,Hans,,Hauptstr. 1,7000,Eisenstadt,0664123456,hans@mail.at"></textarea>
-    </div>
-    <div id="csvVorschau"></div>
-    <div style="display:flex;gap:10px;margin-top:16px">
-      <button class="btn btnOut btnSm" onclick="csvVorschau()">👁 Vorschau</button>
-      <button class="btn btnGrn" style="flex:1" onclick="csvImportStarten()">📥 Importieren</button>
-      <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
-    </div>
-    <div style="background:#fef9c3;border-radius:8px;padding:12px;margin-top:14px;font-size:.78rem;color:#713f12">
-      💡 <strong>Tipp:</strong> Der einfachste Weg ist direkt in Supabase:<br>
-      Table Editor → kunden → oben "Insert" → "Import data from CSV"
+    <div id="csvVorschau" style="margin-bottom:8px"></div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="btn btnOut" onclick="csvVorschau()">👁 Prüfen</button>
+      <button class="btn btnGrn" style="flex:1;font-size:.95rem" onclick="csvImportStarten()">📥 Jetzt importieren</button>
+      <button class="btn btnOut" onclick="modalZu()">✕</button>
     </div>`);
 }
 
