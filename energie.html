@@ -1455,8 +1455,12 @@ function terminNeu(){
   const heute=new Date().toISOString().split('T')[0];
   const kvOpt=DB.kunden.map(k=>`<option value="${esc(k.nachname+(k.vorname?' '+k.vorname:'')+(k.ort?', '+k.ort:''))}">`).join('');
   modalOffen('📅 Neuer Termin',`
-    <div class="fRow"><label>Bezeichnung *</label><input id="tTitel" placeholder="z.B. Wartung bei Müller"></div>
-    <div class="fRow"><label>Datum *</label><input type="date" id="tDatum" value="${heute}"></div>
+    <div class="fRow"><label>Bezeichnung *</label>
+      <input id="tTitel" placeholder="z.B. PV Reinigung bei Müller">
+    </div>
+    <div class="fRow"><label>Datum *</label>
+      <input type="date" id="tDatum" value="${heute}" onchange="terminWiederholungAktualisieren()">
+    </div>
     <div class="fRow"><label>Ganztägig</label>
       <select id="tGanztag" onchange="terminGanztag()">
         <option value="true">Ja — Ganztag</option>
@@ -1474,22 +1478,71 @@ function terminNeu(){
       <datalist id="kvT">${kvOpt}</datalist>
     </div>
     <div class="fRow"><label>Leistungsart</label>
-      <select id="tTyp">
+      <select id="tTyp" onchange="terminTypWechsel()">
         <option value="">— Optional —</option>
         ${Object.entries(TYPEN).map(([k,v])=>`<option value="${k}">${v.l}</option>`).join('')}
       </select>
     </div>
-
-    <div class="fRow"><label>Beschreibung</label>
-      <textarea id="tBeschreibung" placeholder="Was ist geplant?"></textarea>
+    <div class="fRow"><label>Beschreibung / Was ist zu tun?</label>
+      <textarea id="tBeschreibung" placeholder="Details zum Termin…"></textarea>
     </div>
-    <div class="fRow"><label>Preis (€) — optional</label>
-      <input type="number" id="tPreis" step=".01" min="0" placeholder="z.B. 85.00">
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb">
+    <div class="fGrid fg2">
+      <div class="fRow"><label>🔄 Wiederholung</label>
+        <select id="tWiederholung" onchange="terminWiederholungAktualisieren()">
+          <option value="">— Einmalig —</option>
+          <option value="woechentlich">Wöchentlich</option>
+          <option value="2wochen">Alle 2 Wochen</option>
+          <option value="monatlich">Monatlich</option>
+          <option value="2monate">Alle 2 Monate</option>
+          <option value="quartal">Vierteljährlich</option>
+          <option value="halbjahr">Halbjährlich</option>
+          <option value="jaehrlich">Jährlich</option>
+          <option value="2jahre">Alle 2 Jahre</option>
+          <option value="3jahre">Alle 3 Jahre</option>
+          <option value="5jahre">Alle 5 Jahre</option>
+        </select>
+      </div>
+      <div class="fRow"><label>📅 Nächste Fälligkeit</label>
+        <input type="date" id="tFaellig">
+      </div>
     </div>
+    <div id="tWiederholungInfo" style="display:none;background:#eff6ff;border-radius:8px;padding:10px;font-size:.82rem;color:#1e3a8a;margin-bottom:10px">
+      🔄 Beim Speichern wird die nächste Fälligkeit automatisch berechnet
+    </div>
+    ${isAdmin()?`<div class="fRow"><label>💰 Preis (€) — optional</label>
+      <input type="number" id="tPreis" step=".01" min="0" placeholder="z.B. 85.00"></div>`:''}
     <div style="display:flex;gap:10px;margin-top:18px">
       <button class="btn btnGrn" style="flex:1" onclick="terminSpeichern()">💾 Speichern</button>
       <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
     </div>`);
+}
+
+function terminTypWechsel(){
+  // Automatisch Wiederholung vorschlagen je nach Leistungsart
+  const typ=document.getElementById('tTyp')?.value;
+  const w=document.getElementById('tWiederholung');
+  if(!w||w.value)return; // Nur wenn noch nichts gewählt
+  const vorschlag={pv:'jaehrlich',lueftung:'jaehrlich',heizservice:'jaehrlich',brandschutz:'jaehrlich'};
+  if(vorschlag[typ])w.value=vorschlag[typ];
+  terminWiederholungAktualisieren();
+}
+
+function terminWiederholungAktualisieren(){
+  const w=document.getElementById('tWiederholung')?.value;
+  const info=document.getElementById('tWiederholungInfo');
+  const faelligEl=document.getElementById('tFaellig');
+  const datumEl=document.getElementById('tDatum');
+  if(!w){if(info)info.style.display='none';return;}
+  if(info)info.style.display='block';
+  // Nächste Fälligkeit automatisch berechnen
+  if(datumEl?.value&&faelligEl){
+    const basis=new Date(datumEl.value);
+    const naechste=new Date(basis);
+    const tage={woechentlich:7,'2wochen':14,monatlich:30,'2monate':60,quartal:91,halbjahr:182,jaehrlich:365,'2jahre':730,'3jahre':1095,'5jahre':1825};
+    if(tage[w])naechste.setDate(naechste.getDate()+tage[w]);
+    faelligEl.value=naechste.toISOString().split('T')[0];
+  }
 }
 function terminGanztag(){document.getElementById('tZeitenDiv').style.display=document.getElementById('tGanztag')?.value==='true'?'none':'block';}
 async function terminSpeichern(){
@@ -1498,26 +1551,33 @@ async function terminSpeichern(){
   if(!titel){toast('Bitte Bezeichnung eingeben','err');document.getElementById('tTitel')?.focus();return;}
   if(!datum){toast('Bitte Datum eingeben','err');return;}
   const ganztag=document.getElementById('tGanztag')?.value==='true';
-  // Automatisch eingetragen von + User Name in Beschreibung
-  const beschreibung = document.getElementById('tBeschreibung')?.value||null;
-  const eingetragenVon = user?.name ? 'Eingetragen von: '+user.name : null;
-  const beschreibungFinal = beschreibung && eingetragenVon
-    ? beschreibung + ' | ' + eingetragenVon
-    : (beschreibung || eingetragenVon);
-
-  const d={titel,datum,ganztag,
+  const beschreibung=document.getElementById('tBeschreibung')?.value||'';
+  const preis=document.getElementById('tPreis')?.value;
+  const wiederholung=document.getElementById('tWiederholung')?.value||'';
+  const faellig=document.getElementById('tFaellig')?.value||null;
+  // Beschreibung zusammenbauen: Text | Eingetragen von | Wiederholung | Preis
+  const teile=[beschreibung||null,`Eingetragen von: ${user.name}`,wiederholung?`Wiederholung: ${wiederholung}`:null,preis&&isAdmin()?`Preis: €${parseFloat(preis).toFixed(2)}`:null].filter(Boolean);
+  const d={
+    titel,datum,ganztag,
     uhrzeit_von:ganztag?null:(document.getElementById('tVon')?.value||null),
     uhrzeit_bis:ganztag?null:(document.getElementById('tBis')?.value||null),
     kunde:document.getElementById('tKunde')?.value||null,
     typ:document.getElementById('tTyp')?.value||null,
-    beschreibung: document.getElementById('tPreis')?.value
-      ? (beschreibungFinal ? beschreibungFinal + ' | Preis: €'+parseFloat(document.getElementById('tPreis').value||0).toFixed(2) : 'Preis: €'+parseFloat(document.getElementById('tPreis').value||0).toFixed(2))
-      : beschreibungFinal,
-    farbe:'#c0392b'
+    beschreibung:teile.join(' | '),
+    farbe:'#991b1b',
   };
+  if(faellig)d.naechste_faelligkeit=faellig;
+  // Null-Werte entfernen
+  Object.keys(d).forEach(k=>{if(d[k]===null||d[k]===undefined||d[k]==='')delete d[k];});
   try{
     await api('/termine',{method:'POST',body:JSON.stringify(d)});
-    toast('Termin gespeichert ✓');modalZu();await laden();zeigeTab('kalender');
+    // Bei Wiederholung: Info anzeigen
+    if(wiederholung&&faellig){
+      toast('✓ Termin gespeichert · Nächste Fälligkeit: '+faellig.split('-').reverse().join('.'));
+    } else {
+      toast('Termin gespeichert ✓');
+    }
+    modalZu();await laden();zeigeTab('kalender');
   }catch(e){toast('Speicherfehler: '+e.message,'err');}
 }
 async function terminLoeschen(id){if(!confirm('Termin wirklich löschen?'))return;try{await api('/termine?id=eq.'+id,{method:'DELETE'});toast('Termin gelöscht');await laden();}catch(e){toast('Fehler: '+e.message,'err');}}
