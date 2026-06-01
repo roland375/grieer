@@ -554,7 +554,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   <div id="tab-kunden" class="tabContent">
     <div class="secHead">
       <h2>👥 Kunden</h2>
-      <button class="btn btnG" onclick="kundeNeu()">+ Neuer Kunde</button>
+      <div style="display:flex;gap:8px">
+        <button class="btn btnOut btnSm" onclick="csvImportOeffnen()">📥 CSV Import</button>
+        <button class="btn btnG" onclick="kundeNeu()">+ Neuer Kunde</button>
+      </div>
     </div>
     <div class="searchBar" style="border-color:var(--pri)">
       <span style="color:var(--pri)">📁</span>
@@ -1078,23 +1081,29 @@ async function kvSpeichern(id){
       zeigeTab('journal');
     }
   }catch(e){
-    // Zeige vollständige Fehlermeldung
-    const msg = e.message || 'Unbekannter Fehler';
-    toast('Fehler: '+msg.substring(0,100),'err');
-    console.error('kvSpeichern Fehler:', e);
-    // Versuche minimal - nur Pflichtfelder
-    try {
-      const minimal = {nachname:nn, aktiv:true};
-      if(id) {
-        await api('/kunden?id=eq.'+id, {method:'PATCH', body:JSON.stringify({nachname:nn})});
+    const msg=e.message||'Unbekannter Fehler';
+    console.error('kvSpeichern Fehler:',e);
+    // Versuche schrittweise - erst Basis, dann Zusatzfelder
+    try{
+      const basis={nachname:nn,aktiv:true};
+      if(d.vorname)basis.vorname=d.vorname;
+      if(d.anrede)basis.anrede=d.anrede;
+      if(d.firma)basis.firma=d.firma;
+      if(d.strasse)basis.strasse=d.strasse;
+      if(d.plz)basis.plz=d.plz;
+      if(d.ort)basis.ort=d.ort;
+      if(d.telefon)basis.telefon=d.telefon;
+      if(d.email)basis.email=d.email;
+      if(d.nummer)basis.nummer=d.nummer;
+      if(id){
+        await api('/kunden?id=eq.'+id,{method:'PATCH',body:JSON.stringify(basis)});
+        toast('Gespeichert (Kontaktdaten). Anlagen-SQL nötig.','err');
       } else {
-        await api('/kunden', {method:'POST', body:JSON.stringify(minimal)});
+        await api('/kunden',{method:'POST',body:JSON.stringify(basis)});
+        toast('Kunde angelegt (nur Kontaktdaten)','err');
       }
-      toast('Minimal gespeichert - bitte Fehlermeldung notieren','err');
-      modalZu(); await laden();
-    } catch(e2){
-      toast('Auch minimal fehlgeschlagen: '+e2.message.substring(0,80),'err');
-    }
+      modalZu();await laden();
+    }catch(e2){toast('Fehler: '+e2.message.substring(0,80),'err');}
   }
 }
 
@@ -1114,7 +1123,7 @@ function kundeDetail(id){
       <p>${esc(k.firma||'')}${k.ort?' · '+esc(k.ort):''}</p>
     </div>
     <div class="detailBody">
-      ${k.notiz?`<div class="hinweisBox"><div class="hb-icon">⚠️</div><div class="hb-label">Hinweis & Besonderheit</div><p>${esc(k.notiz)}</p></div>`:''}
+      ${k.notiz?`<div class="hinweisBox"><div class="hb-icon">⚠️</div><div class="hb-label">Hinweis & Besonderheit</div><p>${escNotiz(k.notiz)}</p></div>`:''}
       <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
         ${k.telefon?`<a href="tel:${k.telefon}" class="btn btnP btnSm">📞 Anrufen</a>`:''}
         ${k.email?`<a href="mailto:${k.email}" class="btn btnOut btnSm">✉️ E-Mail</a>`:''}
@@ -1172,7 +1181,7 @@ function kundeDetail(id){
             <span><span class="badge ${a.bezahlt?'bGrn':'bOrange'}">${a.bezahlt?'✓ Bezahlt':'Offen'}</span></span>
           </div>`).join('')}
       </div>`:''}
-      ${k.notiz?`<div class="detailSection"><h4>Notiz</h4><p style="font-size:.86rem;color:var(--text2);line-height:1.6">${esc(k.notiz)}</p></div>`:''}
+      ${k.notiz?`<div class="detailSection"><h4>Notiz</h4><p style="font-size:.86rem;color:var(--text2);line-height:1.6">${escNotiz(k.notiz)}</p></div>`:''}
     </div>`;
   document.getElementById('detailOverlay').style.display='block';
 }
@@ -2189,7 +2198,7 @@ function kundeAkteDetail(id){
       </div>
       ${k.strasse?`<p style="font-size:.84rem;color:var(--text2);margin-top:8px">📍 ${esc(k.strasse)}, ${esc(k.plz||'')} ${esc(k.ort||'')}</p>`:''}
     </div>
-    ${k.notiz?`<div class="akteSection"><div class="hinweisBox" style="margin:0"><div class="hb-icon">⚠️</div><div class="hb-label">Wichtiger Hinweis</div><p>${esc(k.notiz)}</p></div></div>`:''}
+    ${k.notiz?`<div class="akteSection"><div class="hinweisBox" style="margin:0"><div class="hb-icon">⚠️</div><div class="hb-label">Wichtiger Hinweis</div><p>${escNotiz(k.notiz)}</p></div></div>`:''}
     ${isAdmin()&&auftraege.length>0?`
     <div class="akteSection" style="background:#fdf5f5">
       <h4>💰 Finanzübersicht (nur Admin)</h4>
@@ -2242,8 +2251,97 @@ function kundeAkteDetail(id){
         <span class="badge bBlue">${t.ganztag?'Ganztag':(t.uhrzeit_von||'08:00')}</span>
       </div>`).join('')}
     </div>`:''}
-    ${k.notiz?`<div class="akteSection"><h4>Notiz</h4><p style="font-size:.86rem;color:var(--text2);line-height:1.6">${esc(k.notiz)}</p></div>`:''}`;
+    ${k.notiz?`<div class="akteSection"><h4>Notiz</h4><p style="font-size:.86rem;color:var(--text2);line-height:1.6">${escNotiz(k.notiz)}</p></div>`:''}`;
   document.getElementById('detailOverlay').style.display='block';
+}
+
+
+// ══ CSV IMPORT ══
+function csvImportOeffnen(){
+  modalOffen('📥 Kunden importieren',`
+    <div style="background:#eff6ff;border-radius:10px;padding:14px;margin-bottom:16px;border-left:4px solid #3b82f6">
+      <p style="font-weight:700;font-size:.87rem;color:#1e3a8a;margin-bottom:8px">📋 Möglichkeiten zum Import</p>
+      <p style="font-size:.82rem;color:#1e40af;line-height:1.8">
+        <strong>1. CSV hier importieren</strong> — Excel als CSV speichern, hier einfügen<br>
+        <strong>2. Text aus Excel kopieren</strong> — direkt in das Feld unten einfügen<br>
+        <strong>3. Supabase direkt</strong> — Table Editor → kunden → Import CSV (einfachster Weg!)
+      </p>
+    </div>
+    <div class="fRow">
+      <label>Spaltenreihenfolge (Komma oder Semikolon getrennt)</label>
+      <div style="background:#f9fafb;border-radius:8px;padding:10px;font-size:.74rem;font-family:monospace;color:var(--text2);margin-bottom:8px;line-height:1.6">
+        Nachname, Vorname, Firma, Straße, PLZ, Ort, Telefon, E-Mail
+      </div>
+    </div>
+    <div class="fRow">
+      <label>CSV-Datei hochladen</label>
+      <input type="file" id="csvDatei" accept=".csv,.txt" style="padding:6px" onchange="csvDateiLesen(this)">
+    </div>
+    <div class="fRow">
+      <label>Oder Text direkt einfügen / eingeben</label>
+      <textarea id="csvText" style="min-height:130px;font-family:monospace;font-size:.79rem"
+        placeholder="Müller,Hans,,Hauptstr. 1,7000,Eisenstadt,0664123456,hans@mail.at"></textarea>
+    </div>
+    <div id="csvVorschau"></div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btnOut btnSm" onclick="csvVorschau()">👁 Vorschau</button>
+      <button class="btn btnGrn" style="flex:1" onclick="csvImportStarten()">📥 Importieren</button>
+      <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
+    </div>
+    <div style="background:#fef9c3;border-radius:8px;padding:12px;margin-top:14px;font-size:.78rem;color:#713f12">
+      💡 <strong>Tipp:</strong> Der einfachste Weg ist direkt in Supabase:<br>
+      Table Editor → kunden → oben "Insert" → "Import data from CSV"
+    </div>`);
+}
+
+function csvDateiLesen(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{document.getElementById('csvText').value=e.target.result;csvVorschau();};
+  reader.readAsText(file,'UTF-8');
+}
+
+function csvVorschau(){
+  const text=(document.getElementById('csvText')?.value||'').trim();
+  const el=document.getElementById('csvVorschau');if(!el)return;
+  if(!text){el.innerHTML='';return;}
+  const zeilen=text.split('\n').filter(z=>z.trim());
+  const hatHeader=zeilen[0]?.toLowerCase().includes('nachname')||zeilen[0]?.toLowerCase().includes('name');
+  const daten=hatHeader?zeilen.slice(1):zeilen;
+  el.innerHTML=`<div style="background:#f0fdf4;border-radius:8px;padding:10px;border:1px solid #86efac;margin-bottom:10px">
+    <p style="font-size:.78rem;font-weight:700;color:#065f46">✅ ${daten.length} Kunde(n) werden importiert</p>
+    ${daten.slice(0,3).map(z=>`<p style="font-size:.74rem;color:var(--text2);margin-top:3px">${esc(z.substring(0,70))}</p>`).join('')}
+    ${daten.length>3?`<p style="font-size:.72rem;color:var(--text2)">... und ${daten.length-3} weitere</p>`:''}
+  </div>`;
+}
+
+async function csvImportStarten(){
+  const text=(document.getElementById('csvText')?.value||'').trim();
+  if(!text){toast('Bitte CSV eingeben','err');return;}
+  const zeilen=text.split('\n').filter(z=>z.trim());
+  const hatHeader=zeilen[0]?.toLowerCase().includes('nachname')||zeilen[0]?.toLowerCase().includes('name');
+  const daten=hatHeader?zeilen.slice(1):zeilen;
+  if(!daten.length){toast('Keine Daten gefunden','err');return;}
+  let ok=0,fehler=0;
+  toast('Importiere '+daten.length+' Kunden…');
+  for(const zeile of daten){
+    if(!zeile.trim())continue;
+    const sep=zeile.includes(';')?';':',';
+    const t=zeile.split(sep).map(x=>x.trim().replace(/^"|"$/g,''));
+    const [nachname='',vorname='',firma='',strasse='',plz='',ort='',telefon='',email='']=t;
+    if(!nachname){fehler++;continue;}
+    try{
+      await api('/kunden',{method:'POST',body:JSON.stringify({
+        nachname,vorname:vorname||null,firma:firma||null,
+        strasse:strasse||null,plz:plz||null,ort:ort||null,
+        telefon:telefon||null,email:email||null,aktiv:true,
+      })});
+      ok++;
+    }catch(e){fehler++;console.log('Import Fehler:',nachname,e.message);}
+    await new Promise(r=>setTimeout(r,100));
+  }
+  toast('✅ '+ok+' importiert'+(fehler>0?' · '+fehler+' Fehler':''));
+  modalZu();await laden();zeigeTab('kunden');
 }
 
 
@@ -2302,6 +2400,7 @@ function toast(msg,typ){
   setTimeout(()=>el.classList.remove('show'),3200);
 }
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function escNotiz(s){return esc(String(s||'').replace(/\[ANLAGEN:.*?\]/s,'').trim());}
 
 // TASTATUR
 document.addEventListener('keydown',e=>{
