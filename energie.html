@@ -947,21 +947,30 @@ function kvFormHTML(k){
       <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
     </div>`;
 }
-async function journalEintragErstellen(kunde){
-  // Erstellt automatisch einen offenen Journaleintrag für den neuen Kunden
+async function journalEintragErstellen(kunde, gespeicherterName){
+  // Nur aufrufen NACHDEM Kunde erfolgreich gespeichert wurde
   const heute = new Date().toISOString().split('T')[0];
-  const name = (kunde.vorname?kunde.vorname+' ':'')+kunde.nachname;
+  // Vollständiger Name des gespeicherten Kunden
+  const name = gespeicherterName || (
+    (kunde.anrede?kunde.anrede+' ':'') +
+    (kunde.vorname?kunde.vorname+' ':'') +
+    kunde.nachname +
+    (kunde.ort?' — '+kunde.ort:'')
+  );
   const eintrag = {
     datum: heute,
     kunde: name,
+    strasse: kunde.strasse||null,
     ort: kunde.ort||null,
-    arbeit: 'Neuer Kunde — Leistung noch offen',
+    arbeit: 'Auftrag offen — Preis nach Durchführung eintragen',
     bezahlt: false,
   };
   try {
     await api('/auftraege', {method:'POST', body:JSON.stringify(eintrag)});
+    return true;
   } catch(e) {
-    console.log('Journal-Auto-Eintrag fehlgeschlagen:', e.message);
+    console.log('Journal-Eintrag Fehler:', e.message);
+    return false;
   }
 }
 
@@ -998,12 +1007,19 @@ async function kvSpeichern(id){
       modalZu();await laden();
     } else {
       d.aktiv=true;
-      await api('/kunden',{method:'POST',body:JSON.stringify(d)});
-      // Automatisch Journaleintrag erstellen
-      await journalEintragErstellen(d);
-      toast('Kunde angelegt — Journaleintrag offen ✓');
-      modalZu();await laden();
-      // Direkt zum Journal mit Preis-Eingabe
+      // 1. Kunde speichern
+      const gespeichert = await api('/kunden',{method:'POST',body:JSON.stringify(d)});
+      // 2. Nur wenn erfolgreich → Journaleintrag erstellen
+      const vollName = (d.anrede?d.anrede+' ':'')+(d.vorname?d.vorname+' ':'')+d.nachname+(d.ort?' — '+d.ort:'');
+      const journalOk = await journalEintragErstellen(d, vollName);
+      if(journalOk){
+        toast('✓ Kunde "'+vollName+'" angelegt — Journaleintrag erstellt');
+      } else {
+        toast('✓ Kunde "'+vollName+'" angelegt');
+      }
+      modalZu();
+      await laden();
+      // Direkt zum Journal springen
       zeigeTab('journal');
     }
   }catch(e){
@@ -1125,8 +1141,8 @@ function jRender(){
     const monat=d?d.toLocaleDateString('de-AT',{month:'long',year:'numeric'}):'—';
     if(monat!==lM){if(lM)html+='</div>';html+=`<div style="font-size:.72rem;font-weight:700;color:var(--text2);text-transform:uppercase;padding:10px 2px 4px;letter-spacing:.4px">${monat}</div><div class="card">`;lM=monat;}
     const farbe=TYPEN[a.typ]?.c||'#7f5a5a';
-    const istAuto = !a.bezahlt && !a.preis && (a.arbeit||'').includes('Neuer Kunde');
-    html+=`<div class="listItem ${istAuto?'ampelOrange':''}" onclick="${isAdmin()&&!a.bezahlt&&!a.preis?`preisUndBezahlt('${a.id}','${esc(a.kunde||'')}')`:``}auftragDetail('${a.id}')" tabindex="0">
+    const istAuto = !a.bezahlt && !a.preis;
+    html+=`<div class="listItem ${istAuto&&isAdmin()?'ampelOrange':''}" onclick="${isAdmin()&&!a.bezahlt?`preisUndBezahlt('${a.id}','${esc(a.kunde||'')}')`:``}${!isAdmin()||a.bezahlt?`auftragDetail('${a.id}')`:''}" tabindex="0">
       <div class="listAvatar" style="background:${farbe}18;color:${farbe}">${(TYPEN[a.typ]?.l||'📋').split(' ')[0]}</div>
       <div class="listMain">
         <strong>${esc(a.kunde||'—')}</strong>
@@ -1134,7 +1150,7 @@ function jRender(){
       </div>
       <div class="listRight">
         ${isAdmin()&&a.preis?`<div style="font-weight:800;font-size:.9rem;color:var(--pri)">€${a.preis.toFixed(2)}</div>`:''}
-        ${isAdmin()&&!a.bezahlt&&!a.preis?`<span class="badge bOrange">💰 Preis eintragen</span>`:`<span class="badge ${a.bezahlt?'bGrn':'bOrange'}">${a.bezahlt?'✓':'Offen'}</span>`}
+        ${isAdmin()&&!a.bezahlt?`<span class="badge bOrange" style="cursor:pointer">💰 Preis eintragen</span>`:`<span class="badge ${a.bezahlt?'bGrn':'bOrange'}">${a.bezahlt?'✓ Bezahlt':'Offen'}</span>`}
       </div>
     </div>`;
   });
