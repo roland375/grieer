@@ -17545,15 +17545,66 @@ function ablageAddButtons() {
 
 // show() Override: Ablage-Buttons hinzufuegen wenn Seite geoeffnet
 var _ablageOrigShow = window.show;
-window.show = function(id) {
-  if (_ablageOrigShow) { try { _ablageOrigShow(id); } catch(e) {} }
-  // Ablage-Seite
-  if (id === 'ablage') {
-    ablageRender();
-  }
-  // Buttons hinzufuegen (verzoegert damit die Seite gerendert ist)
-  setTimeout(ablageAddButtons, 100);
-};
+  window.show = function(id){
+    // SICHERHEIT: Immer zuerst Login prüfen
+    if(!window._currentUser){
+      try{
+        var raw = sessionStorage.getItem('grieer-current-user');
+        if(raw){ window._currentUser = JSON.parse(raw); }
+      }catch(e){}
+    }
+    
+    // Nicht eingeloggt → Login zeigen, STOP
+    if(!window._currentUser){
+      document.querySelectorAll('.pg').forEach(function(p){
+        p.classList.remove('active');
+        p.style.display = 'none';
+      });
+      // Overlay wiederherstellen falls entfernt
+      var ovs = document.querySelectorAll('[id="pin-overlay"]');
+      if(ovs.length > 0){
+        ovs.forEach(function(ov){ ov.style.display='flex'; ov.style.visibility='visible'; });
+      } else {
+        // Neu erstellen
+        var div = document.createElement('div');
+        div.id = 'pin-overlay';
+        div.setAttribute('style', 'display:flex;position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#0F172A,#1A2B45);z-index:99999;align-items:center;justify-content:center;flex-direction:column;padding:20px;box-sizing:border-box');
+        div.innerHTML = [
+          '<div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:32px 24px;width:100%;max-width:360px;text-align:center">',
+          '<div style="font-size:48px;margin-bottom:8px">&#128272;</div>',
+          '<div style="font-size:22px;font-weight:800;color:#fff;margin-bottom:24px">Grieer App</div>',
+          '<input type="text" id="pin-word-input" placeholder="Zugangscode" autocomplete="off" ',
+          'style="width:100%;padding:14px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);color:#fff;font-size:16px;box-sizing:border-box;margin-bottom:12px;text-align:center" ',
+          'onkeydown="if(event.key===\'Enter\')pinWordSubmit()">',
+          '<button onclick="pinWordSubmit()" style="width:100%;padding:14px;background:linear-gradient(135deg,#1E5799,#2563EB);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer">Einloggen</button>',
+          '<div id="pin-err" style="color:#FCA5A5;font-size:12px;margin-top:10px;min-height:18px"></div>',
+          '<div style="font-size:10px;color:#475569;margin-top:16px">Zugangscode: <b>roland</b></div>',
+          '</div>'
+        ].join('');
+        document.body.appendChild(div);
+      }
+      return;
+    }
+    
+    // Eingeloggt: Seiten umschalten
+    document.querySelectorAll('.pg').forEach(function(p){ 
+      p.classList.remove('active');
+      p.style.display = '';
+    });
+    
+    if(_ablageOrigShow){
+      try{ _ablageOrigShow(id); return; }catch(e){}
+    }
+    
+    // Fallback
+    var pg = document.getElementById('page-' + id);
+    if(pg){ pg.classList.add('active'); try{ pg.scrollTop=0; }catch(e){} }
+    var navCur = document.getElementById('nav-current');
+    if(navCur) navCur.textContent = id;
+    
+    if(id==='ablage') setTimeout(function(){ try{ablageRender();}catch(e){} },100);
+    setTimeout(function(){ try{ablageAddButtons();}catch(e){} },100);
+  };
 
 // ============================================================
 // ADMIN ROLLE ZUWEISEN - Erweiterung der Benutzerverwaltung
