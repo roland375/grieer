@@ -5,7 +5,7 @@
 // === GRIEER CACHE-KILLER v2026-05-25-KI ===
 (function(){
   try {
-    var CURRENT_VER = "v2026-05-25-KI";
+    var CURRENT_VER = "v2026-06-01-PROT";
     var lastVer = null;
     try { lastVer = localStorage.getItem('__grieer_app_ver__'); } catch(e){}
     if('serviceWorker' in navigator){
@@ -24,6 +24,8 @@
     }
   } catch(e){}
 })();
+
+
 </script>
 >
 
@@ -5837,7 +5839,7 @@ body {
 </div>
 </div></div>
 
-<script>
+<scrip
 // ══════════════════════════════════════════════════════════════════════════
 //  GRIEER USER MANAGEMENT — Benutzer & Berechtigungen
 // ══════════════════════════════════════════════════════════════════════════
@@ -6175,6 +6177,266 @@ function adminSaveAdminCode(){
   var h2 = document.getElementById('set-pw2-hint');
   if(h1) h1.textContent = code1 ? 'Aktuell: gesetzt ✓' : 'Aktuell: Standard';
   if(h2) h2.textContent = code2 ? 'Aktuell: gesetzt ✓' : 'Aktuell: leer';
+}
+
+
+
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════
+//  GRIEER USER MANAGEMENT — Benutzer & Berechtigungen
+// ══════════════════════════════════════════════════════════════════════════
+
+var ALL_PAGES = [
+  {id:'aufnahme', label:'🏠 Startseite / Aufnahme',     cat:'Protokolle'},
+  {id:'auftrag',  label:'📋 Auftragsprotokoll',          cat:'Protokolle'},
+  {id:'mess',     label:'📊 Messprotokoll (§32 HK-VO)',  cat:'Protokolle'},
+  {id:'luft2',    label:'💨 Luftmessung (ÖVGW G K62)',   cat:'Protokolle'},
+  {id:'b8201',    label:'🏠 B 8201 Fangprüfung',         cat:'Protokolle'},
+  {id:'maengel',  label:'⚠️ Mängelmeldung',              cat:'Protokolle'},
+  {id:'pvprot',   label:'☀️ PV-Protokoll (ohne Preise)', cat:'Protokolle'},
+  {id:'brandprot',label:'🛡️ Brandschutz-Protokoll',      cat:'Protokolle'},
+  {id:'kehr',     label:'🏠 Kehrtarif KV',               cat:'Kostenvoranschläge'},
+  {id:'gas',      label:'🔥 Gas-Service KV',             cat:'Kostenvoranschläge'},
+  {id:'pv',       label:'☀️ PV-Reinigung KV',            cat:'Kostenvoranschläge'},
+  {id:'brand',    label:'🛡️ Brandschutz KV',             cat:'Kostenvoranschläge'},
+  {id:'luft',     label:'💨 Lüftung KV',                 cat:'Kostenvoranschläge'},
+  {id:'kamin',    label:'🚪 Kamintürl KV',               cat:'Kostenvoranschläge'},
+  {id:'gesamt',   label:'📊 Gesamt-KV',                  cat:'Kostenvoranschläge'},
+  {id:'wprot',    label:'📝 Wartungsprotokoll Gas',       cat:'Kostenvoranschläge'},
+  {id:'verr',     label:'💶 Preisliste / Verrechnung',   cat:'Kostenvoranschläge'},
+  {id:'wart',     label:'🔔 Wartungserinnerung',         cat:'Kostenvoranschläge'},
+  {id:'ki',       label:'🧠 KI-Berater',                 cat:'Tools'},
+];
+
+var _currentUser = null;
+
+function _loadUsers(){
+  try {
+    var raw = localStorage.getItem('grieer-users');
+    if(raw){
+      var users = JSON.parse(raw);
+      var admin = users.find(function(u){ return u.role==='admin'; });
+      if(admin){
+        var adminCodes = Array.isArray(admin.code) ? admin.code : [admin.code];
+        var pwCodes = _pinWords && _pinWords.length ? _pinWords : [];
+        pwCodes.forEach(function(c){ if(c && adminCodes.indexOf(c)<0) adminCodes.push(c); });
+        admin.code = adminCodes;
+      }
+      return users;
+    }
+  } catch(e){}
+  var savedPw = [];
+  try { var sp=localStorage.getItem('grieer-passwords'); if(sp) savedPw=JSON.parse(sp); } catch(e){}
+  var defCodes = savedPw.length ? savedPw : (_pinWords&&_pinWords.length?_pinWords:['roland','grieer']);
+  return [{id:'admin',name:'Admin (Roland)',code:defCodes,role:'admin',pages:'*'}];
+}
+
+function _saveUsers(users){
+  try { localStorage.setItem('grieer-users', JSON.stringify(users)); } catch(e){}
+}
+
+function _userCanAccess(pageId){
+  if(!_currentUser) return false;
+  if(_currentUser.role === 'admin') return true;
+  if(_currentUser.pages === '*') return true;
+  return Array.isArray(_currentUser.pages) && _currentUser.pages.indexOf(pageId) >= 0;
+}
+
+function _loginWithCode(code){
+  var users = _loadUsers();
+  var code_clean = (code||'').trim().toLowerCase();
+  for(var i=0;i<users.length;i++){
+    var u = users[i];
+    if(u.role === 'admin'){
+      var adminCodes = Array.isArray(u.code) ? u.code.slice() : [u.code];
+      if(_pinWords) adminCodes = adminCodes.concat(_pinWords);
+      try { var sp=localStorage.getItem('grieer-passwords'); if(sp) adminCodes=adminCodes.concat(JSON.parse(sp)); } catch(e){}
+      var adminCodesNorm = adminCodes.map(function(c){return (c||'').trim().toLowerCase();}).filter(Boolean);
+      if(adminCodesNorm.indexOf(code_clean) >= 0){
+        _currentUser = u;
+        sessionStorage.setItem('grieer-current-user', JSON.stringify(u));
+        sessionStorage.setItem('grieer-unlocked','1');
+        if(!localStorage.getItem('grieer-users')){ _saveUsers(users); }
+        return u;
+      }
+    } else {
+      if((u.code||'').trim().toLowerCase() === code_clean){
+        _currentUser = u;
+        sessionStorage.setItem('grieer-current-user', JSON.stringify(u));
+        sessionStorage.setItem('grieer-unlocked','1');
+        return u;
+      }
+    }
+  }
+  return null;
+}
+
+function _restoreSession(){
+  try {
+    var raw = sessionStorage.getItem('grieer-current-user');
+    if(raw){ _currentUser = JSON.parse(raw); return true; }
+  } catch(e){}
+  return false;
+}
+
+function _logout(){
+  _currentUser = null;
+  sessionStorage.removeItem('grieer-current-user');
+  sessionStorage.removeItem('grieer-unlocked');
+  sessionStorage.removeItem('grieer-pending-tab');
+  _updateNavUser();
+  var ov = document.getElementById('pin-overlay');
+  if(ov){ ov.classList.remove('hidden'); ov.style.display = ''; }
+}
+
+function _updateNavUser(){
+  var badge = document.getElementById('nav-user-badge');
+  if(!badge) return;
+  if(_currentUser){
+    badge.textContent = _currentUser.name.split(' ')[0].split('(')[0].trim();
+    badge.title = 'Eingeloggt als: ' + _currentUser.name;
+    badge.style.display = 'flex';
+  } else {
+    badge.style.display = 'none';
+  }
+  var settBtn = document.querySelector('button[onclick="showSettings()"]') || document.getElementById('nav-settings');
+  if(settBtn){ settBtn.style.display = (_currentUser && _currentUser.role === 'admin') ? '' : 'none'; }
+}
+
+function _filterHomeTiles(){
+  if(!_currentUser) return;
+  document.querySelectorAll('button[onclick*="show("]').forEach(function(btn){
+    var onclick = btn.getAttribute('onclick') || '';
+    var m = onclick.match(/show\(['"](\w+)['"]\)/);
+    if(!m) return;
+    btn.style.display = _userCanAccess(m[1]) ? '' : 'none';
+  });
+}
+
+function _buildLoginUserList(){
+  var sel = document.getElementById('login-user-select');
+  if(!sel) return;
+  var users = _loadUsers();
+  sel.innerHTML = '';
+  users.forEach(function(u){
+    var opt = document.createElement('option');
+    opt.value = u.id;
+    opt.textContent = (u.role==='admin'?'👑 ':'👤 ') + u.name;
+    sel.appendChild(opt);
+  });
+}
+
+function adminShowUsers(){
+  var users = _loadUsers();
+  var container = document.getElementById('admin-users-list');
+  if(!container) return;
+  var html2 = '';
+  users.forEach(function(u, idx){
+    var isAdmin = u.role === 'admin';
+    var pageCount = u.pages === '*' ? 'Alle' : (Array.isArray(u.pages) ? u.pages.length : 0);
+    var codeDisplay = isAdmin ? (Array.isArray(u.code) ? u.code.join(' / ') : (u.code||'roland/grieer')) : u.code;
+    html2 += '<div style="display:flex;align-items:center;gap:8px;padding:10px;background:'+(isAdmin?'#EDE7F6':'#F0F9FF')+';border-radius:8px;border:1.5px solid '+(isAdmin?'#B39DDB':'#93C5FD')+';margin-bottom:8px"><div style="flex:1">';
+    html2 += '<div style="font-size:13px;font-weight:700;color:#1A2B45">'+(isAdmin?'👑 ':'👤 ')+u.name+'</div>';
+    html2 += '<div style="font-size:10px;color:#64748B;margin-top:2px">Code: '+codeDisplay+' · Seiten: '+pageCount+'</div></div>';
+    if(!isAdmin){
+      html2 += '<button onclick="adminEditUser('+idx+')" style="background:#1A2B45;color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;min-height:32px">✏️ Edit</button>';
+      html2 += '<button onclick="adminDeleteUser('+idx+')" style="background:#DC2626;color:#fff;border:none;border-radius:6px;padding:5px 8px;font-size:11px;cursor:pointer;min-height:32px">🗑️</button>';
+    }
+    html2 += '</div>';
+  });
+  container.innerHTML = html2;
+}
+
+function adminNewUser(){ _adminOpenUserForm(null, null); }
+
+function adminEditUser(idx){
+  var users = _loadUsers();
+  if(users[idx]) _adminOpenUserForm(users[idx], idx);
+}
+
+function adminDeleteUser(idx){
+  var users = _loadUsers();
+  if(!confirm('Benutzer "'+users[idx].name+'" wirklich löschen?')) return;
+  users.splice(idx, 1);
+  _saveUsers(users);
+  adminShowUsers();
+  _grieerToast('✓ Benutzer gelöscht', '#DC2626', 2000);
+}
+
+function _adminOpenUserForm(user, idx){
+  var overlay = document.getElementById('admin-user-form-overlay');
+  if(!overlay) return;
+  var isEdit = (user !== null && idx !== null);
+  var pages = isEdit ? (user.pages || []) : [];
+  var cats = {};
+  ALL_PAGES.forEach(function(p){ if(!cats[p.cat]) cats[p.cat]=[]; cats[p.cat].push(p); });
+  var pageChecks = '';
+  Object.keys(cats).forEach(function(cat){
+    pageChecks += '<div style="font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;margin:8px 0 4px">'+cat+'</div>';
+    cats[cat].forEach(function(p){
+      var checked = Array.isArray(pages) && pages.indexOf(p.id)>=0;
+      pageChecks += '<label style="display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:5px;cursor:pointer;font-size:12px;margin-bottom:2px"><input type="checkbox" id="uperm-'+p.id+'" value="'+p.id+'" '+(checked?'checked':'')+' style="width:16px;height:16px">'+p.label+'</label>';
+    });
+  });
+  document.getElementById('admin-form-title').textContent = isEdit ? '✏️ Benutzer bearbeiten' : '➕ Neuer Benutzer';
+  document.getElementById('admin-form-name').value = isEdit ? user.name : '';
+  document.getElementById('admin-form-code').value = isEdit ? user.code : '';
+  document.getElementById('admin-form-pages').innerHTML = pageChecks;
+  document.getElementById('admin-form-idx').value = isEdit ? idx : '';
+  document.getElementById('admin-perm-all').onclick = function(){ document.querySelectorAll('#admin-form-pages input[type=checkbox]').forEach(function(cb){cb.checked=true;}); };
+  document.getElementById('admin-perm-none').onclick = function(){ document.querySelectorAll('#admin-form-pages input[type=checkbox]').forEach(function(cb){cb.checked=false;}); };
+  overlay.style.display = 'flex';
+}
+
+function adminSaveUser(){
+  var name = (document.getElementById('admin-form-name').value||'').trim();
+  var code = (document.getElementById('admin-form-code').value||'').trim();
+  var idxStr = document.getElementById('admin-form-idx').value;
+  if(!name){ _grieerToast('Name erforderlich!','#DC2626',2000); return; }
+  if(!code){ _grieerToast('Zugangscode erforderlich!','#DC2626',2000); return; }
+  if(code.length < 3){ _grieerToast('Code mind. 3 Zeichen!','#F59E0B',2000); return; }
+  var pages = [];
+  document.querySelectorAll('#admin-form-pages input[type=checkbox]:checked').forEach(function(cb){ pages.push(cb.value); });
+  var users = _loadUsers();
+  var editIdx = idxStr !== '' ? parseInt(idxStr) : -1;
+  for(var i=0;i<users.length;i++){
+    if(i===editIdx) continue;
+    var uCode = Array.isArray(users[i].code) ? users[i].code.join('|') : users[i].code;
+    if(uCode.toLowerCase()===code.toLowerCase()){ _grieerToast('Code bereits vergeben!','#DC2626',2500); return; }
+  }
+  var newUser = {id:editIdx>=0?users[editIdx].id:'u_'+Date.now(), name:name, code:code, role:'user', pages:pages};
+  if(editIdx>=0){ users[editIdx]=newUser; } else { users.push(newUser); }
+  _saveUsers(users);
+  document.getElementById('admin-user-form-overlay').style.display = 'none';
+  adminShowUsers();
+  _grieerToast('✓ Benutzer gespeichert','#16A34A',2000);
+}
+
+function adminCloseForm(){
+  var ov = document.getElementById('admin-user-form-overlay');
+  if(ov) ov.style.display = 'none';
+}
+
+function adminSaveAdminCode(){
+  var code1 = (document.getElementById('set-pw1-new')?.value||'').trim();
+  var code2 = (document.getElementById('set-pw2-new')?.value||'').trim();
+  var users = _loadUsers();
+  var adminUser = users.find(function(u){ return u.role==='admin'; });
+  if(!adminUser) return;
+  var codes = [];
+  if(code1) codes.push(code1);
+  if(code2) codes.push(code2);
+  if(codes.length===0){ _grieerToast('Mind. 1 Code eingeben!','#F59E0B',2000); return; }
+  adminUser.code = codes.length===1 ? codes[0] : codes;
+  _pinWords = codes;
+  localStorage.setItem('grieer-passwords', JSON.stringify(codes));
+  _saveUsers(users);
+  if(document.getElementById('set-pw1-new')) document.getElementById('set-pw1-new').value='';
+  if(document.getElementById('set-pw2-new')) document.getElementById('set-pw2-new').value='';
+  _grieerToast('✓ Admin-Code gespeichert','#16A34A',2000);
+  var h1=document.getElementById('set-pw1-hint'); if(h1) h1.textContent=code1?'Aktuell: gesetzt ✓':'Aktuell: Standard';
+  var h2=document.getElementById('set-pw2-hint'); if(h2) h2.textContent=code2?'Aktuell: gesetzt ✓':'Aktuell: leer';
 }
 
 
@@ -10326,6 +10588,28 @@ var _pinWords = (function(){
 })();
 var _pendingTab = null;
 var _pinProtectedTabs = ['pv','gas','luft','brand','kamin','kehr','gesamt','verr'];
+
+
+function forceAppReload(){
+  _grieerToast('🔄 Lade App neu...', '#0891B2', 2000);
+  setTimeout(function(){
+    if('serviceWorker' in navigator){
+      navigator.serviceWorker.getRegistrations().then(function(regs){
+        regs.forEach(function(r){ r.unregister(); });
+        if('caches' in window){
+          caches.keys().then(function(names){
+            names.forEach(function(n){ caches.delete(n); });
+            setTimeout(function(){ window.location.reload(true); }, 300);
+          });
+        } else {
+          window.location.reload(true);
+        }
+      });
+    } else {
+      window.location.reload(true);
+    }
+  }, 500);
+}
 
 function pinInit(){
   var ov = document.getElementById('pin-overlay');
@@ -16976,7 +17260,7 @@ function buildWartHtml(){
 </script>
 
 
-<div id="grieer-version-badge" style="position:fixed;bottom:4px;right:8px;font-size:9px;color:#90A4AE;background:rgba(255,255,255,0.85);padding:2px 6px;border-radius:8px;z-index:50;pointer-events:none;font-family:monospace">App v2026-05-25-KI</div>
+<div id="grieer-version-badge" style="position:fixed;bottom:4px;right:8px;font-size:9px;color:#90A4AE;background:rgba(255,255,255,0.85);padding:2px 6px;border-radius:8px;z-index:50;pointer-events:none;font-family:monospace">App v2026-06-01-PROT</div>
 
 <div id="settings-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.65);z-index:99998;align-items:center;justify-content:center">
   <div style="background:#fff;border-radius:14px;padding:20px;width:min(92vw,380px);max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.4)">
@@ -17007,14 +17291,14 @@ function buildWartHtml(){
       </div>
       <button onclick="savePasswords()" style="width:100%;background:#1A2B45;color:#fff;border:none;border-radius:8px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:48px">💾 Passwörter speichern</button>
     </div>
-    <div style="font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">🔐 Sitzung</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
-      <button onclick="sessionStorage.setItem('grieer-unlocked','1'); document.getElementById('settings-overlay').style.display='none'; show('aufnahme');" style="background:#059669;color:#fff;border:none;border-radius:8px;padding:11px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:46px">🔓 Entsperren</button>
-      <button onclick="sessionStorage.removeItem('grieer-unlocked'); document.getElementById('settings-overlay').style.display='none'; var ov=document.getElementById('pin-overlay'); if(ov){ov.classList.remove('hidden');ov.style.display='';}" style="background:#DC2626;color:#fff;border:none;border-radius:8px;padding:11px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:46px">🔒 Sperren</button>
-    </div>
-    
-    <div id="settings-msg" style="display:none;padding:10px;border-radius:7px;font-size:12px;font-weight:600;text-align:center"></div>
-  </div>
+    <div style="font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">🔐 Sitzung &amp; Zugang</div>
+      <div style="background:#FFF7ED;border:1px solid #FED7AA;border-radius:10px;padding:14px;margin-bottom:14px">
+        <div id="sitzung-info" style="font-size:12px;color:#92400E;margin-bottom:10px;font-weight:600">Eingeloggt als: —</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <button onclick="_logout(); document.getElementById('settings-overlay').style.display='none';" style="background:#DC2626;color:#fff;border:none;border-radius:8px;padding:11px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:44px">🔒 Abmelden</button>
+          <button onclick="forceAppReload()" style="background:#0891B2;color:#fff;border:none;border-radius:8px;padding:11px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:44px">🔄 App neu laden</button>
+        </div>
+      </div>
 </div>
 
 
