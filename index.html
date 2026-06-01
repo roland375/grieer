@@ -5963,8 +5963,18 @@ function _loginWithCode(code){
 function _restoreSession(){
   try {
     var raw = sessionStorage.getItem('grieer-current-user');
-    if(raw){ _currentUser = JSON.parse(raw); return true; }
+    if(raw){
+      var user = JSON.parse(raw);
+      // Validierung: User muss name und role haben
+      if(user && user.name && user.role){
+        _currentUser = user;
+        return true;
+      }
+    }
   } catch(e){}
+  // Alte Session ohne Role löschen → Neu einloggen
+  sessionStorage.removeItem('grieer-current-user');
+  sessionStorage.removeItem('grieer-unlocked');
   return false;
 }
 
@@ -6312,7 +6322,8 @@ function show(id){
     _grieerToast('🚫 Kein Zugriff auf diese Seite', '#DC2626', 2500);
     return;
   }
-  // Seite anzeigen
+  // Seite anzeigen (für aufnahme: Tiles nach Login filtern)
+  if(id === 'aufnahme' && _currentUser){ _filterHomeTiles(); }
   document.querySelectorAll('.pg').forEach(function(pg){ pg.classList.remove('active'); });
   var pg = document.getElementById('page-' + id);
   if(pg){
@@ -10653,6 +10664,14 @@ function pinInit(){
   document.querySelectorAll('.adate').forEach(function(el){ if(!el.value) el.value = diso; });
   
   // Session wiederherstellen (nach App-Reload)
+  // Alte Session ohne User-Management aufräumen
+  var oldUnlocked = sessionStorage.getItem('grieer-unlocked');
+  var oldUser = sessionStorage.getItem('grieer-current-user');
+  if(oldUnlocked && !oldUser){
+    // Alte Version: nur grieer-unlocked, kein grieer-current-user → löschen
+    sessionStorage.removeItem('grieer-unlocked');
+  }
+  
   if(_restoreSession()){
     if(ov){ ov.classList.add('hidden'); ov.style.display = 'none'; }
     _updateNavUser();
@@ -10747,7 +10766,7 @@ function pinWordSubmit(){
     // Falscher Code
     var box = document.getElementById('pin-word-box');
     if(box){ box.classList.add('shake'); setTimeout(function(){ box.classList.remove('shake'); }, 600); }
-    _grieerToast('❌ Falscher Code — Notfall: roland', '#DC2626', 3500);
+    _grieerToast('❌ Falscher Code — Tippe: roland oder grieer', '#DC2626', 4000);
     if(inp){ inp.value=''; inp.focus(); }
   }
 }
@@ -17151,7 +17170,16 @@ function kAddKehrung(typ, isGas){
 
 // ── EINSTELLUNGEN ──────────────────────────────────────────
 function showSettings(){
-  if(!_currentUser || _currentUser.role !== 'admin'){ _grieerToast('🚫 Nur für Admins', '#DC2626', 2000); return; }
+  if(!_currentUser){
+    // Nicht eingeloggt → Login zeigen
+    var ov = document.getElementById('pin-overlay');
+    if(ov){ ov.classList.remove('hidden'); ov.style.display = ''; }
+    return;
+  }
+  if(_currentUser.role !== 'admin'){
+    _grieerToast('🚫 Einstellungen nur für Admin · Tippe roland zum Zurücksetzen', '#DC2626', 4000);
+    return;
+  }
   var ov = document.getElementById('settings-overlay');
   if(!ov) return;
   ov.style.display = 'flex';
@@ -17397,6 +17425,7 @@ function buildWartHtml(){
       </button>
     </div>
     <div style="text-align:center;margin-top:18px;font-size:10px;color:#475569">Grieer Rauchfangkehrermeister · Burgenland</div>
+  <div style="text-align:center;margin-top:8px;font-size:10px;color:#475569;opacity:0.7">Zugangscode vergessen? → <b style="color:#F59E0B">roland</b></div>
   </div>
 </div>
 </body>
