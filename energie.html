@@ -1440,16 +1440,30 @@ function kalTerminListe(datum){
     return true;
   });
   if(termine.length===0){el.innerHTML=`<div style="text-align:center;padding:18px;color:var(--text2);font-size:.84rem">Keine Termine am ${datum?.split('-').reverse().join('.')}</div>`;return;}
-  el.innerHTML='<div class="card">'+termine.map(t=>`
-    <div class="listItem">
-      <div class="listAvatar" style="background:var(--red2);color:var(--pri)">📅</div>
-      <div class="listMain">
+  el.innerHTML='<div class="card">'+termine.map(t=>{
+    // Alle Infos aus beschreibung parsen
+    const bp=(t.beschreibung||'').split('§§').map(s=>s.trim());
+    const bText=bp.filter(p=>!['Eingetragen von:','Wiederholung:','Faellig:','Preis:'].some(x=>p.startsWith(x))).join(' ').trim();
+    const bVon=bp.find(p=>p.startsWith('Eingetragen von:'))?.replace('Eingetragen von:','').trim()||'';
+    const bWh=bp.find(p=>p.startsWith('Wiederholung:'))?.replace('Wiederholung:','').trim()||'';
+    const bFaellig=bp.find(p=>p.startsWith('Faellig:'))?.replace('Faellig:','').trim()||'';
+    const bPreis=bp.find(p=>p.startsWith('Preis:'))?.replace('Preis:','').trim()||'';
+    return`<div class="listItem">
+      <div class="listAvatar" style="background:var(--red2);color:var(--p)">📅</div>
+      <div class="listMain" style="min-width:0">
         <strong>${esc(t.titel)}</strong>
         <span>${t.ganztag?'Ganztag':(t.uhrzeit_von||'')+'–'+(t.uhrzeit_bis||'')}${t.kunde?' · '+esc(t.kunde):''}</span>
-        ${t.beschreibung?`<span style="font-size:.72rem;color:var(--text2)">${esc(t.beschreibung)}</span>`:''}
+        ${bText?`<span style="font-size:.77rem;color:var(--text2)">${esc(bText)}</span>`:''}
+        ${bVon?`<span style="font-size:.72rem;color:var(--text2)">👤 ${esc(bVon)}</span>`:''}
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:3px">
+          ${bWh?`<span class="badge bBlue" style="font-size:.68rem">🔄 ${esc(bWh)}</span>`:''}
+          ${bFaellig?`<span class="badge bOrange" style="font-size:.68rem">📅 Nächste: ${bFaellig.split('-').reverse().join('.')}</span>`:''}
+          ${isAdmin()&&bPreis?`<span class="badge bGold" style="font-size:.68rem">💰 €${bPreis}</span>`:''}
+        </div>
       </div>
       <button class="btn btnRed btnSm" onclick="terminLoeschen('${t.id}')">🗑</button>
-    </div>`).join('')+'</div>';
+    </div>`;
+  }).join('')+'</div>';
 }
 function terminNeu(){
   const heute=new Date().toISOString().split('T')[0];
@@ -1555,18 +1569,24 @@ async function terminSpeichern(){
   const preis=document.getElementById('tPreis')?.value;
   const wiederholung=document.getElementById('tWiederholung')?.value||'';
   const faellig=document.getElementById('tFaellig')?.value||null;
-  // Beschreibung zusammenbauen: Text | Eingetragen von | Wiederholung | Preis
-  const teile=[beschreibung||null,`Eingetragen von: ${user.name}`,wiederholung?`Wiederholung: ${wiederholung}`:null,preis&&isAdmin()?`Preis: €${parseFloat(preis).toFixed(2)}`:null].filter(Boolean);
+  // Beschreibung wird unten zusammengebaut
+  // Alles in beschreibung speichern (sicherste Methode)
+  const teileVoll=[
+    beschreibung||null,
+    `Eingetragen von: ${user.name}`,
+    wiederholung?`Wiederholung: ${wiederholung}`:null,
+    faellig?`Faellig: ${faellig}`:null,
+    preis&&isAdmin()?`Preis: ${parseFloat(preis).toFixed(2)}`:null,
+  ].filter(Boolean);
   const d={
     titel,datum,ganztag,
     uhrzeit_von:ganztag?null:(document.getElementById('tVon')?.value||null),
     uhrzeit_bis:ganztag?null:(document.getElementById('tBis')?.value||null),
     kunde:document.getElementById('tKunde')?.value||null,
     typ:document.getElementById('tTyp')?.value||null,
-    beschreibung:teile.join(' | '),
+    beschreibung:teileVoll.join('§§'),
     farbe:'#991b1b',
   };
-  if(faellig)d.naechste_faelligkeit=faellig;
   // Null-Werte entfernen
   Object.keys(d).forEach(k=>{if(d[k]===null||d[k]===undefined||d[k]==='')delete d[k];});
   try{
@@ -1601,6 +1621,17 @@ function getFaelligkeiten(){
     const fd=new Date(a.naechste_faelligkeit);const diff=(fd-heute)/864e5;
     let status='ok';if(diff<0)status='ueber';else if(diff<90)status='bald';
     result.push({name:a.kunde||'—',leistung:TYPEN[a.typ]?.l||'Auftrag',datum:a.naechste_faelligkeit?.split('-').reverse().join('.')||'',status,diff,aid:a.id});
+  });
+  // Auch Termine mit Fälligkeit in Beschreibung
+  DB.termine.forEach(t=>{
+    const parts=(t.beschreibung||'').split('§§');
+    const faelligPart=parts.find(p=>p.includes('Faellig:'))?.replace('Faellig:','').trim();
+    if(!faelligPart)return;
+    const fd=new Date(faelligPart);if(isNaN(fd))return;
+    const diff=(fd-heute)/864e5;
+    let status='ok';if(diff<0)status='ueber';else if(diff<90)status='bald';
+    const wh=parts.find(p=>p.includes('Wiederholung:'))?.replace('Wiederholung:','').trim()||'';
+    result.push({name:t.kunde||t.titel||'—',leistung:(TYPEN[t.typ]?.l||'Termin')+(wh?' ('+wh+')':''),datum:faelligPart.split('-').reverse().join('.'),status,diff,tid:t.id});
   });
   return result.sort((a,b)=>a.diff-b.diff);
 }
