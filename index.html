@@ -902,6 +902,16 @@ body {
   }
 }
 
+/* ── LOGIN & USER MANAGEMENT ── */
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  20%,60%{transform:translateX(-8px)}
+  40%,80%{transform:translateX(8px)}
+}
+.shake{animation:shake .4s ease;}
+#pin-word-input::placeholder{color:rgba(255,255,255,0.35);letter-spacing:1px}
+#pin-word-input:focus{border-color:rgba(255,200,50,0.6)!important;box-shadow:0 0 0 3px rgba(245,158,11,0.2)}
+#nav-user-badge:hover{background:rgba(239,68,68,0.3)!important}
 </style>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -1176,6 +1186,8 @@ body {
   <button id="nav-maengel" onclick="show('maengel')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;border-radius:6px;padding:6px 8px;font-size:15px;min-height:36px;min-width:36px;cursor:pointer;touch-action:manipulation">⚠️</button>
   <button id="nav-ki" onclick="show('ki')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;border-radius:6px;padding:6px 8px;font-size:15px;min-height:36px;min-width:36px;cursor:pointer;touch-action:manipulation">🧠</button>
   <button id="nav-settings" onclick="showSettings()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;border-radius:6px;padding:6px 8px;font-size:15px;min-height:36px;min-width:36px;cursor:pointer;touch-action:manipulation" title="Einstellungen">⚙️</button>
+
+  <div id="nav-user-badge" title="Eingeloggt" onclick="if(_currentUser&&_currentUser.role!='admin') { if(confirm('Abmelden?')) _logout(); }" style="display:none;align-items:center;gap:4px;background:rgba(255,255,255,0.12);border-radius:6px;padding:4px 8px;font-size:10px;font-weight:600;color:#E2E8F0;cursor:pointer;max-width:70px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;flex-shrink:0" title="Tippen zum Abmelden"></div>
 </nav>
 
 
@@ -2473,37 +2485,7 @@ body {
 
 
 
-<div class="pin-overlay hidden" id="pin-overlay">
-  <div style="font-size:38px;margin-bottom:8px">🔐</div>
-  <div style="font-size:17px;font-weight:800;color:#fff;margin-bottom:3px">Grieer App</div>
-  <div style="font-size:12px;color:#B0BEC5;margin-bottom:18px">Passwort eingeben</div>
-  <input type="password" id="pin-word-input"
-    placeholder="Passwort..." autocomplete="current-password"
-    style="width:200px;padding:12px 16px;border-radius:10px;border:2px solid #455A64;
-    background:#37474F;color:#fff;font-size:16px;text-align:center;outline:none;
-    margin:0 auto 6px;display:block"
-    oninput="pinWordCheck(this.value)"
-    onkeydown="if(event.key==='Enter'){pinWordSubmit();}">
-  <div id="pin-word-error"
-    style="color:#EF9A9A;font-size:11px;min-height:16px;margin-bottom:10px;text-align:center">
-  </div>
-  <button onclick="pinWordSubmit()"
-    style="background:#27AE60;color:#fff;border:none;border-radius:10px;
-    padding:12px 0;font-size:15px;font-weight:700;cursor:pointer;
-    width:200px;display:block;margin:0 auto 10px;touch-action:manipulation">
-    ✓ Öffnen
-  </button>
-  <button onclick="document.getElementById('pin-overlay').classList.add('hidden')"
-    style="background:transparent;border:1px solid #546E7A;color:#90A4AE;
-    border-radius:8px;padding:7px 20px;font-size:12px;cursor:pointer;
-    display:block;margin:0 auto 14px">
-    Abbrechen
-  </button>
-  <div style="font-size:10px;color:#546E7A">
-    Passwort: <b style="color:#78909C">roland</b> oder <b style="color:#78909C">grieer</b>
-  </div>
 
-</div>
 
 
 
@@ -3034,36 +3016,7 @@ body {
 
 
 
-<div class="pin-overlay hidden" id="pin-overlay">
-  <div style="font-size:38px;margin-bottom:8px">🔐</div>
-  <div style="font-size:17px;font-weight:800;color:#fff;margin-bottom:3px">Grieer App</div>
-  <div style="font-size:12px;color:#B0BEC5;margin-bottom:18px">Passwort eingeben</div>
-  <input type="password" id="pin-word-input"
-    placeholder="Passwort..." autocomplete="current-password"
-    style="width:200px;padding:12px 16px;border-radius:10px;border:2px solid #455A64;
-    background:#37474F;color:#fff;font-size:16px;text-align:center;outline:none;
-    margin:0 auto 6px;display:block"
-    oninput="pinWordCheck(this.value)"
-    onkeydown="if(event.key==='Enter'){pinWordSubmit();}">
-  <div id="pin-word-error"
-    style="color:#EF9A9A;font-size:11px;min-height:16px;margin-bottom:10px;text-align:center">
-  </div>
-  <button onclick="pinWordSubmit()"
-    style="background:#27AE60;color:#fff;border:none;border-radius:10px;
-    padding:12px 0;font-size:15px;font-weight:700;cursor:pointer;
-    width:200px;display:block;margin:0 auto 10px;touch-action:manipulation">
-    ✓ Öffnen
-  </button>
-  <button onclick="document.getElementById('pin-overlay').classList.add('hidden')"
-    style="background:transparent;border:1px solid #546E7A;color:#90A4AE;
-    border-radius:8px;padding:7px 20px;font-size:12px;cursor:pointer;
-    display:block;margin:0 auto 14px">
-    Abbrechen
-  </button>
-  <div style="font-size:10px;color:#546E7A">
-    Passwort: <b style="color:#78909C">roland</b> oder <b style="color:#78909C">grieer</b>
-  </div>
-</div>
+
 
 
 
@@ -5672,6 +5625,323 @@ body {
 </div>
 
 <script>
+// ══════════════════════════════════════════════════════════════════════════
+//  GRIEER USER MANAGEMENT — Benutzer & Berechtigungen
+// ══════════════════════════════════════════════════════════════════════════
+
+// Alle verfügbaren Seiten mit Labels + Kategorien
+var ALL_PAGES = [
+  {id:'aufnahme', label:'🏠 Startseite / Aufnahme',     cat:'Protokolle'},
+  {id:'auftrag',  label:'📋 Auftragsprotokoll',          cat:'Protokolle'},
+  {id:'mess',     label:'📊 Messprotokoll (§32 HK-VO)',  cat:'Protokolle'},
+  {id:'luft2',    label:'💨 Luftmessung (ÖVGW G K62)',   cat:'Protokolle'},
+  {id:'b8201',    label:'🏠 B 8201 Fangprüfung',         cat:'Protokolle'},
+  {id:'maengel',  label:'⚠️ Mängelmeldung',              cat:'Protokolle'},
+  {id:'kehr',     label:'🏠 Kehrtarif KV',               cat:'Kostenvoranschläge'},
+  {id:'gas',      label:'🔥 Gas-Service KV',             cat:'Kostenvoranschläge'},
+  {id:'pv',       label:'☀️ PV-Reinigung KV',            cat:'Kostenvoranschläge'},
+  {id:'brand',    label:'🛡️ Brandschutz KV',             cat:'Kostenvoranschläge'},
+  {id:'luft',     label:'💨 Lüftung KV',                 cat:'Kostenvoranschläge'},
+  {id:'kamin',    label:'🚪 Kamintürl KV',               cat:'Kostenvoranschläge'},
+  {id:'gesamt',   label:'📊 Gesamt-KV',                  cat:'Kostenvoranschläge'},
+  {id:'wprot',    label:'📝 Wartungsprotokoll Gas',       cat:'Kostenvoranschläge'},
+  {id:'verr',     label:'💶 Preisliste / Verrechnung',   cat:'Kostenvoranschläge'},
+  {id:'wart',     label:'🔔 Wartungserinnerung',         cat:'Kostenvoranschläge'},
+  {id:'ki',       label:'🧠 KI-Berater',                 cat:'Tools'},
+];
+
+// Aktuell eingeloggter Benutzer (Session)
+var _currentUser = null;
+
+// Benutzer laden
+function _loadUsers(){
+  try {
+    var raw = localStorage.getItem('grieer-users');
+    if(raw) return JSON.parse(raw);
+  } catch(e){}
+  // Standard: Admin mit bestehenden PIN-Codes
+  var defCodes = _pinWords && _pinWords.length ? _pinWords : ['roland','grieer'];
+  return [{
+    id:'admin',
+    name:'Admin (Roland)',
+    code:defCodes,
+    role:'admin',
+    pages:'*'
+  }];
+}
+
+// Benutzer speichern
+function _saveUsers(users){
+  try { localStorage.setItem('grieer-users', JSON.stringify(users)); } catch(e){}
+}
+
+// Prüft ob eingeloggter User Zugriff auf Seite hat
+function _userCanAccess(pageId){
+  if(!_currentUser) return false;
+  if(_currentUser.role === 'admin') return true;
+  if(_currentUser.pages === '*') return true;
+  return Array.isArray(_currentUser.pages) && _currentUser.pages.indexOf(pageId) >= 0;
+}
+
+// Login mit Code
+function _loginWithCode(code){
+  var users = _loadUsers();
+  var code_clean = (code||'').trim().toLowerCase();
+  for(var i=0;i<users.length;i++){
+    var u = users[i];
+    // Admin: prüft auch alte _pinWords
+    if(u.role === 'admin'){
+      var adminCodes = Array.isArray(u.code) ? u.code.slice() : [u.code];
+      // Füge _pinWords und gespeicherte Passwörter hinzu
+      if(_pinWords) adminCodes = adminCodes.concat(_pinWords);
+      try {
+        var saved = localStorage.getItem('grieer-passwords');
+        if(saved) adminCodes = adminCodes.concat(JSON.parse(saved));
+      } catch(e){}
+      // Deduplizieren + normalisieren
+      var adminCodesNorm = adminCodes.map(function(c){return (c||'').trim().toLowerCase();}).filter(Boolean);
+      if(adminCodesNorm.indexOf(code_clean) >= 0){
+        _currentUser = u;
+        sessionStorage.setItem('grieer-current-user', JSON.stringify(u));
+        sessionStorage.setItem('grieer-unlocked', '1');
+        return u;
+      }
+    } else {
+      var userCode = (u.code||'').trim().toLowerCase();
+      if(userCode === code_clean){
+        _currentUser = u;
+        sessionStorage.setItem('grieer-current-user', JSON.stringify(u));
+        sessionStorage.setItem('grieer-unlocked', '1');
+        return u;
+      }
+    }
+  }
+  return null;
+}
+
+// Session wiederherstellen
+function _restoreSession(){
+  try {
+    var raw = sessionStorage.getItem('grieer-current-user');
+    if(raw){ _currentUser = JSON.parse(raw); return true; }
+  } catch(e){}
+  return false;
+}
+
+// Logout
+function _logout(){
+  _currentUser = null;
+  sessionStorage.removeItem('grieer-current-user');
+  sessionStorage.removeItem('grieer-unlocked');
+  sessionStorage.removeItem('grieer-pending-tab');
+  // Nav-User-Badge aktualisieren
+  _updateNavUser();
+  // Login-Screen zeigen
+  var ov = document.getElementById('pin-overlay');
+  if(ov){ ov.classList.remove('hidden'); ov.style.display = ''; }
+}
+
+// Nav-User-Badge aktualisieren
+function _updateNavUser(){
+  var badge = document.getElementById('nav-user-badge');
+  if(!badge) return;
+  if(_currentUser){
+    badge.textContent = _currentUser.name.split(' ')[0].split('(')[0].trim();
+    badge.title = 'Eingeloggt als: ' + _currentUser.name;
+    badge.style.display = 'flex';
+  } else {
+    badge.style.display = 'none';
+  }
+  // Einstellungs-Button nur für Admin sichtbar
+  var settBtn = document.querySelector('button[onclick="showSettings()"]');
+  if(settBtn){
+    settBtn.style.display = (_currentUser && _currentUser.role === 'admin') ? '' : 'none';
+  }
+}
+
+// Home-Kacheln: nur erlaubte Seiten zeigen
+function _filterHomeTiles(){
+  if(!_currentUser) return;
+  // Alle Buttons mit show('id') onclick durchsuchen
+  document.querySelectorAll('button[onclick*="show("]').forEach(function(btn){
+    var onclick = btn.getAttribute('onclick') || '';
+    var m = onclick.match(/show\(['"](\w+)['"]\)/);
+    if(!m) return;
+    var pid = m[1];
+    var visible = _userCanAccess(pid);
+    btn.style.display = visible ? '' : 'none';
+  });
+}
+function adminShowUsers(){
+  var users = _loadUsers();
+  var container = document.getElementById('admin-users-list');
+  if(!container) return;
+
+  var html = '';
+  users.forEach(function(u, idx){
+    var isAdmin = u.role === 'admin';
+    var pageCount = u.pages === '*' ? 'Alle' : (Array.isArray(u.pages) ? u.pages.length : 0);
+    html += '<div style="display:flex;align-items:center;gap:8px;padding:10px;background:' + (isAdmin?'#EDE7F6':'#F0F9FF') + ';border-radius:8px;border:1.5px solid ' + (isAdmin?'#B39DDB':'#93C5FD') + ';margin-bottom:8px">';
+    html += '<div style="flex:1">';
+    html += '<div style="font-size:13px;font-weight:700;color:#1A2B45">' + (isAdmin?'👑 ':'👤 ') + u.name + '</div>';
+    html += '<div style="font-size:10px;color:#64748B;margin-top:2px">Code: ' + (isAdmin?'[Admin]':u.code) + ' · Seiten: ' + pageCount + '</div>';
+    html += '</div>';
+    if(!isAdmin){
+      html += '<button onclick="adminEditUser(' + idx + ')" style="background:#1A2B45;color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;min-height:32px">✏️ Edit</button>';
+      html += '<button onclick="adminDeleteUser(' + idx + ')" style="background:#DC2626;color:#fff;border:none;border-radius:6px;padding:5px 8px;font-size:11px;cursor:pointer;min-height:32px">🗑️</button>';
+    }
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
+}
+
+function adminNewUser(){
+  _adminOpenUserForm(null, null);
+}
+
+function adminEditUser(idx){
+  var users = _loadUsers();
+  _adminOpenUserForm(users[idx], idx);
+}
+
+function adminDeleteUser(idx){
+  var users = _loadUsers();
+  if(!confirm('Benutzer "' + users[idx].name + '" wirklich löschen?')) return;
+  users.splice(idx, 1);
+  _saveUsers(users);
+  adminShowUsers();
+  _grieerToast('✓ Benutzer gelöscht', '#DC2626', 2000);
+}
+
+function _adminOpenUserForm(user, idx){
+  var overlay = document.getElementById('admin-user-form-overlay');
+  if(!overlay) return;
+
+  var isEdit = (user !== null && idx !== null);
+  var pages = isEdit ? (user.pages || []) : [];
+
+  // Formular aufbauen
+  var cats = {};
+  ALL_PAGES.forEach(function(p){
+    if(!cats[p.cat]) cats[p.cat] = [];
+    cats[p.cat].push(p);
+  });
+
+  var pageChecks = '';
+  var catKeys = Object.keys(cats);
+  catKeys.forEach(function(cat){
+    pageChecks += '<div style="font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;margin:8px 0 4px">' + cat + '</div>';
+    cats[cat].forEach(function(p){
+      var checked = Array.isArray(pages) && pages.indexOf(p.id) >= 0;
+      pageChecks += '<label style="display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:5px;cursor:pointer;font-size:12px;margin-bottom:2px">';
+      pageChecks += '<input type="checkbox" id="uperm-' + p.id + '" value="' + p.id + '" ' + (checked?'checked':'') + ' style="width:16px;height:16px">';
+      pageChecks += p.label;
+      pageChecks += '</label>';
+    });
+  });
+
+  document.getElementById('admin-form-title').textContent = isEdit ? '✏️ Benutzer bearbeiten' : '➕ Neuer Benutzer';
+  document.getElementById('admin-form-name').value = isEdit ? user.name : '';
+  document.getElementById('admin-form-code').value = isEdit ? user.code : '';
+  document.getElementById('admin-form-pages').innerHTML = pageChecks;
+  document.getElementById('admin-form-idx').value = isEdit ? idx : '';
+
+  // Alle auswählen Button
+  document.getElementById('admin-perm-all').onclick = function(){
+    document.querySelectorAll('#admin-form-pages input[type=checkbox]').forEach(function(cb){ cb.checked = true; });
+  };
+  document.getElementById('admin-perm-none').onclick = function(){
+    document.querySelectorAll('#admin-form-pages input[type=checkbox]').forEach(function(cb){ cb.checked = false; });
+  };
+
+  overlay.style.display = 'flex';
+}
+
+function adminSaveUser(){
+  var name = (document.getElementById('admin-form-name').value||'').trim();
+  var code = (document.getElementById('admin-form-code').value||'').trim();
+  var idxStr = document.getElementById('admin-form-idx').value;
+
+  if(!name){ _grieerToast('Name erforderlich!', '#DC2626', 2000); return; }
+  if(!code){ _grieerToast('Zugangscode erforderlich!', '#DC2626', 2000); return; }
+  if(code.length < 3){ _grieerToast('Code mind. 3 Zeichen!', '#F59E0B', 2000); return; }
+
+  // Ausgewählte Seiten
+  var pages = [];
+  document.querySelectorAll('#admin-form-pages input[type=checkbox]:checked').forEach(function(cb){
+    pages.push(cb.value);
+  });
+
+  // Code-Duplikat prüfen
+  var users = _loadUsers();
+  var editIdx = idxStr !== '' ? parseInt(idxStr) : -1;
+  for(var i=0;i<users.length;i++){
+    if(i === editIdx) continue;
+    var uCode = Array.isArray(users[i].code) ? users[i].code.join('|') : users[i].code;
+    if(uCode.toLowerCase() === code.toLowerCase()){
+      _grieerToast('Dieser Code ist bereits vergeben!', '#DC2626', 2500);
+      return;
+    }
+  }
+
+  var newUser = {
+    id: editIdx >= 0 ? users[editIdx].id : ('u_' + Date.now()),
+    name: name,
+    code: code,
+    role: 'user',
+    pages: pages
+  };
+
+  if(editIdx >= 0){
+    users[editIdx] = newUser;
+  } else {
+    users.push(newUser);
+  }
+
+  _saveUsers(users);
+  document.getElementById('admin-user-form-overlay').style.display = 'none';
+  adminShowUsers();
+  _grieerToast('✓ Benutzer gespeichert', '#16A34A', 2000);
+}
+
+function adminCloseForm(){
+  var ov = document.getElementById('admin-user-form-overlay');
+  if(ov) ov.style.display = 'none';
+}
+
+// Admin Passwort ändern
+function adminSaveAdminCode(){
+  var code1 = (document.getElementById('set-pw1-new')?.value||'').trim();
+  var code2 = (document.getElementById('set-pw2-new')?.value||'').trim();
+
+  var users = _loadUsers();
+  var adminUser = users.find(function(u){ return u.role === 'admin'; });
+  if(!adminUser) return;
+
+  var codes = [];
+  if(code1) codes.push(code1);
+  if(code2) codes.push(code2);
+  if(codes.length === 0){ _grieerToast('Mind. 1 Code eingeben!', '#F59E0B', 2000); return; }
+
+  adminUser.code = codes.length === 1 ? codes[0] : codes;
+  // Auch _pinWords aktualisieren für Rückwärtskompatibilität
+  _pinWords = codes;
+  localStorage.setItem('grieer-passwords', JSON.stringify(codes));
+  _saveUsers(users);
+
+  if(document.getElementById('set-pw1-new')) document.getElementById('set-pw1-new').value='';
+  if(document.getElementById('set-pw2-new')) document.getElementById('set-pw2-new').value='';
+  _grieerToast('✓ Admin-Code gespeichert', '#16A34A', 2000);
+
+  // Hints aktualisieren
+  var h1 = document.getElementById('set-pw1-hint');
+  var h2 = document.getElementById('set-pw2-hint');
+  if(h1) h1.textContent = code1 ? 'Aktuell: gesetzt ✓' : 'Aktuell: Standard';
+  if(h2) h2.textContent = code2 ? 'Aktuell: gesetzt ✓' : 'Aktuell: leer';
+}
+
+
 
 // ─────────────────────────────────────────────────────────────
 //  FEHLENDE FUNKTIONEN – DRUCK / SENDEN / SPEICHERN
@@ -5792,33 +6062,38 @@ var PAGE_LABELS = {
 };
 
 function show(id){
-  // Nur KV und Berechnungsseiten brauchen PIN
-  var unlocked = sessionStorage.getItem('grieer-unlocked');
-  if(_pinProtectedTabs && _pinProtectedTabs.indexOf(id) >= 0 && !unlocked){
-    // Gespeicherte Zielseite für nach dem Login
+  // Nicht eingeloggt → Login zeigen
+  if(!_currentUser){
     sessionStorage.setItem('grieer-pending-tab', id);
-    // PIN-Overlay zeigen
     var ov = document.getElementById('pin-overlay');
     if(ov){ ov.classList.remove('hidden'); ov.style.display = ''; }
     return;
   }
-  // Alle anderen Seiten direkt zugänglich
+  // Berechtigungs-Check
+  if(!_userCanAccess(id)){
+    _grieerToast('🚫 Kein Zugriff auf diese Seite', '#DC2626', 2500);
+    return;
+  }
+  // Seite anzeigen
   document.querySelectorAll('.pg').forEach(function(pg){ pg.classList.remove('active'); });
-  var target = document.getElementById('page-'+id);
-  if(target){ target.classList.add('active'); window.scrollTo(0,0); }
-  var nc = document.getElementById('nav-current');
-  if(nc) nc.textContent = PAGE_LABELS[id] || id;
-  var d = new Date();
-  var diso = d.toISOString().split('T')[0];
-  document.querySelectorAll('.adate').forEach(function(el){ if(!el.value) el.value = diso; });
-  if(id === 'auftrag') setTimeout(function(){ if(typeof apInit === 'function') apInit(); }, 150);
-  if(id === 'verr')   setTimeout(function(){ if(typeof verrAccordionInit==='function') verrAccordionInit(); }, 150);
-  if(id === 'mess')    setTimeout(function(){ if(typeof messInit === 'function') messInit(); }, 150);
-  if(id === 'luft2')   setTimeout(function(){ if(typeof l2Init === 'function') l2Init(); }, 150);
-  if(id === 'b8201')  setTimeout(function(){ if(typeof b82Init === 'function') b82Init(); }, 150);
-  if(id === 'wprot')   setTimeout(function(){ if(typeof wpCalc === 'function') wpCalc(); }, 150);
-  if(id === 'kehr')    setTimeout(function(){ if(typeof kAccInit==='function') kAccInit(); if(typeof kCalcTarif === 'function') kCalcTarif(); }, 150);
+  var pg = document.getElementById('page-' + id);
+  if(pg){
+    pg.classList.add('active');
+    pg.scrollTop = 0;
+  }
+  // Nav-Titel aktualisieren
+  var cur = document.getElementById('nav-current');
+  if(cur) cur.textContent = PAGE_LABELS[id] || id;
+  // Initialisierungen
+  if(id==='kehr'){ if(typeof kAccInit==='function') kAccInit(); if(typeof kCalcTarif==='function') kCalcTarif(); }
+  if(id==='wprot'){ if(typeof wpCalc==='function') wpCalc(); }
+  if(id==='mess'){ if(typeof messInit==='function') messInit(); }
+  if(id==='luft2'){ if(typeof l2Init==='function') l2Init(); }
+  if(id==='b8201'){ if(typeof b82Init==='function') b82Init(); }
+  if(id==='auftrag'){ if(typeof apInit==='function') apInit(); }
+  if(id==='verr'){ if(typeof verrAccordionInit==='function') verrAccordionInit(); }
 }
+
 
 function checkPin(){
   var input = document.getElementById('pin-input');
@@ -9637,21 +9912,47 @@ function pinInit(){
   var d = new Date(); var diso = d.toISOString().split('T')[0];
   document.querySelectorAll('.adate').forEach(function(el){ if(!el.value) el.value = diso; });
   
-  // Overlay immer ausblenden – App startet direkt ohne PIN
-  if(ov){ ov.classList.add('hidden'); ov.style.display = 'none'; }
+  // Session wiederherstellen (nach App-Reload)
+  if(_restoreSession()){
+    if(ov){ ov.classList.add('hidden'); ov.style.display = 'none'; }
+    _updateNavUser();
+    _filterHomeTiles();
+    show('aufnahme');
+    // Input-Handler
+    var inp = document.getElementById('pin-word-input');
+    if(inp && !inp.dataset.pinInit){
+      inp.dataset.pinInit = '1';
+      inp.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); pinWordSubmit(); } });
+    }
+    return;
+  }
   
-  // PIN-Overlay Input-Handler einrichten (für später)
+  // Kein aktiver Login → Login-Screen zeigen
+  if(ov){ ov.classList.remove('hidden'); ov.style.display = ''; }
+  
+  // PIN-Overlay Input-Handler
   var inp = document.getElementById('pin-word-input');
   if(inp && !inp.dataset.pinInit){
     inp.dataset.pinInit = '1';
-    inp.addEventListener('keydown', function(e){
-      if(e.key === 'Enter'){ e.preventDefault(); pinWordSubmit(); }
-    });
+    inp.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); pinWordSubmit(); } });
   }
-  
-  // Startseite direkt zeigen
-  show('aufnahme');
+  // Benutzer-Auswahl vorbefüllen
+  _buildLoginUserList();
 }
+
+function _buildLoginUserList(){
+  var sel = document.getElementById('login-user-select');
+  if(!sel) return;
+  var users = _loadUsers();
+  sel.innerHTML = '';
+  users.forEach(function(u){
+    var opt = document.createElement('option');
+    opt.value = u.id;
+    opt.textContent = (u.role==='admin'?'👑 ':'👤 ') + u.name;
+    sel.appendChild(opt);
+  });
+}
+
 
 function pinWordCheck(val){
   var err=document.getElementById('pin-word-error');
@@ -9666,28 +9967,42 @@ function pinWordCheck(val){
 }
 
 function pinWordSubmit(){
-  var input = document.getElementById('pin-word-input');
-  var val = input ? input.value.trim().toLowerCase() : '';
-  if(_pinWords.indexOf(val) >= 0){
-    _pinUnlocked = true;
-    sessionStorage.setItem('grieer-unlocked','1');
+  var inp = document.getElementById('pin-word-input');
+  var code = inp ? inp.value.trim() : '';
+  if(!code){ _grieerToast('Bitte Code eingeben', '#F59E0B', 2000); return; }
+  
+  var user = _loginWithCode(code);
+  
+  if(user){
+    // Erfolgreich eingeloggt
     var ov = document.getElementById('pin-overlay');
     if(ov){ ov.classList.add('hidden'); ov.style.display = 'none'; }
-    if(typeof syncKunden === 'function') syncKunden();
-    // Zur vorher angeforderten Seite navigieren
+    if(inp) inp.value = '';
+    
+    // Shake-Fehler zurücksetzen
+    var box = document.getElementById('pin-word-box');
+    if(box) box.classList.remove('shake');
+    
+    _updateNavUser();
+    _filterHomeTiles();
+    
+    // Zur gewünschten Seite navigieren
     var pending = sessionStorage.getItem('grieer-pending-tab');
     sessionStorage.removeItem('grieer-pending-tab');
-    show(pending || 'kehr');
+    if(pending && _userCanAccess(pending)){
+      show(pending);
+    } else {
+      show('aufnahme');
+    }
+    _grieerToast('👋 Willkommen, ' + user.name.split(' ')[0] + '!', '#16A34A', 2500);
   } else {
-    var err = document.getElementById('pin-word-error');
-    if(err){ err.style.color='#EF9A9A'; err.textContent='Passwort nicht korrekt!'; }
-    if(input){ input.value=''; input.style.borderColor='#EF9A9A'; }
+    // Falscher Code
+    var box = document.getElementById('pin-word-box');
+    if(box){ box.classList.add('shake'); setTimeout(function(){ box.classList.remove('shake'); }, 600); }
+    _grieerToast('❌ Falscher Code', '#DC2626', 2500);
+    if(inp){ inp.value=''; inp.focus(); }
   }
 }
-
-
-
-
 
 
 function pinLock(){
@@ -16088,9 +16403,12 @@ function kAddKehrung(typ, isGas){
 
 // ── EINSTELLUNGEN ──────────────────────────────────────────
 function showSettings(){
+  if(!_currentUser || _currentUser.role !== 'admin'){ _grieerToast('🚫 Nur für Admins', '#DC2626', 2000); return; }
   var ov = document.getElementById('settings-overlay');
   if(!ov) return;
   ov.style.display = 'flex';
+  // Benutzer-Liste laden
+  if(typeof adminShowUsers === 'function') adminShowUsers();
   // Aktuelle Passwörter anzeigen (als Hinweis)
   try {
     var pws = JSON.parse(localStorage.getItem('grieer-passwords') || '[]');
@@ -16102,35 +16420,7 @@ function showSettings(){
 }
 
 function savePasswords(){
-  var pw1 = (document.getElementById('set-pw1')?.value || '').trim().toLowerCase();
-  var pw2 = (document.getElementById('set-pw2')?.value || '').trim().toLowerCase();
-  
-  if(!pw1){ 
-    showSettingsMsg('Passwort 1 ist Pflicht!', '#DC2626');
-    return;
-  }
-  if(pw1.length < 3){
-    showSettingsMsg('Passwort muss mind. 3 Zeichen haben!', '#DC2626');
-    return;
-  }
-  
-  var pws = pw2 ? [pw1, pw2] : [pw1];
-  localStorage.setItem('grieer-passwords', JSON.stringify(pws));
-  
-  // _pinWords aktualisieren (sofort wirksam)
-  if(typeof _pinWords !== 'undefined') {
-    _pinWords.length = 0;
-    pws.forEach(function(p){ _pinWords.push(p); });
-  }
-  
-  document.getElementById('set-pw1').value = '';
-  document.getElementById('set-pw2').value = '';
-  var h1 = document.getElementById('set-pw1-hint');
-  var h2 = document.getElementById('set-pw2-hint');
-  if(h1) h1.textContent = 'Aktuell: gesetzt ✓';
-  if(h2) h2.textContent = pw2 ? 'Aktuell: gesetzt ✓' : 'Aktuell: leer';
-  
-  showSettingsMsg('✓ Passwörter gespeichert!', '#059669');
+  adminSaveAdminCode();
 }
 
 function showSettingsMsg(msg, col){
@@ -16269,7 +16559,15 @@ function buildWartHtml(){
       ⚙️ Einstellungen
       <button onclick="document.getElementById('settings-overlay').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer;color:#94A3B8;line-height:1">✕</button>
     </div>
-    <div style="font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">🔑 Passwörter ändern</div>
+    
+    <div style="font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">👥 Mitarbeiter & Zugänge</div>
+    <div style="background:#F0FDF4;border:1px solid #86EFAC;border-radius:10px;padding:12px;margin-bottom:14px">
+      <div id="admin-users-list" style="margin-bottom:10px"><!-- dynamisch --></div>
+      <button onclick="adminNewUser()" style="width:100%;background:#1A2B45;color:#fff;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:44px">
+        ➕ Neuen Mitarbeiter anlegen
+      </button>
+    </div>
+<div style="font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">🔑 Passwörter ändern</div>
     <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:14px;margin-bottom:14px">
       <div style="font-size:11px;color:#64748B;margin-bottom:10px">Zwei Passwörter möglich (z.B. Admin + Mitarbeiter).</div>
       <div style="margin-bottom:10px">
@@ -16294,5 +16592,64 @@ function buildWartHtml(){
   </div>
 </div>
 
+
+<div id="admin-user-form-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:99998;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px;box-sizing:border-box">
+  <div style="background:#fff;border-radius:16px;padding:20px;width:100%;max-width:500px;margin:auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div id="admin-form-title" style="font-size:16px;font-weight:800;color:#1A2B45">➕ Neuer Mitarbeiter</div>
+      <button onclick="adminCloseForm()" style="background:#f1f5f9;border:none;border-radius:8px;padding:6px 12px;font-size:18px;cursor:pointer">✕</button>
+    </div>
+    <input type="hidden" id="admin-form-idx">
+    
+    <div style="margin-bottom:12px">
+      <label style="font-size:11px;font-weight:700;color:#334155;display:block;margin-bottom:4px">👤 Name des Mitarbeiters</label>
+      <input type="text" id="admin-form-name" placeholder="z.B. Kai Grieer" style="width:100%;padding:10px 12px;border:1.5px solid #CBD5E1;border-radius:8px;font-size:14px;box-sizing:border-box">
+    </div>
+    
+    <div style="margin-bottom:12px">
+      <label style="font-size:11px;font-weight:700;color:#334155;display:block;margin-bottom:4px">🔑 Zugangscode</label>
+      <input type="text" id="admin-form-code" placeholder="z.B. kai2026" autocomplete="off" style="width:100%;padding:10px 12px;border:1.5px solid #CBD5E1;border-radius:8px;font-size:14px;box-sizing:border-box">
+      <div style="font-size:10px;color:#94A3B8;margin-top:4px">Mind. 3 Zeichen · Groß-/Kleinschreibung egal</div>
+    </div>
+    
+    <div style="margin-bottom:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <label style="font-size:11px;font-weight:700;color:#334155">📋 Zugriff auf Seiten</label>
+        <div style="display:flex;gap:6px">
+          <button id="admin-perm-all" style="background:#1A2B45;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer">Alle</button>
+          <button id="admin-perm-none" style="background:#94A3B8;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer">Keine</button>
+        </div>
+      </div>
+      <div id="admin-form-pages" style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:10px;max-height:320px;overflow-y:auto">
+        <!-- Checkboxen werden per JS befüllt -->
+      </div>
+    </div>
+    
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <button onclick="adminCloseForm()" style="background:#F1F5F9;color:#334155;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;min-height:44px">Abbrechen</button>
+      <button onclick="adminSaveUser()" style="background:#16A34A;color:#fff;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;min-height:44px">✓ Speichern</button>
+    </div>
+  </div>
+</div>
+
+<div id="pin-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(160deg,#0F172A 0%,#1A2B45 60%,#1E3A5F 100%);z-index:99999;display:flex;align-items:center;justify-content:center">
+  <div style="width:100%;max-width:380px;padding:24px 20px">
+    <div style="text-align:center;margin-bottom:28px">
+      <div style="font-size:52px;margin-bottom:10px">🔒</div>
+      <div style="font-size:24px;font-weight:800;color:#fff;letter-spacing:-0.5px">Grieer App</div>
+      <div style="font-size:12px;color:#94A3B8;margin-top:5px">Rauchfangkehrermeister · Neudörfl</div>
+    </div>
+    <div id="pin-word-box" style="background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,255,255,0.15);border-radius:16px;padding:22px">
+      <div style="font-size:11px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px">Zugangscode eingeben</div>
+      <input type="password" id="pin-word-input" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"
+        placeholder="Code..."
+        style="width:100%;background:rgba(255,255,255,0.1);border:1.5px solid rgba(255,255,255,0.2);border-radius:10px;padding:14px 16px;font-size:18px;color:#fff;outline:none;box-sizing:border-box;margin-bottom:14px;-webkit-text-fill-color:#fff">
+      <button onclick="pinWordSubmit()" style="width:100%;background:linear-gradient(135deg,#D97706,#F59E0B);color:#fff;border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;box-shadow:0 4px 15px rgba(245,158,11,0.4)">
+        🔓 Einloggen
+      </button>
+    </div>
+    <div style="text-align:center;margin-top:18px;font-size:10px;color:#475569">Grieer Rauchfangkehrermeister · Burgenland</div>
+  </div>
+</div>
 </body>
 </html>
