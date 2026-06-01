@@ -972,7 +972,8 @@ body {
   <button id="nav-ki" onclick="show('ki')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;border-radius:6px;padding:6px 8px;font-size:15px;min-height:36px;min-width:36px;cursor:pointer;touch-action:manipulation">🧠</button>
   <button id="nav-settings" onclick="showSettings()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;border-radius:6px;padding:6px 8px;font-size:15px;min-height:36px;min-width:36px;cursor:pointer;touch-action:manipulation" title="Einstellungen">⚙️</button>
 
-  <div id="nav-user-badge" title="Eingeloggt" onclick="if(_currentUser&&_currentUser.role!='admin') { if(confirm('Abmelden?')) _logout(); }" style="display:none;align-items:center;gap:4px;background:rgba(255,255,255,0.12);border-radius:6px;padding:4px 8px;font-size:10px;font-weight:600;color:#E2E8F0;cursor:pointer;max-width:70px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;flex-shrink:0" title="Tippen zum Abmelden"></div>
+  <div id="nav-user-badge" title="Eingeloggt" onclick="if(confirm('Abmelden?')) _logout(); }" style="display:none;align-items:center;gap:4px;background:rgba(255,255,255,0.12);border-radius:6px;padding:4px 8px;font-size:10px;font-weight:600;color:#E2E8F0;cursor:pointer;max-width:70px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;flex-shrink:0" title="Tippen zum Abmelden"></div>
+  <button onclick="showChangePw()" title="Passwort ändern" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#94A3B8;font-size:11px;padding:4px 8px;cursor:pointer;touch-action:manipulation;display:none" id="change-pw-btn">&#128273;</button>
 </nav>
 
 <div id="pin-overlay" style="display:flex;position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#0F172A 0%,#1A2B45 100%);z-index:99999;align-items:center;justify-content:center;flex-direction:column;padding:20px;box-sizing:border-box">
@@ -5844,8 +5845,10 @@ function _updateNavUser(){
     badge.textContent = _currentUser.name.split(' ')[0].split('(')[0].trim();
     badge.title = 'Eingeloggt als: ' + _currentUser.name;
     badge.style.display = 'flex';
+  var cpwBtn = document.getElementById('change-pw-btn'); if(cpwBtn) cpwBtn.style.display = 'inline-block';
   } else {
     badge.style.display = 'none';
+  var cpwBtn2 = document.getElementById('change-pw-btn'); if(cpwBtn2) cpwBtn2.style.display = 'none';
   }
   // Einstellungs-Button nur für Admin sichtbar
   var settBtn = document.querySelector('button[onclick="showSettings()"]');
@@ -17161,74 +17164,94 @@ function pinWordSubmit(){
   try{ code = inp.value.toString().trim().toLowerCase(); }catch(e){}
   
   if(dbg) dbg.style.display='block';
+  if(!code){ if(err) err.textContent='Bitte Code eingeben'; return; }
+  if(err) err.textContent='';
   
-  if(!code){
-    if(err) err.textContent='Bitte Code eingeben';
-    return;
-  }
+  var matchedUser = null;
   
-  // Prüfe gespeicherte Codes zuerst
-  var ok = false;
-  var useEmergency = false;
-  
-  // 1. Gespeicherte Benutzer prüfen
+  // 1. Gespeicherte Benutzer durchsuchen - richtigen User mit richtigem Namen+Rolle finden
   try{
-    var users=JSON.parse(localStorage.getItem('grieer-users')||'[]');
+    var users = JSON.parse(localStorage.getItem('grieer-users') || '[]');
     for(var i=0;i<users.length;i++){
-      var codes=Array.isArray(users[i].code)?users[i].code:[users[i].code];
-      for(var j=0;j<codes.length;j++){ if((codes[j]||'').toString().trim().toLowerCase()===code){ok=true;break;} }
-      if(ok)break;
+      var u = users[i];
+      var codes = Array.isArray(u.code) ? u.code : [u.code];
+      for(var j=0;j<codes.length;j++){
+        if((codes[j]||'').toString().trim().toLowerCase() === code){
+          matchedUser = u;
+          break;
+        }
+      }
+      if(matchedUser) break;
     }
   }catch(e){}
   
-  // 2. Alte Passwörter prüfen
-  if(!ok){
+  // 2. Altes Passwort-System
+  if(!matchedUser){
     try{
-      var pws=JSON.parse(localStorage.getItem('grieer-passwords')||'[]');
-      for(var i=0;i<pws.length;i++){ if((pws[i]||'').toString().trim().toLowerCase()===code){ok=true;break;} }
+      var pws = JSON.parse(localStorage.getItem('grieer-passwords') || '[]');
+      for(var k=0;k<pws.length;k++){
+        if((pws[k]||'').toString().trim().toLowerCase() === code){
+          // Altes System: als Admin einloggen
+          matchedUser = {id:'admin',name:'Admin (Roland)',code:['roland','grieer'],role:'admin',pages:'*'};
+          break;
+        }
+      }
     }catch(e){}
   }
   
-  // 3. Notfall-Codes roland/grieer (OHNE Daten zu löschen)
-  if(!ok && (code==='roland'||code==='grieer')){
-    ok = true;
-    useEmergency = true;
+  // 3. Notfall-Codes roland/grieer - NUR wenn noch kein Admin existiert
+  if(!matchedUser && (code === 'roland' || code === 'grieer')){
+    try{
+      var storedUsers = JSON.parse(localStorage.getItem('grieer-users') || '[]');
+      var hasAdmin = storedUsers.some(function(u){ return u.role==='admin'; });
+      if(!hasAdmin || storedUsers.length === 0){
+        matchedUser = {id:'admin',name:'Admin (Roland)',code:['roland','grieer'],role:'admin',pages:'*'};
+      } else {
+        // Es gibt schon einen Admin - falscher Code
+        if(err) err.textContent = 'Falscher Code';
+        if(inp){ inp.value=''; try{inp.focus();}catch(e){} }
+        return;
+      }
+    }catch(e){
+      matchedUser = {id:'admin',name:'Admin (Roland)',code:['roland','grieer'],role:'admin',pages:'*'};
+    }
   }
   
-  if(!ok){
-    if(err) err.textContent='Falscher Code';
-    if(dbg) dbg.textContent='Code "'+code+'" nicht erkannt';
-    if(inp){inp.value='';try{inp.focus();}catch(e){}}
+  if(!matchedUser){
+    if(err) err.textContent = 'Falscher Code';
+    if(dbg) dbg.textContent = 'Code nicht erkannt';
+    if(inp){ inp.value=''; try{inp.focus();}catch(e){} }
     return;
   }
   
-  // ERFOLGREICH EINGELOGGT
-  // Nur bei explizitem Reset (resetapp) Daten löschen, nicht bei roland/grieer Login
-  var u={id:'admin',name:'Admin (Roland)',code:['roland','grieer'],role:'admin',pages:'*'};
-  try{window._currentUser=u;}catch(e){}
-  try{sessionStorage.setItem('grieer-current-user',JSON.stringify(u));}catch(e){}
+  // LOGIN ERFOLGREICH - als der richtige Benutzer einloggen
+  window._currentUser = matchedUser;
+  try{ sessionStorage.setItem('grieer-current-user', JSON.stringify(matchedUser)); }catch(e){}
   
-  // ALLE pin-overlay Elemente entfernen
+  // Overlay entfernen
   document.querySelectorAll('[id="pin-overlay"]').forEach(function(ov){
     try{ ov.parentNode.removeChild(ov); }catch(e){
-      ov.style.cssText='display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;z-index:-999!important';
+      ov.style.cssText = 'display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;z-index:-999!important';
     }
   });
   
-  // page-aufnahme ist bereits sichtbar (display:block!important im HTML)
-  // Andere Seiten verstecken
+  // Seiten umschalten
   try{
     document.querySelectorAll('.pg').forEach(function(p){
-      if(p.id!=='page-aufnahme'){ p.style.display='none'; }
+      p.classList.remove('active');
+      p.style.display = '';
     });
-    var auf=document.getElementById('page-aufnahme');
-    if(auf){ auf.style.display='block'; }
+    var auf = document.getElementById('page-aufnahme');
+    if(auf){ auf.classList.add('active'); }
   }catch(e){}
   
   try{ _updateNavUser(); }catch(e){}
-  try{ _grieerToast('Willkommen!','#16A34A',2000); }catch(e){}
+  try{ _filterHomeTiles(); }catch(e){}
+  try{ _grieerToast('Willkommen, ' + (matchedUser.name||'').split(' ')[0].split('(')[0].trim() + '!', '#16A34A', 2000); }catch(e){}
   if(inp) inp.value='';
 }
+
+
 /* === ENDE EIGENSTÄNDIGER LOGIN === */
 
 
@@ -17660,6 +17683,83 @@ window.adminSaveUser = function() {
 };
 
 /* ============================================================ */
+
+/* === PASSWORT ÄNDERN === */
+function showChangePw(){
+  var cur = window._currentUser;
+  if(!cur){ _grieerToast('Nicht eingeloggt', '#DC2626', 2000); return; }
+  
+  var overlay = document.getElementById('change-pw-overlay');
+  if(!overlay){
+    overlay = document.createElement('div');
+    overlay.id = 'change-pw-overlay';
+    overlay.style.cssText = 'display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;padding:20px;box-sizing:border-box';
+    overlay.innerHTML = [
+      '<div style="background:#fff;border-radius:14px;padding:24px;width:100%;max-width:360px">',
+      '<h3 style="margin:0 0 16px;color:#1A2B45;font-size:16px">&#128273; Passwort &auml;ndern</h3>',
+      '<div style="font-size:12px;color:#64748B;margin-bottom:12px">Aktueller Benutzer: <b id="cpw-user-name"></b></div>',
+      '<input type="text" id="cpw-new" placeholder="Neuer Zugangscode" autocomplete="off" ',
+      'style="width:100%;padding:12px;border:1.5px solid #CBD5E1;border-radius:8px;font-size:14px;box-sizing:border-box;margin-bottom:8px">',
+      '<input type="text" id="cpw-confirm" placeholder="Nochmals eingeben" autocomplete="off" ',
+      'style="width:100%;padding:12px;border:1.5px solid #CBD5E1;border-radius:8px;font-size:14px;box-sizing:border-box;margin-bottom:12px">',
+      '<div id="cpw-err" style="color:#DC2626;font-size:12px;margin-bottom:8px;min-height:16px"></div>',
+      '<div style="display:flex;gap:8px">',
+      '<button onclick="document.getElementById(\'change-pw-overlay\').style.display=\'none\'" ',
+      'style="flex:1;padding:10px;background:#F1F5F9;border:none;border-radius:8px;cursor:pointer;font-size:13px">Abbrechen</button>',
+      '<button onclick="doChangePw()" ',
+      'style="flex:1;padding:10px;background:#1A2B45;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700">Speichern</button>',
+      '</div></div>'
+    ].join('');
+    document.body.appendChild(overlay);
+  }
+  document.getElementById('cpw-user-name').textContent = cur.name;
+  document.getElementById('cpw-new').value = '';
+  document.getElementById('cpw-confirm').value = '';
+  document.getElementById('cpw-err').textContent = '';
+  overlay.style.display = 'flex';
+}
+
+function doChangePw(){
+  var newPw = (document.getElementById('cpw-new').value||'').trim();
+  var confirm2 = (document.getElementById('cpw-confirm').value||'').trim();
+  var errEl = document.getElementById('cpw-err');
+  
+  if(!newPw){ errEl.textContent = 'Bitte neuen Code eingeben'; return; }
+  if(newPw.length < 4){ errEl.textContent = 'Mindestens 4 Zeichen'; return; }
+  if(newPw !== confirm2){ errEl.textContent = 'Codes stimmen nicht überein'; return; }
+  
+  var cur = window._currentUser;
+  if(!cur){ errEl.textContent = 'Nicht eingeloggt'; return; }
+  
+  // Benutzer in der Liste aktualisieren
+  var users = [];
+  try{ users = JSON.parse(localStorage.getItem('grieer-users') || '[]'); }catch(e){}
+  
+  var found = false;
+  for(var i=0;i<users.length;i++){
+    if(users[i].id === cur.id){
+      users[i].code = newPw;
+      window._currentUser.code = newPw;
+      found = true;
+      break;
+    }
+  }
+  
+  if(!found){
+    // Admin (Roland) nicht in Liste → hinzufügen
+    cur.code = newPw;
+    window._currentUser.code = newPw;
+    users.push(cur);
+  }
+  
+  try{ localStorage.setItem('grieer-users', JSON.stringify(users)); }catch(e){}
+  try{ sessionStorage.setItem('grieer-current-user', JSON.stringify(window._currentUser)); }catch(e){}
+  
+  document.getElementById('change-pw-overlay').style.display = 'none';
+  _grieerToast('&#10003; Passwort geändert!', '#16A34A', 2500);
+}
+/* === ENDE PASSWORT ÄNDERN === */
+
 </script>
 
 </body>
