@@ -2,10 +2,10 @@
 <html lang="de">
 <head>
 <script>
-// === GRIEER CACHE-KILLER v2026-05-25-KI ===
+// === GRIEER CACHE-KILLER v2026-06-01-FIX0938 === v2026-05-25-KI ===
 (function(){
   try {
-    var CURRENT_VER = "v2026-06-01-PROT";
+    var CURRENT_VER = "v2026-06-01-FIX0938";
     var lastVer = null;
     try { lastVer = localStorage.getItem('__grieer_app_ver__'); } catch(e){}
     if('serviceWorker' in navigator){
@@ -21,6 +21,8 @@
     try { localStorage.setItem('__grieer_app_ver__', CURRENT_VER); } catch(e){}
     if(lastVer && lastVer !== CURRENT_VER){
       window.__grieerUpdated = lastVer + ' -> ' + CURRENT_VER;
+      // Bei Update: alte Session löschen damit Login erzwungen wird
+      try { sessionStorage.removeItem('grieer-current-user'); sessionStorage.removeItem('grieer-unlocked'); } catch(e){}
     }
   } catch(e){}
 })();
@@ -1173,7 +1175,7 @@ body {
   overflow-x: hidden !important;
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" async defer></script>
 <link rel="manifest" href="manifest.json">
 </head>
 <body onload="pinInit()">
@@ -6483,7 +6485,7 @@ function syncKundenToPage(pageId){
 }
 
 /* GRIEER VERSION 2026-05-20-PWA-FIX */
-var GRIEER_VERSION = "v2026-06-01-PROT";
+var GRIEER_VERSION = "v2026-06-01-FIX0938";
 
 /* === KEHRTARIF Berechnung — echte Tarife Bgld. HTVO LGBl 98/2025 === */
 var KEHR_TYPEN = {
@@ -10342,6 +10344,7 @@ var _sbUserId = null;    // Firmen-ID (aus URL abgeleitet)
 // Supabase initialisieren
 function sbInit(){
   try {
+    if(typeof supabase === 'undefined'){ _sbReady = false; return; } // CDN noch nicht geladen
     var cfg = _sbGetConfig();
     if(!cfg){ _sbReady = false; return; }
     _sb = supabase.createClient(cfg.url, cfg.key);
@@ -10615,8 +10618,16 @@ function sbCopySQL(){
     if(!localStorage.getItem('grieer-supabase')){
       localStorage.setItem('grieer-supabase', JSON.stringify({url:"https://bvodhzacatfuduwtlwut.supabase.co", key:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2b2RoemFjYXRmdWR1d3Rsd3V0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxODUwMjcsImV4cCI6MjA5NTc2MTAyN30.kX03LLhpIm-iD1VQqreIpCCwAHzsT0pmYdIsl8uSeuY"}));
     }
-    sbInit();
-    if(_sbReady) _sbHookKvSpeichern();
+    // Supabase mit Retry (CDN lädt async)
+    function _trySbInit(attempts){
+      if(typeof supabase !== 'undefined'){
+        sbInit();
+        if(_sbReady) _sbHookKvSpeichern();
+      } else if(attempts > 0){
+        setTimeout(function(){ _trySbInit(attempts-1); }, 500);
+      }
+    }
+    _trySbInit(10); // versucht 5 Sekunden lang
   });
 })();
 
@@ -17327,7 +17338,7 @@ function buildWartHtml(){
 </script>
 
 
-<div id="grieer-version-badge" style="position:fixed;bottom:4px;right:8px;font-size:9px;color:#90A4AE;background:rgba(255,255,255,0.85);padding:2px 6px;border-radius:8px;z-index:50;pointer-events:none;font-family:monospace">App v2026-06-01-PROT</div>
+<div id="grieer-version-badge" style="position:fixed;bottom:4px;right:8px;font-size:9px;color:#90A4AE;background:rgba(255,255,255,0.85);padding:2px 6px;border-radius:8px;z-index:50;pointer-events:none;font-family:monospace">App v2026-06-01-FIX0938</div>
 
 <div id="settings-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.65);z-index:99998;align-items:center;justify-content:center">
   <div style="background:#fff;border-radius:14px;padding:20px;width:min(92vw,380px);max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.4)">
