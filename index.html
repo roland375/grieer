@@ -1173,6 +1173,7 @@ body {
   overflow-x: hidden !important;
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="manifest" href="manifest.json">
 </head>
 <body onload="pinInit()">
@@ -5839,7 +5840,8 @@ body {
 </div>
 </div></div>
 
-<scrip
+// ══════════════════════════════════════════════════════════════════════════
+<script>
 // ══════════════════════════════════════════════════════════════════════════
 //  GRIEER USER MANAGEMENT — Benutzer & Berechtigungen
 // ══════════════════════════════════════════════════════════════════════════
@@ -6178,268 +6180,6 @@ function adminSaveAdminCode(){
   if(h1) h1.textContent = code1 ? 'Aktuell: gesetzt ✓' : 'Aktuell: Standard';
   if(h2) h2.textContent = code2 ? 'Aktuell: gesetzt ✓' : 'Aktuell: leer';
 }
-
-
-
-
-<script>
-// ══════════════════════════════════════════════════════════════════════════
-//  GRIEER USER MANAGEMENT — Benutzer & Berechtigungen
-// ══════════════════════════════════════════════════════════════════════════
-
-var ALL_PAGES = [
-  {id:'aufnahme', label:'🏠 Startseite / Aufnahme',     cat:'Protokolle'},
-  {id:'auftrag',  label:'📋 Auftragsprotokoll',          cat:'Protokolle'},
-  {id:'mess',     label:'📊 Messprotokoll (§32 HK-VO)',  cat:'Protokolle'},
-  {id:'luft2',    label:'💨 Luftmessung (ÖVGW G K62)',   cat:'Protokolle'},
-  {id:'b8201',    label:'🏠 B 8201 Fangprüfung',         cat:'Protokolle'},
-  {id:'maengel',  label:'⚠️ Mängelmeldung',              cat:'Protokolle'},
-  {id:'pvprot',   label:'☀️ PV-Protokoll (ohne Preise)', cat:'Protokolle'},
-  {id:'brandprot',label:'🛡️ Brandschutz-Protokoll',      cat:'Protokolle'},
-  {id:'kehr',     label:'🏠 Kehrtarif KV',               cat:'Kostenvoranschläge'},
-  {id:'gas',      label:'🔥 Gas-Service KV',             cat:'Kostenvoranschläge'},
-  {id:'pv',       label:'☀️ PV-Reinigung KV',            cat:'Kostenvoranschläge'},
-  {id:'brand',    label:'🛡️ Brandschutz KV',             cat:'Kostenvoranschläge'},
-  {id:'luft',     label:'💨 Lüftung KV',                 cat:'Kostenvoranschläge'},
-  {id:'kamin',    label:'🚪 Kamintürl KV',               cat:'Kostenvoranschläge'},
-  {id:'gesamt',   label:'📊 Gesamt-KV',                  cat:'Kostenvoranschläge'},
-  {id:'wprot',    label:'📝 Wartungsprotokoll Gas',       cat:'Kostenvoranschläge'},
-  {id:'verr',     label:'💶 Preisliste / Verrechnung',   cat:'Kostenvoranschläge'},
-  {id:'wart',     label:'🔔 Wartungserinnerung',         cat:'Kostenvoranschläge'},
-  {id:'ki',       label:'🧠 KI-Berater',                 cat:'Tools'},
-];
-
-var _currentUser = null;
-
-function _loadUsers(){
-  try {
-    var raw = localStorage.getItem('grieer-users');
-    if(raw){
-      var users = JSON.parse(raw);
-      var admin = users.find(function(u){ return u.role==='admin'; });
-      if(admin){
-        var adminCodes = Array.isArray(admin.code) ? admin.code : [admin.code];
-        var pwCodes = _pinWords && _pinWords.length ? _pinWords : [];
-        pwCodes.forEach(function(c){ if(c && adminCodes.indexOf(c)<0) adminCodes.push(c); });
-        admin.code = adminCodes;
-      }
-      return users;
-    }
-  } catch(e){}
-  var savedPw = [];
-  try { var sp=localStorage.getItem('grieer-passwords'); if(sp) savedPw=JSON.parse(sp); } catch(e){}
-  var defCodes = savedPw.length ? savedPw : (_pinWords&&_pinWords.length?_pinWords:['roland','grieer']);
-  return [{id:'admin',name:'Admin (Roland)',code:defCodes,role:'admin',pages:'*'}];
-}
-
-function _saveUsers(users){
-  try { localStorage.setItem('grieer-users', JSON.stringify(users)); } catch(e){}
-}
-
-function _userCanAccess(pageId){
-  if(!_currentUser) return false;
-  if(_currentUser.role === 'admin') return true;
-  if(_currentUser.pages === '*') return true;
-  return Array.isArray(_currentUser.pages) && _currentUser.pages.indexOf(pageId) >= 0;
-}
-
-function _loginWithCode(code){
-  var users = _loadUsers();
-  var code_clean = (code||'').trim().toLowerCase();
-  for(var i=0;i<users.length;i++){
-    var u = users[i];
-    if(u.role === 'admin'){
-      var adminCodes = Array.isArray(u.code) ? u.code.slice() : [u.code];
-      if(_pinWords) adminCodes = adminCodes.concat(_pinWords);
-      try { var sp=localStorage.getItem('grieer-passwords'); if(sp) adminCodes=adminCodes.concat(JSON.parse(sp)); } catch(e){}
-      var adminCodesNorm = adminCodes.map(function(c){return (c||'').trim().toLowerCase();}).filter(Boolean);
-      if(adminCodesNorm.indexOf(code_clean) >= 0){
-        _currentUser = u;
-        sessionStorage.setItem('grieer-current-user', JSON.stringify(u));
-        sessionStorage.setItem('grieer-unlocked','1');
-        if(!localStorage.getItem('grieer-users')){ _saveUsers(users); }
-        return u;
-      }
-    } else {
-      if((u.code||'').trim().toLowerCase() === code_clean){
-        _currentUser = u;
-        sessionStorage.setItem('grieer-current-user', JSON.stringify(u));
-        sessionStorage.setItem('grieer-unlocked','1');
-        return u;
-      }
-    }
-  }
-  return null;
-}
-
-function _restoreSession(){
-  try {
-    var raw = sessionStorage.getItem('grieer-current-user');
-    if(raw){ _currentUser = JSON.parse(raw); return true; }
-  } catch(e){}
-  return false;
-}
-
-function _logout(){
-  _currentUser = null;
-  sessionStorage.removeItem('grieer-current-user');
-  sessionStorage.removeItem('grieer-unlocked');
-  sessionStorage.removeItem('grieer-pending-tab');
-  _updateNavUser();
-  var ov = document.getElementById('pin-overlay');
-  if(ov){ ov.classList.remove('hidden'); ov.style.display = ''; }
-}
-
-function _updateNavUser(){
-  var badge = document.getElementById('nav-user-badge');
-  if(!badge) return;
-  if(_currentUser){
-    badge.textContent = _currentUser.name.split(' ')[0].split('(')[0].trim();
-    badge.title = 'Eingeloggt als: ' + _currentUser.name;
-    badge.style.display = 'flex';
-  } else {
-    badge.style.display = 'none';
-  }
-  var settBtn = document.querySelector('button[onclick="showSettings()"]') || document.getElementById('nav-settings');
-  if(settBtn){ settBtn.style.display = (_currentUser && _currentUser.role === 'admin') ? '' : 'none'; }
-}
-
-function _filterHomeTiles(){
-  if(!_currentUser) return;
-  document.querySelectorAll('button[onclick*="show("]').forEach(function(btn){
-    var onclick = btn.getAttribute('onclick') || '';
-    var m = onclick.match(/show\(['"](\w+)['"]\)/);
-    if(!m) return;
-    btn.style.display = _userCanAccess(m[1]) ? '' : 'none';
-  });
-}
-
-function _buildLoginUserList(){
-  var sel = document.getElementById('login-user-select');
-  if(!sel) return;
-  var users = _loadUsers();
-  sel.innerHTML = '';
-  users.forEach(function(u){
-    var opt = document.createElement('option');
-    opt.value = u.id;
-    opt.textContent = (u.role==='admin'?'👑 ':'👤 ') + u.name;
-    sel.appendChild(opt);
-  });
-}
-
-function adminShowUsers(){
-  var users = _loadUsers();
-  var container = document.getElementById('admin-users-list');
-  if(!container) return;
-  var html2 = '';
-  users.forEach(function(u, idx){
-    var isAdmin = u.role === 'admin';
-    var pageCount = u.pages === '*' ? 'Alle' : (Array.isArray(u.pages) ? u.pages.length : 0);
-    var codeDisplay = isAdmin ? (Array.isArray(u.code) ? u.code.join(' / ') : (u.code||'roland/grieer')) : u.code;
-    html2 += '<div style="display:flex;align-items:center;gap:8px;padding:10px;background:'+(isAdmin?'#EDE7F6':'#F0F9FF')+';border-radius:8px;border:1.5px solid '+(isAdmin?'#B39DDB':'#93C5FD')+';margin-bottom:8px"><div style="flex:1">';
-    html2 += '<div style="font-size:13px;font-weight:700;color:#1A2B45">'+(isAdmin?'👑 ':'👤 ')+u.name+'</div>';
-    html2 += '<div style="font-size:10px;color:#64748B;margin-top:2px">Code: '+codeDisplay+' · Seiten: '+pageCount+'</div></div>';
-    if(!isAdmin){
-      html2 += '<button onclick="adminEditUser('+idx+')" style="background:#1A2B45;color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;min-height:32px">✏️ Edit</button>';
-      html2 += '<button onclick="adminDeleteUser('+idx+')" style="background:#DC2626;color:#fff;border:none;border-radius:6px;padding:5px 8px;font-size:11px;cursor:pointer;min-height:32px">🗑️</button>';
-    }
-    html2 += '</div>';
-  });
-  container.innerHTML = html2;
-}
-
-function adminNewUser(){ _adminOpenUserForm(null, null); }
-
-function adminEditUser(idx){
-  var users = _loadUsers();
-  if(users[idx]) _adminOpenUserForm(users[idx], idx);
-}
-
-function adminDeleteUser(idx){
-  var users = _loadUsers();
-  if(!confirm('Benutzer "'+users[idx].name+'" wirklich löschen?')) return;
-  users.splice(idx, 1);
-  _saveUsers(users);
-  adminShowUsers();
-  _grieerToast('✓ Benutzer gelöscht', '#DC2626', 2000);
-}
-
-function _adminOpenUserForm(user, idx){
-  var overlay = document.getElementById('admin-user-form-overlay');
-  if(!overlay) return;
-  var isEdit = (user !== null && idx !== null);
-  var pages = isEdit ? (user.pages || []) : [];
-  var cats = {};
-  ALL_PAGES.forEach(function(p){ if(!cats[p.cat]) cats[p.cat]=[]; cats[p.cat].push(p); });
-  var pageChecks = '';
-  Object.keys(cats).forEach(function(cat){
-    pageChecks += '<div style="font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;margin:8px 0 4px">'+cat+'</div>';
-    cats[cat].forEach(function(p){
-      var checked = Array.isArray(pages) && pages.indexOf(p.id)>=0;
-      pageChecks += '<label style="display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:5px;cursor:pointer;font-size:12px;margin-bottom:2px"><input type="checkbox" id="uperm-'+p.id+'" value="'+p.id+'" '+(checked?'checked':'')+' style="width:16px;height:16px">'+p.label+'</label>';
-    });
-  });
-  document.getElementById('admin-form-title').textContent = isEdit ? '✏️ Benutzer bearbeiten' : '➕ Neuer Benutzer';
-  document.getElementById('admin-form-name').value = isEdit ? user.name : '';
-  document.getElementById('admin-form-code').value = isEdit ? user.code : '';
-  document.getElementById('admin-form-pages').innerHTML = pageChecks;
-  document.getElementById('admin-form-idx').value = isEdit ? idx : '';
-  document.getElementById('admin-perm-all').onclick = function(){ document.querySelectorAll('#admin-form-pages input[type=checkbox]').forEach(function(cb){cb.checked=true;}); };
-  document.getElementById('admin-perm-none').onclick = function(){ document.querySelectorAll('#admin-form-pages input[type=checkbox]').forEach(function(cb){cb.checked=false;}); };
-  overlay.style.display = 'flex';
-}
-
-function adminSaveUser(){
-  var name = (document.getElementById('admin-form-name').value||'').trim();
-  var code = (document.getElementById('admin-form-code').value||'').trim();
-  var idxStr = document.getElementById('admin-form-idx').value;
-  if(!name){ _grieerToast('Name erforderlich!','#DC2626',2000); return; }
-  if(!code){ _grieerToast('Zugangscode erforderlich!','#DC2626',2000); return; }
-  if(code.length < 3){ _grieerToast('Code mind. 3 Zeichen!','#F59E0B',2000); return; }
-  var pages = [];
-  document.querySelectorAll('#admin-form-pages input[type=checkbox]:checked').forEach(function(cb){ pages.push(cb.value); });
-  var users = _loadUsers();
-  var editIdx = idxStr !== '' ? parseInt(idxStr) : -1;
-  for(var i=0;i<users.length;i++){
-    if(i===editIdx) continue;
-    var uCode = Array.isArray(users[i].code) ? users[i].code.join('|') : users[i].code;
-    if(uCode.toLowerCase()===code.toLowerCase()){ _grieerToast('Code bereits vergeben!','#DC2626',2500); return; }
-  }
-  var newUser = {id:editIdx>=0?users[editIdx].id:'u_'+Date.now(), name:name, code:code, role:'user', pages:pages};
-  if(editIdx>=0){ users[editIdx]=newUser; } else { users.push(newUser); }
-  _saveUsers(users);
-  document.getElementById('admin-user-form-overlay').style.display = 'none';
-  adminShowUsers();
-  _grieerToast('✓ Benutzer gespeichert','#16A34A',2000);
-}
-
-function adminCloseForm(){
-  var ov = document.getElementById('admin-user-form-overlay');
-  if(ov) ov.style.display = 'none';
-}
-
-function adminSaveAdminCode(){
-  var code1 = (document.getElementById('set-pw1-new')?.value||'').trim();
-  var code2 = (document.getElementById('set-pw2-new')?.value||'').trim();
-  var users = _loadUsers();
-  var adminUser = users.find(function(u){ return u.role==='admin'; });
-  if(!adminUser) return;
-  var codes = [];
-  if(code1) codes.push(code1);
-  if(code2) codes.push(code2);
-  if(codes.length===0){ _grieerToast('Mind. 1 Code eingeben!','#F59E0B',2000); return; }
-  adminUser.code = codes.length===1 ? codes[0] : codes;
-  _pinWords = codes;
-  localStorage.setItem('grieer-passwords', JSON.stringify(codes));
-  _saveUsers(users);
-  if(document.getElementById('set-pw1-new')) document.getElementById('set-pw1-new').value='';
-  if(document.getElementById('set-pw2-new')) document.getElementById('set-pw2-new').value='';
-  _grieerToast('✓ Admin-Code gespeichert','#16A34A',2000);
-  var h1=document.getElementById('set-pw1-hint'); if(h1) h1.textContent=code1?'Aktuell: gesetzt ✓':'Aktuell: Standard';
-  var h2=document.getElementById('set-pw2-hint'); if(h2) h2.textContent=code2?'Aktuell: gesetzt ✓':'Aktuell: leer';
-}
-
-
 
 // ─────────────────────────────────────────────────────────────
 //  FEHLENDE FUNKTIONEN – DRUCK / SENDEN / SPEICHERN
@@ -10579,6 +10319,297 @@ function _initFotoPreview(prefix, count){
 }
 
 
+// ══════════════════════════════════════════════════════════════════════════
+//  SUPABASE SYNC — Cloud-Synchronisation für alle Geräte
+//  → URL und Key in den Einstellungen eintragen (⚙️ → ☁️ Supabase Sync)
+// ══════════════════════════════════════════════════════════════════════════
+
+var _sb = null;          // Supabase Client
+var _sbReady = false;    // Initialisiert?
+var _sbUserId = null;    // Firmen-ID (aus URL abgeleitet)
+
+// Supabase initialisieren
+function sbInit(){
+  try {
+    var cfg = _sbGetConfig();
+    if(!cfg){ _sbReady = false; return; }
+    _sb = supabase.createClient(cfg.url, cfg.key);
+    _sbUserId = cfg.url.match(/\/\/([a-z0-9]+)\./)?.[1] || 'grieer';
+    _sbReady = true;
+    _sbUpdateIndicator(true);
+    console.log('✓ Supabase verbunden:', cfg.url);
+  } catch(e){
+    _sbReady = false;
+    _sbUpdateIndicator(false);
+    console.warn('Supabase Init Fehler:', e.message);
+  }
+}
+
+// Config aus localStorage lesen
+function _sbGetConfig(){
+  // Standard-Credentials (bereits konfiguriert)
+  var DEFAULT_URL = "https://bvodhzacatfuduwtlwut.supabase.co";
+  var DEFAULT_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2b2RoemFjYXRmdWR1d3Rsd3V0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxODUwMjcsImV4cCI6MjA5NTc2MTAyN30.kX03LLhpIm-iD1VQqreIpCCwAHzsT0pmYdIsl8uSeuY";
+  try {
+    var raw = localStorage.getItem('grieer-supabase');
+    if(raw){
+      var cfg = JSON.parse(raw);
+      if(cfg.url && cfg.key && cfg.url.startsWith('https://')) return cfg;
+    }
+  } catch(e){}
+  // Verwende Standard-Credentials wenn kein Override gespeichert
+  return {url: DEFAULT_URL, key: DEFAULT_KEY};
+}
+
+// Config speichern
+function _sbSaveConfig(url, key){
+  try {
+    localStorage.setItem('grieer-supabase', JSON.stringify({url:url.trim(), key:key.trim()}));
+    return true;
+  } catch(e){ return false; }
+}
+
+// Status-Indikator in der Nav aktualisieren
+function _sbUpdateIndicator(online){
+  var dot = document.getElementById('sb-status-dot');
+  if(dot){
+    dot.style.background = online ? '#16A34A' : '#94A3B8';
+    dot.title = online ? '☁️ Supabase verbunden' : '☁️ Nicht verbunden';
+  }
+}
+
+// ── DATEN SPEICHERN ────────────────────────────────────────────────────────
+// Speichert KV/Protokoll in Supabase
+// Tabelle: grieer_dokumente (id, firma_id, doc_type, doc_nr, data, updated_at, ersteller)
+async function sbSave(docType, data){
+  if(!_sbReady || !_sb) return false;
+  try {
+    var docNr = data.kvNr || data.protokollNr || data.nr || ('DOC-' + Date.now());
+    var row = {
+      firma_id:   _sbUserId,
+      doc_type:   docType,
+      doc_nr:     docNr,
+      data:       JSON.stringify(data),
+      ersteller:  _currentUser ? _currentUser.name : 'Unbekannt',
+      updated_at: new Date().toISOString()
+    };
+    var result = await _sb.from('grieer_dokumente')
+      .upsert(row, {onConflict:'firma_id,doc_type,doc_nr'});
+    if(result.error){ console.warn('sbSave Fehler:', result.error.message); return false; }
+    _sbUpdateIndicator(true);
+    return true;
+  } catch(e){ console.warn('sbSave:', e.message); return false; }
+}
+
+// Lädt ein Dokument aus Supabase
+async function sbLoad(docType, docNr){
+  if(!_sbReady || !_sb) return null;
+  try {
+    var query = _sb.from('grieer_dokumente')
+      .select('data, updated_at, ersteller')
+      .eq('firma_id', _sbUserId)
+      .eq('doc_type', docType);
+    if(docNr) query = query.eq('doc_nr', docNr);
+    var result = await query.order('updated_at', {ascending:false}).limit(1).single();
+    if(result.error || !result.data) return null;
+    return JSON.parse(result.data.data);
+  } catch(e){ return null; }
+}
+
+// Alle Dokumente eines Typs laden (für Übersicht)
+async function sbLoadAll(docType){
+  if(!_sbReady || !_sb) return [];
+  try {
+    var result = await _sb.from('grieer_dokumente')
+      .select('doc_nr, updated_at, ersteller, data')
+      .eq('firma_id', _sbUserId)
+      .eq('doc_type', docType)
+      .order('updated_at', {ascending:false})
+      .limit(50);
+    if(result.error || !result.data) return [];
+    return result.data.map(function(r){ 
+      var d = JSON.parse(r.data); 
+      return {nr:r.doc_nr, datum:r.updated_at?.split('T')[0], ersteller:r.ersteller, data:d};
+    });
+  } catch(e){ return []; }
+}
+
+// Kundendaten synchronisieren
+async function sbSaveKunde(kdNr, data){
+  if(!_sbReady || !_sb || !kdNr) return false;
+  try {
+    var row = {
+      firma_id:   _sbUserId,
+      kd_nr:      kdNr,
+      data:       JSON.stringify(data),
+      updated_at: new Date().toISOString()
+    };
+    var result = await _sb.from('grieer_kunden')
+      .upsert(row, {onConflict:'firma_id,kd_nr'});
+    return !result.error;
+  } catch(e){ return false; }
+}
+
+async function sbLoadKunde(kdNr){
+  if(!_sbReady || !_sb || !kdNr) return null;
+  try {
+    var result = await _sb.from('grieer_kunden')
+      .select('data')
+      .eq('firma_id', _sbUserId)
+      .eq('kd_nr', kdNr)
+      .single();
+    if(result.error || !result.data) return null;
+    return JSON.parse(result.data.data);
+  } catch(e){ return null; }
+}
+
+// ── kvSpeichern HOOK: nach lokalem Speichern auch in Supabase ─────────────
+var _origKvSpeichern = null;
+function _sbHookKvSpeichern(){
+  if(_origKvSpeichern) return; // bereits gehooked
+  _origKvSpeichern = kvSpeichern;
+  kvSpeichern = async function(pid){
+    _origKvSpeichern(pid);
+    if(!_sbReady) return;
+    try {
+      var raw = localStorage.getItem('grieer-kv-' + pid);
+      if(raw){
+        var ok = await sbSave(pid, JSON.parse(raw));
+        if(ok){
+          _grieerToast('✓ Gespeichert + ☁️ Sync', '#16A34A', 2000);
+        }
+      }
+    } catch(e){}
+  };
+}
+
+// ── Supabase Settings in ⚙️ einstellungen ────────────────────────────────
+function sbShowSettings(){
+  var urlEl  = document.getElementById('sb-url-input');
+  var keyEl  = document.getElementById('sb-key-input');
+  var statusEl = document.getElementById('sb-connect-status');
+  var cfg = _sbGetConfig();
+  if(urlEl)  urlEl.value  = cfg ? cfg.url  : '';
+  if(keyEl)  keyEl.value  = cfg ? cfg.key  : '';
+  if(statusEl){
+    statusEl.textContent = _sbReady 
+      ? '🟢 Verbunden — Firmen-ID: ' + _sbUserId
+      : (cfg ? '🔴 Nicht verbunden (Key/URL prüfen)' : '⚪ Nicht konfiguriert');
+  }
+}
+
+function sbSaveSettings(){
+  var url = (document.getElementById('sb-url-input')?.value || '').trim();
+  var key = (document.getElementById('sb-key-input')?.value || '').trim();
+  if(!url || !key){ 
+    _grieerToast('URL und Key erforderlich!', '#F59E0B', 2500); 
+    return; 
+  }
+  if(!url.startsWith('https://')){ 
+    _grieerToast('URL muss mit https:// beginnen', '#F59E0B', 2500); 
+    return; 
+  }
+  _sbSaveConfig(url, key);
+  sbInit();
+  if(_sbReady){
+    _sbHookKvSpeichern();
+    _grieerToast('✓ Supabase verbunden!', '#16A34A', 2500);
+    sbShowSettings();
+  } else {
+    _grieerToast('❌ Verbindung fehlgeschlagen — URL/Key prüfen', '#DC2626', 3000);
+  }
+}
+
+function sbTestConnection(){
+  if(!_sbReady){ 
+    _grieerToast('Erst URL + Key speichern!', '#F59E0B', 2000); 
+    return; 
+  }
+  _sb.from('grieer_dokumente').select('count').limit(1)
+    .then(function(r){ 
+      if(r.error && r.error.code==='42P01'){
+        _grieerToast('⚠️ Tabellen fehlen noch — SQL ausführen!', '#F59E0B', 4000);
+      } else if(r.error){
+        _grieerToast('❌ Fehler: ' + r.error.message.substring(0,40), '#DC2626', 3000);
+      } else {
+        _grieerToast('✓ Supabase OK! Verbindung funktioniert.', '#16A34A', 2500);
+      }
+    });
+}
+
+// Tabellen-Setup SQL (einmalig in Supabase SQL Editor ausführen)
+function sbShowSetupSQL(){
+  var sql = [
+    '-- Tabelle für alle KVs und Protokolle',
+    'create table if not exists grieer_dokumente (',
+    '  id          bigint generated always as identity primary key,',
+    '  firma_id    text not null,',
+    '  doc_type    text not null,',
+    '  doc_nr      text not null,',
+    '  data        jsonb not null,',
+    '  ersteller   text,',
+    '  updated_at  timestamptz default now(),',
+    '  unique(firma_id, doc_type, doc_nr)',
+    ');',
+    '',
+    '-- Tabelle für Kundendaten',
+    'create table if not exists grieer_kunden (',
+    '  id          bigint generated always as identity primary key,',
+    '  firma_id    text not null,',
+    '  kd_nr       text not null,',
+    '  data        jsonb not null,',
+    '  updated_at  timestamptz default now(),',
+    '  unique(firma_id, kd_nr)',
+    ');',
+    '',
+    '-- Row Level Security (optional aber empfohlen)',
+    'alter table grieer_dokumente enable row level security;',
+    'alter table grieer_kunden    enable row level security;',
+    '',
+    '-- Zugriff für anon key erlauben',
+    'create policy "grieer_dok_all" on grieer_dokumente for all using (true) with check (true);',
+    'create policy "grieer_kd_all"  on grieer_kunden    for all using (true) with check (true);'
+  ].join('\n');
+  
+  var overlay = document.getElementById('sb-sql-overlay');
+  if(overlay){
+    var pre = overlay.querySelector('pre');
+    if(pre) pre.textContent = sql.replace(/\\n/g, '\n');
+    overlay.style.display = 'flex';
+  } else {
+    // Fallback: in Zwischenablage kopieren
+    navigator.clipboard?.writeText(sql.replace(/\\n/g, '\n'))
+      .then(function(){ _grieerToast('✓ SQL in Zwischenablage kopiert', '#16A34A', 2500); })
+      .catch(function(){ alert(sql.replace(/\\n/g, '\n')); });
+  }
+}
+
+function sbCopySQL(){
+  var pre = document.querySelector('#sb-sql-overlay pre');
+  if(pre && navigator.clipboard){
+    navigator.clipboard.writeText(pre.textContent)
+      .then(function(){ _grieerToast('✓ SQL kopiert!', '#16A34A', 2000); });
+  }
+}
+
+// DOM-Ready: Supabase initialisieren wenn konfiguriert
+(function(){
+  function _onReady(fn){ 
+    if(document.readyState==='loading'){ 
+      document.addEventListener('DOMContentLoaded',fn); 
+    } else { fn(); } 
+  }
+  _onReady(function(){
+    // Auto-Save der Default-Credentials (einmalig)
+    if(!localStorage.getItem('grieer-supabase')){
+      localStorage.setItem('grieer-supabase', JSON.stringify({url:"https://bvodhzacatfuduwtlwut.supabase.co", key:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2b2RoemFjYXRmdWR1d3Rsd3V0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxODUwMjcsImV4cCI6MjA5NTc2MTAyN30.kX03LLhpIm-iD1VQqreIpCCwAHzsT0pmYdIsl8uSeuY"}));
+    }
+    sbInit();
+    if(_sbReady) _sbHookKvSpeichern();
+  });
+})();
+
+
 var _pinWords = (function(){
   try {
     var saved = localStorage.getItem('grieer-passwords');
@@ -10680,6 +10711,14 @@ function pinWordSubmit(){
   var code = inp ? inp.value.trim() : '';
   if(!code){ _grieerToast('Bitte Code eingeben', '#F59E0B', 2000); return; }
   
+  // NOTFALL: roland oder grieer funktionieren IMMER
+  var codeLow = code.trim().toLowerCase();
+  if(codeLow === 'roland' || codeLow === 'grieer'){
+    // Erzwinge Admin-Login mit Default-Codes
+    localStorage.removeItem('grieer-users');
+    _pinWords = ['roland','grieer'];
+  }
+  
   var user = _loginWithCode(code);
   
   if(user){
@@ -10708,7 +10747,7 @@ function pinWordSubmit(){
     // Falscher Code
     var box = document.getElementById('pin-word-box');
     if(box){ box.classList.add('shake'); setTimeout(function(){ box.classList.remove('shake'); }, 600); }
-    _grieerToast('❌ Falscher Code', '#DC2626', 2500);
+    _grieerToast('❌ Falscher Code — Notfall: roland', '#DC2626', 3500);
     if(inp){ inp.value=''; inp.focus(); }
   }
 }
