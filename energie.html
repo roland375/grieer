@@ -571,8 +571,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <button class="chip" id="kfFaellig" onclick="kvFilter('faellig')">⚠️ Fällig</button>
       <button class="chip" id="kfPv" onclick="kvFilter('fotovoltaik')">☀️ PV</button>
       <button class="chip" id="kfLueft" onclick="kvFilter('lueftung')">💨 Lüftung</button>
-      <button class="chip" id="kfHeiz" onclick="kvFilter('heizung')">🌡️ Heizung</button>
-      <button class="chip" id="kfWart" onclick="kvFilter('wartung')">🔧 Wartung</button>
+      <button class="chip" id="kfHeiz" onclick="kvFilter('heizung')">🔧 Heizungs Service</button>
+      <button class="chip" id="kfSonst" onclick="kvFilter('sonstiges')">📋 Sonstiges</button>
     </div>
     <div class="card" id="kundenListe"></div>
   </div>
@@ -857,7 +857,7 @@ function kvRender(){
     if(kvFilterAkt==='fotovoltaik')return k.rhythmus_fotovoltaik||k.letzt_fotovoltaik||(k.pv_module>0);
     if(kvFilterAkt==='lueftung')return k.rhythmus_lueftung||k.letzt_lueftung||(k.lueftungsanlagen>0);
     if(kvFilterAkt==='heizung')return k.rhythmus_heizung||k.letzt_heizung;
-    if(kvFilterAkt==='wartung')return k.rhythmus_wartung||k.letzt_wartung;
+    if(kvFilterAkt==='sonstiges')return !k.pv_module&&!k.lueftungsanlagen&&!k.rhythmus_fotovoltaik&&!k.rhythmus_lueftung;
     return true;
   });
   const el=document.getElementById('kundenListe');if(!el)return;
@@ -886,6 +886,13 @@ function hatFaelligkeit(k){return['lueftung','fotovoltaik'].some(l=>{const r=k['
 function kundeNeu(){modalOffen('👤 Neuer Kunde',kvFormHTML(null));}
 function kvFormHTML(k){
   const v=k||{};
+  let anlagenData={};
+  try{
+    if(v.notiz&&v.notiz.includes('[ANLAGEN:')){
+      const m=v.notiz.match(/\[ANLAGEN:(.*?)\]/s);
+      if(m)anlagenData=JSON.parse(m[1]);
+    }
+  }catch(e){}
   return`
     <div class="fGrid fg2">
       <div class="fRow"><label>Anrede</label>
@@ -917,11 +924,59 @@ function kvFormHTML(k){
       <textarea id="fHinweis" placeholder="z.B. Hund im Garten, Tor klingeln, Schlüssel beim Nachbarn, schwer erreichbar…">${esc(v.notiz||'')}</textarea>
     </div>
     <hr style="margin:12px 0;border:none;border-top:2px solid var(--border)">
-    <p style="font-size:.74rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">🏠 Anlagen</p>
-    <div class="fGrid fg3">
-      <div class="fRow"><label>PV-Module</label><input id="fPv" type="number" min="0" value="${v.pv_module||0}"></div>
-      <div class="fRow"><label>Lüftungen</label><input id="fLueft" type="number" min="0" value="${v.lueftungsanlagen||0}"></div>
+    <p style="font-size:.74rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">🏠 Anlagen & Geräte</p>
 
+    <div style="background:#fff5f5;border-radius:10px;border:1px solid #fca5a5;padding:13px;margin-bottom:10px">
+      <p style="font-size:.78rem;font-weight:700;color:#7c3aed;margin-bottom:8px">☀️ Fotovoltaik / PV</p>
+      <div class="fGrid fg2">
+        <div class="fRow"><label>Anzahl Module</label><input id="fPv" type="number" min="0" value="${v.pv_module||0}"></div>
+        <div class="fRow"><label>Leistung (kWp)</label><input id="fPvKwp" placeholder="z.B. 10.5" value="${esc(anlagenData.pvKwp||'')}"></div>
+      </div>
+      <div class="fGrid fg2">
+        <div class="fRow"><label>Hersteller</label><input id="fPvHersteller" placeholder="z.B. Fronius" value="${esc(anlagenData.pvHersteller||'')}"></div>
+        <div class="fRow"><label>Baujahr</label><input id="fPvBaujahr" type="number" placeholder="z.B. 2020" value="${esc(anlagenData.pvBaujahr||'')}"></div>
+      </div>
+    </div>
+
+    <div style="background:#eff6ff;border-radius:10px;border:1px solid #93c5fd;padding:13px;margin-bottom:10px">
+      <p style="font-size:.78rem;font-weight:700;color:#1e3a8a;margin-bottom:8px">💨 Lüftungsanlage</p>
+      <div class="fGrid fg2">
+        <div class="fRow"><label>Anzahl Anlagen</label><input id="fLueft" type="number" min="0" value="${v.lueftungsanlagen||0}"></div>
+        <div class="fRow"><label>Typ / Hersteller</label><input id="fLueftTyp" placeholder="z.B. Zehnder" value="${esc(anlagenData.lueftTyp||'')}"></div>
+      </div>
+      <div class="fRow"><label>Besonderheiten</label><input id="fLueftInfo" placeholder="z.B. Wohnraumlüftung EG" value="${esc(anlagenData.lueftInfo||'')}"></div>
+    </div>
+
+    <div style="background:#f0fdf4;border-radius:10px;border:1px solid #86efac;padding:13px;margin-bottom:10px">
+      <p style="font-size:.78rem;font-weight:700;color:#065f46;margin-bottom:8px">🔧 Heizungsanlage</p>
+      <div class="fGrid fg2">
+        <div class="fRow"><label>Heizungsart</label>
+          <select id="fHeizArt">
+            <option value="">—</option>
+            <option ${anlagenData.heizArt==='gas'?'selected':''} value="gas">Gas-Therme</option>
+            <option ${anlagenData.heizArt==='oel'?'selected':''} value="oel">Öl-Heizung</option>
+            <option ${anlagenData.heizArt==='wp'?'selected':''} value="wp">Wärmepumpe</option>
+            <option ${anlagenData.heizArt==='pellets'?'selected':''} value="pellets">Pellets</option>
+            <option ${anlagenData.heizArt==='fern'?'selected':''} value="fern">Fernwärme</option>
+            <option ${anlagenData.heizArt==='sonst'?'selected':''} value="sonst">Sonstiges</option>
+          </select>
+        </div>
+        <div class="fRow"><label>Hersteller / Modell</label><input id="fHeizModell" placeholder="z.B. Vaillant" value="${esc(anlagenData.heizModell||'')}"></div>
+      </div>
+      <div class="fGrid fg2">
+        <div class="fRow"><label>Baujahr</label><input id="fHeizBaujahr" type="number" placeholder="z.B. 2018" value="${esc(anlagenData.heizBaujahr||'')}"></div>
+        <div class="fRow"><label>Leistung (kW)</label><input id="fHeizKw" type="number" step=".1" placeholder="z.B. 24" value="${esc(anlagenData.heizKw||'')}"></div>
+      </div>
+      <div class="fRow"><label>Wartungsinfo</label><input id="fHeizInfo" placeholder="z.B. Wartung jährlich" value="${esc(anlagenData.heizInfo||'')}"></div>
+    </div>
+
+    <div style="background:#fff7ed;border-radius:10px;border:1px solid #fdba74;padding:13px;margin-bottom:10px">
+      <p style="font-size:.78rem;font-weight:700;color:#c2410c;margin-bottom:8px">🔥 Brandschutz</p>
+      <div class="fGrid fg2">
+        <div class="fRow"><label>Anzahl Geräte / Melder</label><input id="fBsAnz" type="number" min="0" value="${esc(anlagenData.bsAnz||'')}"></div>
+        <div class="fRow"><label>Letzter Service</label><input id="fBsService" type="date" value="${esc(anlagenData.bsService||'')}"></div>
+      </div>
+      <div class="fRow"><label>Typ / Details</label><input id="fBsInfo" placeholder="z.B. Rauchmelder Typ X" value="${esc(anlagenData.bsInfo||'')}"></div>
     </div>
     <hr style="margin:12px 0;border:none;border-top:2px solid var(--border)">
     <p style="font-size:.74rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">🔄 Rhythmus & letzte Durchführung</p>
@@ -977,29 +1032,29 @@ async function journalEintragErstellen(kunde, gespeicherterName){
 async function kvSpeichern(id){
   const nn=document.getElementById('fNachname')?.value?.trim();
   if(!nn){toast('Bitte Nachname eingeben','err');document.getElementById('fNachname')?.focus();return;}
-  // Nur absolut sichere Basis-Felder
-  const d = {};
-  d.nachname = nn;
-  const fAnrede = document.getElementById('fAnrede')?.value;
-  const fNummer = document.getElementById('fNummer')?.value;
-  const fVorname = document.getElementById('fVorname')?.value;
-  const fFirma = document.getElementById('fFirma')?.value;
-  const fStrasse = document.getElementById('fStrasse')?.value;
-  const fPlz = document.getElementById('fPlz')?.value;
-  const fOrt = document.getElementById('fOrt')?.value;
-  const fTel = document.getElementById('fTel')?.value;
-  const fEmail = document.getElementById('fEmail')?.value;
-  const fNotizVal = document.getElementById('fHinweis')?.value || document.getElementById('fNotiz')?.value || '';
-  if(fAnrede) d.anrede = fAnrede;
-  if(fNummer) d.nummer = fNummer;
-  if(fVorname) d.vorname = fVorname;
-  if(fFirma) d.firma = fFirma;
-  if(fStrasse) d.strasse = fStrasse;
-  if(fPlz) d.plz = fPlz;
-  if(fOrt) d.ort = fOrt;
-  if(fTel) d.telefon = fTel;
-  if(fEmail) d.email = fEmail;
-  if(fNotizVal) d.notiz = fNotizVal;
+  const d={nachname:nn};
+  // Basis-Felder
+  const felder={anrede:'fAnrede',nummer:'fNummer',vorname:'fVorname',firma:'fFirma',strasse:'fStrasse',plz:'fPlz',ort:'fOrt',telefon:'fTel',email:'fEmail'};
+  Object.entries(felder).forEach(([col,fid])=>{const v=document.getElementById(fid)?.value;if(v)d[col]=v;});
+  // PV + Lüftung Anzahl
+  const pvVal=parseInt(document.getElementById('fPv')?.value)||0;if(pvVal)d.pv_module=pvVal;
+  const lueftVal=parseInt(document.getElementById('fLueft')?.value)||0;if(lueftVal)d.lueftungsanlagen=lueftVal;
+  // Anlage-Detail-Daten in notiz speichern
+  const anlagenSave={};
+  const aFelder={pvKwp:'fPvKwp',pvHersteller:'fPvHersteller',pvBaujahr:'fPvBaujahr',lueftTyp:'fLueftTyp',lueftInfo:'fLueftInfo',heizArt:'fHeizArt',heizModell:'fHeizModell',heizBaujahr:'fHeizBaujahr',heizKw:'fHeizKw',heizInfo:'fHeizInfo',bsAnz:'fBsAnz',bsService:'fBsService',bsInfo:'fBsInfo'};
+  Object.entries(aFelder).forEach(([k,fid])=>{const el=document.getElementById(fid);if(el&&el.value)anlagenSave[k]=el.value;});
+  const hinweis=document.getElementById('fNotiz')?.value||'';
+  const hinweisClean=hinweis.replace(/\[ANLAGEN:.*?\]/s,'').trim();
+  if(Object.keys(anlagenSave).length>0)d.notiz=(hinweisClean?hinweisClean+'\n':'')+('[ANLAGEN:'+JSON.stringify(anlagenSave)+']');
+  else if(hinweisClean)d.notiz=hinweisClean;
+  // Rhythmus
+  const rhythmusMap={fotovoltaik:'fotovoltaik',lueftung:'lueftung',heizservice:'heizung',brandschutz:'wartung'};
+  Object.entries(rhythmusMap).forEach(([formId,dbKey])=>{
+    const rv=document.getElementById('fr_'+formId)?.value;
+    const lv=document.getElementById('fl_'+formId)?.value;
+    if(rv)d['rhythmus_'+dbKey]=parseInt(rv);
+    if(lv)d['letzt_'+dbKey]=lv;
+  });
   try{
     if(id){
       await api('/kunden?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});
@@ -1046,6 +1101,8 @@ async function kvSpeichern(id){
 function kundeDetail(id){
   const k=DB.kunden.find(x=>x.id===id);if(!k)return;
   const name=(k.anrede?k.anrede+' ':'')+(k.vorname?k.vorname+' ':'')+k.nachname;
+  let anlagenData={};
+  try{if(k.notiz&&k.notiz.includes('[ANLAGEN:')){const m=k.notiz.match(/\[ANLAGEN:(.*?)\]/s);if(m)anlagenData=JSON.parse(m[1]);}}catch(e){}
   const auftraege=DB.auftraege.filter(a=>a.kunde&&a.kunde.toLowerCase().includes(k.nachname.toLowerCase()));
   const letztePreise={};
   const allePreise=auftraege.filter(a=>a.preis&&a.bezahlt).sort((a,b)=>new Date(b.datum)-new Date(a.datum));
