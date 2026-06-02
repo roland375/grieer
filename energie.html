@@ -1,4 +1,4 @@
-<!DOCTYPE html><!-- v02062026 -->
+<!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -1308,6 +1308,14 @@ function kundeDetail(id){
 
     </div>`;
   document.getElementById('detailOverlay').style.display='block';
+}
+async function kundeSchnellLoeschen(id, name){
+  if(!confirm('Kunde "'+name+'" wirklich löschen?'))return;
+  try{
+    await api('/kunden?id=eq.'+id,{method:'DELETE'});
+    toast('Kunde gelöscht ✓');
+    await laden();
+  }catch(e){toast('Fehler: '+e.message,'err');}
 }
 function kundeBearbeiten(id){const k=DB.kunden.find(x=>x.id===id);if(!k)return;detailZu();setTimeout(()=>modalOffen('✏️ Kunde bearbeiten',kvFormHTML(k)),200);}
 async function kundeLoeschen(id){if(!confirm('Kunde wirklich löschen?'))return;try{await api('/kunden?id=eq.'+id,{method:'DELETE'});toast('Kunde gelöscht');detailZu();await laden();}catch(e){toast('Fehler: '+e.message,'err');}}
