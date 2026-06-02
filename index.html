@@ -953,6 +953,32 @@ body {
   max-width: 100%;
   box-sizing: border-box;
 }
+
+/* === ABLAGE: Alle Send/Druck Buttons in Formularen verstecken === */
+/* Diese Buttons sind nur über die Ablage erreichbar */
+.pg button[onclick*="sendKv"],
+.pg button[onclick*="buildA4"],
+.pg button[onclick*="kvMail"],
+.pg button[onclick*="kvWhats"],
+.pg button[onclick*="kvPdf"],
+.pg button[onclick*="doSend"],
+.pg button[onclick*="printKv"],
+.pg button[onclick*="doPrint"],
+.pg button[onclick*="shareDoc"],
+.pg button[onclick*="sendDoc"],
+.pg button[onclick*="mailKv"],
+.pg button[onclick*="whatsKv"],
+.pg button[onclick*="whatsDoc"],
+.pg button[onclick*="mailto"],
+.pg a[onclick*="mailto"],
+.pg button[onclick*="print"],
+.pg button[onclick*="window.open"][onclick*="pdf"] {
+  display: none !important;
+}
+/* Versteckte Bereich-Divs */
+.pg .send-buttons, .pg .action-buttons, .pg .kv-buttons,
+.pg div[class*="send-"], .pg div[class*="-send"],
+.pg div[class*="action-"] { display: none !important; }
 </style>
 
 
@@ -1023,6 +1049,62 @@ body {
 </div>
 
 </div>
+</div>
+
+<div class="pg" id="page-ablage">
+<div class="card">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+  <h2 style="margin:0;font-size:18px;color:#1A2B45">&#128193; Ablage</h2>
+  <button onclick="show('aufnahme')" style="background:#E2E8F0;border:none;border-radius:8px;padding:8px 14px;font-size:12px;cursor:pointer">&#8592; Zur&#252;ck</button>
+</div>
+<div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+  <select id="ablage-filter-type" onchange="ablageRender()" style="flex:1;padding:8px;border:1.5px solid #CBD5E1;border-radius:8px;font-size:12px;min-width:120px">
+    <option value="">Alle Formulare</option>
+    <option value="pv">PV-Reinigung</option>
+    <option value="gas">Gas-Service</option>
+    <option value="luft">L&#252;ftung</option>
+    <option value="brand">Brandschutz</option>
+    <option value="kamin">Kamint&#252;rl</option>
+    <option value="kehr">Kehrtarif</option>
+    <option value="gesamt">Gesamt-KV</option>
+    <option value="wprot">Wartungsprotokoll</option>
+    <option value="mess">Messprotokoll</option>
+    <option value="luft2">Luftmessung</option>
+    <option value="b8201">B8201</option>
+    <option value="maengel">M&#228;ngelmeldung</option>
+    <option value="wart">Wartungserinnerung</option>
+    <option value="pvprot">PV-Protokoll</option>
+    <option value="brandprot">Brandschutz-Protokoll</option>
+    <option value="auftrag">Auftragsformular</option>
+    <option value="verr">Preisliste</option>
+  </select>
+  <select id="ablage-filter-user" onchange="ablageRender()" style="flex:1;padding:8px;border:1.5px solid #CBD5E1;border-radius:8px;font-size:12px;min-width:120px;display:none">
+    <option value="">Alle Mitarbeiter</option>
+  </select>
+</div>
+<div style="margin-bottom:10px">
+  <input type="text" id="ablage-search" placeholder="&#128269; Suchen nach Name, Typ..." oninput="ablageRender()" style="width:100%;padding:8px;border:1.5px solid #CBD5E1;border-radius:8px;font-size:13px;box-sizing:border-box">
+</div>
+<div id="ablage-list" style="min-height:80px">
+  <div style="text-align:center;color:#94A3B8;padding:32px;font-size:14px">Noch keine Dokumente gespeichert</div>
+</div>
+</div>
+</div>
+
+<div id="ablage-preview-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:9998;align-items:center;justify-content:center;padding:16px;box-sizing:border-box">
+  <div style="background:#fff;border-radius:14px;width:100%;max-width:600px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column">
+    <div style="padding:14px 16px;border-bottom:1px solid #E2E8F0;display:flex;align-items:center;justify-content:space-between">
+      <div id="ablage-preview-title" style="font-size:15px;font-weight:700;color:#1A2B45;flex:1;padding-right:8px"></div>
+      <button onclick="document.getElementById('ablage-preview-overlay').style.display='none'" style="background:#F1F5F9;border:none;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:14px;flex-shrink:0">&#10005;</button>
+    </div>
+    <div style="display:flex;gap:8px;padding:10px 12px;border-bottom:1px solid #E2E8F0;flex-wrap:wrap">
+      <button onclick="ablagePrint()" style="flex:1;background:#1A2B45;color:#fff;border:none;border-radius:8px;padding:9px;font-size:12px;font-weight:700;cursor:pointer;min-width:80px">&#128424; Drucken</button>
+      <button onclick="ablageWhatsApp()" style="display:none;flex:1;background:#25D366;color:#fff;border:none;border-radius:8px;padding:9px;font-size:12px;font-weight:700;cursor:pointer;min-width:80px">&#128241; WhatsApp</button>
+      <button onclick="ablageMail()" style="flex:1;background:#2563EB;color:#fff;border:none;border-radius:8px;padding:9px;font-size:12px;font-weight:700;cursor:pointer;min-width:80px">&#9993; E-Mail</button>
+      <button onclick="ablageDeleteCurrent()" style="background:#DC2626;color:#fff;border:none;border-radius:8px;padding:9px 12px;font-size:12px;font-weight:700;cursor:pointer">&#128465;</button>
+    </div>
+    <div id="ablage-preview-content" style="overflow-y:auto;flex:1;padding:14px;font-size:13px;line-height:1.6"></div>
+  </div>
 </div>
 
 <div class="pg" id="page-pv">
@@ -1183,7 +1265,7 @@ body {
   <canvas class="sig-canvas" id="sig2" width="400" height="120"></canvas>
   <button class="sig-clr" onclick="sigClear('sig2')">✕ Löschen</button>
 </div></div>
-<div class="btns no-print"><button class="btn" onclick="doPrint()">🖨 Als PDF / Drucken</button><button class="btn btn-g" onclick="doMail()">✉ Per E-Mail senden</button><button class="btn btn-rst no-print" onclick="resetKV('pv')" title="Alle Felder dieses KV zurücksetzen">↺ Zurücksetzen</button></div>
+<div class="btns no-print"><button class="btn" onclick="doPrint()" style="display:none!important;display:none">🖨 Als PDF / Drucken</button><button class="btn btn-g" onclick="doMail()" style="display:none!important">✉ Per E-Mail senden</button><button class="btn btn-rst no-print" onclick="resetKV('pv')" title="Alle Felder dieses KV zurücksetzen" style="display:none!important">↺ Zurücksetzen</button></div>
 <div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
 </div>
 
@@ -1191,7 +1273,7 @@ body {
   <div style="font-size:11px;color:#78909C;text-align:center;margin-bottom:10px;font-weight:600;letter-spacing:0.5px">KOSTENVORANSCHLAG</div>
   
   <!-- HAUPT-BUTTON: Senden mit Anhang -->
-  <button type="button" onclick="kvSenden('pv')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
+  <button type="button" onclick="kvSenden('pv')" style="display:none!important;background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
     <div style="display:flex;align-items:center;gap:10px">
       <span style="font-size:24px">📤</span>
       <span>KV SENDEN</span>
@@ -1201,15 +1283,15 @@ body {
   
   <!-- ZWEITE Reihe: Speichern + Laden + Drucken -->
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">
-    <button type="button" onclick="kvSpeichern('pv')" style="background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvSpeichern('pv')" style="display:none!important;background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">💾</span>
       <span>Speichern</span>
     </button>
-    <button type="button" onclick="kvLaden('pv')" style="background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvLaden('pv')" style="display:none!important;background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">📂</span>
       <span>Laden</span>
     </button>
-    <button type="button" onclick="kvPrint('pv')" style="background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvPrint('pv')" style="display:none!important;background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">🖨️</span>
       <span>Drucken</span>
     </button>
@@ -1401,7 +1483,7 @@ body {
   <canvas class="sig-canvas" id="sig4" width="400" height="120"></canvas>
   <button class="sig-clr" onclick="sigClear('sig4')">✕ Löschen</button>
 </div></div>
-<div class="btns no-print"><button class="btn" onclick="doPrint()">🖨 Als PDF / Drucken</button><button class="btn btn-g" onclick="doMail()">✉ Per E-Mail senden</button><button class="btn btn-rst no-print" onclick="resetKV('gas')" title="Alle Felder dieses KV zurücksetzen">↺ Zurücksetzen</button></div>
+<div class="btns no-print"><button class="btn" onclick="doPrint()" style="display:none!important;display:none">🖨 Als PDF / Drucken</button><button class="btn btn-g" onclick="doMail()" style="display:none!important">✉ Per E-Mail senden</button><button class="btn btn-rst no-print" onclick="resetKV('gas')" title="Alle Felder dieses KV zurücksetzen" style="display:none!important">↺ Zurücksetzen</button></div>
 <div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
 
 
@@ -1411,7 +1493,7 @@ body {
   <div style="font-size:11px;color:#78909C;text-align:center;margin-bottom:10px;font-weight:600;letter-spacing:0.5px">KOSTENVORANSCHLAG</div>
   
   <!-- HAUPT-BUTTON: Senden mit Anhang -->
-  <button type="button" onclick="kvSenden('gas')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
+  <button type="button" onclick="kvSenden('gas')" style="display:none!important;background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
     <div style="display:flex;align-items:center;gap:10px">
       <span style="font-size:24px">📤</span>
       <span>KV SENDEN</span>
@@ -1421,15 +1503,15 @@ body {
   
   <!-- ZWEITE Reihe: Speichern + Laden + Drucken -->
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">
-    <button type="button" onclick="kvSpeichern('gas')" style="background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvSpeichern('gas')" style="display:none!important;background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">💾</span>
       <span>Speichern</span>
     </button>
-    <button type="button" onclick="kvLaden('gas')" style="background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvLaden('gas')" style="display:none!important;background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">📂</span>
       <span>Laden</span>
     </button>
-    <button type="button" onclick="kvPrint('gas')" style="background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvPrint('gas')" style="display:none!important;background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">🖨️</span>
       <span>Drucken</span>
     </button>
@@ -1554,7 +1636,7 @@ body {
   <canvas class="sig-canvas" id="sig6" width="400" height="120"></canvas>
   <button class="sig-clr" onclick="sigClear('sig6')">✕ Löschen</button>
 </div></div>
-<div class="btns no-print"><button class="btn" onclick="doPrint()">🖨 Als PDF / Drucken</button><button class="btn btn-g" onclick="doMail()">✉ Per E-Mail senden</button><button class="btn btn-rst no-print" onclick="resetKV('luft')" title="Alle Felder dieses KV zurücksetzen">↺ Zurücksetzen</button></div>
+<div class="btns no-print"><button class="btn" onclick="doPrint()" style="display:none!important;display:none">🖨 Als PDF / Drucken</button><button class="btn btn-g" onclick="doMail()" style="display:none!important">✉ Per E-Mail senden</button><button class="btn btn-rst no-print" onclick="resetKV('luft')" title="Alle Felder dieses KV zurücksetzen" style="display:none!important">↺ Zurücksetzen</button></div>
 <div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
 </div>
 
@@ -1562,7 +1644,7 @@ body {
   <div style="font-size:11px;color:#78909C;text-align:center;margin-bottom:10px;font-weight:600;letter-spacing:0.5px">KOSTENVORANSCHLAG</div>
   
   <!-- HAUPT-BUTTON: Senden mit Anhang -->
-  <button type="button" onclick="kvSenden('luft')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
+  <button type="button" onclick="kvSenden('luft')" style="display:none!important;background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
     <div style="display:flex;align-items:center;gap:10px">
       <span style="font-size:24px">📤</span>
       <span>KV SENDEN</span>
@@ -1572,15 +1654,15 @@ body {
   
   <!-- ZWEITE Reihe: Speichern + Laden + Drucken -->
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">
-    <button type="button" onclick="kvSpeichern('luft')" style="background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvSpeichern('luft')" style="display:none!important;background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">💾</span>
       <span>Speichern</span>
     </button>
-    <button type="button" onclick="kvLaden('luft')" style="background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvLaden('luft')" style="display:none!important;background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">📂</span>
       <span>Laden</span>
     </button>
-    <button type="button" onclick="kvPrint('luft')" style="background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvPrint('luft')" style="display:none!important;background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">🖨️</span>
       <span>Drucken</span>
     </button>
@@ -1730,7 +1812,7 @@ body {
   <canvas class="sig-canvas" id="sig8" width="400" height="120"></canvas>
   <button class="sig-clr" onclick="sigClear('sig8')">✕ Löschen</button>
 </div></div>
-<div class="btns no-print"><button class="btn" onclick="doPrint()">🖨 Als PDF / Drucken</button><button class="btn btn-g" onclick="doMail()">✉ Per E-Mail senden</button><button class="btn btn-rst no-print" onclick="resetKV('br')" title="Alle Felder dieses KV zurücksetzen">↺ Zurücksetzen</button></div>
+<div class="btns no-print"><button class="btn" onclick="doPrint()" style="display:none!important;display:none">🖨 Als PDF / Drucken</button><button class="btn btn-g" onclick="doMail()" style="display:none!important">✉ Per E-Mail senden</button><button class="btn btn-rst no-print" onclick="resetKV('br')" title="Alle Felder dieses KV zurücksetzen" style="display:none!important">↺ Zurücksetzen</button></div>
 <div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
 </div>
 
@@ -1738,7 +1820,7 @@ body {
   <div style="font-size:11px;color:#78909C;text-align:center;margin-bottom:10px;font-weight:600;letter-spacing:0.5px">KOSTENVORANSCHLAG</div>
   
   <!-- HAUPT-BUTTON: Senden mit Anhang -->
-  <button type="button" onclick="kvSenden('brand')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
+  <button type="button" onclick="kvSenden('brand')" style="display:none!important;background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
     <div style="display:flex;align-items:center;gap:10px">
       <span style="font-size:24px">📤</span>
       <span>KV SENDEN</span>
@@ -1748,15 +1830,15 @@ body {
   
   <!-- ZWEITE Reihe: Speichern + Laden + Drucken -->
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">
-    <button type="button" onclick="kvSpeichern('brand')" style="background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvSpeichern('brand')" style="display:none!important;background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">💾</span>
       <span>Speichern</span>
     </button>
-    <button type="button" onclick="kvLaden('brand')" style="background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvLaden('brand')" style="display:none!important;background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">📂</span>
       <span>Laden</span>
     </button>
-    <button type="button" onclick="kvPrint('brand')" style="background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvPrint('brand')" style="display:none!important;background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">🖨️</span>
       <span>Drucken</span>
     </button>
@@ -1875,7 +1957,7 @@ body {
   <canvas class="sig-canvas" id="sig10" width="400" height="120"></canvas>
   <button class="sig-clr" onclick="sigClear('sig10')">✕ Löschen</button>
 </div></div>
-<div class="btns no-print"><button class="btn" onclick="doPrint()">🖨 Als PDF / Drucken</button><button class="btn btn-g" onclick="doMail()">✉ Per E-Mail senden</button><button class="btn btn-rst no-print" onclick="resetKV('kamin')" title="Alle Felder dieses KV zurücksetzen">↺ Zurücksetzen</button></div>
+<div class="btns no-print"><button class="btn" onclick="doPrint()" style="display:none!important;display:none">🖨 Als PDF / Drucken</button><button class="btn btn-g" onclick="doMail()" style="display:none!important">✉ Per E-Mail senden</button><button class="btn btn-rst no-print" onclick="resetKV('kamin')" title="Alle Felder dieses KV zurücksetzen" style="display:none!important">↺ Zurücksetzen</button></div>
 <div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
 </div>
 
@@ -1883,7 +1965,7 @@ body {
   <div style="font-size:11px;color:#78909C;text-align:center;margin-bottom:10px;font-weight:600;letter-spacing:0.5px">KOSTENVORANSCHLAG</div>
   
   <!-- HAUPT-BUTTON: Senden mit Anhang -->
-  <button type="button" onclick="kvSenden('kamin')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
+  <button type="button" onclick="kvSenden('kamin')" style="display:none!important;background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
     <div style="display:flex;align-items:center;gap:10px">
       <span style="font-size:24px">📤</span>
       <span>KV SENDEN</span>
@@ -1893,15 +1975,15 @@ body {
   
   <!-- ZWEITE Reihe: Speichern + Laden + Drucken -->
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">
-    <button type="button" onclick="kvSpeichern('kamin')" style="background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvSpeichern('kamin')" style="display:none!important;background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">💾</span>
       <span>Speichern</span>
     </button>
-    <button type="button" onclick="kvLaden('kamin')" style="background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvLaden('kamin')" style="display:none!important;background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">📂</span>
       <span>Laden</span>
     </button>
-    <button type="button" onclick="kvPrint('kamin')" style="background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvPrint('kamin')" style="display:none!important;background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">🖨️</span>
       <span>Drucken</span>
     </button>
@@ -2112,14 +2194,14 @@ body {
 <!-- Aktionen -->
 <div class="no-print" style="margin-top:20px;padding:14px;background:#F5F7FA;border-radius:12px;border:1.5px solid #E0E4E8">
   <div style="font-size:11px;color:#78909C;text-align:center;margin-bottom:10px;font-weight:600;letter-spacing:0.5px">KOSTENVORANSCHLAG</div>
-  <button type="button" onclick="kvSenden('kehr')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
+  <button type="button" onclick="kvSenden('kehr')" style="display:none!important;background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
     <div style="display:flex;align-items:center;gap:10px"><span style="font-size:24px">📤</span><span>KV SENDEN</span></div>
     <div style="font-size:11px;font-weight:400;opacity:0.92">Mit Datei-Anhang per Mail / WhatsApp</div>
   </button>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">
-    <button type="button" onclick="kvSpeichern('kehr')" style="background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:18px">💾</span><span>Speichern</span></button>
-    <button type="button" onclick="kvLaden('kehr')" style="background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:18px">📂</span><span>Laden</span></button>
-    <button type="button" onclick="kvPrint('kehr')" style="background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:18px">🖨️</span><span>Drucken</span></button>
+    <button type="button" onclick="kvSpeichern('kehr')" style="display:none!important;background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:18px">💾</span><span>Speichern</span></button>
+    <button type="button" onclick="kvLaden('kehr')" style="display:none!important;background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:18px">📂</span><span>Laden</span></button>
+    <button type="button" onclick="kvPrint('kehr')" style="display:none!important;background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:18px">🖨️</span><span>Drucken</span></button>
   </div>
 </div>
 
@@ -2141,7 +2223,7 @@ body {
 <div class="btns no-print" style="margin-bottom:12px">
   <button class="btn" onclick="brandinfoPrint()">🖨 Drucken / PDF</button>
   <button class="btn btn-g" onclick="brandinfoMail()">✉ Per E-Mail senden</button>
-  <button class="btn" style="background:#8E44AD" onclick="brandinfoShare()">📤 Teilen / WhatsApp</button>
+  <button class="btn" style="display:none;background:#8E44AD" onclick="brandinfoShare()">📤 Teilen / WhatsApp</button>
   <button class="btn btn-o" onclick="brandinfoDownload()">⬇ PDF speichern</button>
 </div>
 <div style="background:#FFF8E1;border:1.5px solid #F9A825;border-radius:5px;padding:8px 12px;margin-bottom:12px;font-size:11px;color:#5D4037">
@@ -2219,7 +2301,7 @@ body {
   <div style="font-size:11px;color:#78909C;text-align:center;margin-bottom:10px;font-weight:600;letter-spacing:0.5px">KOSTENVORANSCHLAG</div>
   
   <!-- HAUPT-BUTTON: Senden mit Anhang -->
-  <button type="button" onclick="kvSenden('brandinfo')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
+  <button type="button" onclick="kvSenden('brandinfo')" style="display:none!important;background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
     <div style="display:flex;align-items:center;gap:10px">
       <span style="font-size:24px">📤</span>
       <span>KV SENDEN</span>
@@ -2229,15 +2311,15 @@ body {
   
   <!-- ZWEITE Reihe: Speichern + Laden + Drucken -->
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">
-    <button type="button" onclick="kvSpeichern('brandinfo')" style="background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvSpeichern('brandinfo')" style="display:none!important;background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">💾</span>
       <span>Speichern</span>
     </button>
-    <button type="button" onclick="kvLaden('brandinfo')" style="background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvLaden('brandinfo')" style="display:none!important;background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">📂</span>
       <span>Laden</span>
     </button>
-    <button type="button" onclick="kvPrint('brandinfo')" style="background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvPrint('brandinfo')" style="display:none!important;background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">🖨️</span>
       <span>Drucken</span>
     </button>
@@ -2395,10 +2477,10 @@ body {
 </div>
 
 <div class="btns no-print" style="margin-top:10px">
-  <button class="btn" onclick="doPrint()">🖨 Drucken / PDF</button>
-  <button class="btn btn-g" onclick="doMail()">✉ Per E-Mail</button>
+  <button class="btn" onclick="doPrint()" style="display:none!important;display:none">🖨 Drucken / PDF</button>
+  <button class="btn btn-g" onclick="doMail()" style="display:none!important">✉ Per E-Mail</button>
   <button class="btn btn-save" onclick="saveCurrentPage()" title="Als Datei auf Gerät speichern">⬇ Speichern</button>
-  <button class="btn btn-rst" onclick="resetKV('gesamt')">↺ Zurücksetzen</button>
+  <button class="btn btn-rst" onclick="resetKV('gesamt')" style="display:none!important">↺ Zurücksetzen</button>
 </div>
 
 <div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
@@ -2408,7 +2490,7 @@ body {
   <div style="font-size:11px;color:#78909C;text-align:center;margin-bottom:10px;font-weight:600;letter-spacing:0.5px">KOSTENVORANSCHLAG</div>
   
   <!-- HAUPT-BUTTON: Senden mit Anhang -->
-  <button type="button" onclick="kvSenden('gesamt')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
+  <button type="button" onclick="kvSenden('gesamt')" style="display:none!important;background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
     <div style="display:flex;align-items:center;gap:10px">
       <span style="font-size:24px">📤</span>
       <span>KV SENDEN</span>
@@ -2418,15 +2500,15 @@ body {
   
   <!-- ZWEITE Reihe: Speichern + Laden + Drucken -->
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">
-    <button type="button" onclick="kvSpeichern('gesamt')" style="background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvSpeichern('gesamt')" style="display:none!important;background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">💾</span>
       <span>Speichern</span>
     </button>
-    <button type="button" onclick="kvLaden('gesamt')" style="background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvLaden('gesamt')" style="display:none!important;background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">📂</span>
       <span>Laden</span>
     </button>
-    <button type="button" onclick="kvPrint('gesamt')" style="background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvPrint('gesamt')" style="display:none!important;background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">🖨️</span>
       <span>Drucken</span>
     </button>
@@ -2792,7 +2874,7 @@ body {
   <div style="font-size:11px;color:#78909C;text-align:center;margin-bottom:10px;font-weight:600;letter-spacing:0.5px">KOSTENVORANSCHLAG</div>
   
   <!-- HAUPT-BUTTON: Senden mit Anhang -->
-  <button type="button" onclick="kvSenden('wprot')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
+  <button type="button" onclick="kvSenden('wprot')" style="display:none!important;background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
     <div style="display:flex;align-items:center;gap:10px">
       <span style="font-size:24px">📤</span>
       <span>KV SENDEN</span>
@@ -2802,15 +2884,15 @@ body {
   
   <!-- ZWEITE Reihe: Speichern + Laden + Drucken -->
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">
-    <button type="button" onclick="kvSpeichern('wprot')" style="background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvSpeichern('wprot')" style="display:none!important;background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">💾</span>
       <span>Speichern</span>
     </button>
-    <button type="button" onclick="kvLaden('wprot')" style="background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvLaden('wprot')" style="display:none!important;background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">📂</span>
       <span>Laden</span>
     </button>
-    <button type="button" onclick="kvPrint('wprot')" style="background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvPrint('wprot')" style="display:none!important;background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">🖨️</span>
       <span>Drucken</span>
     </button>
@@ -2921,14 +3003,14 @@ body {
 <!-- AKTIONEN -->
 <div class="no-print" style="margin-top:20px;padding:14px;background:#F5F7FA;border-radius:12px;border:1.5px solid #E0E4E8">
   <div style="font-size:11px;color:#78909C;text-align:center;margin-bottom:10px;font-weight:600;letter-spacing:0.5px">KOSTENVORANSCHLAG</div>
-  <button type="button" onclick="kvSenden('maengel')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
+  <button type="button" onclick="kvSenden('maengel')" style="display:none!important;background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
     <div style="display:flex;align-items:center;gap:10px"><span style="font-size:24px">📤</span><span>KV SENDEN</span></div>
     <div style="font-size:11px;font-weight:400;opacity:0.92">Mit Datei-Anhang per Mail / WhatsApp</div>
   </button>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">
-    <button type="button" onclick="kvSpeichern('maengel')" style="background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:18px">💾</span><span>Speichern</span></button>
-    <button type="button" onclick="kvLaden('maengel')" style="background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:18px">📂</span><span>Laden</span></button>
-    <button type="button" onclick="kvPrint('maengel')" style="background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:18px">🖨️</span><span>Drucken</span></button>
+    <button type="button" onclick="kvSpeichern('maengel')" style="display:none!important;background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:18px">💾</span><span>Speichern</span></button>
+    <button type="button" onclick="kvLaden('maengel')" style="display:none!important;background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:18px">📂</span><span>Laden</span></button>
+    <button type="button" onclick="kvPrint('maengel')" style="display:none!important;background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:18px">🖨️</span><span>Drucken</span></button>
   </div>
 </div>
 
@@ -3149,7 +3231,7 @@ body {
   <div style="font-size:11px;color:#78909C;text-align:center;margin-bottom:10px;font-weight:600;letter-spacing:0.5px">KOSTENVORANSCHLAG</div>
   
   <!-- HAUPT-BUTTON: Senden mit Anhang -->
-  <button type="button" onclick="kvSenden('wart')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
+  <button type="button" onclick="kvSenden('wart')" style="display:none!important;background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
     <div style="display:flex;align-items:center;gap:10px">
       <span style="font-size:24px">📤</span>
       <span>KV SENDEN</span>
@@ -3159,15 +3241,15 @@ body {
   
   <!-- ZWEITE Reihe: Speichern + Laden + Drucken -->
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">
-    <button type="button" onclick="kvSpeichern('wart')" style="background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvSpeichern('wart')" style="display:none!important;background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">💾</span>
       <span>Speichern</span>
     </button>
-    <button type="button" onclick="kvLaden('wart')" style="background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvLaden('wart')" style="display:none!important;background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">📂</span>
       <span>Laden</span>
     </button>
-    <button type="button" onclick="kvPrint('wart')" style="background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvPrint('wart')" style="display:none!important;background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">🖨️</span>
       <span>Drucken</span>
     </button>
@@ -3720,7 +3802,7 @@ body {
 </div>
 <div class="btns no-print">
   <button class="btn" onclick="verrPrint()">🖨 Als PDF / Drucken</button>
-  <button class="btn btn-g" onclick="doMail()">✉ Per E-Mail senden</button>
+  <button class="btn btn-g" onclick="doMail()" style="display:none!important">✉ Per E-Mail senden</button>
   <button class="btn btn-rst" onclick="resetVerr()">↺ Zurücksetzen</button>
 </div>
 <div class="kv-foot">Grieer Rauchfangkehrermeister &nbsp;|&nbsp; Neugebäu 10, 7201 Neudörfl &nbsp;|&nbsp; +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp; office@grieer.com &nbsp;|&nbsp; www.grieer.com</div>
@@ -3730,7 +3812,7 @@ body {
   <div style="font-size:11px;color:#78909C;text-align:center;margin-bottom:10px;font-weight:600;letter-spacing:0.5px">KOSTENVORANSCHLAG</div>
   
   <!-- HAUPT-BUTTON: Senden mit Anhang -->
-  <button type="button" onclick="kvSenden('verr')" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
+  <button type="button" onclick="kvSenden('verr')" style="display:none!important;background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:18px 16px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-shadow:0 4px 12px rgba(21,101,192,0.3);min-height:68px">
     <div style="display:flex;align-items:center;gap:10px">
       <span style="font-size:24px">📤</span>
       <span>KV SENDEN</span>
@@ -3740,15 +3822,15 @@ body {
   
   <!-- ZWEITE Reihe: Speichern + Laden + Drucken -->
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">
-    <button type="button" onclick="kvSpeichern('verr')" style="background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvSpeichern('verr')" style="display:none!important;background:#27AE60;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">💾</span>
       <span>Speichern</span>
     </button>
-    <button type="button" onclick="kvLaden('verr')" style="background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvLaden('verr')" style="display:none!important;background:#16A085;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">📂</span>
       <span>Laden</span>
     </button>
-    <button type="button" onclick="kvPrint('verr')" style="background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <button type="button" onclick="kvPrint('verr')" style="display:none!important;background:#7F8C8D;color:#fff;border:none;border-radius:10px;padding:11px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:50px;display:flex;flex-direction:column;align-items:center;gap:2px">
       <span style="font-size:18px">🖨️</span>
       <span>Drucken</span>
     </button>
@@ -4003,13 +4085,13 @@ body {
 
     <!-- AKTIONEN -->
     <div class="no-print" style="padding:12px;background:#F5F7FA;border-radius:12px;border:1.5px solid #E0E4E8">
-      <button type="button" onclick="apSenden()" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:12px;padding:18px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;width:100%;min-height:68px;box-shadow:0 4px 12px rgba(21,101,192,0.3);display:flex;flex-direction:column;align-items:center;gap:4px">
+      <button type="button" onclick="apSenden()" style="display:none!important;background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:12px;padding:18px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;width:100%;min-height:68px;box-shadow:0 4px 12px rgba(21,101,192,0.3);display:flex;flex-direction:column;align-items:center;gap:4px">
         <div style="display:flex;align-items:center;gap:10px"><span style="font-size:22px">📤</span><span>PROTOKOLL SENDEN</span></div>
         <div style="font-size:11px;font-weight:400;opacity:0.9">Mit Fotos + Unterschriften per Mail / WhatsApp</div>
       </button>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px">
-        <button type="button" onclick="kvSpeichern('auftrag')" style="background:#27AE60;color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:48px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:16px">💾</span><span>Speichern</span></button>
-        <button type="button" onclick="kvLaden('auftrag')" style="background:#16A085;color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:48px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:16px">📂</span><span>Laden</span></button>
+        <button type="button" onclick="kvSpeichern('auftrag')" style="display:none!important;background:#27AE60;color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:48px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:16px">💾</span><span>Speichern</span></button>
+        <button type="button" onclick="kvLaden('auftrag')" style="display:none!important;background:#16A085;color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:48px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:16px">📂</span><span>Laden</span></button>
         <button type="button" onclick="window.print()" style="background:#7F8C8D;color:#fff;border:none;border-radius:8px;padding:10px 6px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:48px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:16px">🖨️</span><span>Drucken</span></button>
       </div>
     </div>
@@ -4356,13 +4438,13 @@ body {
 
 <!-- AKTIONEN -->
 <div class="no-print" style="padding:12px;background:#1A237E;border-radius:12px">
-  <button type="button" onclick="messSenden()" style="background:#fff;color:#1A237E;border:none;border-radius:12px;padding:18px;font-size:16px;font-weight:800;cursor:pointer;touch-action:manipulation;width:100%;min-height:68px;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:0 4px 12px rgba(0,0,0,0.3)">
+  <button type="button" onclick="messSenden()" style="display:none!important;background:#fff;color:#1A237E;border:none;border-radius:12px;padding:18px;font-size:16px;font-weight:800;cursor:pointer;touch-action:manipulation;width:100%;min-height:68px;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:0 4px 12px rgba(0,0,0,0.3)">
     <div style="display:flex;align-items:center;gap:10px"><span style="font-size:22px">📤</span><span>PRÜFBERICHT SENDEN</span></div>
     <div style="font-size:11px;font-weight:400;color:#546E7A">Vollständiger Prüfbericht gem. Anlage 2.3 Bgld. HK-VO · §32 Abs.1</div>
   </button>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-    <button type="button" onclick="kvSpeichern('mess')" style="background:rgba(255,255,255,0.15);color:#fff;border:none;border-radius:8px;padding:10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:48px">💾 Speichern</button>
-    <button type="button" onclick="kvLaden('mess')" style="background:rgba(255,255,255,0.15);color:#fff;border:none;border-radius:8px;padding:10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:48px">📂 Laden</button>
+    <button type="button" onclick="kvSpeichern('mess')" style="display:none!important;background:rgba(255,255,255,0.15);color:#fff;border:none;border-radius:8px;padding:10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:48px">💾 Speichern</button>
+    <button type="button" onclick="kvLaden('mess')" style="display:none!important;background:rgba(255,255,255,0.15);color:#fff;border:none;border-radius:8px;padding:10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:48px">📂 Laden</button>
   </div>
 </div>
 
@@ -4653,13 +4735,13 @@ body {
 
 <!-- AKTIONEN -->
 <div class="no-print" style="padding:12px;background:#0D3B6E;border-radius:12px">
-  <button type="button" onclick="l2Senden()" style="background:#fff;color:#0D3B6E;border:none;border-radius:12px;padding:16px;font-size:15px;font-weight:800;cursor:pointer;touch-action:manipulation;width:100%;min-height:60px;display:flex;flex-direction:column;align-items:center;gap:3px">
+  <button type="button" onclick="l2Senden()" style="display:none!important;background:#fff;color:#0D3B6E;border:none;border-radius:12px;padding:16px;font-size:15px;font-weight:800;cursor:pointer;touch-action:manipulation;width:100%;min-height:60px;display:flex;flex-direction:column;align-items:center;gap:3px">
     <div style="display:flex;align-items:center;gap:10px"><span style="font-size:22px">📤</span><span>MESSBERICHT SENDEN</span></div>
     <div style="font-size:10px;font-weight:400;color:#334155">Verbrennungsluft-Messbericht · ÖVGW G K62 · ÖNORM B 8311</div>
   </button>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-    <button type="button" onclick="kvSpeichern('luft2')" style="background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:8px;padding:10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:44px">💾 Speichern</button>
-    <button type="button" onclick="kvLaden('luft2')" style="background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:8px;padding:10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:44px">📂 Laden</button>
+    <button type="button" onclick="kvSpeichern('luft2')" style="display:none!important;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:8px;padding:10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:44px">💾 Speichern</button>
+    <button type="button" onclick="kvLaden('luft2')" style="display:none!important;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:8px;padding:10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:44px">📂 Laden</button>
   </div>
 </div>
 
@@ -4999,13 +5081,13 @@ body {
 
 <!-- AKTIONEN -->
 <div class="no-print" style="padding:12px;background:#3D0C02;border-radius:12px">
-  <button type="button" onclick="bsSenden()" style="background:#fff;color:#3D0C02;border:none;border-radius:12px;padding:16px;font-size:15px;font-weight:800;cursor:pointer;touch-action:manipulation;width:100%;min-height:60px;display:flex;flex-direction:column;align-items:center;gap:3px">
+  <button type="button" onclick="bsSenden()" style="display:none!important;background:#fff;color:#3D0C02;border:none;border-radius:12px;padding:16px;font-size:15px;font-weight:800;cursor:pointer;touch-action:manipulation;width:100%;min-height:60px;display:flex;flex-direction:column;align-items:center;gap:3px">
     <div style="display:flex;align-items:center;gap:10px"><span style="font-size:22px">📤</span><span>PROTOKOLL SENDEN</span></div>
     <div style="font-size:10px;font-weight:400;color:#78350F">Feuerstättenbeschau gem. Bgld. KehrG · ÖNORM B 8201 · B 8311</div>
   </button>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-    <button type="button" onclick="kvSpeichern('beschau')" style="background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:8px;padding:10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:44px">💾 Speichern</button>
-    <button type="button" onclick="kvLaden('beschau')" style="background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:8px;padding:10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:44px">📂 Laden</button>
+    <button type="button" onclick="kvSpeichern('beschau')" style="display:none!important;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:8px;padding:10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:44px">💾 Speichern</button>
+    <button type="button" onclick="kvLaden('beschau')" style="display:none!important;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:8px;padding:10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:44px">📂 Laden</button>
   </div>
 </div>
 
@@ -5324,13 +5406,13 @@ body {
 
 <!-- AKTIONEN -->
 <div class="no-print" style="padding:12px;background:#1A2B45;border-radius:12px">
-  <button type="button" onclick="b82Senden()" style="background:#fff;color:#1A2B45;border:none;border-radius:12px;padding:16px;font-size:15px;font-weight:800;cursor:pointer;touch-action:manipulation;width:100%;min-height:60px;display:flex;flex-direction:column;align-items:center;gap:3px">
+  <button type="button" onclick="b82Senden()" style="display:none!important;background:#fff;color:#1A2B45;border:none;border-radius:12px;padding:16px;font-size:15px;font-weight:800;cursor:pointer;touch-action:manipulation;width:100%;min-height:60px;display:flex;flex-direction:column;align-items:center;gap:3px">
     <div style="display:flex;align-items:center;gap:10px"><span style="font-size:22px">📤</span><span>PRÜFBERICHT SENDEN</span></div>
     <div style="font-size:10px;font-weight:400;color:#334155">Fang-Prüfbericht · ÖNORM B 8201 · Bgld. KehrG 2022</div>
   </button>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-    <button type="button" onclick="kvSpeichern('b8201')" style="background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:8px;padding:10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:44px">💾 Speichern</button>
-    <button type="button" onclick="kvLaden('b8201')" style="background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:8px;padding:10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:44px">📂 Laden</button>
+    <button type="button" onclick="kvSpeichern('b8201')" style="display:none!important;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:8px;padding:10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:44px">💾 Speichern</button>
+    <button type="button" onclick="kvLaden('b8201')" style="display:none!important;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:8px;padding:10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:44px">📂 Laden</button>
   </div>
 </div>
 
@@ -5486,9 +5568,9 @@ body {
 </div>
 
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px">
-  <button onclick="pvpSenden()" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 8px;font-size:12px;font-weight:700;cursor:pointer;min-height:48px;touch-action:manipulation">📤 Senden / PDF</button>
-  <button onclick="kvSpeichern('pvprot')" style="background:#16A34A;color:#fff;border:none;border-radius:10px;padding:12px 8px;font-size:12px;font-weight:700;cursor:pointer;min-height:48px;touch-action:manipulation">💾 Speichern</button>
-  <button onclick="kvLaden('pvprot')" style="background:#D97706;color:#fff;border:none;border-radius:10px;padding:12px 8px;font-size:12px;font-weight:700;cursor:pointer;min-height:48px;touch-action:manipulation">📂 Laden</button>
+  <button onclick="pvpSenden()" style="display:none!important;background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 8px;font-size:12px;font-weight:700;cursor:pointer;min-height:48px;touch-action:manipulation">📤 Senden / PDF</button>
+  <button onclick="kvSpeichern('pvprot')" style="display:none!important;background:#16A34A;color:#fff;border:none;border-radius:10px;padding:12px 8px;font-size:12px;font-weight:700;cursor:pointer;min-height:48px;touch-action:manipulation">💾 Speichern</button>
+  <button onclick="kvLaden('pvprot')" style="display:none!important;background:#D97706;color:#fff;border:none;border-radius:10px;padding:12px 8px;font-size:12px;font-weight:700;cursor:pointer;min-height:48px;touch-action:manipulation">📂 Laden</button>
 </div>
 </div></div>
 
@@ -5591,9 +5673,9 @@ body {
 </div>
 
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px">
-  <button onclick="bspSenden()" style="background:#B71C1C;color:#fff;border:none;border-radius:10px;padding:12px 8px;font-size:12px;font-weight:700;cursor:pointer;min-height:48px;touch-action:manipulation">📤 Senden / PDF</button>
-  <button onclick="kvSpeichern('brandprot')" style="background:#16A34A;color:#fff;border:none;border-radius:10px;padding:12px 8px;font-size:12px;font-weight:700;cursor:pointer;min-height:48px;touch-action:manipulation">💾 Speichern</button>
-  <button onclick="kvLaden('brandprot')" style="background:#D97706;color:#fff;border:none;border-radius:10px;padding:12px 8px;font-size:12px;font-weight:700;cursor:pointer;min-height:48px;touch-action:manipulation">📂 Laden</button>
+  <button onclick="bspSenden()" style="display:none!important;background:#B71C1C;color:#fff;border:none;border-radius:10px;padding:12px 8px;font-size:12px;font-weight:700;cursor:pointer;min-height:48px;touch-action:manipulation">📤 Senden / PDF</button>
+  <button onclick="kvSpeichern('brandprot')" style="display:none!important;background:#16A34A;color:#fff;border:none;border-radius:10px;padding:12px 8px;font-size:12px;font-weight:700;cursor:pointer;min-height:48px;touch-action:manipulation">💾 Speichern</button>
+  <button onclick="kvLaden('brandprot')" style="display:none!important;background:#D97706;color:#fff;border:none;border-radius:10px;padding:12px 8px;font-size:12px;font-weight:700;cursor:pointer;min-height:48px;touch-action:manipulation">📂 Laden</button>
 </div>
 </div></div>
 
@@ -17483,24 +17565,31 @@ function ablageOpen(id) {
 }
 
 // Drucken aus Ablage
-function ablagePrint() {
-  if (!_ablageCurrentEntry) return;
-  try {
-    var htmlContent = buildA4Html(_ablageCurrentEntry.type);
-    if (htmlContent && htmlContent.html) {
-      var w = window.open('', '_blank', 'width=800,height=900');
-      w.document.write(htmlContent.html);
-      w.document.close();
-      setTimeout(function(){ w.print(); }, 500);
-    } else {
-      _grieerToast('Drucken nicht verfuegbar', '#F59E0B', 2000);
-    }
-  } catch(e) {
-    _grieerToast('Drucken: ' + e.message, '#DC2626', 3000);
-  }
+function ablagePrint(){
+  if(!_ablageCurrentEntry) return;
+  var e = _ablageCurrentEntry;
+  var rows = '';
+  var skip = ['_pageId','_pageLabel','_kunde'];
+  Object.keys(e.data||{}).forEach(function(k){
+    if(skip.indexOf(k)>=0||!e.data[k]) return;
+    var lbl = k.replace(/-|_/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();});
+    rows += '<tr><td style="padding:6px 10px 6px 0;color:#64748B;font-size:13px;white-space:nowrap">' + lbl + '</td>';
+    rows += '<td style="padding:6px 0;font-size:13px;font-weight:600">' + String(e.data[k]).replace(/</g,'&lt;') + '</td></tr>';
+  });
+  var pw = window.open('','_blank','width=800,height=900');
+  var css = 'body{font-family:Arial,sans-serif;padding:30px;color:#1A2B45}h2{margin:0 0 4px}.m{color:#64748B;font-size:12px;margin-bottom:20px}table{width:100%;border-collapse:collapse}tr{border-bottom:1px solid #F1F5F9}@media print{.nb{display:none}}';
+  var h = '<!DOCTYPE html><html><head><meta charset=UTF-8><title>' + e.titel + '</title><style>' + css + '</style></head><body>';
+  h += '<div style="display:flex;justify-content:space-between;margin-bottom:16px"><div>';
+  h += '<h2>' + e.titel + '</h2><div class=m>Datum: ' + e.datum + ' &bull; ' + e.ersteller + '</div></div>';
+  h += '<div style="font-size:11px;color:#94A3B8">Grieer Rauchfangkehrermeister</div></div>';
+  h += '<table>' + rows + '</table>';
+  h += '<div class=nb style="margin-top:20px"><button onclick="window.print()" style="padding:10px 20px;background:#1A2B45;color:#fff;border:none;border-radius:8px;cursor:pointer">Drucken</button></div>';
+  h += '</body></html>';
+  pw.document.write(h);
+  pw.document.close();
+  setTimeout(function(){ try{pw.print();}catch(ex){} },500);
 }
 
-// WhatsApp aus Ablage
 function ablageWhatsApp() {
   if (!_ablageCurrentEntry) return;
   var e = _ablageCurrentEntry;
@@ -17524,167 +17613,56 @@ function ablageDeleteCurrent() {
 
 // Ablage-Buttons dynamisch zu jedem Formular hinzufuegen
 function ablageAddButtons() {
-  var forms = ['pv','gas','luft','brand','kamin','kehr','gesamt','wprot','mess','luft2',
-               'b8201','maengel','wart','pvprot','brandprot','auftrag','verr','mess'];
-  forms.forEach(function(pageId) {
+  var ALL_FORMS = ['pv','gas','luft','brand','kamin','kehr','gesamt','wprot','mess',
+    'luft2','b8201','maengel','wart','pvprot','brandprot','auftrag','verr'];
+  var hideWords = ['senden','drucken','e-mail','email','whatsapp','pdf',
+    'speichern','laden','print','share','mail','kv send','weiterleiten'];
+  
+  ALL_FORMS.forEach(function(pageId) {
     var pg = document.getElementById('page-' + pageId);
-    if (!pg || pg.getAttribute('data-ablage-added')) return;
-    pg.setAttribute('data-ablage-added', '1');
+    if (!pg) return;
     
-    // Erstelle Ablage-Button-Leiste ganz oben in der Seite
-    var bar = document.createElement('div');
-    bar.style.cssText = 'position:sticky;top:0;z-index:10;background:#1A2B45;padding:6px 8px;margin:-12px -12px 8px;display:flex;align-items:center;justify-content:space-between;border-radius:10px 10px 0 0'; bar.className = 'ablage-bar';
+    // 1. Ablage-Bar nur einmal einfügen
+    if (!pg.querySelector('.ablage-bar')) {
+      var bar = document.createElement('div');
+      bar.className = 'ablage-bar';
+      bar.style.cssText = 'position:sticky;top:0;z-index:10;background:#1A2B45;padding:6px 8px;margin:-12px -12px 8px;display:flex;align-items:center;justify-content:space-between;border-radius:10px 10px 0 0';
+      var bb = document.createElement('button');
+      bb.innerHTML = '&#8592; Zur&#252;ck';
+      bb.style.cssText = 'background:rgba(255,255,255,0.15);color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;touch-action:manipulation;min-height:34px';
+      bb.onclick = function(){ show('aufnahme'); };
+      var sb = document.createElement('button');
+      sb.innerHTML = '&#128193; In Ablage speichern';
+      sb.style.cssText = 'background:#16A34A;color:#fff;border:none;border-radius:6px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:34px';
+      (function(pid){ sb.onclick = function(){ ablageSpeichern(pid); }; })(pageId);
+      bar.appendChild(bb); bar.appendChild(sb);
+      pg.insertBefore(bar, pg.firstChild);
+    }
     
-    var leftPart = document.createElement('div');
-    leftPart.style.cssText = 'display:flex;align-items:center;gap:8px';
-    
-    var backBtn = document.createElement('button');
-    backBtn.innerHTML = '&#8592; Startseite';
-    backBtn.style.cssText = 'background:rgba(255,255,255,0.15);color:#fff;border:none;border-radius:6px;padding:5px 8px;font-size:11px;cursor:pointer;touch-action:manipulation;min-height:34px';
-    backBtn.onclick = function() { show('aufnahme'); };
-    
-    var saveBtn = document.createElement('button');
-    saveBtn.innerHTML = '&#128193; In Ablage speichern';
-    saveBtn.style.cssText = 'background:#16A34A;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;min-height:34px';
-    (function(pid){ saveBtn.onclick = function() { ablageSpeichern(pid); }; })(pageId);
-    
-    leftPart.appendChild(backBtn);
-    leftPart.appendChild(saveBtn);
-    bar.appendChild(leftPart);
-    
-    // Vorhandene Seiten-Buttons VERBERGEN (Senden, Speichern, etc.)
-    pg.querySelectorAll('button').forEach(function(btn) {
-      var txt = (btn.textContent || '').toLowerCase();
-      if (txt.includes('senden') || txt.includes('whatsapp') || txt.includes('speichern') ||
-          txt.includes('e-mail') || txt.includes('email') || txt.includes('pdf') ||
-          txt.includes('laden') || txt.includes('drucken')) {
-        btn.style.display = 'none';
+    // 2. IMMER: Alle Send/Druck Buttons verstecken (auch bei Wiederholung)
+    pg.querySelectorAll('button').forEach(function(btn){
+      if(btn.closest('.ablage-bar')) return;
+      var t = (btn.textContent || '').toLowerCase().replace(/\s+/g,' ').trim();
+      var o = (btn.getAttribute('onclick') || '').toLowerCase();
+      var shouldHide = hideWords.some(function(w){ return t.includes(w) || o.includes(w); });
+      if(shouldHide){
+        btn.style.setProperty('display','none','important');
+        btn.setAttribute('data-ablage-hidden','1');
       }
     });
     
-    pg.insertBefore(bar, pg.firstChild);
+    // 3. Divs mit mehreren Send-Buttons auch verstecken
+    pg.querySelectorAll('div').forEach(function(d){
+      if(d.closest('.ablage-bar')) return;
+      var btns = d.querySelectorAll('button:not([data-ablage-hidden])');
+      var hiddenBtns = d.querySelectorAll('button[data-ablage-hidden]');
+      if(hiddenBtns.length > 0 && btns.length === 0){
+        d.style.setProperty('display','none','important');
+      }
+    });
   });
 }
 
-// show() Override: Ablage-Buttons hinzufuegen wenn Seite geoeffnet
-var _ablageOrigShow = window.show;
-  window.show = function(id){
-    // SICHERHEIT: Immer zuerst Login prüfen
-    if(!window._currentUser){
-      try{
-        var raw = sessionStorage.getItem('grieer-current-user');
-        if(raw){ window._currentUser = JSON.parse(raw); }
-      }catch(e){}
-    }
-    
-    // Nicht eingeloggt → Login zeigen, STOP
-    if(!window._currentUser){
-      document.querySelectorAll('.pg').forEach(function(p){
-        p.classList.remove('active');
-        p.style.display = 'none';
-      });
-      // Overlay wiederherstellen falls entfernt
-      var ovs = document.querySelectorAll('[id="pin-overlay"]');
-      if(ovs.length > 0){
-        ovs.forEach(function(ov){ ov.style.display='flex'; ov.style.visibility='visible'; });
-      } else {
-        // Neu erstellen
-        var div = document.createElement('div');
-        div.id = 'pin-overlay';
-        div.setAttribute('style', 'display:flex;position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#0F172A,#1A2B45);z-index:99999;align-items:center;justify-content:center;flex-direction:column;padding:20px;box-sizing:border-box');
-        div.innerHTML = [
-          '<div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:32px 24px;width:100%;max-width:360px;text-align:center">',
-          '<div style="font-size:48px;margin-bottom:8px">&#128272;</div>',
-          '<div style="font-size:22px;font-weight:800;color:#fff;margin-bottom:24px">Grieer App</div>',
-          '<input type="text" id="pin-word-input" placeholder="Zugangscode" autocomplete="off" ',
-          'style="width:100%;padding:14px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);color:#fff;font-size:16px;box-sizing:border-box;margin-bottom:12px;text-align:center" ',
-          'onkeydown="if(event.key===\'Enter\')pinWordSubmit()">',
-          '<button onclick="pinWordSubmit()" style="width:100%;padding:14px;background:linear-gradient(135deg,#1E5799,#2563EB);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer">Einloggen</button>',
-          '<div id="pin-err" style="color:#FCA5A5;font-size:12px;margin-top:10px;min-height:18px"></div>',
-          '<div style="font-size:10px;color:#475569;margin-top:16px">Zugangscode: <b>roland</b></div>',
-          '</div>'
-        ].join('');
-        document.body.appendChild(div);
-      }
-      return;
-    }
-    
-    // Eingeloggt: Seiten umschalten
-    document.querySelectorAll('.pg').forEach(function(p){ 
-      p.classList.remove('active');
-      p.style.display = '';
-    });
-    
-    if(_ablageOrigShow){
-      try{ _ablageOrigShow(id); return; }catch(e){}
-    }
-    
-    // Fallback
-    var pg = document.getElementById('page-' + id);
-    if(pg){ pg.classList.add('active'); try{ pg.scrollTop=0; }catch(e){} }
-    var navCur = document.getElementById('nav-current');
-    if(navCur) navCur.textContent = id;
-    
-    if(id==='ablage') setTimeout(function(){ try{ablageRender();}catch(e){} },100);
-    setTimeout(function(){ try{ablageAddButtons();}catch(e){} },100);
-  };
-
-// ============================================================
-// ADMIN ROLLE ZUWEISEN - Erweiterung der Benutzerverwaltung
-// ============================================================
-var _origAdminOpenUserForm = typeof _adminOpenUserForm === 'function' ? _adminOpenUserForm : null;
-window._adminOpenUserForm = function(user, idx) {
-  if (_origAdminOpenUserForm) _origAdminOpenUserForm(user, idx);
-  // Admin-Checkbox hinzufuegen falls noch nicht vorhanden
-  setTimeout(function() {
-    var formPages = document.getElementById('admin-form-pages');
-    if (!formPages) return;
-    var adminCheck = document.getElementById('admin-role-check');
-    if (adminCheck) { adminCheck.checked = (user && user.role === 'admin'); return; }
-    
-    var adminDiv = document.createElement('div');
-    adminDiv.style.cssText = 'margin-bottom:12px;padding:10px;background:#FEF3C7;border-radius:8px;border:1.5px solid #F59E0B';
-    adminDiv.innerHTML = '<label style="display:flex;align-items:center;gap:10px;cursor:pointer"><input type="checkbox" id="admin-role-check" style="width:20px;height:20px"> <div><div style="font-weight:700;font-size:13px;color:#92400E">&#128081; Admin-Rechte zuweisen</div><div style="font-size:11px;color:#B45309">Dieser Benutzer kann alle Dokumente sehen und Einstellungen verwalten</div></div></label>';
-    formPages.parentNode.insertBefore(adminDiv, formPages);
-    if (user && user.role === 'admin') document.getElementById('admin-role-check').checked = true;
-  }, 150);
-};
-
-// adminSaveUser mit Admin-Rolle
-var _origAdminSaveUser = typeof adminSaveUser === 'function' ? adminSaveUser : null;
-window.adminSaveUser = function() {
-  var adminCheck = document.getElementById('admin-role-check');
-  var isAdmin = adminCheck && adminCheck.checked;
-  
-  var name = (document.getElementById('admin-form-name').value||'').trim();
-  var code = (document.getElementById('admin-form-code').value||'').trim();
-  var idxStr = document.getElementById('admin-form-idx').value;
-  if (!name || !code) { _grieerToast('Name und Code erforderlich!', '#DC2626', 2000); return; }
-  
-  var pages = [];
-  document.querySelectorAll('#admin-form-pages input[type=checkbox]:checked').forEach(function(cb){ pages.push(cb.value); });
-  
-  var users = _loadUsers();
-  var editIdx = idxStr !== '' ? parseInt(idxStr) : -1;
-  
-  var newUser = {
-    id: editIdx >= 0 ? users[editIdx].id : ('u_' + Date.now()),
-    name: name,
-    code: code,
-    role: isAdmin ? 'admin' : 'user',
-    pages: isAdmin ? '*' : pages
-  };
-  
-  if (editIdx >= 0) { users[editIdx] = newUser; } else { users.push(newUser); }
-  _saveUsers(users);
-  document.getElementById('admin-user-form-overlay').style.display = 'none';
-  if (typeof adminShowUsers === 'function') adminShowUsers();
-  _grieerToast('&#10003; Benutzer gespeichert' + (isAdmin ? ' (Admin)' : ''), '#16A34A', 2000);
-};
-
-/* ============================================================ */
-
-/* === PASSWORT ÄNDERN === */
 function showChangePw(){
   var cur = window._currentUser;
   if(!cur){ _grieerToast('Nicht eingeloggt', '#DC2626', 2000); return; }
@@ -17760,6 +17738,33 @@ function doChangePw(){
 }
 /* === ENDE PASSWORT ÄNDERN === */
 
+function ablageMail(){
+  if(!_ablageCurrentEntry) return;
+  var e = _ablageCurrentEntry;
+  var subject = encodeURIComponent(e.titel);
+  var body = encodeURIComponent(e.titel + '\n\nDatum: ' + e.datum + '\nErstellt von: ' + e.ersteller + '\n\n-- Grieer Rauchfangkehrermeister --');
+  window.open('mailto:?subject=' + subject + '&body=' + body, '_blank');
+}
+
+/* Ablage-List: Auto-Render via MutationObserver */
+(function(){
+  function initAblageObserver(){
+    var ablageEl = document.getElementById('page-ablage');
+    if(!ablageEl){ setTimeout(initAblageObserver, 500); return; }
+    var obs = new MutationObserver(function(muts){
+      muts.forEach(function(m){
+        if(m.type==='attributes' && (m.attributeName==='class'||m.attributeName==='style')){
+          var el = m.target;
+          var isActive = el.classList.contains('active') || el.style.display==='block';
+          if(isActive && window._currentUser){ try{ablageRender();}catch(e){} }
+        }
+      });
+    });
+    obs.observe(ablageEl, {attributes:true, attributeFilter:['class','style']});
+  }
+  if(document.readyState==='complete'){ initAblageObserver(); }
+  else { window.addEventListener('load', initAblageObserver); }
+})();
 </script>
 
 </body>
