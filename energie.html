@@ -2324,7 +2324,7 @@ function csvImportOeffnen(){
     <div class="fRow">
       <label>Oder Text direkt einfügen</label>
       <textarea id="csvText" style="min-height:120px;font-family:monospace;font-size:.78rem" 
-        placeholder="K001;Müller;Hans;Musterfirma;Hauptstraße 1;7000;Eisenstadt;0664123456;hans@email.at"></textarea>
+        placeholder="K001;Müller;Hans;Musterfirma GmbH;Hauptstraße 1;7000;Eisenstadt;0664123456;hans@email.at"></textarea>
     </div>
     <div id="csvVorschau" style="margin-bottom:8px"></div>
     <div style="display:flex;gap:8px;margin-top:14px">
@@ -2334,10 +2334,50 @@ function csvImportOeffnen(){
     </div>`);
 }
 
+function csvZeileParsen(zeile, sep){
+  // Korrekte CSV-Verarbeitung mit Anführungszeichen
+  const result=[];
+  let current='';
+  let inQuotes=false;
+  for(let i=0;i<zeile.length;i++){
+    const ch=zeile[i];
+    if(ch==='"'){
+      if(inQuotes&&zeile[i+1]==='"'){current+='"';i++;}
+      else inQuotes=!inQuotes;
+    } else if(ch===sep&&!inQuotes){
+      result.push(current.trim());
+      current='';
+    } else {
+      current+=ch;
+    }
+  }
+  result.push(current.trim());
+  return result;
+}
+
 function csvDateiLesen(input){
   const file=input.files[0];if(!file)return;
   const reader=new FileReader();
-  reader.onload=e=>{document.getElementById('csvText').value=e.target.result;csvVorschau();};
+  reader.onload=e=>{
+    let text=e.target.result;
+    // BOM entfernen falls vorhanden
+    if(text.charCodeAt(0)===0xFEFF)text=text.slice(1);
+    // Prüfe ob Umlaute kaputt sind (? statt ä/ö/ü)
+    if(text.includes('?')&&!text.includes('ä')&&!text.includes('ö')&&!text.includes('ü')){
+      // Nochmal mit Windows-1252 lesen
+      const r2=new FileReader();
+      r2.onload=e2=>{
+        let t2=e2.target.result;
+        if(t2.charCodeAt(0)===0xFEFF)t2=t2.slice(1);
+        document.getElementById('csvText').value=t2;
+        csvVorschau();
+      };
+      r2.readAsText(file,'windows-1252');
+      return;
+    }
+    document.getElementById('csvText').value=text;
+    csvVorschau();
+  };
   reader.readAsText(file,'UTF-8');
 }
 
@@ -2372,9 +2412,20 @@ async function csvImportStarten(){
   toast('Importiere '+daten.length+' Kunden…');
   for(const zeile of daten){
     if(!zeile.trim())continue;
-    const sep=zeile.includes(';')?';':',';
-    const t=zeile.split(sep).map(x=>x.trim().replace(/^"|"$/g,''));
-    const [nummer='',nachname='',vorname='',firma='',strasse='',plz='',ort='',telefon='',email='']=t;
+    // Trennzeichen intelligent erkennen
+    const sep=zeile.includes(';')?';':(zeile.includes('\t')?'\t':',');
+    // Splits mit Anführungszeichen korrekt behandeln
+    const t=csvZeileParsen(zeile,sep);
+    // Maximal 9 Felder - Rest wird ignoriert
+    const nummer  = (t[0]||'').trim();
+    const nachname= (t[1]||'').trim();
+    const vorname = (t[2]||'').trim();
+    const firma   = (t[3]||'').trim();
+    const strasse = (t[4]||'').trim();
+    const plz     = (t[5]||'').trim();
+    const ort     = (t[6]||'').trim();
+    const telefon = (t[7]||'').trim();
+    const email   = (t[8]||'').trim();
     if(!nachname){fehler++;continue;}
     try{
       await api('/kunden',{method:'POST',body:JSON.stringify({
