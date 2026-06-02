@@ -462,6 +462,26 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   body{background:#fff}
 }
 </style>
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<script>
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').then(reg=>{
+    reg.addEventListener('updatefound',()=>{
+      const nw=reg.installing;
+      nw.addEventListener('statechange',()=>{
+        if(nw.state==='installed'&&navigator.serviceWorker.controller){
+          // Neue Version verfügbar
+          const banner=document.createElement('div');
+          banner.style.cssText='position:fixed;top:0;left:0;right:0;z-index:9999;background:#065f46;color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;font-family:system-ui';
+          banner.innerHTML='<span>🔄 Neue Version verfügbar!</span><button onclick="location.reload()" style="background:#fff;color:#065f46;border:none;padding:6px 14px;border-radius:20px;font-weight:700;cursor:pointer">Jetzt aktualisieren</button>';
+          document.body.prepend(banner);
+        }
+      });
+    });
+  }).catch(()=>{});
+}
+</script>
 </head>
 <body>
 
@@ -522,7 +542,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
   <!-- HOME -->
   <div id="tab-home" class="tabContent ak">
-    <div id="notifContainer"></div>
+    <div id="offlineBanner" style="display:none;background:#92400e;color:#fff;padding:10px 16px;margin-bottom:10px;border-radius:10px;font-size:.83rem;font-weight:600">
+  📵 Offline — Daten aus dem Zwischenspeicher
+</div>
+<div id="notifContainer"></div>
     <div class="statsRow" id="homeStats"></div>
     <div class="card">
       <div class="cardHead"><h3>📊 Kunden je Leistungsart</h3></div>
@@ -678,6 +701,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <div id="maListe"></div>
     </div>
     <div class="card">
+      <div class="cardHead">
+        <h3>🔧 Datenbank Wartung</h3>
+      </div>
+      <div class="cardBody">
+        <p style="font-size:.83rem;color:var(--text2);margin-bottom:12px">Hilfsfunktionen für Datenkorrekturen</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btnOut btnSm" onclick="aktivSetzen()">✅ Alle Kunden aktivieren</button>
+          <button class="btn btnOut btnSm" onclick="kundenZaehlen()">📊 Kunden zählen</button>
+        </div>
+        <div id="wartungInfo" style="margin-top:10px;font-size:.82rem;color:var(--text2)"></div>
+      </div>
+    </div>
+    <div class="card">
       <div class="cardHead"><h3>📤 Kalender Export</h3></div>
       <div class="cardBody">
         <p style="font-size:.84rem;color:var(--text2);margin-bottom:14px">Termine als .ics Datei für Apple Calendar exportieren.</p>
@@ -738,7 +774,14 @@ let pinEingabe='';
 
 // API
 async function api(p,o={}){
-  const h={'Content-Type':'application/json','apikey':KEY,'Authorization':'Bearer '+KEY,'Prefer':'return=representation'};
+  const h={
+    'Content-Type':'application/json',
+    'apikey':KEY,
+    'Authorization':'Bearer '+KEY,
+    'Prefer':'return=representation',
+    'Range-Unit':'items',
+    'Range':'0-9999',
+  };
   const r=await fetch(SB+p,{...o,headers:{...h,...(o.headers||{})}});
   if(!r.ok){const t=await r.text();throw new Error(t||r.statusText);}
   const t=await r.text();return t?JSON.parse(t):[];
@@ -781,6 +824,17 @@ async function pinPruefen(){
   pinEingabe='';pinAnzeigen();
 }
 function logout(){sessionStorage.removeItem('gu');user=null;location.reload();}
+function appNeuLaden(){
+  const btn=document.getElementById('reloadBtn');
+  if(btn){btn.textContent='⏳';btn.disabled=true;}
+  laden().then(()=>{
+    if(btn){btn.textContent='✓';setTimeout(()=>{btn.textContent='↺';btn.disabled=false;},1500);}
+    toast('App aktualisiert ✓');
+  }).catch(()=>{
+    if(btn){btn.textContent='↺';btn.disabled=false;}
+    toast('Offline — zeige gespeicherte Daten','err');
+  });
+}
 function isAdmin(){return user?.rolle==='admin';}
 
 // APP START
@@ -800,9 +854,9 @@ async function appStart(){
 async function laden(){
   try{
     const [k,a,t,m]=await Promise.all([
-      api('/kunden?order=nachname.asc&aktiv=eq.true'),
-      api('/auftraege?order=datum.desc'),
-      api('/termine?order=datum.asc'),
+      api('/kunden?order=nachname.asc&or=(aktiv.eq.true,aktiv.is.null)&limit=10000'),
+      api('/auftraege?order=datum.desc&limit=10000'),
+      api('/termine?order=datum.asc&limit=10000'),
       api('/mitarbeiter?order=name.asc'),
     ]);
     DB={kunden:k,auftraege:a,termine:t,mitarbeiter:m};
@@ -2495,6 +2549,30 @@ async function csvImportStarten(){
   modalZu();await laden();zeigeTab('kunden');
 }
 
+
+// ══ WARTUNG ══
+async function aktivSetzen(){
+  try{
+    await api('/kunden?aktiv=is.null',{method:'PATCH',body:JSON.stringify({aktiv:true})});
+    await api('/kunden?aktiv=eq.false',{method:'PATCH',body:JSON.stringify({aktiv:true})});
+    toast('Alle Kunden aktiviert ✓');
+    document.getElementById('wartungInfo').textContent='Erledigt!';
+    await laden();
+  }catch(e){toast('Fehler: '+e.message,'err');}
+}
+async function kundenZaehlen(){
+  try{
+    const alle=await api('/kunden?select=id');
+    const aktiv=await api('/kunden?aktiv=eq.true&select=id');
+    const inaktiv=await api('/kunden?aktiv=eq.false&select=id');
+    const ohneAktiv=await api('/kunden?aktiv=is.null&select=id');
+    document.getElementById('wartungInfo').innerHTML=
+      `Gesamt: <strong>${alle.length}</strong> · 
+       Aktiv: <strong>${aktiv.length}</strong> · 
+       Inaktiv: <strong>${inaktiv.length}</strong> · 
+       Ohne Status: <strong>${ohneAktiv.length}</strong>`;
+  }catch(e){toast('Fehler: '+e.message,'err');}
+}
 
 // iCAL
 function icalExport(){
