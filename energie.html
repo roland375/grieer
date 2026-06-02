@@ -576,14 +576,7 @@ if('serviceWorker' in navigator){
 
   <!-- KUNDEN -->
   <div id="tab-kunden" class="tabContent">
-    <div class="secHead">
-      <h2>👥 Kunden</h2>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn btnOut btnSm" onclick="csvImportOeffnen()">📥 CSV</button>
-        <button class="btn btnRed btnSm" id="btnLoeschModus" onclick="loeschModusToggle()" style="display:none">🗑 Auswählen</button>
-        <button class="btn btnG btnSm" onclick="kundeNeu()">+ Neu</button>
-      </div>
-    </div>
+    <div id="kundenSecHead"></div>
     <div id="loeschBar" style="display:none;background:#fef2f2;border:1.5px solid #fca5a5;border-radius:10px;padding:10px 14px;margin-bottom:12px;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
       <span id="loeschAnzahl" style="font-size:.85rem;font-weight:700;color:#991b1b">0 ausgewählt</span>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -995,6 +988,16 @@ async function ausgewaehltLoeschen(){
 }
 
 function kvRender(){
+  // Header dynamisch rendern (Admin-Button nur für Admin)
+  const sh=document.getElementById('kundenSecHead');
+  if(sh)sh.innerHTML=`<div class="secHead">
+    <h2>👥 Kunden</h2>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btnOut btnSm" onclick="csvImportOeffnen()">📥 CSV</button>
+      ${isAdmin()?'<button class="btn btnRed btnSm" id="btnLoeschModus" onclick="loeschModusToggle()">🗑 Auswählen</button>':''}
+      <button class="btn btnG btnSm" onclick="kundeNeu()">+ Neu</button>
+    </div>
+  </div>`;
   const suche=(document.getElementById('kvSuche')?.value||'').toLowerCase();
   let liste=DB.kunden.filter(k=>{
     if(suche){const h=((k.nachname||'')+(k.vorname||'')+(k.ort||'')+(k.telefon||'')+(k.firma||'')).toLowerCase();if(!h.includes(suche))return false;}
