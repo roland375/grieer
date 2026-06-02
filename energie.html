@@ -578,9 +578,19 @@ if('serviceWorker' in navigator){
   <div id="tab-kunden" class="tabContent">
     <div class="secHead">
       <h2>👥 Kunden</h2>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btnOut btnSm" onclick="csvImportOeffnen()">📥 CSV</button>
+        ${isAdmin()?`<button class="btn btnRed btnSm" id="btnLoeschModus" onclick="loeschModusToggle()">🗑 Auswählen</button>`:''}
+        <button class="btn btnG btnSm" onclick="kundeNeu()">+ Neu</button>
+      </div>
+    </div>
+    <div id="loeschBar" style="display:none;background:#fef2f2;border:1.5px solid #fca5a5;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:none;align-items:center;justify-content:space-between;gap:10px">
+      <span id="loeschAnzahl" style="font-size:.85rem;font-weight:700;color:#991b1b">0 ausgewählt</span>
       <div style="display:flex;gap:8px">
-        <button class="btn btnOut btnSm" onclick="csvImportOeffnen()">📥 CSV Import</button>
-        <button class="btn btnG" onclick="kundeNeu()">+ Neuer Kunde</button>
+        <button class="btn btnGray btnSm" onclick="alleAbwaehlen()">Alle abwählen</button>
+        <button class="btn btnOut btnSm" onclick="alleAuswaehlen()">Alle wählen</button>
+        <button class="btn btnRed btnSm" id="btnLoeschenJetzt" onclick="ausgewaehltLoeschen()" disabled>🗑 Löschen</button>
+        <button class="btn btnGray btnSm" onclick="loeschModusToggle()">✕ Abbrechen</button>
       </div>
     </div>
     <div class="searchBar" style="border-color:var(--pri)">
@@ -921,6 +931,69 @@ function homeRender(){
 }
 
 // KUNDEN
+let loeschModus=false;
+let ausgewaehlt=new Set();
+
+function loeschModusToggle(){
+  if(!isAdmin())return;
+  loeschModus=!loeschModus;
+  ausgewaehlt.clear();
+  const btn=document.getElementById('btnLoeschModus');
+  const bar=document.getElementById('loeschBar');
+  if(loeschModus){
+    if(btn){btn.textContent='✕ Abbrechen';btn.style.background='var(--text2)';}
+    if(bar)bar.style.display='flex';
+  } else {
+    if(btn){btn.textContent='🗑 Auswählen';btn.style.background='';}
+    if(bar)bar.style.display='none';
+  }
+  loeschAnzahlUpdate();
+  kvRender();
+}
+
+function loeschAnzahlUpdate(){
+  const el=document.getElementById('loeschAnzahl');
+  if(el)el.textContent=ausgewaehlt.size+' ausgewählt';
+  const btn=document.getElementById('btnLoeschenJetzt');
+  if(btn)btn.disabled=ausgewaehlt.size===0;
+}
+
+function alleAuswaehlen(){
+  document.querySelectorAll('.kvCheck').forEach(cb=>{
+    cb.checked=true;
+    ausgewaehlt.add(cb.dataset.id);
+  });
+  loeschAnzahlUpdate();
+}
+
+function alleAbwaehlen(){
+  document.querySelectorAll('.kvCheck').forEach(cb=>{
+    cb.checked=false;
+  });
+  ausgewaehlt.clear();
+  loeschAnzahlUpdate();
+}
+
+async function ausgewaehltLoeschen(){
+  if(ausgewaehlt.size===0)return;
+  if(!confirm(ausgewaehlt.size+' Kunden loeschen?'))return;
+  let ok=0,err=0;
+  for(const id of ausgewaehlt){
+    try{
+      await api('/kunden?id=eq.'+id,{method:'DELETE'});
+      ok++;
+    }catch(e){err++;console.error('Lösch-Fehler:',e.message);}
+  }
+  toast('✅ '+ok+' Kunden gelöscht'+(err>0?' · '+err+' Fehler':''));
+  loeschModus=false;
+  ausgewaehlt.clear();
+  const btn=document.getElementById('btnLoeschModus');
+  const bar=document.getElementById('loeschBar');
+  if(btn){btn.textContent='🗑 Auswählen';btn.style.background='';}
+  if(bar)bar.style.display='none';
+  await laden();
+}
+
 function kvRender(){
   const suche=(document.getElementById('kvSuche')?.value||'').toLowerCase();
   let liste=DB.kunden.filter(k=>{
