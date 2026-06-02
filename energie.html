@@ -1011,12 +1011,37 @@ function kvRender(){
   const el=document.getElementById('kundenListe');if(!el)return;
   if(liste.length===0){el.innerHTML='<div class="emptyState"><div class="ei">👥</div><p>Keine Kunden gefunden</p></div>';return;}
   el.innerHTML=liste.map(k=>{
-    const name=(k.anrede?k.anrede+' ':'')+(k.vorname?k.vorname+' ':'')+k.nachname;
+    // Name sauber zusammenbauen - leere Strings ignorieren
+    const nn=(k.nachname||'').replace(/^"|"$/g,'').trim();
+    const vn=(k.vorname||'').replace(/^"|"$/g,'').trim();
+    const anr=(k.anrede||'').replace(/^"|"$/g,'').trim();
+    const name=(anr?anr+' ':'')+(vn?vn+' ':'')+nn;
+    const anzeigeText=name.trim()||k.nummer||'Unbekannt';
+    const ersterBuchstabe=(nn||vn||'?').charAt(0).toUpperCase();
     const hatNotiz=k.notiz&&k.notiz.replace(/\[ANLAGEN:[^\]]*\]/g,'').trim().length>0;
-    return`<div class="listItem" onclick="kundeDetail('${k.id}')" tabindex="0" onkeydown="if(event.key==='Enter')kundeDetail('${k.id}')">
-      <div class="listAvatar" style="background:var(--red2);color:var(--pri);font-weight:800">${k.nachname.charAt(0).toUpperCase()}</div>
+    const istAusgewaehlt=ausgewaehlt.has(k.id);
+
+    // LÖSCH-MODUS: Checkbox anzeigen
+    if(loeschModus){
+      return`<div class="listItem" style="cursor:pointer;background:${istAusgewaehlt?'#fef2f2':''};border-left:${istAusgewaehlt?'4px solid #991b1b':'4px solid transparent'}"
+        onclick="(function(){const cb=document.getElementById('cb_${k.id}');if(cb){cb.checked=!cb.checked;if(cb.checked)ausgewaehlt.add('${k.id}');else ausgewaehlt.delete('${k.id}');loeschAnzahlUpdate();kvRender();}})()">
+        <input type="checkbox" id="cb_${k.id}" class="kvCheck" data-id="${k.id}"
+          style="width:22px;height:22px;accent-color:#991b1b;flex-shrink:0;cursor:pointer"
+          ${istAusgewaehlt?'checked':''}
+          onclick="event.stopPropagation();if(this.checked)ausgewaehlt.add('${k.id}');else ausgewaehlt.delete('${k.id}');loeschAnzahlUpdate();kvRender()">
+        <div class="listMain" style="pointer-events:none">
+          <strong>${esc(anzeigeText)}</strong>
+          <span>${esc(k.ort||'')}${k.telefon?' · '+esc(k.telefon):''}</span>
+        </div>
+        <span class="badge ${hatFaelligkeit(k)?'bRed':'bGrn'}" style="flex-shrink:0">${hatFaelligkeit(k)?'Fällig':'OK'}</span>
+      </div>`;
+    }
+
+    // NORMAL-MODUS
+    return`<div class="listItem" onclick="kundeDetail('${k.id}')" tabindex="0">
+      <div class="listAvatar" style="background:var(--red2);color:var(--p);font-weight:800">${ersterBuchstabe}</div>
       <div class="listMain">
-        <strong>${esc(name)}${k.firma?' · '+esc(k.firma):''}</strong>
+        <strong>${esc(anzeigeText)}${k.firma&&k.firma.replace(/^"|"$/g,'').trim()?' · '+esc(k.firma.replace(/^"|"$/g,'').trim()):''}</strong>
         <span>${esc(k.ort||'')}${k.telefon?' · '+esc(k.telefon):''}${hatNotiz?' · ⚠️':''}</span>
       </div>
       <div class="listRight">${hatFaelligkeit(k)?'<span class="badge bRed">Fällig</span>':'<span class="badge bGrn">OK</span>'}</div>
