@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grieer — Kunden Import</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f5f5f5;color:#1a1a1a}
+.header{background:#7f1d1d;color:#fff;padding:16px 20px;display:flex;align-items:center;gap:12px}
+.header h1{font-size:1.1rem;font-weight:700}
+.header p{font-size:.78rem;opacity:.7;margin-top:2px}
+.container{max-width:700px;margin:20px auto;padding:0 16px}
+.card{background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);margin-bottom:16px;overflow:hidden}
+.cardHead{padding:14px 18px;border-bottom:1px solid #f0e8e8;display:flex;align-items:center;justify-content:space-between}
+.cardHead h2{font-size:.95rem;font-weight:700;color:#7f1d1d}
+.cardBody{padding:18px}
+label{display:block;font-size:.74rem;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
+input[type=file],textarea,select{width:100%;padding:10px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:.87rem;font-family:inherit;margin-bottom:12px}
+textarea{min-height:120px;font-family:monospace;font-size:.8rem}
+input[type=file]:focus,textarea:focus,select:focus{outline:none;border-color:#991b1b}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;border:none;font-size:.87rem;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}
+.btnP{background:#991b1b;color:#fff}
+.btnG{background:#065f46;color:#fff}
+.btnO{background:#92400e;color:#fff}
+.btnGray{background:#e5e7eb;color:#374151}
+.btn:hover{filter:brightness(1.1)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.row{margin-bottom:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:500px){.grid2{grid-template-columns:1fr}}
+.info{background:#eff6ff;border:1px solid #93c5fd;border-radius:8px;padding:12px;font-size:.82rem;color:#1e3a8a;margin-bottom:12px;line-height:1.7}
+.warn{background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:12px;font-size:.82rem;color:#92400e;margin-bottom:12px}
+.success{background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:12px;font-size:.82rem;color:#065f46;margin-bottom:12px}
+.err{background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:12px;font-size:.82rem;color:#991b1b;margin-bottom:12px}
+#log{background:#1a1a1a;color:#4ade80;border-radius:8px;padding:14px;font-family:monospace;font-size:.78rem;min-height:100px;max-height:300px;overflow-y:auto;white-space:pre-wrap;line-height:1.6}
+#log .err-line{color:#f87171}
+#log .warn-line{color:#fbbf24}
+#log .ok-line{color:#4ade80}
+.progress{background:#e5e7eb;border-radius:20px;height:8px;margin:8px 0;overflow:hidden}
+.progressBar{background:linear-gradient(90deg,#991b1b,#dc2626);height:100%;border-radius:20px;transition:.3s;width:0%}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:700}
+.bGrn{background:#d1fae5;color:#065f46}
+.bRed{background:#fee2e2;color:#991b1b}
+.bBlue{background:#dbeafe;color:#1e3a8a}
+.bOrange{background:#fef3c7;color:#92400e}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{background:#f9fafb;padding:8px 10px;text-align:left;font-size:.72rem;font-weight:700;color:#666;text-transform:uppercase;border-bottom:2px solid #e5e7eb}
+td{padding:7px 10px;border-bottom:1px solid #f3f4f6}
+tr:hover td{background:#fef2f2}
+.stat{text-align:center;padding:14px;background:#f9fafb;border-radius:8px}
+.stat .n{font-size:2rem;font-weight:800;color:#991b1b}
+.stat .l{font-size:.72rem;color:#666;text-transform:uppercase;font-weight:600;margin-top:2px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>⚡ Grieer — Kunden Import Tool</h1>
+    <p>Kundendaten importieren, aktualisieren und bereinigen</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- STATUS -->
+  <div class="card">
+    <div class="cardHead">
+      <h2>📊 Aktueller Datenbestand</h2>
+      <button class="btn btnGray" onclick="statusPruefen()">🔄 Prüfen</button>
+    </div>
+    <div class="cardBody">
+      <div id="statusBereich">
+        <p style="color:#666;font-size:.84rem">Klicke auf "Prüfen" um den aktuellen Stand zu sehen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMPORT -->
+  <div class="card">
+    <div class="cardHead"><h2>📥 CSV Import / Update</h2></div>
+    <div class="cardBody">
+
+      <div class="info">
+        <strong>Format deiner Datei (Tab-getrennt):</strong><br>
+        Nummer · SmsIndex · Anrede · TitelName · Name2 · Name3 · PLZ · Ort · Strasse · HNR · HNRTxt · Adresse · EMail · Tel1<br><br>
+        <strong>Modus:</strong> Wenn Kundennummer bereits existiert → <strong>Daten werden aktualisiert</strong>.<br>
+        Wenn neu → wird angelegt. Bestehende Anlagen-Daten bleiben erhalten.
+      </div>
+
+      <div class="row">
+        <label>CSV/TXT Datei auswählen</label>
+        <input type="file" id="csvDatei" accept=".csv,.txt,.tab" onchange="dateiLaden(this)">
+        <span id="encInfo" style="font-size:.76rem;color:#065f46;display:block;margin-top:-8px;margin-bottom:10px"></span>
+      </div>
+
+      <div class="row">
+        <label>Oder Text direkt einfügen</label>
+        <textarea id="csvText" placeholder="Nummer&#9;SmsIndex&#9;Anrede&#9;TitelName&#9;..."></textarea>
+      </div>
+
+      <div id="vorschauBereich" style="display:none;margin-bottom:14px">
+        <div id="vorschauInfo"></div>
+        <div style="overflow-x:auto">
+          <table id="vorschauTabelle">
+            <thead><tr id="vorschauHeader"></tr></thead>
+            <tbody id="vorschauBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btnGray" onclick="vorschauZeigen()">👁 Vorschau prüfen</button>
+        <button class="btn btnP" id="btnImport" onclick="importStarten('neu')" disabled>
+          📥 Nur neue anlegen
+        </button>
+        <button class="btn btnO" id="btnUpdate" onclick="importStarten('update')" disabled>
+          🔄 Alles aktualisieren
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORTSCHRITT -->
+  <div class="card" id="fortschrittsCard" style="display:none">
+    <div class="cardHead"><h2>⏳ Import läuft...</h2></div>
+    <div class="cardBody">
+      <div class="progress"><div class="progressBar" id="progressBar"></div></div>
+      <p id="progressText" style="font-size:.83rem;color:#666;margin-bottom:10px"></p>
+      <div id="log">Warte auf Start...</div>
+    </div>
+  </div>
+
+  <!-- WARTUNG -->
+  <div class="card">
+    <div class="cardHead"><h2>🔧 Datenbank Wartung</h2></div>
+    <div class="cardBody">
+      <div class="warn">Diese Funktionen direkt auf die Datenbank anwenden.</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btnG" onclick="alleAktivieren()">✅ Alle Kunden aktivieren</button>
+        <button class="btn btnGray" onclick="duplikateZeigen()">🔍 Duplikate finden</button>
+      </div>
+      <div id="wartungResult" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const SB='https://bvodhzacatfuduwtlwut.supabase.co/rest/v1';
+const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2b2RoemFjYXRmdWR1d3Rsd3V0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxODUwMjcsImV4cCI6MjA5NTc2MTAyN30.kX03LLhpIm-iD1VQqreIpCCwAHzsT0pmYdIsl8uSeuY';
+
+async function api(path, opts={}){
+  const h={
+    'Content-Type':'application/json',
+    'apikey':KEY,
+    'Authorization':'Bearer '+KEY,
+    'Prefer':'return=representation',
+  };
+  const r=await fetch(SB+path,{...opts,headers:{...h,...(opts.headers||{})}});
+  if(!r.ok){const t=await r.text();throw new Error(t);}
+  const t=await r.text();
+  return t?JSON.parse(t):[];
+}
+
+// ══ STATUS ══
+async function statusPruefen(){
+  document.getElementById('statusBereich').innerHTML='<p style="color:#666">Lade...</p>';
+  try{
+    // Alle Kunden laden (paginiert)
+    let alle=[], page=0;
+    while(true){
+      const b=await api('/kunden?select=id,aktiv,nummer&limit=1000&offset='+(page*1000));
+      if(!b||!b.length)break;
+      alle.push(...b);
+      if(b.length<1000)break;
+      page++;
+      if(page>20)break;
+    }
+    const aktiv=alle.filter(k=>k.aktiv===true).length;
+    const inaktiv=alle.filter(k=>k.aktiv===false).length;
+    const ohneStatus=alle.filter(k=>k.aktiv===null||k.aktiv===undefined).length;
+    const mitNummer=alle.filter(k=>k.nummer).length;
+    document.getElementById('statusBereich').innerHTML=`
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px">
+        <div class="stat"><div class="n">${alle.length}</div><div class="l">Gesamt</div></div>
+        <div class="stat"><div class="n" style="color:#065f46">${aktiv}</div><div class="l">Aktiv</div></div>
+        <div class="stat"><div class="n" style="color:#991b1b">${inaktiv+ohneStatus}</div><div class="l">Inaktiv/Kein Status</div></div>
+        <div class="stat"><div class="n" style="color:#1e3a8a">${mitNummer}</div><div class="l">Mit Nummer</div></div>
+      </div>
+      ${ohneStatus>0?`<div class="warn">⚠️ ${ohneStatus} Kunden haben keinen aktiv-Status → klicke "Alle Kunden aktivieren"</div>`:''}
+      <p style="font-size:.82rem;color:#666">Daten geladen in ${page+1} Seite(n)</p>`;
+  }catch(e){
+    document.getElementById('statusBereich').innerHTML=`<div class="err">Fehler: ${e.message}</div>`;
+  }
+}
+
+// ══ ENCODING ══
+function dateiLaden(input){
+  const file=input.files[0];if(!file)return;
+  const r1=new FileReader();
+  r1.onload=function(e){
+    const arr=new Uint8Array(e.target.result);
+    let enc='UTF-8';
+    if(arr[0]===0xFF&&arr[1]===0xFE) enc='UTF-16LE';
+    else if(arr[0]===0xEF&&arr[1]===0xBB&&arr[2]===0xBF) enc='UTF-8';
+    else{
+      for(let i=0;i<Math.min(arr.length,3000);i++){
+        const b=arr[i];
+        if(b===0xE4||b===0xF6||b===0xFC||b===0xDF||b===0xC4||b===0xD6||b===0xDC){
+          enc='windows-1252'; break;
+        }
+      }
+    }
+    const r2=new FileReader();
+    r2.onload=function(e2){
+      let text=e2.target.result;
+      if(text.charCodeAt(0)===0xFEFF)text=text.slice(1);
+      document.getElementById('csvText').value=text;
+      document.getElementById('encInfo').textContent='✅ Encoding erkannt: '+enc+' · '+file.name+' ('+Math.round(file.size/1024)+' KB)';
+      document.getElementById('btnImport').disabled=false;
+      document.getElementById('btnUpdate').disabled=false;
+    };
+    r2.readAsText(file,enc);
+  };
+  r1.readAsArrayBuffer(file);
+}
+
+// ══ CSV PARSEN ══
+function zeileParsen(zeile, sep){
+  const r=[];let cur='',inQ=false;
+  for(let i=0;i<zeile.length;i++){
+    const c=zeile[i];
+    if(c==='"'){if(inQ&&zeile[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}
+    else if(c===sep&&!inQ){r.push(cur.trim());cur='';}
+    else cur+=c;
+  }
+  r.push(cur.trim());
+  return r;
+}
+
+function csvParsen(text){
+  const zeilen=text.split('\n').filter(z=>z.trim());
+  if(!zeilen.length)return{header:[],daten:[]};
+  const erstZ=zeilen[0];
+  const sep=erstZ.includes('\t')?'\t':(erstZ.includes(';')?';':',');
+  const header=zeileParsen(zeilen[0],sep).map(h=>h.toLowerCase().trim()
+    .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss'));
+  const hatHeader=header.some(h=>['nummer','name2','titelname','nachname','ort','plz','strasse'].includes(h));
+  const datenZeilen=hatHeader?zeilen.slice(1):zeilen;
+  // Spalten-Mapping
+  const col={};
+  const map={
+    'nummer':'nr','kundennummer':'nr','kundennr':'nr',
+    'titelname':'ti','titlename':'ti',
+    'name2':'nn','nachname':'nn','name':'nn',
+    'name3':'vn','vorname':'vn',
+    'anrede':'anr',
+    'firma':'fi',
+    'strasse':'str','straße':'str',
+    'hnr':'hnr','hausnummer':'hnr',
+    'plz':'plz',
+    'ort':'ort','stadt':'ort',
+    'email':'email','e-mail':'email','adresse':'email',
+    'tel1':'tel','tel2':'tel2','telefon':'tel','handy':'tel',
+  };
+  header.forEach((h,i)=>{const m=map[h];if(m&&col[m]===undefined)col[m]=i;});
+  const daten=datenZeilen.map(z=>{
+    if(!z.trim())return null;
+    const t=zeileParsen(z,sep);
+    const g=k=>col[k]!==undefined&&col[k]<t.length?(t[col[k]]||'').trim():'';
+    // Name aufteilen: TitelName = "Dr. Elisabeth Seedoch" → Nachname=Seedoch, Vorname=Dr. Elisabeth
+    let tiName=g('ti');
+    let nn=g('nn');
+    let vn=g('vn');
+    if(tiName&&!nn){
+      const parts=tiName.split(' ').filter(Boolean);
+      nn=parts[parts.length-1];
+      vn=parts.slice(0,-1).join(' ');
+    }
+    if(!nn)return null;
+    // Straße + HNR zusammenbauen
+    const str=g('str');
+    const hnr=g('hnr');
+    const strasseVoll=str+(hnr?' '+hnr:'');
+    return{
+      nummer:g('nr')||null,
+      anrede:g('anr')||null,
+      nachname:nn,
+      vorname:vn||null,
+      firma:g('fi')||null,
+      strasse:strasseVoll||null,
+      plz:g('plz')||null,
+      ort:g('ort')||null,
+      email:g('email')||null,
+      telefon:g('tel')||null,
+      aktiv:true,
+    };
+  }).filter(Boolean);
+  return{header,col,sep,daten};
+}
+
+// ══ VORSCHAU ══
+function vorschauZeigen(){
+  const text=document.getElementById('csvText').value.trim();
+  if(!text){alert('Bitte Datei hochladen oder Text eingeben!');return;}
+  const {daten}=csvParsen(text);
+  document.getElementById('vorschauBereich').style.display='block';
+  document.getElementById('vorschauInfo').innerHTML=`
+    <div class="success">✅ ${daten.length} Kunden erkannt und bereit zum Import</div>`;
+  document.getElementById('vorschauHeader').innerHTML=
+    '<th>Nummer</th><th>Nachname</th><th>Vorname</th><th>Anrede</th><th>Straße</th><th>PLZ</th><th>Ort</th><th>Telefon</th><th>E-Mail</th>';
+  document.getElementById('vorschauBody').innerHTML=
+    daten.slice(0,10).map(k=>`<tr>
+      <td>${k.nummer||'—'}</td>
+      <td><strong>${k.nachname}</strong></td>
+      <td>${k.vorname||''}</td>
+      <td>${k.anrede||''}</td>
+      <td>${k.strasse||''}</td>
+      <td>${k.plz||''}</td>
+      <td>${k.ort||''}</td>
+      <td>${k.telefon||''}</td>
+      <td>${k.email||''}</td>
+    </tr>`).join('');
+  if(daten.length>10){
+    document.getElementById('vorschauBody').innerHTML+=
+      `<tr><td colspan="9" style="text-align:center;color:#666;font-style:italic">... und ${daten.length-10} weitere</td></tr>`;
+  }
+  document.getElementById('btnImport').disabled=false;
+  document.getElementById('btnUpdate').disabled=false;
+}
+
+// ══ IMPORT / UPDATE ══
+async function importStarten(modus){
+  const text=document.getElementById('csvText').value.trim();
+  if(!text){alert('Bitte Datei hochladen!');return;}
+  const {daten}=csvParsen(text);
+  if(!daten.length){alert('Keine gültigen Daten gefunden!');return;}
+
+  document.getElementById('fortschrittsCard').style.display='block';
+  document.getElementById('fortschrittsCard').scrollIntoView({behavior:'smooth'});
+  const logEl=document.getElementById('log');
+  const bar=document.getElementById('progressBar');
+  const txt=document.getElementById('progressText');
+  logEl.textContent='';
+
+  function log(msg,typ=''){
+    const line=document.createElement('div');
+    line.className=typ==='err'?'err-line':typ==='warn'?'warn-line':'ok-line';
+    line.textContent=msg;
+    logEl.appendChild(line);
+    logEl.scrollTop=logEl.scrollHeight;
+  }
+
+  // Bestehende Nummern laden für Update-Modus
+  let bestehendeMap={};
+  if(modus==='update'){
+    log('⏳ Lade bestehende Kundennummern...');
+    let alle=[], page=0;
+    while(true){
+      const b=await api('/kunden?select=id,nummer&limit=1000&offset='+(page*1000));
+      if(!b||!b.length)break;
+      alle.push(...b);
+      if(b.length<1000)break;
+      page++;if(page>20)break;
+    }
+    alle.forEach(k=>{if(k.nummer)bestehendeMap[k.nummer]=k.id;});
+    log(`✅ ${alle.length} bestehende Kunden geladen, ${Object.keys(bestehendeMap).length} mit Nummern`);
+  }
+
+  let ok=0,updated=0,fehler=0;
+  const total=daten.length;
+
+  for(let i=0;i<daten.length;i++){
+    const k=daten[i];
+    bar.style.width=Math.round((i+1)/total*100)+'%';
+    txt.textContent=`${i+1} von ${total} — ${k.nachname}`;
+
+    try{
+      // Nur definierte Felder senden (keine null-Werte bei Update)
+      const clean={};
+      Object.entries(k).forEach(([key,val])=>{
+        if(val!==null&&val!==undefined&&val!=='')clean[key]=val;
+        else if(val===null&&modus==='neu')clean[key]=null; // Bei Neu: null erlaubt
+      });
+
+      if(modus==='update'&&k.nummer&&bestehendeMap[k.nummer]){
+        // Update bestehenden Kunden
+        const id=bestehendeMap[k.nummer];
+        await api('/kunden?id=eq.'+id,{method:'PATCH',body:JSON.stringify(clean)});
+        updated++;
+        if(i%50===0)log(`🔄 Aktualisiert: ${k.nummer} ${k.nachname} ${k.vorname||''}`);
+      } else {
+        // Neuen Kunden anlegen
+        clean.aktiv=true;
+        await api('/kunden',{method:'POST',body:JSON.stringify(clean)});
+        ok++;
+        if(i%50===0)log(`✅ Angelegt: ${k.nummer||'—'} ${k.nachname} ${k.vorname||''}`);
+      }
+    }catch(e){
+      fehler++;
+      log(`❌ Fehler bei ${k.nachname}: ${e.message.substring(0,80)}`,'err');
+    }
+    // Kurze Pause um Supabase nicht zu überlasten
+    if(i%10===9)await new Promise(r=>setTimeout(r,50));
+  }
+
+  log('');
+  log('════════════════════════════');
+  log(`✅ Neu angelegt:   ${ok}`);
+  log(`🔄 Aktualisiert:   ${updated}`);
+  log(`❌ Fehler:         ${fehler}`);
+  log('════════════════════════════');
+  bar.style.width='100%';
+  txt.textContent='Fertig!';
+  document.getElementById('fortschrittsCard').querySelector('h2').textContent='✅ Import abgeschlossen!';
+  statusPruefen();
+}
+
+// ══ WARTUNG ══
+async function alleAktivieren(){
+  document.getElementById('wartungResult').innerHTML='<p style="color:#666">Arbeite...</p>';
+  try{
+    await api('/kunden?aktiv=is.null',{method:'PATCH',body:JSON.stringify({aktiv:true})});
+    await api('/kunden?aktiv=eq.false',{method:'PATCH',body:JSON.stringify({aktiv:true})});
+    document.getElementById('wartungResult').innerHTML='<div class="success">✅ Alle Kunden aktiviert!</div>';
+    statusPruefen();
+  }catch(e){
+    document.getElementById('wartungResult').innerHTML='<div class="err">Fehler: '+e.message+'</div>';
+  }
+}
+
+async function duplikateZeigen(){
+  document.getElementById('wartungResult').innerHTML='<p style="color:#666">Suche Duplikate...</p>';
+  try{
+    let alle=[], page=0;
+    while(true){
+      const b=await api('/kunden?select=id,nachname,vorname,ort,nummer&limit=1000&offset='+(page*1000));
+      if(!b||!b.length)break;
+      alle.push(...b);
+      if(b.length<1000)break;
+      page++;if(page>20)break;
+    }
+    const map={};
+    alle.forEach(k=>{
+      const key=(k.nachname||'').toLowerCase()+'|'+(k.vorname||'').toLowerCase()+'|'+(k.ort||'').toLowerCase();
+      if(!map[key])map[key]=[];
+      map[key].push(k);
+    });
+    const dups=Object.values(map).filter(g=>g.length>1);
+    if(!dups.length){
+      document.getElementById('wartungResult').innerHTML='<div class="success">✅ Keine Duplikate gefunden!</div>';
+      return;
+    }
+    document.getElementById('wartungResult').innerHTML=`
+      <div class="warn">⚠️ ${dups.length} mögliche Duplikate gefunden:</div>
+      <div style="overflow-x:auto"><table>
+        <thead><tr><th>Name</th><th>Ort</th><th>Anzahl</th><th>Nummern</th></tr></thead>
+        <tbody>${dups.slice(0,20).map(g=>`<tr>
+          <td>${g[0].nachname} ${g[0].vorname||''}</td>
+          <td>${g[0].ort||''}</td>
+          <td><span class="badge bRed">${g.length}×</span></td>
+          <td>${g.map(k=>k.nummer||'—').join(', ')}</td>
+        </tr>`).join('')}</tbody>
+      </table></div>`;
+  }catch(e){
+    document.getElementById('wartungResult').innerHTML='<div class="err">Fehler: '+e.message+'</div>';
+  }
+}
+
+// Auto-Status beim Laden
+statusPruefen();
+</script>
+</body>
+</html>
