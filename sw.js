@@ -1,4 +1,4 @@
-const CACHE = 'grieer-et-v1';
+const CACHE = 'grieer-et-v202606020502';
 const ASSETS = [
   '/grieer/energie.html',
 ];
