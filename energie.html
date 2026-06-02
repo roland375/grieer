@@ -2324,7 +2324,7 @@ function csvImportOeffnen(){
     <div class="fRow">
       <label>Oder Text direkt einfügen</label>
       <textarea id="csvText" style="min-height:120px;font-family:monospace;font-size:.78rem" 
-        placeholder="K001;Müller;Hans;Musterfirma GmbH;Hauptstraße 1;7000;Eisenstadt;0664123456;hans@email.at"></textarea>
+        placeholder="K001;Müller;Hans;Musterfirma GmbH;Hauptstraße 1;7000;Eisenstadt;0664123456;hans@email.at" style="min-height:100px"></textarea>
     </div>
     <div id="csvVorschau" style="margin-bottom:8px"></div>
     <div style="display:flex;gap:8px;margin-top:14px">
@@ -2357,30 +2357,26 @@ function csvZeileParsen(zeile, sep){
 
 function csvDateiLesen(input){
   const file=input.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=e=>{
-    let text=e.target.result;
-    // BOM entfernen falls vorhanden
-    if(text.charCodeAt(0)===0xFEFF)text=text.slice(1);
-    // Prüfe ob Umlaute kaputt sind (? statt ä/ö/ü)
-    if(text.includes('?')&&!text.includes('ä')&&!text.includes('ö')&&!text.includes('ü')){
-      // Nochmal mit Windows-1252 lesen
-      const r2=new FileReader();
-      r2.onload=e2=>{
-        let t2=e2.target.result;
-        if(t2.charCodeAt(0)===0xFEFF)t2=t2.slice(1);
-        document.getElementById('csvText').value=t2;
-        csvVorschau();
-      };
-      r2.readAsText(file,'windows-1252');
-      return;
-    }
-    document.getElementById('csvText').value=text;
-    csvVorschau();
+  // Erst als Binary lesen um Encoding zu erkennen
+  const r1=new FileReader();
+  r1.onload=e=>{
+    const arr=new Uint8Array(e.target.result);
+    let encoding='UTF-8';
+    if(arr[0]===0xFF&&arr[1]===0xFE){encoding='UTF-16LE';}
+    else{for(let i=0;i<Math.min(arr.length,500);i++){
+      if([0xE4,0xF6,0xFC,0xDF,0xC4,0xD6,0xDC].includes(arr[i])){encoding='windows-1252';break;}
+    }}
+    const r2=new FileReader();
+    r2.onload=e2=>{
+      let text=e2.target.result;
+      if(text.charCodeAt(0)===0xFEFF)text=text.slice(1);
+      document.getElementById('csvText').value=text;
+      csvVorschau();
+    };
+    r2.readAsText(file,encoding);
   };
-  reader.readAsText(file,'UTF-8');
+  r1.readAsArrayBuffer(file);
 }
-
 function csvVorschau(){
   const text=(document.getElementById('csvText')?.value||'').trim();
   const el=document.getElementById('csvVorschau');if(!el)return;
@@ -2403,40 +2399,97 @@ function csvVorschau(){
 
 async function csvImportStarten(){
   const text=(document.getElementById('csvText')?.value||'').trim();
-  if(!text){toast('Bitte CSV eingeben','err');return;}
+  if(!text){toast('Bitte CSV-Datei hochladen oder Text eingeben','err');return;}
   const zeilen=text.split('\n').filter(z=>z.trim());
-  const hatHeader=zeilen[0]?.toLowerCase().includes('nachname')||zeilen[0]?.toLowerCase().includes('name');
+  if(!zeilen.length){toast('Keine Daten gefunden','err');return;}
+
+  // Trennzeichen erkennen (Tab, Semikolon oder Komma)
+  const erstZ=zeilen[0];
+  const sep=erstZ.includes('\t')?'\t':(erstZ.includes(';')?';':',');
+
+  // Header-Spalten mappen
+  const header=csvZeileParsen(zeilen[0],sep).map(h=>h.toLowerCase().trim()
+    .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss'));
+  const hatHeader=header.some(h=>['nummer','name','name2','nachname','ort','plz','strasse','tel1'].includes(h));
+
+  // Spalten-Index aus Header ermitteln
+  const col={};
+  const colMap={
+    // Kundennummer
+    'nummer':'nr','kundennummer':'nr','kundennr':'nr',
+    // Name (Nachname)
+    'name2':'nn','nachname':'nn','name':'nn','titlename':'nn','titelname':'nn',
+    // Vorname / Name3
+    'name3':'vn','vorname':'vn',
+    // Anrede
+    'anrede':'anr',
+    // Titel (wird zum Vorname dazu)
+    'titlename':'ti','titelname':'ti',
+    // Firma
+    'firma':'fi','firmenname':'fi',
+    // Strasse
+    'strasse':'str','straße':'str',
+    // Hausnummer
+    'hnr':'hnr',
+    // PLZ
+    'plz':'plz',
+    // Ort
+    'ort':'ort',
+    // Email
+    'email':'email','e-mail':'email','mail':'email',
+    // Telefon
+    'tel1':'tel','telefon':'tel','handy':'tel','mobil':'tel',
+  };
+  header.forEach((h,i)=>{const m=colMap[h];if(m&&col[m]===undefined)col[m]=i;});
+
   const daten=hatHeader?zeilen.slice(1):zeilen;
   if(!daten.length){toast('Keine Daten gefunden','err');return;}
+
   let ok=0,fehler=0;
   toast('Importiere '+daten.length+' Kunden…');
+
   for(const zeile of daten){
     if(!zeile.trim())continue;
-    // Trennzeichen intelligent erkennen
-    const sep=zeile.includes(';')?';':(zeile.includes('\t')?'\t':',');
-    // Splits mit Anführungszeichen korrekt behandeln
     const t=csvZeileParsen(zeile,sep);
-    // Maximal 9 Felder - Rest wird ignoriert
-    const nummer  = (t[0]||'').trim();
-    const nachname= (t[1]||'').trim();
-    const vorname = (t[2]||'').trim();
-    const firma   = (t[3]||'').trim();
-    const strasse = (t[4]||'').trim();
-    const plz     = (t[5]||'').trim();
-    const ort     = (t[6]||'').trim();
-    const telefon = (t[7]||'').trim();
-    const email   = (t[8]||'').trim();
+    const g=k=>col[k]!==undefined&&col[k]<t.length?(t[col[k]]||'').trim():'';
+
+    // Name zusammenbauen:
+    // TitelName = z.B. "Di Christoph Asinger" → Vorname=Di Christoph, Nachname=Asinger
+    // Name2 = Nachname, Name3 = Vorname (leer meist)
+    let nachname=g('nn');
+    let vorname=g('vn');
+
+    // Wenn TitelName Spalte genutzt wird (enthält oft Titel + Vorname + Nachname)
+    // Letztes Wort = Nachname, Rest = Vorname/Titel
+    if(nachname&&nachname.includes(' ')&&!vorname){
+      const teile=nachname.split(' ');
+      nachname=teile[teile.length-1];
+      vorname=teile.slice(0,-1).join(' ');
+    }
+
     if(!nachname){fehler++;continue;}
+
+    // Straße + Hausnummer zusammenbauen
+    const strasse=g('str');
+    const hnr=g('hnr');
+    const strasseVoll=strasse&&hnr?strasse+' '+hnr:strasse;
+
+    const d={aktiv:true,nachname};
+    if(vorname)d.vorname=vorname;
+    if(g('anr'))d.anrede=g('anr');
+    if(g('nr'))d.nummer=g('nr');
+    if(g('fi'))d.firma=g('fi');
+    if(strasseVoll)d.strasse=strasseVoll;
+    if(g('plz'))d.plz=g('plz');
+    if(g('ort'))d.ort=g('ort');
+    if(g('email'))d.email=g('email');
+    if(g('tel'))d.telefon=g('tel');
+
     try{
-      await api('/kunden',{method:'POST',body:JSON.stringify({
-        nummer:nummer||null,
-        nachname,vorname:vorname||null,firma:firma||null,
-        strasse:strasse||null,plz:plz||null,ort:ort||null,
-        telefon:telefon||null,email:email||null,aktiv:true,
-      })});
+      await api('/kunden',{method:'POST',body:JSON.stringify(d)});
       ok++;
-    }catch(e){fehler++;console.log('Import Fehler:',nachname,e.message);}
-    await new Promise(r=>setTimeout(r,100));
+    }catch(e){fehler++;console.error('Import Fehler:',nachname,e.message);}
+    await new Promise(r=>setTimeout(r,80));
   }
   toast('✅ '+ok+' importiert'+(fehler>0?' · '+fehler+' Fehler':''));
   modalZu();await laden();zeigeTab('kunden');
