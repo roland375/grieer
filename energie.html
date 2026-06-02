@@ -580,13 +580,13 @@ if('serviceWorker' in navigator){
       <h2>👥 Kunden</h2>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn btnOut btnSm" onclick="csvImportOeffnen()">📥 CSV</button>
-        ${isAdmin()?`<button class="btn btnRed btnSm" id="btnLoeschModus" onclick="loeschModusToggle()">🗑 Auswählen</button>`:''}
+        <button class="btn btnRed btnSm" id="btnLoeschModus" onclick="loeschModusToggle()" style="display:none">🗑 Auswählen</button>
         <button class="btn btnG btnSm" onclick="kundeNeu()">+ Neu</button>
       </div>
     </div>
-    <div id="loeschBar" style="display:none;background:#fef2f2;border:1.5px solid #fca5a5;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:none;align-items:center;justify-content:space-between;gap:10px">
+    <div id="loeschBar" style="display:none;background:#fef2f2;border:1.5px solid #fca5a5;border-radius:10px;padding:10px 14px;margin-bottom:12px;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
       <span id="loeschAnzahl" style="font-size:.85rem;font-weight:700;color:#991b1b">0 ausgewählt</span>
-      <div style="display:flex;gap:8px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn btnGray btnSm" onclick="alleAbwaehlen()">Alle abwählen</button>
         <button class="btn btnOut btnSm" onclick="alleAuswaehlen()">Alle wählen</button>
         <button class="btn btnRed btnSm" id="btnLoeschenJetzt" onclick="ausgewaehltLoeschen()" disabled>🗑 Löschen</button>
