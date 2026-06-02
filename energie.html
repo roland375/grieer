@@ -854,13 +854,27 @@ async function appStart(){
 
 async function laden(){
   try{
-    const [k,a,t,m]=await Promise.all([
-      api('/kunden?order=nachname.asc&or=(aktiv.eq.true,aktiv.is.null)&limit=10000'),
-      api('/auftraege?order=datum.desc&limit=10000'),
-      api('/termine?order=datum.asc&limit=10000'),
+    // Kunden in mehreren Seiten laden (Supabase Limit 1000 pro Anfrage)
+    const alleKunden=[];
+    let seite=0;
+    while(true){
+      const von=seite*1000;
+      const bis=von+999;
+      const batch=await api('/kunden?order=nachname.asc&or=(aktiv.eq.true,aktiv.is.null)&limit=1000&offset='+von,{
+        headers:{'Range-Unit':'items','Range':von+'-'+bis}
+      });
+      if(!batch||batch.length===0)break;
+      alleKunden.push(...batch);
+      if(batch.length<1000)break;
+      seite++;
+      if(seite>20)break; // Max 20.000 Kunden
+    }
+    const [a,t,m]=await Promise.all([
+      api('/auftraege?order=datum.desc&limit=5000'),
+      api('/termine?order=datum.asc&limit=5000'),
       api('/mitarbeiter?order=name.asc'),
     ]);
-    DB={kunden:k,auftraege:a,termine:t,mitarbeiter:m};
+    DB={kunden:alleKunden,auftraege:a,termine:t,mitarbeiter:m};
     renderAlles();
     benachrichtigungenInitialisieren();
   }catch(e){toast('Verbindungsfehler: '+e.message,'err');}
@@ -2412,20 +2426,39 @@ function csvZeileParsen(zeile, sep){
 
 function csvDateiLesen(input){
   const file=input.files[0];if(!file)return;
-  // Erst als Binary lesen um Encoding zu erkennen
+  // Schritt 1: Als ArrayBuffer lesen um Encoding zu erkennen
   const r1=new FileReader();
-  r1.onload=e=>{
+  r1.onload=function(e){
     const arr=new Uint8Array(e.target.result);
+    // Encoding erkennen
     let encoding='UTF-8';
-    if(arr[0]===0xFF&&arr[1]===0xFE){encoding='UTF-16LE';}
-    else{for(let i=0;i<Math.min(arr.length,500);i++){
-      if([0xE4,0xF6,0xFC,0xDF,0xC4,0xD6,0xDC].includes(arr[i])){encoding='windows-1252';break;}
-    }}
+    // UTF-16 LE BOM (FF FE)
+    if(arr[0]===0xFF&&arr[1]===0xFE){
+      encoding='UTF-16LE';
+    }
+    // UTF-8 BOM (EF BB BF)
+    else if(arr[0]===0xEF&&arr[1]===0xBB&&arr[2]===0xBF){
+      encoding='UTF-8';
+    }
+    // Windows-1252: typische Umlaut-Bytes
+    else{
+      for(let i=0;i<Math.min(arr.length,2000);i++){
+        const b=arr[i];
+        // ä=0xE4 ö=0xF6 ü=0xFC ß=0xDF Ä=0xC4 Ö=0xD6 Ü=0xDC
+        if(b===0xE4||b===0xF6||b===0xFC||b===0xDF||b===0xC4||b===0xD6||b===0xDC){
+          encoding='windows-1252';
+          break;
+        }
+      }
+    }
+    // Schritt 2: Mit erkanntem Encoding lesen
     const r2=new FileReader();
-    r2.onload=e2=>{
+    r2.onload=function(e2){
       let text=e2.target.result;
+      // BOM entfernen
       if(text.charCodeAt(0)===0xFEFF)text=text.slice(1);
       document.getElementById('csvText').value=text;
+      document.getElementById('csvEnc').textContent='Encoding: '+encoding;
       csvVorschau();
     };
     r2.readAsText(file,encoding);
