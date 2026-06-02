@@ -923,8 +923,8 @@ function kvFormHTML(k){
       <div class="fRow"><label>E-Mail</label><input id="fEmail" type="email" value="${esc(v.email||'')}"></div>
     </div>
     <div class="fRow">
-      <label>⚠️ Hinweise & Notizen</label>
-      <textarea id="fHinweis" placeholder="z.B. Hund im Garten, Tor klingeln, Schlüssel beim Nachbarn, schwer erreichbar…">${esc(v.notiz||'')}</textarea>
+      <label>⚠️ Hinweise & Besonderheiten</label>
+      <textarea id="fHinweis" placeholder="z.B. Hund im Garten, Tor klingeln, Schlüssel beim Nachbarn…">${esc(escNotiz(v.notiz))}</textarea>
     </div>
     <hr style="margin:12px 0;border:none;border-top:2px solid var(--border)">
     <p style="font-size:.74rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">🏠 Anlagen & Geräte</p>
@@ -983,21 +983,60 @@ function kvFormHTML(k){
     </div>
     <hr style="margin:12px 0;border:none;border-top:2px solid var(--border)">
     <p style="font-size:.74rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">🔄 Rhythmus & letzte Durchführung</p>
-    <div class="rhythmusGrid">
-      ${[
-        {dbKey:'fotovoltaik', label:'☀️ PV Reinigung',    formId:'fotovoltaik'},
-        {dbKey:'lueftung',    label:'💨 Lüftung',         formId:'lueftung'},
-        {dbKey:'heizung',     label:'🔧 Heizungs Service',formId:'heizservice'},
-        {dbKey:'wartung',     label:'🔥 Brandschutz',     formId:'brandschutz'},
-      ].map(({dbKey,label,formId})=>`
-        <div class="rhythmusItem">
-          <label>${label}</label>
-          <select id="fr_${formId}">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+
+      <div style="background:#faf5ff;border-radius:10px;padding:12px;border:1px solid #d8b4fe">
+        <p style="font-size:.76rem;font-weight:700;color:#7c3aed;margin-bottom:8px">☀️ PV Reinigung</p>
+        <div class="fRow" style="margin-bottom:8px"><label>Rhythmus</label>
+          <select id="fr_fotovoltaik">
             <option value="">— kein —</option>
-            ${[1,2,3,4,5].map(j=>`<option value="${j}" ${v['rhythmus_'+dbKey]==j?'selected':''}>${j} ${j===1?'Jahr':'Jahre'}</option>`).join('')}
+            ${[1,2,3,4,5].map(j=>`<option value="${j}" ${v.rhythmus_fotovoltaik==j?'selected':''}>${j} ${j===1?'Jahr':'Jahre'}</option>`).join('')}
           </select>
-          <input type="date" id="fl_${formId}" value="${v['letzt_'+dbKey]||''}" style="margin-top:6px" placeholder="Letzte Durchf.">
-        </div>`).join('')}
+        </div>
+        <div class="fRow"><label>Letzter Service</label>
+          <input type="date" id="fl_fotovoltaik" value="${v.letzt_fotovoltaik||''}">
+        </div>
+      </div>
+
+      <div style="background:#eff6ff;border-radius:10px;padding:12px;border:1px solid #93c5fd">
+        <p style="font-size:.76rem;font-weight:700;color:#1e3a8a;margin-bottom:8px">💨 Lüftung</p>
+        <div class="fRow" style="margin-bottom:8px"><label>Rhythmus</label>
+          <select id="fr_lueftung">
+            <option value="">— kein —</option>
+            ${[1,2,3,4,5].map(j=>`<option value="${j}" ${v.rhythmus_lueftung==j?'selected':''}>${j} ${j===1?'Jahr':'Jahre'}</option>`).join('')}
+          </select>
+        </div>
+        <div class="fRow"><label>Letzter Service</label>
+          <input type="date" id="fl_lueftung" value="${v.letzt_lueftung||''}">
+        </div>
+      </div>
+
+      <div style="background:#f0fdf4;border-radius:10px;padding:12px;border:1px solid #86efac">
+        <p style="font-size:.76rem;font-weight:700;color:#065f46;margin-bottom:8px">🔧 Heizungs Service</p>
+        <div class="fRow" style="margin-bottom:8px"><label>Rhythmus</label>
+          <select id="fr_heizservice">
+            <option value="">— kein —</option>
+            ${[1,2,3,4,5].map(j=>`<option value="${j}" ${v.rhythmus_heizung==j?'selected':''}>${j} ${j===1?'Jahr':'Jahre'}</option>`).join('')}
+          </select>
+        </div>
+        <div class="fRow"><label>Letzter Service</label>
+          <input type="date" id="fl_heizservice" value="${v.letzt_heizung||''}">
+        </div>
+      </div>
+
+      <div style="background:#fff7ed;border-radius:10px;padding:12px;border:1px solid #fdba74">
+        <p style="font-size:.76rem;font-weight:700;color:#c2410c;margin-bottom:8px">🔥 Brandschutz</p>
+        <div class="fRow" style="margin-bottom:8px"><label>Rhythmus</label>
+          <select id="fr_brandschutz">
+            <option value="">— kein —</option>
+            ${[1,2,3,4,5].map(j=>`<option value="${j}" ${v.rhythmus_wartung==j?'selected':''}>${j} ${j===1?'Jahr':'Jahre'}</option>`).join('')}
+          </select>
+        </div>
+        <div class="fRow"><label>Letzter Service</label>
+          <input type="date" id="fl_brandschutz" value="${v.letzt_wartung||''}">
+        </div>
+      </div>
+
     </div>
 
     <div style="display:flex;gap:10px;margin-top:18px">
@@ -1046,18 +1085,34 @@ async function kvSpeichern(id){
   const anlagenSave={};
   const aFelder={pvKwp:'fPvKwp',pvHersteller:'fPvHersteller',pvBaujahr:'fPvBaujahr',lueftTyp:'fLueftTyp',lueftInfo:'fLueftInfo',heizArt:'fHeizArt',heizModell:'fHeizModell',heizBaujahr:'fHeizBaujahr',heizKw:'fHeizKw',heizInfo:'fHeizInfo',bsAnz:'fBsAnz',bsService:'fBsService',bsInfo:'fBsInfo'};
   Object.entries(aFelder).forEach(([k,fid])=>{const el=document.getElementById(fid);if(el&&el.value)anlagenSave[k]=el.value;});
-  const hinweis=document.getElementById('fNotiz')?.value||'';
-  const hinweisClean=hinweis.replace(/\[ANLAGEN:.*?\]/s,'').trim();
-  if(Object.keys(anlagenSave).length>0)d.notiz=(hinweisClean?hinweisClean+'\n':'')+('[ANLAGEN:'+JSON.stringify(anlagenSave)+']');
-  else if(hinweisClean)d.notiz=hinweisClean;
+  const hinweisText=(document.getElementById('fHinweis')?.value||'').trim();
+  // Hinweis und Anlagen-Daten sauber trennen
+  if(Object.keys(anlagenSave).length>0){
+    d.notiz=(hinweisText?hinweisText+'\n':'')+('[ANLAGEN:'+JSON.stringify(anlagenSave)+']');
+  } else if(hinweisText){
+    d.notiz=hinweisText;
+  }
   // Rhythmus
-  const rhythmusMap={fotovoltaik:'fotovoltaik',lueftung:'lueftung',heizservice:'heizung',brandschutz:'wartung'};
-  Object.entries(rhythmusMap).forEach(([formId,dbKey])=>{
-    const rv=document.getElementById('fr_'+formId)?.value;
-    const lv=document.getElementById('fl_'+formId)?.value;
-    if(rv)d['rhythmus_'+dbKey]=parseInt(rv);
-    if(lv)d['letzt_'+dbKey]=lv;
-  });
+  // PV Rhythmus
+  const pvR=document.getElementById('fr_fotovoltaik')?.value;
+  const pvL=document.getElementById('fl_fotovoltaik')?.value;
+  if(pvR)d.rhythmus_fotovoltaik=parseInt(pvR); else d.rhythmus_fotovoltaik=null;
+  if(pvL)d.letzt_fotovoltaik=pvL; else d.letzt_fotovoltaik=null;
+  // Lüftung Rhythmus
+  const luR=document.getElementById('fr_lueftung')?.value;
+  const luL=document.getElementById('fl_lueftung')?.value;
+  if(luR)d.rhythmus_lueftung=parseInt(luR); else d.rhythmus_lueftung=null;
+  if(luL)d.letzt_lueftung=luL; else d.letzt_lueftung=null;
+  // Heizung Rhythmus
+  const heR=document.getElementById('fr_heizservice')?.value;
+  const heL=document.getElementById('fl_heizservice')?.value;
+  if(heR)d.rhythmus_heizung=parseInt(heR); else d.rhythmus_heizung=null;
+  if(heL)d.letzt_heizung=heL; else d.letzt_heizung=null;
+  // Brandschutz Rhythmus
+  const bsR=document.getElementById('fr_brandschutz')?.value;
+  const bsL=document.getElementById('fl_brandschutz')?.value;
+  if(bsR)d.rhythmus_wartung=parseInt(bsR); else d.rhythmus_wartung=null;
+  if(bsL)d.letzt_wartung=bsL; else d.letzt_wartung=null;
   try{
     if(id){
       await api('/kunden?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});
@@ -2269,7 +2324,7 @@ function csvImportOeffnen(){
     <div class="fRow">
       <label>Oder Text direkt einfügen</label>
       <textarea id="csvText" style="min-height:120px;font-family:monospace;font-size:.78rem" 
-        placeholder="Müller;Hans;Musterfirma;Hauptstraße 1;7000;Eisenstadt;0664123456;hans@email.at"></textarea>
+        placeholder="K001;Müller;Hans;Musterfirma;Hauptstraße 1;7000;Eisenstadt;0664123456;hans@email.at"></textarea>
     </div>
     <div id="csvVorschau" style="margin-bottom:8px"></div>
     <div style="display:flex;gap:8px;margin-top:14px">
@@ -2295,7 +2350,13 @@ function csvVorschau(){
   const daten=hatHeader?zeilen.slice(1):zeilen;
   el.innerHTML=`<div style="background:#f0fdf4;border-radius:8px;padding:10px;border:1px solid #86efac;margin-bottom:10px">
     <p style="font-size:.78rem;font-weight:700;color:#065f46">✅ ${daten.length} Kunde(n) werden importiert</p>
-    ${daten.slice(0,3).map(z=>`<p style="font-size:.74rem;color:var(--text2);margin-top:3px">${esc(z.substring(0,70))}</p>`).join('')}
+    ${daten.slice(0,3).map(z=>{
+      const sep2=z.includes(';')?';':',';
+      const t2=z.split(sep2);
+      return`<p style="font-size:.74rem;color:var(--text2);margin-top:3px">
+        ${t2[0]?`<span class="badge bBlue">${esc(t2[0])}</span> `:''}
+        ${esc((t2[1]||'')+(t2[2]?' '+t2[2]:'')+(t2[3]?' · '+t2[3]:'')+(t2[6]?' · '+t2[6]:''))}
+      </p>`;}).join('')}
     ${daten.length>3?`<p style="font-size:.72rem;color:var(--text2)">... und ${daten.length-3} weitere</p>`:''}
   </div>`;
 }
@@ -2313,10 +2374,11 @@ async function csvImportStarten(){
     if(!zeile.trim())continue;
     const sep=zeile.includes(';')?';':',';
     const t=zeile.split(sep).map(x=>x.trim().replace(/^"|"$/g,''));
-    const [nachname='',vorname='',firma='',strasse='',plz='',ort='',telefon='',email='']=t;
+    const [nummer='',nachname='',vorname='',firma='',strasse='',plz='',ort='',telefon='',email='']=t;
     if(!nachname){fehler++;continue;}
     try{
       await api('/kunden',{method:'POST',body:JSON.stringify({
+        nummer:nummer||null,
         nachname,vorname:vorname||null,firma:firma||null,
         strasse:strasse||null,plz:plz||null,ort:ort||null,
         telefon:telefon||null,email:email||null,aktiv:true,
