@@ -6,60 +6,52 @@
 <title>Grieer — Kunden Import</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,-apple-system,sans-serif;background:#f5f5f5;color:#1a1a1a}
-.header{background:#7f1d1d;color:#fff;padding:16px 20px;display:flex;align-items:center;gap:12px}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f5f5f5;color:#1a1a1a;padding-bottom:40px}
+.header{background:linear-gradient(135deg,#7f1d1d,#991b1b);color:#fff;padding:16px 20px}
 .header h1{font-size:1.1rem;font-weight:700}
-.header p{font-size:.78rem;opacity:.7;margin-top:2px}
-.container{max-width:700px;margin:20px auto;padding:0 16px}
+.header p{font-size:.78rem;opacity:.75;margin-top:3px}
+.container{max-width:720px;margin:20px auto;padding:0 16px}
 .card{background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);margin-bottom:16px;overflow:hidden}
-.cardHead{padding:14px 18px;border-bottom:1px solid #f0e8e8;display:flex;align-items:center;justify-content:space-between}
-.cardHead h2{font-size:.95rem;font-weight:700;color:#7f1d1d}
-.cardBody{padding:18px}
-label{display:block;font-size:.74rem;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
-input[type=file],textarea,select{width:100%;padding:10px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:.87rem;font-family:inherit;margin-bottom:12px}
-textarea{min-height:120px;font-family:monospace;font-size:.8rem}
-input[type=file]:focus,textarea:focus,select:focus{outline:none;border-color:#991b1b}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;border:none;font-size:.87rem;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}
-.btnP{background:#991b1b;color:#fff}
-.btnG{background:#065f46;color:#fff}
-.btnO{background:#92400e;color:#fff}
+.cardHead{padding:13px 18px;border-bottom:1px solid #f0e0e0;display:flex;align-items:center;justify-content:space-between;background:#fef9f9}
+.cardHead h2{font-size:.92rem;font-weight:700;color:#7f1d1d}
+.cardBody{padding:16px 18px}
+label{display:block;font-size:.73rem;font-weight:700;color:#777;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
+input[type=file]{width:100%;padding:10px;border:2px dashed #e5e7eb;border-radius:8px;font-size:.87rem;font-family:inherit;margin-bottom:8px;background:#fafafa;cursor:pointer}
+input[type=file]:hover{border-color:#991b1b;background:#fff5f5}
+textarea{width:100%;padding:10px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:.8rem;font-family:monospace;min-height:100px;margin-bottom:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;border-radius:8px;border:none;font-size:.87rem;font-weight:700;cursor:pointer;font-family:inherit;transition:.15s;min-height:40px}
+.btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btnRed{background:#991b1b;color:#fff;box-shadow:0 2px 8px rgba(153,27,27,.3)}
+.btnGrn{background:#065f46;color:#fff;box-shadow:0 2px 8px rgba(6,95,70,.3)}
+.btnOrange{background:#92400e;color:#fff}
 .btnGray{background:#e5e7eb;color:#374151}
-.btn:hover{filter:brightness(1.1)}
-.btn:disabled{opacity:.5;cursor:not-allowed}
-.row{margin-bottom:12px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media(max-width:500px){.grid2{grid-template-columns:1fr}}
-.info{background:#eff6ff;border:1px solid #93c5fd;border-radius:8px;padding:12px;font-size:.82rem;color:#1e3a8a;margin-bottom:12px;line-height:1.7}
-.warn{background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:12px;font-size:.82rem;color:#92400e;margin-bottom:12px}
-.success{background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:12px;font-size:.82rem;color:#065f46;margin-bottom:12px}
-.err{background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:12px;font-size:.82rem;color:#991b1b;margin-bottom:12px}
-#log{background:#1a1a1a;color:#4ade80;border-radius:8px;padding:14px;font-family:monospace;font-size:.78rem;min-height:100px;max-height:300px;overflow-y:auto;white-space:pre-wrap;line-height:1.6}
-#log .err-line{color:#f87171}
-#log .warn-line{color:#fbbf24}
-#log .ok-line{color:#4ade80}
-.progress{background:#e5e7eb;border-radius:20px;height:8px;margin:8px 0;overflow:hidden}
-.progressBar{background:linear-gradient(90deg,#991b1b,#dc2626);height:100%;border-radius:20px;transition:.3s;width:0%}
-.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:700}
+.info{background:#eff6ff;border-left:4px solid #3b82f6;border-radius:0 8px 8px 0;padding:12px 14px;font-size:.82rem;color:#1e3a8a;margin-bottom:12px;line-height:1.7}
+.warn{background:#fffbeb;border-left:4px solid #f59e0b;border-radius:0 8px 8px 0;padding:12px 14px;font-size:.82rem;color:#92400e;margin-bottom:12px}
+.success{background:#f0fdf4;border-left:4px solid #22c55e;border-radius:0 8px 8px 0;padding:12px 14px;font-size:.82rem;color:#065f46;margin-bottom:12px}
+.errBox{background:#fef2f2;border-left:4px solid #ef4444;border-radius:0 8px 8px 0;padding:12px 14px;font-size:.82rem;color:#991b1b;margin-bottom:12px}
+#log{background:#111;color:#4ade80;border-radius:8px;padding:14px;font-family:monospace;font-size:.77rem;min-height:80px;max-height:260px;overflow-y:auto;white-space:pre-wrap;line-height:1.6}
+.logErr{color:#f87171}.logWarn{color:#fbbf24}.logOk{color:#4ade80}.logInfo{color:#60a5fa}
+.progress{background:#e5e7eb;border-radius:20px;height:10px;margin:10px 0;overflow:hidden}
+.progressBar{background:linear-gradient(90deg,#991b1b,#dc2626);height:100%;border-radius:20px;transition:.2s;width:0%}
+table{width:100%;border-collapse:collapse;font-size:.81rem}
+th{background:#fef2f2;padding:8px 10px;text-align:left;font-size:.71rem;font-weight:700;color:#991b1b;text-transform:uppercase;border-bottom:2px solid #fca5a5}
+td{padding:7px 10px;border-bottom:1px solid #f9f0f0}
+tr:hover td{background:#fef9f9}
+.stat{text-align:center;padding:14px 10px;background:#fef9f9;border-radius:8px;border:1px solid #fde8e8}
+.stat .n{font-size:1.8rem;font-weight:800;color:#991b1b;line-height:1}
+.stat .l{font-size:.69rem;color:#888;text-transform:uppercase;font-weight:600;margin-top:4px}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.71rem;font-weight:700}
 .bGrn{background:#d1fae5;color:#065f46}
 .bRed{background:#fee2e2;color:#991b1b}
 .bBlue{background:#dbeafe;color:#1e3a8a}
-.bOrange{background:#fef3c7;color:#92400e}
-table{width:100%;border-collapse:collapse;font-size:.82rem}
-th{background:#f9fafb;padding:8px 10px;text-align:left;font-size:.72rem;font-weight:700;color:#666;text-transform:uppercase;border-bottom:2px solid #e5e7eb}
-td{padding:7px 10px;border-bottom:1px solid #f3f4f6}
-tr:hover td{background:#fef2f2}
-.stat{text-align:center;padding:14px;background:#f9fafb;border-radius:8px}
-.stat .n{font-size:2rem;font-weight:800;color:#991b1b}
-.stat .l{font-size:.72rem;color:#666;text-transform:uppercase;font-weight:600;margin-top:2px}
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div>
-    <h1>⚡ Grieer — Kunden Import Tool</h1>
-    <p>Kundendaten importieren, aktualisieren und bereinigen</p>
-  </div>
+  <h1>⚡ Grieer — Kunden Import Tool</h1>
+  <p>Kundendaten importieren, aktualisieren und bereinigen · roland375/grieer</p>
 </div>
 
 <div class="container">
@@ -67,68 +59,74 @@ tr:hover td{background:#fef2f2}
   <!-- STATUS -->
   <div class="card">
     <div class="cardHead">
-      <h2>📊 Aktueller Datenbestand</h2>
-      <button class="btn btnGray" onclick="statusPruefen()">🔄 Prüfen</button>
+      <h2>📊 Aktueller Datenbestand in Supabase</h2>
+      <button class="btn btnGray" onclick="statusPruefen()" style="font-size:.8rem;padding:6px 14px">🔄 Prüfen</button>
     </div>
+    <div class="cardBody" id="statusBereich">
+      <p style="color:#888;font-size:.84rem">Klicke "Prüfen" um den aktuellen Stand zu laden...</p>
+    </div>
+  </div>
+
+  <!-- FORMAT INFO -->
+  <div class="card">
+    <div class="cardHead"><h2>📋 Erkanntes CSV-Format</h2></div>
     <div class="cardBody">
-      <div id="statusBereich">
-        <p style="color:#666;font-size:.84rem">Klicke auf "Prüfen" um den aktuellen Stand zu sehen.</p>
+      <div class="info">
+        <strong>Dein Format (Tab-getrennt, 14 Spalten):</strong><br>
+        <span style="font-family:monospace;font-size:.78rem">
+          [0] Nummer · [1] SmsIndex · [2] Anrede · [3] TitelName · [4] Name2 · [5] Name3<br>
+          [6] PLZ · [7] Ort · [8] Strasse · [9] HNR · [10] HNRTxt · [11] Adresse · [12] EMail · [13] Tel1
+        </span><br><br>
+        <strong>Mapping:</strong> TitelName → Vor+Nachname · Strasse+HNR → Straße · Nummer → Kundennummer
       </div>
     </div>
   </div>
 
   <!-- IMPORT -->
   <div class="card">
-    <div class="cardHead"><h2>📥 CSV Import / Update</h2></div>
+    <div class="cardHead"><h2>📥 Datei hochladen & importieren</h2></div>
     <div class="cardBody">
-
-      <div class="info">
-        <strong>Format deiner Datei (Tab-getrennt):</strong><br>
-        Nummer · SmsIndex · Anrede · TitelName · Name2 · Name3 · PLZ · Ort · Strasse · HNR · HNRTxt · Adresse · EMail · Tel1<br><br>
-        <strong>Modus:</strong> Wenn Kundennummer bereits existiert → <strong>Daten werden aktualisiert</strong>.<br>
-        Wenn neu → wird angelegt. Bestehende Anlagen-Daten bleiben erhalten.
-      </div>
-
-      <div class="row">
-        <label>CSV/TXT Datei auswählen</label>
-        <input type="file" id="csvDatei" accept=".csv,.txt,.tab" onchange="dateiLaden(this)">
-        <span id="encInfo" style="font-size:.76rem;color:#065f46;display:block;margin-top:-8px;margin-bottom:10px"></span>
-      </div>
-
-      <div class="row">
-        <label>Oder Text direkt einfügen</label>
-        <textarea id="csvText" placeholder="Nummer&#9;SmsIndex&#9;Anrede&#9;TitelName&#9;..."></textarea>
+      <div class="row" style="margin-bottom:12px">
+        <label>CSV / TXT Datei auswählen (Tab-getrennt)</label>
+        <input type="file" id="csvDatei" accept=".csv,.txt,.tab,.tsv" onchange="dateiLaden(this)">
+        <div id="encInfo" style="font-size:.78rem;color:#065f46;min-height:20px"></div>
       </div>
 
       <div id="vorschauBereich" style="display:none;margin-bottom:14px">
         <div id="vorschauInfo"></div>
-        <div style="overflow-x:auto">
-          <table id="vorschauTabelle">
-            <thead><tr id="vorschauHeader"></tr></thead>
+        <div style="overflow-x:auto;border-radius:8px;border:1px solid #fde8e8">
+          <table>
+            <thead><tr>
+              <th>Nummer</th><th>Anrede</th><th>Nachname</th><th>Vorname</th>
+              <th>Straße</th><th>PLZ</th><th>Ort</th><th>Telefon</th><th>E-Mail</th>
+            </tr></thead>
             <tbody id="vorschauBody"></tbody>
           </table>
         </div>
+        <p style="font-size:.75rem;color:#888;margin-top:6px">Zeigt die ersten 10 Zeilen zur Kontrolle</p>
       </div>
 
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn btnGray" onclick="vorschauZeigen()">👁 Vorschau prüfen</button>
-        <button class="btn btnP" id="btnImport" onclick="importStarten('neu')" disabled>
-          📥 Nur neue anlegen
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">
+        <button class="btn btnRed" id="btnUpdate" onclick="importStarten('update')" disabled>
+          🔄 Alle importieren & aktualisieren
         </button>
-        <button class="btn btnO" id="btnUpdate" onclick="importStarten('update')" disabled>
-          🔄 Alles aktualisieren
+        <button class="btn btnGray" id="btnNeu" onclick="importStarten('neu')" disabled>
+          ➕ Nur neue anlegen
         </button>
       </div>
+      <p style="font-size:.77rem;color:#888;margin-top:8px">
+        <strong>Alle importieren:</strong> Bestehende werden aktualisiert, neue angelegt · <strong>Nur neue:</strong> Bestehende bleiben unverändert
+      </p>
     </div>
   </div>
 
   <!-- FORTSCHRITT -->
   <div class="card" id="fortschrittsCard" style="display:none">
-    <div class="cardHead"><h2>⏳ Import läuft...</h2></div>
+    <div class="cardHead"><h2 id="fortschrittsTitle">⏳ Import läuft...</h2></div>
     <div class="cardBody">
       <div class="progress"><div class="progressBar" id="progressBar"></div></div>
-      <p id="progressText" style="font-size:.83rem;color:#666;margin-bottom:10px"></p>
-      <div id="log">Warte auf Start...</div>
+      <p id="progressText" style="font-size:.83rem;color:#666;margin:6px 0 10px"></p>
+      <div id="log">Bereit...</div>
     </div>
   </div>
 
@@ -136,12 +134,13 @@ tr:hover td{background:#fef2f2}
   <div class="card">
     <div class="cardHead"><h2>🔧 Datenbank Wartung</h2></div>
     <div class="cardBody">
-      <div class="warn">Diese Funktionen direkt auf die Datenbank anwenden.</div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn btnG" onclick="alleAktivieren()">✅ Alle Kunden aktivieren</button>
-        <button class="btn btnGray" onclick="duplikateZeigen()">🔍 Duplikate finden</button>
+      <div class="warn">⚠️ Diese Aktionen wirken direkt auf die Datenbank!</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+        <button class="btn btnGrn" onclick="alleAktivieren()">✅ Alle Kunden aktivieren</button>
+        <button class="btn btnGray" onclick="duplikateZeigen()">🔍 Duplikate suchen</button>
+        <button class="btn" style="background:#7f1d1d;color:#fff" onclick="alleLoeschen()">🗑 ALLE löschen</button>
       </div>
-      <div id="wartungResult" style="margin-top:12px"></div>
+      <div id="wartungResult"></div>
     </div>
   </div>
 
@@ -151,54 +150,50 @@ tr:hover td{background:#fef2f2}
 const SB='https://bvodhzacatfuduwtlwut.supabase.co/rest/v1';
 const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2b2RoemFjYXRmdWR1d3Rsd3V0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxODUwMjcsImV4cCI6MjA5NTc2MTAyN30.kX03LLhpIm-iD1VQqreIpCCwAHzsT0pmYdIsl8uSeuY';
 
-async function api(path, opts={}){
-  const h={
-    'Content-Type':'application/json',
-    'apikey':KEY,
-    'Authorization':'Bearer '+KEY,
-    'Prefer':'return=representation',
-  };
+async function api(path,opts={}){
+  const h={'Content-Type':'application/json','apikey':KEY,'Authorization':'Bearer '+KEY,'Prefer':'return=representation'};
   const r=await fetch(SB+path,{...opts,headers:{...h,...(opts.headers||{})}});
   if(!r.ok){const t=await r.text();throw new Error(t);}
-  const t=await r.text();
-  return t?JSON.parse(t):[];
+  const t=await r.text();return t?JSON.parse(t):[];
+}
+
+async function alleKundenLaden(){
+  let alle=[],page=0;
+  while(true){
+    const b=await api('/kunden?select=id,nummer,nachname,aktiv&limit=1000&offset='+(page*1000));
+    if(!b||!b.length)break;
+    alle.push(...b);
+    if(b.length<1000)break;
+    page++;if(page>30)break;
+  }
+  return alle;
 }
 
 // ══ STATUS ══
 async function statusPruefen(){
-  document.getElementById('statusBereich').innerHTML='<p style="color:#666">Lade...</p>';
+  document.getElementById('statusBereich').innerHTML='<p style="color:#888">Lade alle Kunden...</p>';
   try{
-    // Alle Kunden laden (paginiert)
-    let alle=[], page=0;
-    while(true){
-      const b=await api('/kunden?select=id,aktiv,nummer&limit=1000&offset='+(page*1000));
-      if(!b||!b.length)break;
-      alle.push(...b);
-      if(b.length<1000)break;
-      page++;
-      if(page>20)break;
-    }
+    const alle=await alleKundenLaden();
     const aktiv=alle.filter(k=>k.aktiv===true).length;
-    const inaktiv=alle.filter(k=>k.aktiv===false).length;
     const ohneStatus=alle.filter(k=>k.aktiv===null||k.aktiv===undefined).length;
-    const mitNummer=alle.filter(k=>k.nummer).length;
+    const mitNr=alle.filter(k=>k.nummer).length;
     document.getElementById('statusBereich').innerHTML=`
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
         <div class="stat"><div class="n">${alle.length}</div><div class="l">Gesamt</div></div>
         <div class="stat"><div class="n" style="color:#065f46">${aktiv}</div><div class="l">Aktiv</div></div>
-        <div class="stat"><div class="n" style="color:#991b1b">${inaktiv+ohneStatus}</div><div class="l">Inaktiv/Kein Status</div></div>
-        <div class="stat"><div class="n" style="color:#1e3a8a">${mitNummer}</div><div class="l">Mit Nummer</div></div>
+        <div class="stat"><div class="n" style="color:#888">${ohneStatus}</div><div class="l">Kein Status</div></div>
+        <div class="stat"><div class="n" style="color:#1e3a8a">${mitNr}</div><div class="l">Mit Nummer</div></div>
       </div>
-      ${ohneStatus>0?`<div class="warn">⚠️ ${ohneStatus} Kunden haben keinen aktiv-Status → klicke "Alle Kunden aktivieren"</div>`:''}
-      <p style="font-size:.82rem;color:#666">Daten geladen in ${page+1} Seite(n)</p>`;
+      ${ohneStatus>0?`<div class="warn" style="margin-top:10px">⚠️ ${ohneStatus} Kunden ohne aktiv-Status → "Alle aktivieren" klicken</div>`:''}`;
   }catch(e){
-    document.getElementById('statusBereich').innerHTML=`<div class="err">Fehler: ${e.message}</div>`;
+    document.getElementById('statusBereich').innerHTML=`<div class="errBox">Fehler: ${e.message}</div>`;
   }
 }
 
 // ══ ENCODING ══
 function dateiLaden(input){
   const file=input.files[0];if(!file)return;
+  document.getElementById('encInfo').textContent='⏳ Lese Datei...';
   const r1=new FileReader();
   r1.onload=function(e){
     const arr=new Uint8Array(e.target.result);
@@ -206,10 +201,11 @@ function dateiLaden(input){
     if(arr[0]===0xFF&&arr[1]===0xFE) enc='UTF-16LE';
     else if(arr[0]===0xEF&&arr[1]===0xBB&&arr[2]===0xBF) enc='UTF-8';
     else{
-      for(let i=0;i<Math.min(arr.length,3000);i++){
+      // Suche nach Windows-1252 Umlaut-Bytes in ersten 5000 Bytes
+      for(let i=0;i<Math.min(arr.length,5000);i++){
         const b=arr[i];
         if(b===0xE4||b===0xF6||b===0xFC||b===0xDF||b===0xC4||b===0xD6||b===0xDC){
-          enc='windows-1252'; break;
+          enc='windows-1252';break;
         }
       }
     }
@@ -217,234 +213,188 @@ function dateiLaden(input){
     r2.onload=function(e2){
       let text=e2.target.result;
       if(text.charCodeAt(0)===0xFEFF)text=text.slice(1);
-      document.getElementById('csvText').value=text;
-      document.getElementById('encInfo').textContent='✅ Encoding erkannt: '+enc+' · '+file.name+' ('+Math.round(file.size/1024)+' KB)';
-      document.getElementById('btnImport').disabled=false;
+      // Parse und Vorschau
+      const {daten,fehler}=csvParsen(text);
+      document.getElementById('encInfo').textContent=
+        `✅ Encoding: ${enc} · ${file.name} · ${Math.round(file.size/1024)} KB · ${daten.length} Kunden erkannt`;
+      zeigeVorschau(daten);
+      // Speichere Text für Import
+      window._csvDaten=daten;
       document.getElementById('btnUpdate').disabled=false;
+      document.getElementById('btnNeu').disabled=false;
     };
     r2.readAsText(file,enc);
   };
   r1.readAsArrayBuffer(file);
 }
 
-// ══ CSV PARSEN ══
-function zeileParsen(zeile, sep){
-  const r=[];let cur='',inQ=false;
-  for(let i=0;i<zeile.length;i++){
-    const c=zeile[i];
-    if(c==='"'){if(inQ&&zeile[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}
-    else if(c===sep&&!inQ){r.push(cur.trim());cur='';}
-    else cur+=c;
-  }
-  r.push(cur.trim());
-  return r;
-}
-
+// ══ HARTKODIERTES PARSING für dein Format ══
+// Nummer[0] SmsIndex[1] Anrede[2] TitelName[3] Name2[4] Name3[5]
+// PLZ[6] Ort[7] Strasse[8] HNR[9] HNRTxt[10] Adresse[11] EMail[12] Tel1[13]
 function csvParsen(text){
   const zeilen=text.split('\n').filter(z=>z.trim());
-  if(!zeilen.length)return{header:[],daten:[]};
-  const erstZ=zeilen[0];
-  const sep=erstZ.includes('\t')?'\t':(erstZ.includes(';')?';':',');
-  const header=zeileParsen(zeilen[0],sep).map(h=>h.toLowerCase().trim()
-    .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss'));
-  const hatHeader=header.some(h=>['nummer','name2','titelname','nachname','ort','plz','strasse'].includes(h));
-  const datenZeilen=hatHeader?zeilen.slice(1):zeilen;
-  // Spalten-Mapping
-  const col={};
-  const map={
-    'nummer':'nr','kundennummer':'nr','kundennr':'nr',
-    'titelname':'ti','titlename':'ti',
-    'name2':'nn','nachname':'nn','name':'nn',
-    'name3':'vn','vorname':'vn',
-    'anrede':'anr',
-    'firma':'fi',
-    'strasse':'str','straße':'str',
-    'hnr':'hnr','hausnummer':'hnr',
-    'plz':'plz',
-    'ort':'ort','stadt':'ort',
-    'email':'email','e-mail':'email','adresse':'email',
-    'tel1':'tel','tel2':'tel2','telefon':'tel','handy':'tel',
-  };
-  header.forEach((h,i)=>{const m=map[h];if(m&&col[m]===undefined)col[m]=i;});
-  const daten=datenZeilen.map(z=>{
-    if(!z.trim())return null;
-    const t=zeileParsen(z,sep);
-    const g=k=>col[k]!==undefined&&col[k]<t.length?(t[col[k]]||'').trim():'';
-    // Name aufteilen: TitelName = "Dr. Elisabeth Seedoch" → Nachname=Seedoch, Vorname=Dr. Elisabeth
-    let tiName=g('ti');
-    let nn=g('nn');
-    let vn=g('vn');
-    if(tiName&&!nn){
-      const parts=tiName.split(' ').filter(Boolean);
-      nn=parts[parts.length-1];
-      vn=parts.slice(0,-1).join(' ');
-    }
-    if(!nn)return null;
+  if(!zeilen.length)return{daten:[],fehler:0};
+  // Header-Zeile überspringen
+  const erstZ=zeilen[0].toLowerCase();
+  const hatHeader=erstZ.includes('nummer')||erstZ.includes('titelname')||erstZ.includes('smsindex');
+  const datenZ=hatHeader?zeilen.slice(1):zeilen;
+  // Tab oder Semikolon?
+  const sep=zeilen[0].includes('\t')?'\t':(zeilen[0].includes(';')?';':',');
+  let daten=[],fehler=0;
+  for(const zeile of datenZ){
+    if(!zeile.trim())continue;
+    const t=zeile.split(sep);
+    const g=i=>(t[i]||'').trim();
+    // TitelName (Index 3) aufteilen: "Dr. Elisabeth Seedoch" → Nachname=Seedoch, Vorname=Dr. Elisabeth
+    const tiName=g(3);
+    if(!tiName){fehler++;continue;}
+    const parts=tiName.split(' ').filter(Boolean);
+    const nachname=parts[parts.length-1];
+    const vorname=parts.length>1?parts.slice(0,-1).join(' '):'';
     // Straße + HNR zusammenbauen
-    const str=g('str');
-    const hnr=g('hnr');
-    const strasseVoll=str+(hnr?' '+hnr:'');
-    return{
-      nummer:g('nr')||null,
-      anrede:g('anr')||null,
-      nachname:nn,
-      vorname:vn||null,
-      firma:g('fi')||null,
+    const strasse=g(8);
+    const hnr=g(9);
+    const strasseVoll=strasse+(hnr?' '+hnr:'');
+    daten.push({
+      nummer:g(0)||null,
+      anrede:g(2)||null,
+      nachname:nachname,
+      vorname:vorname||null,
       strasse:strasseVoll||null,
-      plz:g('plz')||null,
-      ort:g('ort')||null,
-      email:g('email')||null,
-      telefon:g('tel')||null,
+      plz:g(6)||null,
+      ort:g(7)||null,
+      email:g(12)||null,
+      telefon:g(13)||null,
       aktiv:true,
-    };
-  }).filter(Boolean);
-  return{header,col,sep,daten};
+    });
+  }
+  return{daten,fehler};
 }
 
-// ══ VORSCHAU ══
-function vorschauZeigen(){
-  const text=document.getElementById('csvText').value.trim();
-  if(!text){alert('Bitte Datei hochladen oder Text eingeben!');return;}
-  const {daten}=csvParsen(text);
+function zeigeVorschau(daten){
   document.getElementById('vorschauBereich').style.display='block';
-  document.getElementById('vorschauInfo').innerHTML=`
-    <div class="success">✅ ${daten.length} Kunden erkannt und bereit zum Import</div>`;
-  document.getElementById('vorschauHeader').innerHTML=
-    '<th>Nummer</th><th>Nachname</th><th>Vorname</th><th>Anrede</th><th>Straße</th><th>PLZ</th><th>Ort</th><th>Telefon</th><th>E-Mail</th>';
+  document.getElementById('vorschauInfo').innerHTML=
+    `<div class="success">✅ <strong>${daten.length}</strong> Kunden erkannt und bereit zum Import</div>`;
   document.getElementById('vorschauBody').innerHTML=
     daten.slice(0,10).map(k=>`<tr>
       <td>${k.nummer||'—'}</td>
+      <td>${k.anrede||''}</td>
       <td><strong>${k.nachname}</strong></td>
       <td>${k.vorname||''}</td>
-      <td>${k.anrede||''}</td>
       <td>${k.strasse||''}</td>
       <td>${k.plz||''}</td>
       <td>${k.ort||''}</td>
       <td>${k.telefon||''}</td>
       <td>${k.email||''}</td>
-    </tr>`).join('');
-  if(daten.length>10){
-    document.getElementById('vorschauBody').innerHTML+=
-      `<tr><td colspan="9" style="text-align:center;color:#666;font-style:italic">... und ${daten.length-10} weitere</td></tr>`;
-  }
-  document.getElementById('btnImport').disabled=false;
-  document.getElementById('btnUpdate').disabled=false;
+    </tr>`).join('')+
+    (daten.length>10?`<tr><td colspan="9" style="text-align:center;color:#888;font-style:italic;padding:10px">
+      ... und ${daten.length-10} weitere Kunden</td></tr>`:'');
 }
 
-// ══ IMPORT / UPDATE ══
+// ══ IMPORT ══
 async function importStarten(modus){
-  const text=document.getElementById('csvText').value.trim();
-  if(!text){alert('Bitte Datei hochladen!');return;}
-  const {daten}=csvParsen(text);
-  if(!daten.length){alert('Keine gültigen Daten gefunden!');return;}
-
+  const daten=window._csvDaten;
+  if(!daten||!daten.length){alert('Bitte zuerst Datei hochladen!');return;}
+  if(modus==='update'&&!confirm(`${daten.length} Kunden importieren/aktualisieren?\n\nBestehende Kunden werden anhand der Kundennummer aktualisiert.\nNeue Kunden werden angelegt.`))return;
   document.getElementById('fortschrittsCard').style.display='block';
   document.getElementById('fortschrittsCard').scrollIntoView({behavior:'smooth'});
+  document.getElementById('fortschrittsTitle').textContent='⏳ Import läuft...';
   const logEl=document.getElementById('log');
   const bar=document.getElementById('progressBar');
   const txt=document.getElementById('progressText');
-  logEl.textContent='';
-
-  function log(msg,typ=''){
-    const line=document.createElement('div');
-    line.className=typ==='err'?'err-line':typ==='warn'?'warn-line':'ok-line';
-    line.textContent=msg;
-    logEl.appendChild(line);
-    logEl.scrollTop=logEl.scrollHeight;
+  logEl.innerHTML='';
+  function log(msg,cls='logOk'){
+    const d=document.createElement('div');
+    d.className=cls;d.textContent=msg;
+    logEl.appendChild(d);logEl.scrollTop=logEl.scrollHeight;
   }
-
-  // Bestehende Nummern laden für Update-Modus
-  let bestehendeMap={};
+  // Bestehende Nummern laden
+  let nrMap={};
   if(modus==='update'){
-    log('⏳ Lade bestehende Kundennummern...');
-    let alle=[], page=0;
-    while(true){
-      const b=await api('/kunden?select=id,nummer&limit=1000&offset='+(page*1000));
-      if(!b||!b.length)break;
-      alle.push(...b);
-      if(b.length<1000)break;
-      page++;if(page>20)break;
-    }
-    alle.forEach(k=>{if(k.nummer)bestehendeMap[k.nummer]=k.id;});
-    log(`✅ ${alle.length} bestehende Kunden geladen, ${Object.keys(bestehendeMap).length} mit Nummern`);
+    log('⏳ Lade bestehende Kundennummern...','logInfo');
+    const alle=await alleKundenLaden();
+    alle.forEach(k=>{if(k.nummer)nrMap[String(k.nummer).trim()]=k.id;});
+    log(`✅ ${alle.length} Kunden geladen, ${Object.keys(nrMap).length} mit Nummer`,'logInfo');
   }
-
-  let ok=0,updated=0,fehler=0;
+  let neu=0,updated=0,fehler=0;
   const total=daten.length;
-
-  for(let i=0;i<daten.length;i++){
+  for(let i=0;i<total;i++){
     const k=daten[i];
     bar.style.width=Math.round((i+1)/total*100)+'%';
-    txt.textContent=`${i+1} von ${total} — ${k.nachname}`;
-
+    txt.textContent=`${i+1} / ${total} — ${k.nachname} ${k.vorname||''}`;
+    // Nur nicht-leere Felder senden
+    const d={aktiv:true};
+    if(k.nummer)d.nummer=k.nummer;
+    if(k.anrede)d.anrede=k.anrede;
+    d.nachname=k.nachname;
+    if(k.vorname)d.vorname=k.vorname;
+    if(k.strasse)d.strasse=k.strasse;
+    if(k.plz)d.plz=k.plz;
+    if(k.ort)d.ort=k.ort;
+    if(k.email)d.email=k.email;
+    if(k.telefon)d.telefon=k.telefon;
     try{
-      // Nur definierte Felder senden (keine null-Werte bei Update)
-      const clean={};
-      Object.entries(k).forEach(([key,val])=>{
-        if(val!==null&&val!==undefined&&val!=='')clean[key]=val;
-        else if(val===null&&modus==='neu')clean[key]=null; // Bei Neu: null erlaubt
-      });
-
-      if(modus==='update'&&k.nummer&&bestehendeMap[k.nummer]){
-        // Update bestehenden Kunden
-        const id=bestehendeMap[k.nummer];
-        await api('/kunden?id=eq.'+id,{method:'PATCH',body:JSON.stringify(clean)});
+      const existId=k.nummer?nrMap[String(k.nummer).trim()]:null;
+      if(modus==='update'&&existId){
+        await api('/kunden?id=eq.'+existId,{method:'PATCH',body:JSON.stringify(d)});
         updated++;
-        if(i%50===0)log(`🔄 Aktualisiert: ${k.nummer} ${k.nachname} ${k.vorname||''}`);
+        if(updated%100===0)log(`🔄 ${updated} aktualisiert... (${k.nachname})`);
       } else {
-        // Neuen Kunden anlegen
-        clean.aktiv=true;
-        await api('/kunden',{method:'POST',body:JSON.stringify(clean)});
-        ok++;
-        if(i%50===0)log(`✅ Angelegt: ${k.nummer||'—'} ${k.nachname} ${k.vorname||''}`);
+        await api('/kunden',{method:'POST',body:JSON.stringify(d)});
+        neu++;
+        if(neu%100===0)log(`✅ ${neu} neu angelegt... (${k.nachname})`);
       }
     }catch(e){
       fehler++;
-      log(`❌ Fehler bei ${k.nachname}: ${e.message.substring(0,80)}`,'err');
+      if(fehler<=5)log(`❌ Fehler: ${k.nachname} ${k.vorname||''} — ${e.message.substring(0,60)}`,'logErr');
     }
-    // Kurze Pause um Supabase nicht zu überlasten
-    if(i%10===9)await new Promise(r=>setTimeout(r,50));
+    if(i%20===19)await new Promise(r=>setTimeout(r,30));
   }
-
-  log('');
-  log('════════════════════════════');
-  log(`✅ Neu angelegt:   ${ok}`);
-  log(`🔄 Aktualisiert:   ${updated}`);
-  log(`❌ Fehler:         ${fehler}`);
-  log('════════════════════════════');
+  log('','logOk');
+  log('═══════════════════════════════','logInfo');
+  log(`✅ Neu angelegt:    ${neu}`,'logOk');
+  log(`🔄 Aktualisiert:    ${updated}`,'logOk');
+  log(`❌ Fehler:          ${fehler}`,'logErr');
+  log('═══════════════════════════════','logInfo');
   bar.style.width='100%';
-  txt.textContent='Fertig!';
-  document.getElementById('fortschrittsCard').querySelector('h2').textContent='✅ Import abgeschlossen!';
+  txt.textContent='✅ Fertig!';
+  document.getElementById('fortschrittsTitle').textContent='✅ Import abgeschlossen!';
   statusPruefen();
 }
 
 // ══ WARTUNG ══
 async function alleAktivieren(){
-  document.getElementById('wartungResult').innerHTML='<p style="color:#666">Arbeite...</p>';
+  if(!confirm('Alle Kunden auf aktiv=true setzen?'))return;
+  document.getElementById('wartungResult').innerHTML='<p style="color:#888">Arbeite...</p>';
   try{
     await api('/kunden?aktiv=is.null',{method:'PATCH',body:JSON.stringify({aktiv:true})});
     await api('/kunden?aktiv=eq.false',{method:'PATCH',body:JSON.stringify({aktiv:true})});
     document.getElementById('wartungResult').innerHTML='<div class="success">✅ Alle Kunden aktiviert!</div>';
     statusPruefen();
-  }catch(e){
-    document.getElementById('wartungResult').innerHTML='<div class="err">Fehler: '+e.message+'</div>';
-  }
+  }catch(e){document.getElementById('wartungResult').innerHTML='<div class="errBox">Fehler: '+e.message+'</div>';}
+}
+
+async function alleLoeschen(){
+  const alle=await alleKundenLaden();
+  if(!confirm(`⚠️ ALLE ${alle.length} Kunden wirklich löschen?\n\nDiese Aktion kann nicht rückgängig gemacht werden!`))return;
+  if(!confirm('Nochmal bestätigen: Alle Kunden löschen?'))return;
+  document.getElementById('wartungResult').innerHTML='<p style="color:#888">Lösche...</p>';
+  try{
+    await api('/kunden?aktiv=eq.true',{method:'DELETE'});
+    await api('/kunden?aktiv=is.null',{method:'DELETE'});
+    await api('/kunden?aktiv=eq.false',{method:'DELETE'});
+    document.getElementById('wartungResult').innerHTML='<div class="success">✅ Alle Kunden gelöscht!</div>';
+    statusPruefen();
+  }catch(e){document.getElementById('wartungResult').innerHTML='<div class="errBox">Fehler: '+e.message+'</div>';}
 }
 
 async function duplikateZeigen(){
-  document.getElementById('wartungResult').innerHTML='<p style="color:#666">Suche Duplikate...</p>';
+  document.getElementById('wartungResult').innerHTML='<p style="color:#888">Suche...</p>';
   try{
-    let alle=[], page=0;
-    while(true){
-      const b=await api('/kunden?select=id,nachname,vorname,ort,nummer&limit=1000&offset='+(page*1000));
-      if(!b||!b.length)break;
-      alle.push(...b);
-      if(b.length<1000)break;
-      page++;if(page>20)break;
-    }
+    const alle=await alleKundenLaden();
     const map={};
     alle.forEach(k=>{
-      const key=(k.nachname||'').toLowerCase()+'|'+(k.vorname||'').toLowerCase()+'|'+(k.ort||'').toLowerCase();
+      const key=(k.nachname||'').toLowerCase().trim();
       if(!map[key])map[key]=[];
       map[key].push(k);
     });
@@ -453,23 +403,20 @@ async function duplikateZeigen(){
       document.getElementById('wartungResult').innerHTML='<div class="success">✅ Keine Duplikate gefunden!</div>';
       return;
     }
-    document.getElementById('wartungResult').innerHTML=`
-      <div class="warn">⚠️ ${dups.length} mögliche Duplikate gefunden:</div>
+    document.getElementById('wartungResult').innerHTML=
+      `<div class="warn">⚠️ ${dups.length} mögliche Duplikate (gleicher Nachname):</div>
       <div style="overflow-x:auto"><table>
-        <thead><tr><th>Name</th><th>Ort</th><th>Anzahl</th><th>Nummern</th></tr></thead>
-        <tbody>${dups.slice(0,20).map(g=>`<tr>
-          <td>${g[0].nachname} ${g[0].vorname||''}</td>
-          <td>${g[0].ort||''}</td>
+        <thead><tr><th>Nachname</th><th>Anzahl</th><th>Nummern</th></tr></thead>
+        <tbody>${dups.slice(0,15).map(g=>`<tr>
+          <td><strong>${g[0].nachname}</strong></td>
           <td><span class="badge bRed">${g.length}×</span></td>
-          <td>${g.map(k=>k.nummer||'—').join(', ')}</td>
+          <td style="font-family:monospace;font-size:.75rem">${g.map(k=>k.nummer||'—').join(', ')}</td>
         </tr>`).join('')}</tbody>
       </table></div>`;
-  }catch(e){
-    document.getElementById('wartungResult').innerHTML='<div class="err">Fehler: '+e.message+'</div>';
-  }
+  }catch(e){document.getElementById('wartungResult').innerHTML='<div class="errBox">Fehler: '+e.message+'</div>';}
 }
 
-// Auto-Status beim Laden
+// Auto-Status laden
 statusPruefen();
 </script>
 </body>
