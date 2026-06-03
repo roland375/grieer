@@ -324,6 +324,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .sDivider{height:1px;background:var(--border);margin:15px 0}
 .sLabel{font-size:.71rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px}
 
+/* HEADER LEGACY - für alte HTML-Klassen */
+.headerLogo{display:flex;align-items:center;gap:10px}
+.headerLogo .icon{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--p3),var(--gold));display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.headerLogo h1{color:#fff;font-size:.92rem;font-weight:700;line-height:1.2}
+.headerLogo small{color:rgba(255,255,255,.4);font-size:.62rem;display:block;margin-top:1px}
+#headerRight{display:flex;align-items:center;gap:6px}
+#headerUser{color:rgba(255,255,255,.75);font-size:.73rem;font-weight:600;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:4px 10px;border-radius:20px}
+#logoutBtn{background:rgba(220,38,38,.2);border:1px solid rgba(220,38,38,.3);color:#fca5a5;padding:5px 11px;border-radius:20px;font-size:.72rem;cursor:pointer;font-family:var(--font);font-weight:600}
+
 /* PRINT */
 @media print{#appHeader,#navBar,#navSide,#toast,#modal{display:none!important}#main{padding:0!important}body{background:#fff}}
 </style>
@@ -367,16 +376,19 @@ if('serviceWorker' in navigator){
 
 <!-- HEADER -->
 <div id="appHeader" style="display:none">
-  <div class="headerLogo">
-    <div class="icon">⚡</div>
+  <div class="hLogo">
+    <div class="hIcon">⚡</div>
     <div>
-      <h1>Grieer Energietechnik OG</h1>
-      <small>Haustechnik · Burgenland</small>
+      <div class="hTitle">Grieer Energietechnik OG</div>
+      <span class="hSub">Haustechnik · Burgenland</span>
     </div>
   </div>
-  <div id="headerRight">
-    <span id="headerUser"></span>
-    <button id="logoutBtn" onclick="logout()">Abmelden</button>
+  <div id="hRight">
+    <span id="hUser"></span>
+    <button onclick="appAktualisieren()" id="updateBtn">
+      <span id="updateBtnIcon">↺</span><span id="updateBtnText">Aktualisieren</span>
+    </button>
+    <button id="hLogout" onclick="logout()">Abmelden</button>
   </div>
 </div>
 
@@ -420,11 +432,11 @@ if('serviceWorker' in navigator){
       <div class="cardHead"><h3>⚡ Schnellerfassung</h3></div>
       <div class="cardBody">
         <div class="schnellGrid">
-          <button class="btn btnP btnBlock" onclick="schnellAuftrag('pv')">☀️ PV Reinigung</button>
-          <button class="btn btnP btnBlock" onclick="schnellAuftrag('lueftung')">💨 Lüftung</button>
-          <button class="btn btnP btnBlock" onclick="schnellAuftrag('heizservice')">🔧 Heizungs Service</button>
-          <button class="btn btnP btnBlock" onclick="schnellAuftrag('brandschutz')">🔥 Brandschutz</button>
-          <button class="btn btnP btnBlock" onclick="schnellAuftrag('sonstiges')">📋 Sonstiges</button>
+          <button class="schnellBtn" onclick="schnellAuftrag('pv')"><span class="sIcon">☀️</span><span>PV Reinigung</span></button>
+          <button class="schnellBtn" onclick="schnellAuftrag('lueftung')"><span class="sIcon">💨</span><span>Lüftung</span></button>
+          <button class="schnellBtn" onclick="schnellAuftrag('heizservice')"><span class="sIcon">🔧</span><span>Heizungs Service</span></button>
+          <button class="schnellBtn" onclick="schnellAuftrag('brandschutz')"><span class="sIcon">🔥</span><span>Brandschutz</span></button>
+          <button class="schnellBtn" onclick="schnellAuftrag('sonstiges')"><span class="sIcon">📋</span><span>Sonstiges</span></button>
         </div>
       </div>
     </div>
