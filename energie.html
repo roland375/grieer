@@ -183,9 +183,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 /* SCHNELL GRID */
 .schnellGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 @media(max-width:400px){.schnellGrid{grid-template-columns:repeat(2,1fr)}}
-.schnellBtn{padding:13px 8px;border-radius:var(--r2);border:1.5px solid var(--border);background:var(--card);color:var(--text);font-size:.78rem;font-weight:600;cursor:pointer;transition:.15s;font-family:var(--font);text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:var(--sh)}
-.schnellBtn .sIcon{font-size:1.4rem;line-height:1}
-.schnellBtn:hover{border-color:var(--p3);background:var(--p4);color:var(--p);transform:translateY(-1px)}
+.schnellBtn{padding:12px 6px 10px;border-radius:var(--r2);border:1.5px solid var(--border);background:var(--card);color:var(--text);font-size:.74rem;font-weight:600;cursor:pointer;transition:.15s;font-family:var(--font);text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:var(--sh);line-height:1.3}
+.schnellBtn .sIcon{font-size:1.5rem;line-height:1;margin-bottom:2px}
+.schnellBtn:hover{border-color:var(--p3);background:var(--p4);color:var(--p);transform:translateY(-2px);box-shadow:var(--sh2)}
 .schnellBtn:active{transform:scale(.96)}
 
 /* BADGES */
@@ -800,10 +800,28 @@ function homeRender(){
     <div class="statCard"><div class="sv">${DB.auftraege.length}</div><div class="sl">Aufträge</div></div>
     <div class="statCard"><div class="sv">${isAdmin()?'€'+umsatz.toFixed(0):'—'}</div><div class="sl">Umsatz ${new Date().getFullYear()}</div></div>`;
 
-  // Leistungsstatistik
+  // Leistungsstatistik - mit korrekten DB-Feldnamen
   const ls={};
   Object.keys(TYPEN).forEach(t=>{ls[t]={k:new Set(),u:0};});
-  DB.kunden.forEach(k=>Object.keys(TYPEN).forEach(t=>{if(k['rhythmus_'+t]||k['letzt_'+t])ls[t].k.add(k.id);}));
+  // DB-Mapping: TYPEN-key → DB-Spaltenname in kunden
+  const dbM={pv:'fotovoltaik',lueftung:'lueftung',heizservice:'heizung',brandschutz:'wartung'};
+  DB.kunden.forEach(k=>{
+    // PV: pv_module > 0 ODER rhythmus_fotovoltaik gesetzt
+    if(k.pv_module>0||k.rhythmus_fotovoltaik||k.letzt_fotovoltaik) ls['pv']?.k.add(k.id);
+    // Lüftung: lueftungsanlagen > 0 ODER rhythmus_lueftung gesetzt
+    if(k.lueftungsanlagen>0||k.rhythmus_lueftung||k.letzt_lueftung) ls['lueftung']?.k.add(k.id);
+    // Heizung: rhythmus_heizung gesetzt
+    if(k.rhythmus_heizung||k.letzt_heizung) ls['heizservice']?.k.add(k.id);
+    // Brandschutz: rhythmus_wartung gesetzt
+    if(k.rhythmus_wartung||k.letzt_wartung) ls['brandschutz']?.k.add(k.id);
+  });
+  // Auch Aufträge zählen (Kunden die Aufträge haben aber noch keine Rhythmen)
+  DB.auftraege.forEach(a=>{
+    if(a.typ&&ls[a.typ]){
+      const k=DB.kunden.find(x=>x.nachname&&a.kunde&&a.kunde.includes(x.nachname));
+      if(k)ls[a.typ].k.add(k.id);
+    }
+  });
   if(isAdmin())DB.auftraege.filter(a=>a.bezahlt).forEach(a=>{if(ls[a.typ])ls[a.typ].u+=a.preis||0;});
   document.getElementById('leistungStats').innerHTML=Object.entries(ls)
     .filter(([,v])=>v.k.size>0)
