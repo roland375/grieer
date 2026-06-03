@@ -6130,40 +6130,8 @@ function adminCloseForm(){
 
 // Admin Passwort ändern
 function adminSaveAdminCode(){
-  var code1 = (document.getElementById('set-pw1-new').value||'').trim();
-  var code2 = (document.getElementById('set-pw2-new').value||'').trim();
-
-  var users = _loadUsers();
-  var adminUser = users.find(function(u){ return u.role === 'admin'; });
-  if(!adminUser) return;
-
-  var codes = [];
-  if(code1) codes.push(code1);
-  if(code2) codes.push(code2);
-  if(codes.length === 0){ _grieerToast('Mind. 1 Code eingeben!', '#F59E0B', 2000); return; }
-
-  adminUser.code = codes.length === 1 ? codes[0] : codes;
-  // Auch _pinWords aktualisieren für Rückwärtskompatibilität
-  _pinWords = codes;
-  localStorage.setItem('grieer-passwords', JSON.stringify(codes));
-  _saveUsers(users);
-
-  if(document.getElementById('set-pw1-new')) document.getElementById('set-pw1-new').value='';
-  if(document.getElementById('set-pw2-new')) document.getElementById('set-pw2-new').value='';
-  _grieerToast('✓ Admin-Code gespeichert', '#16A34A', 2000);
-
-  // Hints aktualisieren
-  var h1 = document.getElementById('set-pw1-hint');
-  var h2 = document.getElementById('set-pw2-hint');
-  if(h1) h1.textContent = code1 ? 'Aktuell: gesetzt ✓' : 'Aktuell: Standard';
-  if(h2) h2.textContent = code2 ? 'Aktuell: gesetzt ✓' : 'Aktuell: leer';
+  savePasswords();
 }
-
-// ─────────────────────────────────────────────────────────────
-//  FEHLENDE FUNKTIONEN – DRUCK / SENDEN / SPEICHERN
-// ─────────────────────────────────────────────────────────────
-
-// Direkt drucken (ohne Vorschau-Overlay)
 function kvPrint(pid){
   try {
     var data = buildA4Html(pid);
@@ -14185,9 +14153,47 @@ function showSettings(){
 }
 
 function savePasswords(){
-  adminSaveAdminCode();
+  // Lese aus den korrekten Felder (set-pw1 / set-pw2)
+  var code1 = (document.getElementById('set-pw1')?.value || document.getElementById('set-pw1-new')?.value || '').trim();
+  var code2 = (document.getElementById('set-pw2')?.value || document.getElementById('set-pw2-new')?.value || '').trim();
+  
+  if(!code1){ _grieerToast('Mind. 1 Code eingeben!', '#F59E0B', 2000); return; }
+  
+  // 1. In grieer-users speichern (Admin-User Code aktualisieren)
+  var users = _loadUsers();
+  var adminUser = users.find(function(u){ return u.role === 'admin'; });
+  
+  if(!adminUser){
+    // Kein Admin gefunden - aktuellen User als Admin eintragen
+    adminUser = window._currentUser || {id:'admin',name:'Admin (Roland)',role:'admin',pages:'*'};
+    users.unshift(adminUser);
+  }
+  
+  var codes = [code1];
+  if(code2) codes.push(code2);
+  adminUser.code = codes.length === 1 ? codes[0] : codes;
+  
+  _saveUsers(users);
+  
+  // 2. Auch in _pinWords und grieer-passwords speichern (Rückwärtskompatibilität)
+  _pinWords = codes;
+  try{ localStorage.setItem('grieer-passwords', JSON.stringify(codes)); }catch(e){}
+  
+  // 3. Session aktualisieren
+  if(window._currentUser && (window._currentUser.role === 'admin' || window._currentUser.id === adminUser.id)){
+    window._currentUser.code = adminUser.code;
+    try{ sessionStorage.setItem('grieer-current-user', JSON.stringify(window._currentUser)); }catch(e){}
+  }
+  
+  // Felder leeren
+  try{ document.getElementById('set-pw1').value = ''; }catch(e){}
+  try{ document.getElementById('set-pw2').value = ''; }catch(e){}
+  
+  _grieerToast('\u2713 Passwort gespeichert! Neuer Code: ' + code1, '#16A34A', 3000);
+  
+  // Anzeige aktualisieren
+  try{ adminShowSettings(); }catch(e){ try{ showSettings(); }catch(e2){} }
 }
-
 function showSettingsMsg(msg, col){
   var el = document.getElementById('settings-msg');
   if(!el) return;
