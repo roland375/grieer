@@ -999,11 +999,11 @@ body {
   <button id="nav-aufnahme" onclick="show('aufnahme')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;border-radius:6px;padding:6px 8px;font-size:15px;min-height:36px;min-width:36px;cursor:pointer;touch-action:manipulation">🏠</button>
   <button id="nav-maengel" onclick="show('maengel')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;border-radius:6px;padding:6px 8px;font-size:15px;min-height:36px;min-width:36px;cursor:pointer;touch-action:manipulation">⚠️</button>
   <button id="nav-ki" onclick="show('ki')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;border-radius:6px;padding:6px 8px;font-size:15px;min-height:36px;min-width:36px;cursor:pointer;touch-action:manipulation">🧠</button>
-  <button id="nav-settings" onclick="showSettings()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;border-radius:6px;padding:6px 8px;font-size:15px;min-height:36px;min-width:36px;cursor:pointer;touch-action:manipulation" title="Einstellungen">⚙️</button>
+  <button id="nav-settings" onclick="show('settings')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;border-radius:6px;padding:6px 8px;font-size:15px;min-height:36px;min-width:36px;cursor:pointer;touch-action:manipulation" title="Einstellungen">⚙️</button>
 
   <div id="nav-user-badge" title="Eingeloggt" onclick="if(confirm('Abmelden?')) _logout(); }" style="display:none;align-items:center;gap:4px;background:rgba(255,255,255,0.12);border-radius:6px;padding:4px 8px;font-size:10px;font-weight:600;color:#E2E8F0;cursor:pointer;max-width:70px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;flex-shrink:0" title="Tippen zum Abmelden"></div>
   <button onclick="showChangePw()" title="Passwort ändern" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#94A3B8;font-size:11px;padding:4px 8px;cursor:pointer;touch-action:manipulation;display:none" id="change-pw-btn">&#128273;</button>
-<button onclick="appRefresh()" style="width:100%;margin-top:8px;padding:12px;background:linear-gradient(135deg,#1E5799,#2563EB);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><span>&#128257;</span> App aktualisieren / Cache leeren</button>
+
 </nav>
 
 <div id="pin-overlay" style="display:flex;position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#0F172A 0%,#1A2B45 100%);z-index:99999;align-items:center;justify-content:center;flex-direction:column;padding:20px;box-sizing:border-box">
@@ -1051,6 +1051,54 @@ body {
 <button onclick="show('brandprot')" style="display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#B71C1C,#D32F2F);border:none;border-radius:10px;padding:12px 4px;cursor:pointer;touch-action:manipulation;min-height:72px;color:#fff;gap:4px"><span style="font-size:22px">&#128737;&#65039;</span><span style="font-size:10px;text-align:center">Brandschutz-Protokoll</span></button>
 <button onclick="show('ki')" style="display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#1A365D,#2563EB);border:none;border-radius:10px;padding:12px 4px;cursor:pointer;touch-action:manipulation;min-height:72px;color:#fff;gap:4px"><span style="font-size:22px">&#129504;</span><span style="font-size:10px;text-align:center">KI-Berater</span></button>
 </div>
+
+</div>
+</div>
+
+
+<div id="page-settings" class="pg" style="display:none">
+<div class="card">
+
+<!-- HEADER -->
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+  <h2 style="margin:0;font-size:18px;color:#1A2B45">&#9881;&#65039; Einstellungen</h2>
+  <button onclick="show('aufnahme')" style="background:#E2E8F0;border:none;border-radius:8px;padding:8px 14px;font-size:12px;cursor:pointer">&#8592; Zur&#252;ck</button>
+</div>
+
+<!-- SYNC / CLOUD STATUS -->
+<div style="background:linear-gradient(135deg,#1A2B45,#1E3A5F);border-radius:12px;padding:14px;margin-bottom:14px;color:#fff">
+  <div style="font-size:12px;font-weight:700;color:#93C5FD;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">&#9729;&#65039; Cloud-Synchronisierung</div>
+  <div id="sync-status-text" style="font-size:12px;color:#CBD5E1;margin-bottom:10px">Status: Noch nicht synchronisiert</div>
+  <button onclick="doCloudSync()" id="sync-btn" style="width:100%;background:#2563EB;color:#fff;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px">
+    <span id="sync-icon">&#128257;</span> <span id="sync-label">Jetzt synchronisieren</span>
+  </button>
+</div>
+
+<!-- PASSWORT ÄNDERN -->
+<div style="background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:12px;padding:14px;margin-bottom:14px">
+  <div style="font-size:12px;font-weight:700;color:#64748B;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">&#128273; Passwort &#228;ndern</div>
+  <div style="font-size:11px;color:#94A3B8;margin-bottom:10px">Eingeloggt als: <b id="settings-username">—</b></div>
+  <input type="text" id="set-pw1" placeholder="Neues Passwort eingeben..." autocomplete="off"
+    style="width:100%;padding:11px;border:1.5px solid #CBD5E1;border-radius:8px;font-size:14px;box-sizing:border-box;margin-bottom:8px">
+  <div style="font-size:11px;color:#94A3B8;margin-bottom:6px">Aktuell: <span id="set-pw1-current">Standard (roland/grieer)</span></div>
+  <button onclick="savePasswords()" style="width:100%;padding:11px;background:#16A34A;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;min-height:44px">
+    &#128190; Passwort speichern &amp; in Cloud synchronisieren
+  </button>
+</div>
+
+<!-- MITARBEITER -->
+<div style="background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:12px;padding:14px;margin-bottom:14px" id="admin-section">
+  <div style="font-size:12px;font-weight:700;color:#64748B;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">&#128101; Mitarbeiter &amp; Zug&#228;nge</div>
+  <div id="admin-users-list"></div>
+  <button onclick="adminNewUser()" style="width:100%;padding:11px;background:#1A2B45;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;min-height:44px">
+    &#43; Neuen Mitarbeiter anlegen
+  </button>
+</div>
+
+<!-- ABMELDEN -->
+<button onclick="_logout()" style="width:100%;padding:12px;background:#DC2626;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;min-height:44px;margin-bottom:8px">
+  &#128274; Abmelden
+</button>
 
 </div>
 </div>
@@ -15015,6 +15063,70 @@ window.adminDeleteUser = function(idx){
 };
 
 /* === ENDE BENUTZERVERWALTUNG === */
+
+/* === SETTINGS SEITE === */
+function doCloudSync(){
+  var btn = document.getElementById('sync-btn');
+  var lbl = document.getElementById('sync-label');
+  var ico = document.getElementById('sync-icon');
+  var status = document.getElementById('sync-status-text');
+  if(btn){ btn.disabled=true; }
+  if(lbl) lbl.textContent = 'Synchronisiere...';
+  if(ico) ico.textContent = '⏳';
+  
+  syncUsersFromCloud(function(users){
+    btn && (btn.disabled=false);
+    ico && (ico.textContent='✓');
+    if(users){
+      if(lbl) lbl.textContent = 'Synchronisiert (' + users.length + ' Benutzer)';
+      if(status) status.textContent = 'Status: ✓ Zuletzt synchronisiert: ' + new Date().toLocaleTimeString('de-AT');
+      _grieerToast('✓ ' + users.length + ' Benutzer synchronisiert!','#16A34A',2500);
+      try{ adminShowUsers(); }catch(e){}
+    } else {
+      if(lbl) lbl.textContent = 'Keine Cloud-Daten gefunden';
+      if(status) status.textContent = 'Status: Keine Daten in Cloud';
+      _grieerToast('Keine Cloud-Daten vorhanden. Erst am PC speichern!','#F59E0B',3000);
+    }
+    setTimeout(function(){ if(ico) ico.textContent='🔁'; if(lbl) lbl.textContent='Erneut synchronisieren'; },3000);
+  });
+}
+
+// show() für Settings-Seite: Felder befüllen
+var _origShowForSettings = window.show;
+window.show = function(id){
+  if(id === 'settings'){
+    // Admin-Check
+    if(!window._currentUser){ return; }
+    if(window._currentUser.role !== 'admin'){
+      _grieerToast('Nur für Admins','#F59E0B',2000); return;
+    }
+  }
+  if(_origShowForSettings) try{ _origShowForSettings(id); }catch(e){}
+  if(id === 'settings'){
+    // Felder befüllen
+    setTimeout(function(){
+      // Benutzername
+      var nameEl = document.getElementById('settings-username');
+      if(nameEl && window._currentUser) nameEl.textContent = window._currentUser.name;
+      
+      // Aktuelles Passwort anzeigen
+      var pwShow = document.getElementById('set-pw1-current');
+      if(pwShow && window._currentUser){
+        var code = window._currentUser.code;
+        var codeStr = Array.isArray(code) ? code.join(' / ') : (code||'standard');
+        pwShow.textContent = codeStr;
+      }
+      
+      // Admin-Section nur für Admins
+      var adminSec = document.getElementById('admin-section');
+      if(adminSec) adminSec.style.display = (window._currentUser&&window._currentUser.role==='admin') ? '' : 'none';
+      
+      // Mitarbeiterliste laden
+      try{ adminShowUsers(); }catch(e){}
+    },100);
+  }
+};
+/* === ENDE SETTINGS === */
 </script>
 
 </body>
