@@ -1,1 +1,8 @@
-self.addEventListener('install',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.map(function(n){return caches.delete(n);}));}).then(function(){return self.skipWaiting();}));});self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.map(function(n){return caches.delete(n);}));}).then(function(){return self.clients.claim();}));});self.addEventListener('fetch',function(e){e.respondWith(fetch(e.request,{cache:'no-store'}).catch(function(){return caches.match(e.request);}));});
+// Grieer SW v20260603091830 - kein Cache, immer aktuell
+self.addEventListener('install',e=>{e.waitUntil(self.skipWaiting());});
+self.addEventListener('activate',e=>{
+  e.waitUntil(caches.keys().then(keys=>Promise.all(keys.map(k=>caches.delete(k)))).then(()=>self.clients.claim()));
+});
+self.addEventListener('fetch',e=>{
+  e.respondWith(fetch(e.request,{cache:'no-store'}).catch(()=>caches.match(e.request)));
+});
