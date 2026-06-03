@@ -939,7 +939,7 @@ function isAdmin(){return user?.rolle==='admin';}
 async function appStart(){
   ['loginScreen'].forEach(id=>document.getElementById(id).style.display='none');
   ['appHeader','navBar','navSide','main'].forEach(id=>document.getElementById(id).style.display=id==='main'?'block':id==='navSide'?'flex':'flex');
-  document.getElementById('headerUser').textContent=user.name;
+  document.getElementById('hUser').textContent=user.name;
   if(isAdmin()){
     document.getElementById('nb-admin').style.display='flex';
     document.getElementById('ns-admin').style.display='flex';
