@@ -14153,46 +14153,29 @@ function showSettings(){
 }
 
 function savePasswords(){
-  // Lese aus den korrekten Felder (set-pw1 / set-pw2)
-  var code1 = (document.getElementById('set-pw1')?.value || document.getElementById('set-pw1-new')?.value || '').trim();
-  var code2 = (document.getElementById('set-pw2')?.value || document.getElementById('set-pw2-new')?.value || '').trim();
-  
+  var code1 = '';
+  var code2 = '';
+  try{ code1 = (document.getElementById('set-pw1')&&document.getElementById('set-pw1').value||document.getElementById('set-pw1-new')&&document.getElementById('set-pw1-new').value||'').trim(); }catch(e){}
+  try{ code2 = (document.getElementById('set-pw2')&&document.getElementById('set-pw2').value||document.getElementById('set-pw2-new')&&document.getElementById('set-pw2-new').value||'').trim(); }catch(e){}
   if(!code1){ _grieerToast('Mind. 1 Code eingeben!', '#F59E0B', 2000); return; }
-  
-  // 1. In grieer-users speichern (Admin-User Code aktualisieren)
   var users = _loadUsers();
   var adminUser = users.find(function(u){ return u.role === 'admin'; });
-  
-  if(!adminUser){
-    // Kein Admin gefunden - aktuellen User als Admin eintragen
-    adminUser = window._currentUser || {id:'admin',name:'Admin (Roland)',role:'admin',pages:'*'};
-    users.unshift(adminUser);
-  }
-  
+  if(!adminUser){ adminUser = window._currentUser||{id:'admin',name:'Admin',role:'admin',pages:'*'}; users.unshift(adminUser); }
   var codes = [code1];
   if(code2) codes.push(code2);
-  adminUser.code = codes.length === 1 ? codes[0] : codes;
-  
+  adminUser.code = codes.length===1 ? codes[0] : codes;
   _saveUsers(users);
-  
-  // 2. Auch in _pinWords und grieer-passwords speichern (Rückwärtskompatibilität)
   _pinWords = codes;
   try{ localStorage.setItem('grieer-passwords', JSON.stringify(codes)); }catch(e){}
-  
-  // 3. Session aktualisieren
-  if(window._currentUser && (window._currentUser.role === 'admin' || window._currentUser.id === adminUser.id)){
+  if(window._currentUser && (window._currentUser.role==='admin'||window._currentUser.id===adminUser.id)){
     window._currentUser.code = adminUser.code;
     try{ sessionStorage.setItem('grieer-current-user', JSON.stringify(window._currentUser)); }catch(e){}
   }
-  
-  // Felder leeren
-  try{ document.getElementById('set-pw1').value = ''; }catch(e){}
-  try{ document.getElementById('set-pw2').value = ''; }catch(e){}
-  
-  _grieerToast('\u2713 Passwort gespeichert! Neuer Code: ' + code1, '#16A34A', 3000);
-  
-  // Anzeige aktualisieren
-  try{ adminShowSettings(); }catch(e){ try{ showSettings(); }catch(e2){} }
+  // Cloud-Sync
+  try{ syncUsersToCloud(users); }catch(e){}
+  try{ document.getElementById('set-pw1').value=''; }catch(e){}
+  try{ document.getElementById('set-pw2').value=''; }catch(e){}
+  _grieerToast('\u2713 Passwort gespeichert!', '#16A34A', 3000);
 }
 function showSettingsMsg(msg, col){
   var el = document.getElementById('settings-msg');
@@ -14860,22 +14843,62 @@ function ablageMail(){
   else { window.addEventListener('load', initAblageObserver); }
 })();
 
-/* === APP AKTUALISIEREN === */
-function appRefresh(){
-  if(!confirm('App aktualisieren?\nCache wird geleert, neueste Version wird geladen.\nGespeicherte Daten bleiben erhalten.')) return;
-  if('serviceWorker' in navigator){
-    navigator.serviceWorker.getRegistrations().then(function(regs){
-      regs.forEach(function(r){ r.unregister(); });
-    });
-  }
-  if('caches' in window){
-    caches.keys().then(function(names){
-      names.forEach(function(n){ caches.delete(n); });
-    });
-  }
-  setTimeout(function(){ window.location.reload(true); },300);
+
+/* === SUPABASE SYNC & APP REFRESH === */
+var _SB_URL = 'https://bvodhzacatfuduwtlwut.supabase.co';
+var _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2b2RoemFjYXRmdWR1d3Rsd3V0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxODUwMjcsImV4cCI6MjA5NTc2MTAyN30.kX03LLhpIm-iD1VQqreIpCCwAHzsT0pmYdIsl8uSeuY';
+
+function syncUsersToCloud(users){
+  if(!users||!users.length) return;
+  fetch(_SB_URL+'/rest/v1/grieer_dokumente',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
+    body:JSON.stringify({firma_id:'grieer',doc_type:'_config',doc_nr:'users_v1',data:{users:users,ts:Date.now()},ersteller:'system'})
+  }).then(function(r){ if(r.ok) _grieerToast('☁️ In Cloud gespeichert','#16A34A',2000); })
+  .catch(function(){});
 }
-/* === ENDE === */
+
+function syncUsersFromCloud(cb){
+  fetch(_SB_URL+'/rest/v1/grieer_dokumente?firma_id=eq.grieer&doc_type=eq._config&doc_nr=eq.users_v1&select=data',{
+    headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}
+  }).then(function(r){return r.json();})
+  .then(function(rows){
+    if(rows&&rows.length&&rows[0].data&&rows[0].data.users){
+      var u=rows[0].data.users;
+      try{localStorage.setItem('grieer-users',JSON.stringify(u));}catch(e){}
+      if(cb) cb(u);
+    } else { if(cb) cb(null); }
+  }).catch(function(){ if(cb) cb(null); });
+}
+
+function appRefresh(){
+  _grieerToast('⏳ Synchronisiere mit Cloud...','#2563EB',2000);
+  syncUsersFromCloud(function(users){
+    if(users){ _grieerToast('✓ Passwörter synchronisiert! App lädt...','#16A34A',1500); }
+    if('serviceWorker' in navigator){ navigator.serviceWorker.getRegistrations().then(function(r){ r.forEach(function(s){s.unregister();}); }); }
+    if('caches' in window){ caches.keys().then(function(n){ n.forEach(function(k){caches.delete(k);}); }); }
+    setTimeout(function(){window.location.reload(true);},1500);
+  });
+}
+
+// Beim Start: Benutzer von Cloud laden (im Hintergrund, nach 3 Sek.)
+window.addEventListener('load',function(){
+  setTimeout(function(){
+    syncUsersFromCloud(function(users){
+      if(!users) return;
+      // Aktuelle Session aktualisieren wenn eingeloggt
+      try{
+        var cur=JSON.parse(sessionStorage.getItem('grieer-current-user'));
+        if(cur){
+          var upd=users.find(function(u){return u.id===cur.id;});
+          if(upd){ window._currentUser=upd; sessionStorage.setItem('grieer-current-user',JSON.stringify(upd)); }
+        }
+      }catch(e){}
+    });
+  },3000);
+});
+/* === ENDE SYNC === */
+
 
 /* === BENUTZERVERWALTUNG MIT ADMIN-ROLLE === */
 
