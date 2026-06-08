@@ -432,6 +432,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   </div>
   <div id="hRight">
     <span id="hUser"></span>
+    <button onclick="appAktualisieren()" id="updateBtn" title="Synchronisieren"
+      style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;
+             padding:6px 14px;border-radius:20px;font-size:.8rem;font-weight:700;cursor:pointer;
+             font-family:var(--font);display:inline-flex;align-items:center;gap:6px;transition:.15s">
+      <span id="updateIcon">↺</span><span id="updateText">Sync</span>
+    </button>
     <button id="hLogout" onclick="logout()">Abmelden</button>
   </div>
 </div>
@@ -1086,17 +1092,26 @@ function jRender(){
     if(monat!==lM){if(lM)html+='</div>';html+=`<div style="font-size:.71rem;font-weight:700;color:var(--text2);text-transform:uppercase;padding:10px 2px 5px;letter-spacing:.4px">${monat}</div><div class="card">`;lM=monat;}
     const istOffen=!a.bezahlt&&!a.preis;
     const farbe=TYPEN[a.typ]?.c||'#374151';
-    const klick=isAdmin()&&!a.bezahlt?`preisUndBezahlt('${a.id}','${esc(a.kunde||'')}')`:`auftragDetail('${a.id}')`;
-    html+=`<div class="listItem ${istOffen?'journalOffen':''}" onclick="${klick}" tabindex="0">
+    html+=`<div class="listItem ${istOffen?'journalOffen':''}" tabindex="0">
       <div class="listAvatar" style="background:${farbe}15;color:${farbe};font-size:.85rem">${(TYPEN[a.typ]?.l||'📋').split(' ')[0]}</div>
       <div class="listMain">
-        <strong>${esc(a.kunde||'—')}</strong>
-        <span>${a.datum?.split('-').reverse().join('.')||''} · ${esc(a.arbeit||TYPEN[a.typ]?.l||'—')}</span>
+        <strong style="cursor:pointer" onclick="auftragDetail('${a.id}')">${esc(sauber(a.kunde||'—'))}</strong>
+        <span>${a.datum?.split('-').reverse().join('.')||''}${a.uhrzeit_von?' · '+a.uhrzeit_von:''} · ${esc(a.arbeit||TYPEN[a.typ]?.l||'—')}</span>
         ${a.notiz?`<span style="font-size:.71rem;color:var(--text2)">${esc(a.notiz.substring(0,50))}</span>`:''}
       </div>
       <div class="listRight">
-        ${isAdmin()&&a.preis?`<div style="font-weight:800;font-size:.9rem;color:var(--p)">€${a.preis.toFixed(2)}</div>`:''}
-        ${isAdmin()&&!a.bezahlt?`<span class="badge bGold" style="cursor:pointer">💰 Preis eintragen</span>`:`<span class="badge ${a.bezahlt?'bGrn':'bOrange'}">${a.bezahlt?'✓ Bezahlt':'Offen'}</span>`}
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          ${isAdmin()&&a.preis?`<div style="font-weight:800;font-size:.88rem;color:var(--p)">€${a.preis.toFixed(2)}</div>`:''}
+          <span class="badge ${a.bezahlt?'bGrn':istOffen?'bOrange':'bBlue'}">${a.bezahlt?'✓ Bezahlt':istOffen?'Offen':'—'}</span>
+          <div style="display:flex;gap:4px;margin-top:2px">
+            <button class="btn btnOut btnSm" style="padding:5px 9px;min-height:34px"
+              onclick="event.stopPropagation();auftragBearbeiten('${a.id}')" title="Bearbeiten">✏️</button>
+            ${isAdmin()&&!a.bezahlt?`<button class="btn btnGrn btnSm" style="padding:5px 9px;min-height:34px"
+              onclick="event.stopPropagation();preisUndBezahlt('${a.id}','${esc(sauber(a.kunde||''))}')" title="Abrechnen">€</button>`:''}
+            <button class="btn btnRed btnSm" style="padding:5px 9px;min-height:34px"
+              onclick="event.stopPropagation();if(confirm('Eintrag loeschen?'))auftragLoeschen('${a.id}')" title="Löschen">🗑</button>
+          </div>
+        </div>
       </div>
     </div>`;
   });
@@ -1192,24 +1207,37 @@ function auftragNeu(vorKunde){
 }
 function aTypWechsel(){const t=document.getElementById('aTyp')?.value;if(TYPEN[t]&&isAdmin()){const p=document.getElementById('aPreis');if(p&&!p.value&&TYPEN[t].p)p.value=TYPEN[t].p.toFixed(2);}}
 async function auftragSpeichern(id,nurSpeichern=false){
-  const datum=document.getElementById('aDatum')?.value;const kunde=document.getElementById('aKunde')?.value?.trim();
-  if(!datum||!kunde){toast('Datum und Kunde erforderlich','err');return;}
-  const d={datum,kunde,
+  const datum=document.getElementById('aDatum')?.value;
+  if(!datum){toast('Bitte Datum eingeben','err');return;}
+  const kunde=document.getElementById('aKunde')?.value?.trim()||null;
+  const preisVal=document.getElementById('aPreis')?.value;
+  const preis=isAdmin()&&preisVal?(parseFloat(preisVal)||null):null;
+  const d={
+    datum,
+    kunde,
     ort:document.getElementById('aOrt')?.value||null,
     typ:document.getElementById('aTyp')?.value||null,
     arbeit:document.getElementById('aArbeit')?.value||null,
     dauer:parseFloat(document.getElementById('aDauer')?.value)||null,
-    preis:isAdmin()?parseFloat(document.getElementById('aPreis')?.value)||null:null,
+    uhrzeit_von:document.getElementById('aVon')?.value||null,
+    uhrzeit_bis:document.getElementById('aBis')?.value||null,
+    preis,
     naechste_faelligkeit:document.getElementById('aFaellig')?.value||null,
     bezahlt:document.getElementById('aBezahlt')?.value==='true',
     notiz:document.getElementById('aNotiz')?.value||null,
     geaendert_am:new Date().toISOString()
   };
-  Object.keys(d).forEach(k=>{if(d[k]===null||d[k]===undefined)delete d[k];});
+  Object.keys(d).forEach(k=>{if(d[k]===null||d[k]===undefined||d[k]==='')delete d[k];});
   try{
-    if(id){await api('/auftraege?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});toast('Auftrag aktualisiert ✓');}
-    else{await api('/auftraege',{method:'POST',body:JSON.stringify(d)});toast('Auftrag gespeichert ✓');}
-    await laden();if(!nurSpeichern)modalZu();
+    if(id){
+      await api('/auftraege?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});
+      toast('✅ Gespeichert!');
+    } else {
+      await api('/auftraege',{method:'POST',body:JSON.stringify(d)});
+      toast('✅ Auftrag angelegt!');
+    }
+    await laden();
+    if(!nurSpeichern)modalZu();
   }catch(e){toast('Fehler: '+e.message,'err');}
 }
 function auftragDetail(id){
@@ -1243,33 +1271,65 @@ function auftragDetail(id){
 }
 function auftragBearbeiten(id){
   const a=DB.auftraege.find(x=>x.id===id);if(!a)return;
-  const kvOpt=DB.kunden.map(k=>`<option value="${esc(k.nachname+(k.vorname?' '+k.vorname:'')+(k.ort?', '+k.ort:''))}">`).join('');
+  const kvOpt=DB.kunden.map(k=>`<option value="${esc(sauber((k.vorname?k.vorname+' ':'')+k.nachname+(k.ort?', '+k.ort:'')))}">`).join('');
   detailZu();
   setTimeout(()=>modalOffen('✏️ Auftrag bearbeiten',`
-    <div class="fRow"><label>Datum</label><input type="date" id="aDatum" value="${a.datum||''}"></div>
-    <div class="fRow"><label>Kunde</label><input id="aKunde" list="kvB" value="${esc(a.kunde||'')}"><datalist id="kvB">${kvOpt}</datalist></div>
-    <div class="fGrid fg2"><div class="fRow"><label>Straße</label><input id="aStrasse" value="${esc(a.strasse||'')}"></div><div class="fRow"><label>Ort</label><input id="aOrt" value="${esc(a.ort||'')}"></div></div>
-    <div class="fRow"><label>Leistungsart</label><select id="aTyp">${Object.entries(TYPEN).map(([k,v])=>`<option value="${k}" ${a.typ===k?'selected':''}>${v.l}</option>`).join('')}</select></div>
-    <div class="fRow"><label>Beschreibung</label><textarea id="aArbeit">${esc(a.arbeit||'')}</textarea></div>
     <div class="fGrid fg2">
-      <div class="fRow"><label>Dauer (h)</label><input id="aDauer" type="number" step=".5" value="${a.dauer||''}"></div>
-      ${isAdmin()?`<div class="fRow"><label>Preis (€)</label><input id="aPreis" type="number" step=".01" value="${a.preis||''}"></div>`:'<input type="hidden" id="aPreis">'}
-    </div>
-    <div class="fGrid fg2">
-      <div class="fRow"><label>Fälligkeit</label><input type="date" id="aFaellig" value="${a.naechste_faelligkeit||''}"></div>
-      <div class="fRow"><label>Bezahlt</label><select id="aBezahlt"><option value="false" ${!a.bezahlt?'selected':''}>Nein</option><option value="true" ${a.bezahlt?'selected':''}>Ja</option></select></div>
-    </div>
-    <div class="fRow"><label>Notiz</label><input id="aNotiz" value="${esc(a.notiz||'')}"></div>
-    <div style="background:#fef2f2;border-radius:8px;padding:10px;margin:8px 0">
-      <p style="font-size:.78rem;font-weight:700;color:var(--p);margin-bottom:7px">⚠️ Nicht stattgefunden?</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn btnOut btnSm" onclick="auftragDatumAendern('${a.id}')">📅 Datum verschieben</button>
-        <button class="btn btnRed btnSm" onclick="if(confirm('Löschen?'))auftragLoeschen('${a.id}')">🗑 Löschen</button>
+      <div class="fRow"><label>Datum *</label>
+        <input type="date" id="aDatum" value="${a.datum||''}">
+      </div>
+      <div class="fRow"><label>Dauer (h)</label>
+        <input type="number" id="aDauer" step=".5" value="${a.dauer||''}">
       </div>
     </div>
-    <div style="display:flex;gap:8px;margin-top:10px">
-      <button class="btn btnGrn" style="flex:1" onclick="auftragSpeichern('${a.id}')">💾 Speichern</button>
-      <button class="btn btnOut" onclick="auftragSpeichern('${a.id}',true)" style="font-size:.8rem">💾 Nur speichern</button>
+    <div class="fGrid fg2">
+      <div class="fRow"><label>Von</label>
+        <input type="time" id="aVon" value="${a.uhrzeit_von||''}">
+      </div>
+      <div class="fRow"><label>Bis</label>
+        <input type="time" id="aBis" value="${a.uhrzeit_bis||''}">
+      </div>
+    </div>
+    <div class="fRow"><label>Kunde</label>
+      <input id="aKunde" list="kvBE" value="${esc(sauber(a.kunde||''))}" placeholder="Name suchen…">
+      <datalist id="kvBE">${kvOpt}</datalist>
+    </div>
+    <div class="fRow"><label>Leistungsart</label>
+      <select id="aTyp">
+        ${Object.entries(TYPEN).map(([k,v])=>`<option value="${k}" ${a.typ===k?'selected':''}>${v.l}</option>`).join('')}
+      </select>
+    </div>
+    <div class="fRow"><label>Beschreibung / Arbeit</label>
+      <textarea id="aArbeit">${esc(a.arbeit||'')}</textarea>
+    </div>
+    <div class="fRow"><label>Notiz</label>
+      <input id="aNotiz" value="${esc(a.notiz||'')}">
+    </div>
+    ${isAdmin()?`
+    <div class="fGrid fg2">
+      <div class="fRow"><label>Preis (€)</label>
+        <input type="number" id="aPreis" step=".01" value="${a.preis||''}">
+      </div>
+      <div class="fRow"><label>Status</label>
+        <select id="aBezahlt">
+          <option value="false" ${!a.bezahlt?'selected':''}>Offen</option>
+          <option value="true" ${a.bezahlt?'selected':''}>✓ Bezahlt</option>
+        </select>
+      </div>
+    </div>`:'<input type="hidden" id="aPreis" value=""><input type="hidden" id="aBezahlt" value="false">'}
+    <input type="hidden" id="aOrt" value="${esc(a.ort||'')}">
+    <input type="hidden" id="aStrasse" value="${esc(a.strasse||'')}">
+    <input type="hidden" id="aFaellig" value="${a.naechste_faelligkeit||''}">
+    <div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:10px;padding:12px;margin:10px 0">
+      <p style="font-size:.8rem;font-weight:700;color:var(--p);margin-bottom:8px">⚠️ Termin nicht stattgefunden?</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btnOut btnSm" onclick="auftragDatumAendern('${a.id}')">📅 Datum verschieben</button>
+        <button class="btn btnRed btnSm" onclick="if(confirm('Eintrag loeschen?'))auftragLoeschen('${a.id}')">🗑 Löschen</button>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn btnGrn" style="flex:1" onclick="auftragSpeichern('${a.id}')">💾 Speichern & Schließen</button>
+      <button class="btn btnOut" onclick="auftragSpeichern('${a.id}',true)">💾 Nur speichern</button>
     </div>`),200);
 }
 async function auftragLoeschen(id){if(!confirm('Auftrag wirklich löschen?'))return;try{await api('/auftraege?id=eq.'+id,{method:'DELETE'});toast('Auftrag gelöscht');detailZu();await laden();}catch(e){toast('Fehler: '+e.message,'err');}}
@@ -1385,8 +1445,12 @@ function wocheVorZurueck(t){_wocheOffset+=t;wocheRender();}
 
 function terminNeu(){
   const heute=new Date().toISOString().split('T')[0];
-  const kvOpt=DB.kunden.map(k=>`<option value="${esc(k.nachname+(k.vorname?' '+k.vorname:'')+(k.ort?', '+k.ort:''))}">`).join('');
-  modalOffen('📅 Neuer Termin',`
+  const kvOpt=DB.kunden.map(k=>{
+    const nn=sauber(k.nachname);const vn=sauber(k.vorname);
+    const name=(vn?vn+' ':'')+nn;
+    const adr=[k.strasse,k.plz?k.plz+' '+k.ort:k.ort].filter(Boolean).join(', ');
+    return`<option value="${esc(name+(adr?' — '+adr:'')+(k.nummer?' Nr.'+k.nummer:''))}">`;
+  }).join('');  modalOffen('📅 Neuer Termin',`
     <div class="fRow"><label>Bezeichnung *</label><input id="tTitel" placeholder="z.B. Wartung bei Müller"></div>
     <div class="fRow"><label>Datum *</label><input type="date" id="tDatum" value="${heute}"></div>
     <div class="fRow"><label>Ganztägig</label><select id="tGanztag" onchange="terminGanztag()"><option value="true">Ja — Ganztag</option><option value="false">Nein — Uhrzeit</option></select></div>
@@ -1877,8 +1941,12 @@ function leistungsUebersicht(){
 // ══ TERMIN BEARBEITEN ══
 function terminBearbeiten(id){
   const t=DB.termine.find(x=>x.id===id);if(!t)return;
-  const kvOpt=DB.kunden.map(k=>`<option value="${esc(sauber((k.vorname?k.vorname+' ':'')+k.nachname)+(k.ort?', '+k.ort:''))}">`).join('');
-  modalOffen('✏️ Termin bearbeiten',`
+  const kvOpt=DB.kunden.map(k=>{
+    const nn=sauber(k.nachname);const vn=sauber(k.vorname);
+    const name=(vn?vn+' ':'')+nn;
+    const adr=[k.strasse,k.plz?k.plz+' '+k.ort:k.ort].filter(Boolean).join(', ');
+    return`<option value="${esc(name+(adr?' — '+adr:'')+(k.nummer?' Nr.'+k.nummer:''))}">`;
+  }).join('');  modalOffen('✏️ Termin bearbeiten',`
     <div class="fGrid fg2">
       <div class="fRow"><label>Datum *</label><input type="date" id="tDatum" value="${t.datum||''}"></div>
       <div class="fRow"><label>Ganztägig</label>
