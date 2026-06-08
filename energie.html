@@ -649,10 +649,26 @@ let pinEingabe='';
 
 // ══ API ══
 async function api(p,o={}){
-  const h={'Content-Type':'application/json','apikey':KEY,'Authorization':'Bearer '+KEY,'Prefer':'return=representation'};
+  const method=(o.method||'GET').toUpperCase();
+  // Für PATCH/DELETE kein return=representation nötig
+  const prefer=method==='GET'||method==='POST'?'return=representation':'return=minimal';
+  const h={
+    'Content-Type':'application/json',
+    'apikey':KEY,
+    'Authorization':'Bearer '+KEY,
+    'Prefer':prefer
+  };
   const r=await fetch(SB+p,{...o,headers:{...h,...(o.headers||{})}});
-  if(!r.ok){const t=await r.text();throw new Error(t||r.statusText);}
-  const t=await r.text();return t?JSON.parse(t):[];
+  // 204 No Content = Erfolg bei PATCH/DELETE
+  if(r.status===204)return [];
+  if(!r.ok){
+    const t=await r.text();
+    // PGRST204 ist kein echter Fehler
+    if(t&&t.includes('PGRST204'))return [];
+    throw new Error(t||r.statusText);
+  }
+  const t=await r.text();
+  return t?JSON.parse(t):[];
 }
 
 // ══ LOGIN ══
