@@ -6,79 +6,84 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Grieer ET">
-<meta name="theme-color" content="#c0392b">
+<meta name="theme-color" content="#7f1d1d">
 <title>Grieer Energietechnik OG</title>
 <style>
 :root{
-  --pri:#c0392b;--pri2:#a93226;--pri3:#e74c3c;
-  --dark:#1a0a09;--dark2:#2c1210;
-  --gold:#f39c12;--gold2:#f1c40f;
-  --bg:#f7f0f0;--card:#fff;--border:#e8d5d5;
-  --text:#1a0a09;--text2:#7f5a5a;
-  --grn:#1e8a4c;--red:#c0392b;--orange:#e67e22;--blue:#2980b9;
-  --grn2:#e8f5ee;--red2:#fdecea;--orange2:#fef3e2;--blue2:#e8f4fb;
-  --r:14px;--r2:8px;--sh:0 4px 20px rgba(192,57,43,.10);
-  --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+  --p:#991b1b;--p2:#7f1d1d;--p3:#dc2626;--p4:#fee2e2;
+  --dark:#0f0a0a;--dark2:#1c1010;
+  --gold:#d97706;--gold2:#fbbf24;
+  --bg:#fafafa;--card:#ffffff;--border:#f1e8e8;
+  --text:#111;--text2:#6b7280;
+  --grn:#065f46;--grn2:#d1fae5;--grn3:#059669;
+  --red:#991b1b;--red2:#fee2e2;
+  --orange:#92400e;--orange2:#fef3c7;
+  --blue:#1e3a8a;--blue2:#dbeafe;
+  --purple:#5b21b6;--purple2:#ede9fe;
+  --r:16px;--r2:10px;--r3:6px;
+  --sh:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(153,27,27,.06);
+  --sh2:0 4px 24px rgba(153,27,27,.12);
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
   --safe-top:env(safe-area-inset-top,0px);
   --safe-bot:env(safe-area-inset-bottom,0px);
-  --hh:56px;--nh:60px;
+  --hh:58px;--nh:62px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
-*:focus-visible{outline:3px solid var(--pri3);outline-offset:2px;border-radius:4px}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;font-size:15px}
+*:focus-visible{outline:2px solid var(--p3);outline-offset:2px;border-radius:4px}
 
 /* HEADER */
 #appHeader{
   position:fixed;top:0;left:0;right:0;z-index:100;
-  background:linear-gradient(135deg,var(--dark) 0%,var(--pri2) 100%);
+  background:var(--dark);
   height:calc(var(--safe-top) + var(--hh));
-  padding:calc(var(--safe-top) + 10px) 20px 10px;
+  padding:calc(var(--safe-top) + 10px) 18px 10px;
   display:flex;align-items:center;justify-content:space-between;
-  box-shadow:0 2px 12px rgba(192,57,43,.3);
+  box-shadow:0 1px 0 rgba(255,255,255,.05),0 4px 20px rgba(0,0,0,.4);
 }
-.headerLogo{display:flex;align-items:center;gap:10px}
-.headerLogo .icon{
-  width:36px;height:36px;border-radius:10px;
-  background:linear-gradient(135deg,var(--pri3),var(--gold));
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.1rem;flex-shrink:0;
+.hLogo{display:flex;align-items:center;gap:10px}
+.hIcon{
+  width:34px;height:34px;border-radius:9px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--p3),var(--gold));
+  display:flex;align-items:center;justify-content:center;font-size:1rem;
 }
-.headerLogo h1{color:#fff;font-size:.98rem;font-weight:800;line-height:1.2;letter-spacing:.2px}
-.headerLogo small{color:rgba(255,255,255,.65);font-size:.65rem;display:block}
-#headerRight{display:flex;align-items:center;gap:10px;flex-shrink:0}
-#headerUser{
-  color:rgba(255,255,255,.9);font-size:.78rem;font-weight:600;
-  background:rgba(255,255,255,.12);padding:4px 10px;border-radius:20px;
+.hTitle{color:#fff;font-size:.95rem;font-weight:700;letter-spacing:-.2px}
+.hSub{color:rgba(255,255,255,.45);font-size:.65rem;display:block;margin-top:1px}
+#hRight{display:flex;align-items:center;gap:8px}
+#hUser{
+  color:rgba(255,255,255,.8);font-size:.75rem;font-weight:600;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  padding:4px 10px;border-radius:20px;
 }
-#logoutBtn{
-  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);
-  color:#fff;padding:5px 12px;border-radius:20px;font-size:.74rem;
+#hLogout{
+  background:rgba(220,38,38,.2);border:1px solid rgba(220,38,38,.3);
+  color:#fca5a5;padding:5px 11px;border-radius:20px;font-size:.73rem;
   cursor:pointer;font-family:var(--font);transition:.15s;
 }
-#logoutBtn:hover{background:rgba(255,255,255,.2)}
+#hLogout:hover{background:rgba(220,38,38,.35)}
 
-/* BOTTOM NAV - Mobile */
+/* NAV BOTTOM */
 #navBar{
   position:fixed;bottom:0;left:0;right:0;z-index:100;
   background:var(--dark);
-  padding:6px 4px calc(var(--safe-bot) + 4px);
+  padding:6px 0 calc(var(--safe-bot)+4px);
   display:flex;justify-content:space-around;
-  box-shadow:0 -2px 12px rgba(0,0,0,.3);
+  border-top:1px solid rgba(255,255,255,.06);
+  box-shadow:0 -4px 20px rgba(0,0,0,.3);
 }
 .navBtn{
   display:flex;flex-direction:column;align-items:center;gap:2px;
-  background:none;border:none;color:rgba(255,255,255,.4);
+  background:none;border:none;color:rgba(255,255,255,.35);
   font-size:.58rem;font-weight:700;letter-spacing:.3px;
-  padding:5px 6px;cursor:pointer;transition:.2s;
-  min-width:46px;text-transform:uppercase;border-radius:10px;
+  padding:5px 8px;cursor:pointer;transition:.2s;
+  min-width:48px;text-transform:uppercase;border-radius:10px;
   font-family:var(--font);
 }
-.navBtn .ni{font-size:1.3rem;line-height:1.1}
-.navBtn.ak{color:var(--pri3)}
-.navBtn.ak .ni{filter:drop-shadow(0 0 6px rgba(231,76,60,.6))}
-.navBtn:hover{color:rgba(255,255,255,.75)}
+.navBtn .ni{font-size:1.3rem;line-height:1.15}
+.navBtn.ak{color:var(--gold2)}
+.navBtn:hover{color:rgba(255,255,255,.7)}
 
-/* SIDE NAV - Desktop */
+/* NAV SIDE */
 #navSide{display:none}
 
 /* MAIN */
@@ -92,321 +97,314 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   #navBar{display:none}
   #navSide{
     display:flex;flex-direction:column;
-    position:fixed;left:0;
-    top:calc(var(--safe-top) + var(--hh));
-    bottom:0;width:210px;z-index:90;
-    background:var(--dark2);
-    padding:20px 10px;gap:3px;
-    box-shadow:2px 0 12px rgba(0,0,0,.2);
+    position:fixed;left:0;top:calc(var(--safe-top)+var(--hh));bottom:0;
+    width:220px;z-index:90;
+    background:var(--dark2);padding:16px 10px;gap:2px;
+    border-right:1px solid rgba(255,255,255,.04);
   }
-  .nsDivider{height:1px;background:rgba(255,255,255,.08);margin:8px 4px}
-  .nsLabel{font-size:.63rem;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.5px;padding:4px 14px}
+  .nsLabel{font-size:.62rem;font-weight:700;color:rgba(255,255,255,.25);
+    text-transform:uppercase;letter-spacing:.6px;padding:10px 14px 4px}
+  .nsDivider{height:1px;background:rgba(255,255,255,.06);margin:6px 4px}
   .navSideBtn{
     display:flex;align-items:center;gap:10px;
-    background:none;border:none;color:rgba(255,255,255,.5);
-    font-size:.84rem;font-weight:600;padding:10px 14px;
-    border-radius:var(--r2);cursor:pointer;transition:.15s;
+    background:none;border:none;color:rgba(255,255,255,.45);
+    font-size:.84rem;font-weight:500;padding:9px 14px;
+    border-radius:var(--r3);cursor:pointer;transition:.15s;
     text-align:left;font-family:var(--font);width:100%;
   }
-  .navSideBtn .ni{font-size:1.05rem;width:20px;text-align:center}
-  .navSideBtn.ak{background:rgba(192,57,43,.25);color:#fff;border-left:3px solid var(--pri3)}
-  .navSideBtn:hover:not(.ak){background:rgba(255,255,255,.07);color:#fff}
-  #main{padding-left:220px;padding-bottom:20px}
-  #appHeader{left:0}
-  #detailOverlay{left:210px}
+  .navSideBtn .ni{font-size:1rem;width:18px;text-align:center;opacity:.7}
+  .navSideBtn.ak{
+    background:rgba(220,38,38,.15);color:#fff;
+    border-left:3px solid var(--p3);padding-left:11px;
+  }
+  .navSideBtn.ak .ni{opacity:1}
+  .navSideBtn:hover:not(.ak){background:rgba(255,255,255,.05);color:rgba(255,255,255,.8)}
+  #main{padding-left:230px;padding-bottom:24px}
+  #detailOverlay{left:220px}
 }
 @media(min-width:1100px){
-  #navSide{width:230px}
-  #main{padding-left:240px;max-width:1300px}
+  #navSide{width:240px}
+  #main{padding-left:250px}
 }
 
 /* LOGIN */
 #loginScreen{
   position:fixed;inset:0;z-index:200;
-  background:linear-gradient(135deg,var(--dark) 0%,var(--dark2) 40%,var(--pri2) 100%);
+  background:linear-gradient(160deg,var(--dark) 0%,var(--dark2) 50%,#3b0000 100%);
   display:flex;align-items:center;justify-content:center;padding:20px;
 }
 .loginBox{
   background:#fff;border-radius:24px;padding:40px 32px;
   max-width:360px;width:100%;
-  box-shadow:0 32px 80px rgba(0,0,0,.5);text-align:center;
+  box-shadow:0 32px 80px rgba(0,0,0,.6);text-align:center;
 }
 .loginLogo{
-  width:72px;height:72px;border-radius:18px;
-  background:linear-gradient(135deg,var(--pri2),var(--pri3));
-  display:flex;align-items:center;justify-content:center;
-  font-size:2rem;margin:0 auto 20px;
-  box-shadow:0 8px 24px rgba(192,57,43,.4);
+  width:72px;height:72px;border-radius:18px;margin:0 auto 20px;
+  background:linear-gradient(135deg,var(--p2),var(--p3));
+  display:flex;align-items:center;justify-content:center;font-size:2rem;
+  box-shadow:0 8px 32px rgba(153,27,27,.5);
 }
-.loginBox h2{color:var(--dark);font-size:1.4rem;font-weight:800;margin-bottom:4px}
-.loginBox p{color:var(--text2);font-size:.82rem;margin-bottom:24px}
+.loginBox h2{color:var(--dark);font-size:1.45rem;font-weight:800;margin-bottom:4px}
+.loginBox p{color:var(--text2);font-size:.83rem;margin-bottom:24px}
 .pinDots{display:flex;gap:14px;justify-content:center;margin-bottom:20px}
-.pinDot{width:14px;height:14px;border-radius:50%;border:2px solid #ddd;transition:.25s}
-.pinDot.filled{background:var(--pri);border-color:var(--pri);transform:scale(1.2);box-shadow:0 0 8px rgba(192,57,43,.5)}
+.pinDot{width:14px;height:14px;border-radius:50%;border:2px solid #e5e7eb;transition:.25s}
+.pinDot.filled{background:var(--p);border-color:var(--p);transform:scale(1.15);box-shadow:0 0 10px rgba(153,27,27,.4)}
 .pinGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:240px;margin:0 auto 14px}
 .pinKey{
-  padding:16px;border-radius:14px;border:2px solid #eee;
+  padding:16px;border-radius:14px;border:1.5px solid #e5e7eb;
   background:#fff;font-size:1.3rem;font-weight:700;color:var(--dark);
   cursor:pointer;transition:.15s;font-family:var(--font);
 }
-.pinKey:hover{border-color:var(--pri);background:var(--red2)}
-.pinKey:active{background:var(--pri);color:#fff;border-color:var(--pri)}
-.pinError{color:var(--pri);font-size:.82rem;min-height:20px;margin-top:6px;font-weight:600}
+.pinKey:hover{border-color:var(--p);background:var(--red2)}
+.pinKey:active{background:var(--p);color:#fff;border-color:var(--p);transform:scale(.95)}
+.pinError{color:var(--p);font-size:.82rem;min-height:20px;margin-top:6px;font-weight:600}
 
 /* CARDS */
 .card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:14px;overflow:hidden;border:1px solid var(--border)}
-.cardHead{
-  padding:13px 16px;display:flex;align-items:center;justify-content:space-between;
-  border-bottom:1px solid var(--border);background:linear-gradient(135deg,#fff,#fdf5f5);
-}
-.cardHead h3{font-size:.9rem;font-weight:700;color:var(--dark)}
-.cardBody{padding:14px}
+.cardHead{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.cardHead h3{font-size:.88rem;font-weight:700;color:var(--dark);letter-spacing:-.1px}
+.cardBody{padding:16px 18px}
 
 /* BUTTONS */
 .btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:7px;
-  padding:10px 18px;border-radius:var(--r2);border:none;
-  font-size:.84rem;font-weight:700;cursor:pointer;transition:.15s;
-  font-family:var(--font);min-height:42px;letter-spacing:.2px;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:9px 18px;border-radius:var(--r2);border:none;
+  font-size:.84rem;font-weight:600;cursor:pointer;transition:.15s;
+  font-family:var(--font);min-height:40px;letter-spacing:-.1px;
 }
-.btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn:hover{filter:brightness(1.07);transform:translateY(-1px)}
 .btn:active{transform:scale(.97) translateY(0)}
-.btnP{background:linear-gradient(135deg,var(--pri2),var(--pri3));color:#fff;box-shadow:0 4px 12px rgba(192,57,43,.3)}
-.btnG{background:linear-gradient(135deg,#e67e22,var(--gold));color:#fff;box-shadow:0 4px 12px rgba(230,126,34,.3)}
-.btnGrn{background:linear-gradient(135deg,#16a085,var(--grn));color:#fff;box-shadow:0 4px 10px rgba(30,138,76,.25)}
-.btnRed{background:var(--pri);color:#fff}
-.btnOut{background:transparent;color:var(--pri);border:2px solid var(--border)}
-.btnOut:hover{border-color:var(--pri);background:var(--red2)}
+.btnP{background:var(--p);color:#fff;box-shadow:0 2px 8px rgba(153,27,27,.3)}
+.btnG{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#fff;box-shadow:0 2px 8px rgba(217,119,6,.3)}
+.btnGrn{background:var(--grn3);color:#fff;box-shadow:0 2px 8px rgba(5,150,105,.2)}
+.btnRed{background:var(--p3);color:#fff}
+.btnOut{background:transparent;color:var(--text);border:1.5px solid var(--border)}
+.btnOut:hover{border-color:var(--p);color:var(--p)}
 .btnSm{padding:6px 12px;font-size:.76rem;min-height:32px}
 .btnBlock{width:100%}
 
 /* INPUTS */
 .fRow{margin-bottom:14px}
-.fRow label{display:block;font-size:.74rem;font-weight:700;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
+.fRow label{display:block;font-size:.73rem;font-weight:700;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
 .fRow input,.fRow select,.fRow textarea{
-  width:100%;padding:11px 14px;border:2px solid var(--border);
+  width:100%;padding:10px 14px;border:1.5px solid #e5e7eb;
   border-radius:var(--r2);font-size:.88rem;font-family:var(--font);
-  background:#fff;color:var(--text);transition:.2s;min-height:42px;
+  background:#fff;color:var(--text);transition:.2s;min-height:40px;
 }
 .fRow input:focus,.fRow select:focus,.fRow textarea:focus{
-  outline:none;border-color:var(--pri);background:#fffafa;
-  box-shadow:0 0 0 3px rgba(192,57,43,.08);
+  outline:none;border-color:var(--p3);background:#fff;
+  box-shadow:0 0 0 3px rgba(220,38,38,.08);
 }
-.fRow textarea{min-height:84px;resize:vertical}
+.fRow textarea{min-height:80px;resize:vertical}
 .fGrid{display:grid;gap:12px}
 .fg2{grid-template-columns:1fr 1fr}
 .fg3{grid-template-columns:1fr 1fr 1fr}
-@media(max-width:500px){.fg2,.fg3{grid-template-columns:1fr}}
+@media(max-width:480px){.fg2,.fg3{grid-template-columns:1fr}}
 
 /* TABS */
 .tabContent{display:none;padding:16px}
 .tabContent.ak{display:block}
-.secHead{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:16px;flex-wrap:wrap;gap:10px;
-}
-.secHead h2{font-size:1.15rem;font-weight:800;color:var(--dark)}
+.secHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.secHead h2{font-size:1.15rem;font-weight:800;color:var(--dark);letter-spacing:-.3px}
 
 /* BADGES */
-.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:.7rem;font-weight:700}
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:.7rem;font-weight:700;letter-spacing:.1px}
 .bGrn{background:var(--grn2);color:var(--grn)}
-.bRed{background:var(--red2);color:var(--pri)}
+.bRed{background:var(--red2);color:var(--red)}
 .bOrange{background:var(--orange2);color:var(--orange)}
 .bBlue{background:var(--blue2);color:var(--blue)}
+.bPurple{background:var(--purple2);color:var(--purple)}
+.bGold{background:#fef3c7;color:#92400e}
 
 /* LIST */
 .listItem{
-  padding:13px 16px;border-bottom:1px solid var(--border);
+  padding:13px 18px;border-bottom:1px solid var(--border);
   display:flex;align-items:center;gap:12px;cursor:pointer;transition:.15s;
 }
 .listItem:last-child{border-bottom:none}
-.listItem:hover{background:#fdf5f5}
-.listAvatar{
-  width:44px;height:44px;border-radius:12px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.05rem;font-weight:800;flex-shrink:0;
-}
+.listItem:hover{background:#fef2f2}
+.listAvatar{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;flex-shrink:0}
 .listMain{flex:1;min-width:0}
-.listMain strong{display:block;font-size:.88rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.listMain span{font-size:.75rem;color:var(--text2)}
+.listMain strong{display:block;font-size:.88rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.1px}
+.listMain span{font-size:.75rem;color:var(--text2);display:block;margin-top:1px}
 .listRight{text-align:right;flex-shrink:0}
 
 /* STATS */
 .statsRow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
-@media(max-width:500px){.statsRow{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.statsRow{grid-template-columns:repeat(2,1fr)}}
 .statCard{
-  background:linear-gradient(135deg,#fff,#fdf5f5);
-  border-radius:var(--r);padding:14px 10px;
-  box-shadow:var(--sh);text-align:center;
-  border:1px solid var(--border);
+  background:var(--card);border-radius:var(--r);padding:14px 12px;
+  box-shadow:var(--sh);text-align:center;border:1px solid var(--border);
+  transition:.2s;
 }
-.statCard .sv{font-size:1.5rem;font-weight:800;color:var(--pri)}
-.statCard .sl{font-size:.66rem;color:var(--text2);font-weight:700;text-transform:uppercase;margin-top:2px}
+.statCard:hover{box-shadow:var(--sh2);transform:translateY(-2px)}
+.statCard .sv{font-size:1.6rem;font-weight:800;color:var(--p);line-height:1}
+.statCard .sl{font-size:.66rem;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:.3px;margin-top:4px}
 
-/* LEISTUNGSGRID */
+/* LEISTUNG GRID */
 .leistungGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 @media(min-width:600px){.leistungGrid{grid-template-columns:repeat(3,1fr)}}
 .leistungCard{
-  background:#fff;border-radius:var(--r);padding:14px;
+  background:var(--card);border-radius:var(--r);padding:16px;
   box-shadow:var(--sh);border:1px solid var(--border);
-  border-top:4px solid var(--pri);
-  transition:.2s;cursor:pointer;
+  border-top:3px solid var(--p);cursor:pointer;transition:.2s;
 }
-.leistungCard:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(192,57,43,.15)}
-.leistungCard .lv{font-size:2rem;font-weight:800;color:var(--pri);line-height:1}
-.leistungCard .lu{font-size:.75rem;font-weight:700;color:var(--text2);text-transform:uppercase;margin-top:4px}
+.leistungCard:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+.leistungCard .lv{font-size:2rem;font-weight:800;color:var(--p);line-height:1}
+.leistungCard .lu{font-size:.74rem;font-weight:700;color:var(--text2);text-transform:uppercase;margin-top:5px;letter-spacing:.3px}
 .leistungCard .le{font-size:.78rem;color:var(--text2);margin-top:3px}
 
-/* HINWEIS BOX */
-.hinweisBox{
-  background:linear-gradient(135deg,#fff9f0,#fff);
-  border:2px solid #f0b27a;border-radius:var(--r2);
-  padding:14px;margin-bottom:16px;
+/* SCHNELL GRID */
+.schnellGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(max-width:420px){.schnellGrid{grid-template-columns:repeat(2,1fr)}}
+.schnellBtn{
+  padding:12px 8px;border-radius:var(--r2);border:1.5px solid var(--border);
+  background:var(--card);color:var(--text);font-size:.8rem;font-weight:600;
+  cursor:pointer;transition:.15s;font-family:var(--font);text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
 }
-.hinweisBox .hb-icon{font-size:1.2rem;margin-bottom:4px}
-.hinweisBox .hb-label{font-size:.72rem;font-weight:700;color:var(--orange);text-transform:uppercase;margin-bottom:5px}
-.hinweisBox p{font-size:.88rem;color:#7d4e1a;line-height:1.6}
+.schnellBtn .sIcon{font-size:1.4rem}
+.schnellBtn:hover{border-color:var(--p3);background:var(--red2);color:var(--p)}
+.schnellBtn:active{transform:scale(.96)}
+
+/* ANLAGE KARTE */
+.anlageKarte{
+  background:linear-gradient(135deg,#fff,#fef9f9);
+  border:1.5px solid var(--border);border-radius:var(--r2);
+  padding:14px;margin-bottom:10px;
+}
+.anlageKarte h4{font-size:.78rem;font-weight:700;color:var(--p);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+
+/* HINWEIS */
+.hinweisBox{
+  background:linear-gradient(135deg,#fffbeb,#fff);
+  border:1.5px solid #fcd34d;border-radius:var(--r2);padding:14px;margin-bottom:14px;
+}
+.hinweisBox .hbLabel{font-size:.72rem;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
+.hinweisBox p{font-size:.87rem;color:#78350f;line-height:1.6}
 
 /* PREIS HISTORIE */
-.preisHistorie{background:#fdf5f5;border-radius:var(--r2);padding:2px 0;border:1px solid var(--border)}
-.ph-row{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;border-bottom:1px solid var(--border);font-size:.83rem}
+.preisHistorie{background:#fef2f2;border-radius:var(--r2);overflow:hidden;border:1px solid var(--border)}
+.ph-row{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-bottom:1px solid var(--border);font-size:.83rem}
 .ph-row:last-child{border-bottom:none}
-.ph-typ{color:var(--text2)}
-.ph-preis{font-weight:800;color:var(--pri);font-size:.92rem}
+.ph-typ{color:var(--text2);flex:1}
+.ph-preis{font-weight:800;color:var(--p);font-size:.9rem;margin:0 12px}
 .ph-datum{font-size:.73rem;color:var(--text2)}
+.ph-del{background:none;border:none;color:var(--text2);cursor:pointer;padding:2px 6px;border-radius:4px;font-size:.8rem;transition:.15s}
+.ph-del:hover{background:var(--red2);color:var(--p)}
 
 /* DETAIL */
-#detailOverlay{
-  position:fixed;inset:0;z-index:150;background:#fff;
-  overflow-y:auto;
-  padding-top:calc(var(--safe-top) + var(--hh));
-  padding-bottom:20px;display:none;
-}
-.detailHead{padding:20px;color:#fff;position:relative}
-.detailHead h2{font-size:1.15rem;font-weight:800}
-.detailHead p{font-size:.8rem;opacity:.8;margin-top:3px}
-.detailBody{padding:16px 20px}
+#detailOverlay{position:fixed;inset:0;z-index:150;background:var(--bg);overflow-y:auto;padding-top:calc(var(--safe-top)+var(--hh));padding-bottom:20px;display:none}
+.detailHead{padding:20px 22px;color:#fff}
+.detailHead h2{font-size:1.1rem;font-weight:800;letter-spacing:-.2px}
+.detailHead p{font-size:.8rem;opacity:.75;margin-top:3px}
+.detailBody{padding:16px 22px}
 .detailSection{margin-bottom:20px}
-.detailSection h4{
-  font-size:.72rem;font-weight:700;color:var(--text2);
-  text-transform:uppercase;letter-spacing:.5px;
-  border-bottom:2px solid var(--border);padding-bottom:6px;margin-bottom:10px;
-}
-.detailRow{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #f5f0f0}
+.detailSection h4{font-size:.72rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;border-bottom:1.5px solid var(--border);padding-bottom:7px;margin-bottom:10px}
+.detailRow{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #f9f0f0}
 .detailRow:last-child{border-bottom:none}
 .detailRow span:first-child{color:var(--text2);font-size:.84rem}
-.detailRow span:last-child{font-weight:600;font-size:.84rem;text-align:right;max-width:60%}
+.detailRow span:last-child{font-weight:600;font-size:.84rem;text-align:right;max-width:58%}
+
+/* TIMELINE */
+.akteTimeline{position:relative;padding-left:22px}
+.akteTimeline::before{content:'';position:absolute;left:7px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--p3),var(--border))}
+.akteItem{position:relative;margin-bottom:12px;padding:12px 14px;background:var(--card);border-radius:var(--r2);box-shadow:var(--sh);border:1px solid var(--border);cursor:pointer;transition:.15s}
+.akteItem:hover{border-color:var(--p3);transform:translateX(2px)}
+.akteItem::before{content:'';position:absolute;left:-19px;top:14px;width:10px;height:10px;border-radius:50%;background:var(--p3);border:2px solid #fff;box-shadow:0 0 0 2px var(--p3)}
+.akteItem .aiDatum{font-size:.71rem;color:var(--text2);margin-bottom:3px;font-weight:600}
+.akteItem .aiTitel{font-size:.87rem;font-weight:700;color:var(--dark)}
+.akteItem .aiDetail{font-size:.77rem;color:var(--text2);margin-top:3px;display:flex;align-items:center;gap:8px}
 
 /* MODAL */
-#modal{
-  position:fixed;inset:0;z-index:300;
-  background:rgba(26,10,9,.6);backdrop-filter:blur(6px);
-  display:none;align-items:flex-end;justify-content:center;
-}
+#modal{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);display:none;align-items:flex-end;justify-content:center}
 #modal.open{display:flex}
 @media(min-width:768px){#modal{align-items:center}.modalBox{border-radius:20px;max-height:88vh}}
-.modalBox{
-  background:#fff;border-radius:24px 24px 0 0;
-  width:100%;max-width:600px;max-height:94vh;
-  overflow-y:auto;padding:0 0 calc(var(--safe-bot) + 16px);
-}
-.modalHead{
-  position:sticky;top:0;background:#fff;z-index:1;
-  padding:16px 18px 13px;border-bottom:2px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-}
-.modalHead h3{font-size:.96rem;font-weight:800;color:var(--dark)}
-.modalClose{
-  background:var(--red2);border:none;width:30px;height:30px;
-  border-radius:50%;font-size:1rem;cursor:pointer;color:var(--pri);
-  display:flex;align-items:center;justify-content:center;font-weight:700;
-}
-.modalBody{padding:16px}
+.modalBox{background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:580px;max-height:94vh;overflow-y:auto;padding:0 0 calc(var(--safe-bot)+16px)}
+.modalHead{position:sticky;top:0;background:#fff;z-index:1;padding:16px 20px 13px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modalHead h3{font-size:.96rem;font-weight:800;color:var(--dark);letter-spacing:-.2px}
+.modalClose{background:var(--red2);border:none;width:30px;height:30px;border-radius:50%;font-size:1rem;cursor:pointer;color:var(--p);display:flex;align-items:center;justify-content:center;font-weight:700}
+.modalBody{padding:18px 20px}
 
 /* TOAST */
-#toast{
-  position:fixed;bottom:calc(var(--safe-bot) + 72px);left:50%;
-  transform:translateX(-50%) translateY(20px);
-  background:var(--dark);color:#fff;
-  padding:11px 24px;border-radius:24px;
-  font-size:.84rem;font-weight:700;
-  opacity:0;transition:.3s;z-index:999;
-  white-space:nowrap;pointer-events:none;
-  box-shadow:0 8px 24px rgba(0,0,0,.3);
-}
+#toast{position:fixed;bottom:calc(var(--safe-bot)+70px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--dark);color:#fff;padding:11px 24px;border-radius:24px;font-size:.84rem;font-weight:600;opacity:0;transition:.3s;z-index:999;white-space:nowrap;pointer-events:none;box-shadow:0 8px 32px rgba(0,0,0,.4)}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @media(min-width:768px){#toast{bottom:30px}}
 
 /* AMPEL */
-.ampelRed{background:var(--red2);border-left:4px solid var(--pri)}
-.ampelOrange{background:var(--orange2);border-left:4px solid var(--orange)}
-.ampelGrn{background:var(--grn2);border-left:4px solid var(--grn)}
+.ampelRed{background:#fff5f5;border-left:4px solid var(--p3)}
+.ampelOrange{background:#fffbeb;border-left:4px solid var(--gold)}
+.ampelGrn{background:var(--grn2);border-left:4px solid var(--grn3)}
 
 /* KALENDER */
 .kalGrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-.kalTag{text-align:center;font-size:.68rem;font-weight:700;color:var(--text2);padding:4px 0}
-.kalZelle{
-  min-height:42px;border-radius:8px;padding:3px;
-  font-size:.78rem;cursor:pointer;position:relative;transition:.15s;
-}
+.kalTag{text-align:center;font-size:.67rem;font-weight:700;color:var(--text2);padding:5px 0;letter-spacing:.2px}
+.kalZelle{min-height:44px;border-radius:8px;padding:3px;font-size:.77rem;cursor:pointer;position:relative;transition:.15s}
 .kalZelle:hover{background:var(--red2)}
-.kalZelle.heute{background:linear-gradient(135deg,var(--pri2),var(--pri3));color:#fff;font-weight:700;box-shadow:0 4px 12px rgba(192,57,43,.3)}
-.kalZelle.hatTermin::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:var(--pri)}
+.kalZelle.heute{background:linear-gradient(135deg,var(--p2),var(--p3));color:#fff;font-weight:700;box-shadow:0 4px 12px rgba(153,27,27,.3)}
+.kalZelle.hatTermin::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:var(--gold)}
 .kalZelle.heute.hatTermin::after{background:#fff}
 .kalNavRow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 
+/* WOCHE */
+.wocheGrid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:8px}
+@media(max-width:600px){.wocheGrid{grid-template-columns:1fr}}
+.wocheTag{background:var(--card);border-radius:var(--r2);box-shadow:var(--sh);overflow:hidden;border:1px solid var(--border);min-height:80px}
+.wocheTagHead{padding:8px 10px;font-size:.74rem;font-weight:700;background:var(--dark);color:rgba(255,255,255,.8);display:flex;justify-content:space-between;align-items:center}
+.wocheTagHead.heute{background:linear-gradient(135deg,var(--p2),var(--p3));color:#fff}
+.wocheTagHead.wochenende{background:#1c1c1e;color:rgba(255,255,255,.5)}
+.wocheEintrag{padding:5px 8px;margin:4px;border-radius:6px;font-size:.75rem;cursor:pointer;transition:.15s;border-left:3px solid var(--p);background:#fff5f5}
+.wocheEintrag:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.wocheEintrag strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.75rem}
+.wocheEintrag span{font-size:.68rem;color:var(--text2)}
+.wocheLeer{padding:14px 8px;text-align:center;font-size:.75rem;color:var(--text2)}
+
+/* NOTIF */
+.notifBanner{background:linear-gradient(135deg,var(--p2),var(--p3));color:#fff;padding:13px 16px;margin-bottom:12px;border-radius:var(--r2);display:flex;align-items:center;gap:10px;box-shadow:0 4px 16px rgba(153,27,27,.3)}
+.notifBanner .ni{font-size:1.3rem;flex-shrink:0}
+.notifBanner .nt{flex:1}
+.notifBanner .nt strong{display:block;font-size:.87rem;font-weight:700}
+.notifBanner .nt span{font-size:.75rem;opacity:.85}
+.notifBanner button{background:rgba(255,255,255,.2);border:none;color:#fff;padding:5px 10px;border-radius:10px;font-size:.74rem;cursor:pointer;flex-shrink:0;font-family:var(--font)}
+
 /* SUCHE */
-.searchBar{
-  display:flex;align-items:center;gap:10px;
-  background:#fff;border:2px solid var(--border);border-radius:12px;
-  padding:10px 16px;margin-bottom:14px;transition:.2s;
-}
-.searchBar:focus-within{border-color:var(--pri);box-shadow:0 0 0 3px rgba(192,57,43,.08)}
-.searchBar input{border:none;outline:none;flex:1;font-size:.9rem;font-family:var(--font);background:transparent}
+.searchBar{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #e5e7eb;border-radius:12px;padding:10px 16px;margin-bottom:14px;transition:.2s}
+.searchBar:focus-within{border-color:var(--p3);box-shadow:0 0 0 3px rgba(220,38,38,.06)}
+.searchBar input{border:none;outline:none;flex:1;font-size:.9rem;font-family:var(--font);background:transparent;color:var(--text)}
 
 /* CHIPS */
-.chip{
-  display:inline-flex;align-items:center;gap:4px;
-  padding:6px 13px;border-radius:20px;font-size:.74rem;font-weight:700;
-  background:#fff;color:var(--text2);border:2px solid var(--border);
-  cursor:pointer;transition:.15s;
-}
-.chip:hover{border-color:var(--pri);color:var(--pri)}
-.chip.ak{background:var(--pri);color:#fff;border-color:var(--pri);box-shadow:0 4px 10px rgba(192,57,43,.25)}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:20px;font-size:.74rem;font-weight:600;background:#fff;color:var(--text2);border:1.5px solid #e5e7eb;cursor:pointer;transition:.15s}
+.chip:hover{border-color:var(--p3);color:var(--p)}
+.chip.ak{background:var(--p);color:#fff;border-color:var(--p);box-shadow:0 2px 8px rgba(153,27,27,.25)}
 
 /* EMPTY */
 .emptyState{text-align:center;padding:48px 20px;color:var(--text2)}
-.emptyState .ei{font-size:3.5rem;margin-bottom:14px}
+.emptyState .ei{font-size:3.5rem;margin-bottom:14px;opacity:.6}
 .emptyState p{font-size:.9rem}
 
 /* RHYTHMUS */
 .rhythmusGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media(min-width:600px){.rhythmusGrid{grid-template-columns:repeat(4,1fr)}}
-.rhythmusItem{background:#fdf5f5;border-radius:var(--r2);padding:11px;border:1px solid var(--border)}
-.rhythmusItem label{font-size:.7rem;font-weight:700;color:var(--text2);text-transform:uppercase;display:block;margin-bottom:5px}
-.rhythmusItem select,.rhythmusItem input{width:100%;border:1.5px solid var(--border);border-radius:6px;padding:7px 9px;font-size:.83rem;background:#fff;font-family:var(--font)}
-.rhythmusItem select:focus,.rhythmusItem input:focus{outline:none;border-color:var(--pri)}
+.rhythmusItem{background:#fef2f2;border-radius:var(--r2);padding:11px;border:1px solid var(--border)}
+.rhythmusItem label{font-size:.7rem;font-weight:700;color:var(--text2);text-transform:uppercase;display:block;margin-bottom:5px;letter-spacing:.3px}
+.rhythmusItem select,.rhythmusItem input{width:100%;border:1.5px solid #e5e7eb;border-radius:6px;padding:7px 9px;font-size:.83rem;background:#fff;font-family:var(--font)}
+.rhythmusItem select:focus,.rhythmusItem input:focus{outline:none;border-color:var(--p3)}
 
 /* PREIS BOX */
-.preisBox{
-  background:linear-gradient(135deg,#fff9f9,#fff);
-  border:2px solid #f5b7b1;border-radius:var(--r2);padding:14px;margin:12px 0;
-}
-.pb-row{display:flex;justify-content:space-between;padding:3px 0;font-size:.85rem}
-.pb-total{display:flex;justify-content:space-between;padding:8px 0 0;border-top:2px solid var(--pri);margin-top:6px}
-.pb-total span:last-child{font-weight:800;font-size:1.15rem;color:var(--pri)}
+.preisBox{background:linear-gradient(135deg,#fff5f5,#fff);border:1.5px solid #fca5a5;border-radius:var(--r2);padding:14px;margin:12px 0}
+.pb-row{display:flex;justify-content:space-between;padding:3px 0;font-size:.84rem}
+.pb-total{display:flex;justify-content:space-between;padding:8px 0 0;border-top:2px solid var(--p3);margin-top:6px}
+.pb-total span:last-child{font-weight:800;font-size:1.15rem;color:var(--p)}
 
-/* SCHNELL GRID */
-.schnellGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-@media(max-width:400px){.schnellGrid{grid-template-columns:repeat(2,1fr)}}
+/* SECTION DIVIDER */
+.sDivider{height:1px;background:var(--border);margin:16px 0}
+.sLabel{font-size:.73rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px}
 
-/* PRINT */
-@media print{
-  #appHeader,#navBar,#navSide,#toast,#modal{display:none!important}
-  #main{padding:0!important}
-  .btn:not(.btnPrint){display:none!important}
-  body{background:#fff}
-}
+/* JOURNAL OFFEN HIGHLIGHT */
+.journalOffen{background:linear-gradient(135deg,#fffbeb,#fff);border-left:4px solid var(--gold)!important}
+
+/* RESPONSIVE */
+@media print{#appHeader,#navBar,#navSide,#toast,#modal{display:none!important}#main{padding:0!important}body{background:#fff}}
 </style>
 </head>
 <body>
@@ -414,9 +412,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 <!-- LOGIN -->
 <div id="loginScreen">
   <div class="loginBox">
-    <div class="loginLogo">\u26a1</div>
-    <h2>Grieer Energietechnik OG</h2>
-    <p>Haustechnik \u00b7 Burgenland \u00b7 Austria</p>
+    <div class="loginLogo">⚡</div>
+    <h2>Grieer Energietechnik</h2>
+    <p>Haustechnik · Burgenland · Austria</p>
     <div class="pinDots" id="pinDots">
       <div class="pinDot" id="pd0"></div><div class="pinDot" id="pd1"></div>
       <div class="pinDot" id="pd2"></div><div class="pinDot" id="pd3"></div>
@@ -428,70 +426,61 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
 <!-- HEADER -->
 <div id="appHeader" style="display:none">
-  <div class="headerLogo">
-    <div class="icon">\u26a1</div>
-    <div>
-      <h1>Grieer Energietechnik OG</h1>
-      <small>Haustechnik \u00b7 Burgenland</small>
-    </div>
+  <div class="hLogo">
+    <div class="hIcon">⚡</div>
+    <div><div class="hTitle">Grieer Energietechnik OG</div><span class="hSub">Haustechnik · Burgenland</span></div>
   </div>
-  <div id="headerRight">
-    <span id="headerUser"></span>
-    <button id="logoutBtn" onclick="logout()">Abmelden</button>
+  <div id="hRight">
+    <span id="hUser"></span>
+    <button id="hLogout" onclick="logout()">Abmelden</button>
   </div>
 </div>
 
 <!-- BOTTOM NAV -->
 <nav id="navBar" style="display:none">
-  <button class="navBtn ak" onclick="zeigeTab('home')" id="nb-home"><span class="ni">\ud83c\udfe0</span>Home</button>
-  <button class="navBtn" onclick="zeigeTab('kunden')" id="nb-kunden"><span class="ni">\ud83d\udc65</span>Kunden</button>
-  <button class="navBtn" onclick="zeigeTab('journal')" id="nb-journal"><span class="ni">\ud83d\udccb</span>Journal</button>
-  <button class="navBtn" onclick="zeigeTab('kalender')" id="nb-kalender"><span class="ni">\ud83d\udcc5</span>Kalender</button>
-  <button class="navBtn" onclick="zeigeTab('formulare')" id="nb-formulare"><span class="ni">\ud83d\udcc4</span>Formulare</button>
-  <button class="navBtn" onclick="zeigeTab('admin')" id="nb-admin" style="display:none"><span class="ni">\u2699\ufe0f</span>Admin</button>
+  <button class="navBtn ak" onclick="zeigeTab('home')" id="nb-home"><span class="ni">🏠</span>Home</button>
+  <button class="navBtn" onclick="zeigeTab('kunden')" id="nb-kunden"><span class="ni">👥</span>Kunden</button>
+  <button class="navBtn" onclick="zeigeTab('journal')" id="nb-journal"><span class="ni">📋</span>Journal</button>
+  <button class="navBtn" onclick="zeigeTab('kalender')" id="nb-kalender"><span class="ni">📅</span>Kalender</button>
+  <button class="navBtn" onclick="zeigeTab('formulare')" id="nb-formulare"><span class="ni">📄</span>Formulare</button>
+  <button class="navBtn" onclick="zeigeTab('admin')" id="nb-admin" style="display:none"><span class="ni">⚙️</span>Admin</button>
 </nav>
 
 <!-- SIDE NAV -->
 <nav id="navSide" style="display:none">
-  <div class="nsLabel">Hauptmen\u00fc</div>
-  <button class="navSideBtn ak" onclick="zeigeTab('home')" id="ns-home"><span class="ni">\ud83c\udfe0</span> Home</button>
-  <button class="navSideBtn" onclick="zeigeTab('kunden')" id="ns-kunden"><span class="ni">\ud83d\udc65</span> Kunden</button>
-  <button class="navSideBtn" onclick="zeigeTab('journal')" id="ns-journal"><span class="ni">\ud83d\udccb</span> Arbeitsjournal</button>
-  <button class="navSideBtn" onclick="zeigeTab('kalender')" id="ns-kalender"><span class="ni">\ud83d\udcc5</span> Kalender</button>
-  <button class="navSideBtn" onclick="zeigeTab('formulare')" id="ns-formulare"><span class="ni">\ud83d\udcc4</span> Formulare & KV</button>
+  <div class="nsLabel">Navigation</div>
+  <button class="navSideBtn ak" onclick="zeigeTab('home')" id="ns-home"><span class="ni">🏠</span> Home</button>
+  <button class="navSideBtn" onclick="zeigeTab('kunden')" id="ns-kunden"><span class="ni">👥</span> Kunden</button>
+  <button class="navSideBtn" onclick="zeigeTab('journal')" id="ns-journal"><span class="ni">📋</span> Arbeitsjournal</button>
+  <button class="navSideBtn" onclick="zeigeTab('kalender')" id="ns-kalender"><span class="ni">📅</span> Kalender</button>
+  <button class="navSideBtn" onclick="zeigeTab('formulare')" id="ns-formulare"><span class="ni">📄</span> Formulare & KV</button>
   <div class="nsDivider"></div>
-  <button class="navSideBtn" onclick="zeigeTab('admin')" id="ns-admin" style="display:none"><span class="ni">\u2699\ufe0f</span> Administration</button>
+  <button class="navSideBtn" onclick="zeigeTab('admin')" id="ns-admin" style="display:none"><span class="ni">⚙️</span> Administration</button>
 </nav>
 
 <!-- MAIN -->
 <div id="main" style="display:none">
 
   <!-- HOME -->
-  <div id="tab-home" class="tabContent ak">
+  <div id="tab-home" class="tabContent">
+    <div id="notifContainer"></div>
     <div class="statsRow" id="homeStats"></div>
     <div class="card">
-      <div class="cardHead"><h3>\ud83d\udcca Kunden je Leistungsart</h3></div>
+      <div class="cardHead"><h3>📊 Kunden je Leistungsart</h3></div>
       <div class="cardBody"><div class="leistungGrid" id="leistungStats"></div></div>
     </div>
     <div class="card">
-      <div class="cardHead"><h3>\u26a1 Schnellerfassung</h3></div>
+      <div class="cardHead"><h3>⚡ Schnellerfassung</h3></div>
       <div class="cardBody">
-        <div class="schnellGrid">
-          <button class="btn btnP btnBlock" onclick="schnellAuftrag('fotovoltaik')">\u2600\ufe0f Fotovoltaik</button>
-          <button class="btn btnP btnBlock" onclick="schnellAuftrag('lueftung')">\ud83d\udca8 L\u00fcftung</button>
-          <button class="btn btnP btnBlock" onclick="schnellAuftrag('heizung')">\ud83c\udf21\ufe0f Heizung</button>
-          <button class="btn btnP btnBlock" onclick="schnellAuftrag('wartung')">\ud83d\udd27 Wartung</button>
-          <button class="btn btnP btnBlock" onclick="schnellAuftrag('elektro')">\u26a1 Elektro</button>
-          <button class="btn btnP btnBlock" onclick="schnellAuftrag('sonstiges')">\ud83d\udccb Sonstiges</button>
-        </div>
+        <div class="schnellGrid" id="schnellGrid"></div>
       </div>
     </div>
     <div class="card">
-      <div class="cardHead"><h3>\u23f0 N\u00e4chste F\u00e4lligkeiten</h3></div>
+      <div class="cardHead"><h3>⏰ Nächste Fälligkeiten</h3></div>
       <div id="homeFaellig"></div>
     </div>
     <div class="card">
-      <div class="cardHead"><h3>\ud83d\udcc5 Heutige Termine</h3></div>
+      <div class="cardHead"><h3>📅 Heutige Termine</h3></div>
       <div id="homeTermine"></div>
     </div>
   </div>
@@ -499,20 +488,25 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   <!-- KUNDEN -->
   <div id="tab-kunden" class="tabContent">
     <div class="secHead">
-      <h2>\ud83d\udc65 Kunden</h2>
+      <h2>👥 Kunden</h2>
       <button class="btn btnG" onclick="kundeNeu()">+ Neuer Kunde</button>
     </div>
+    <div class="searchBar" style="border-color:var(--p3)">
+      <span style="color:var(--p3)">📁</span>
+      <input type="text" id="akteSearch" placeholder="Kundenakte: Name, Adresse oder Kundennummer…" onkeydown="if(event.key==='Enter')kundenAkteZeigen(this.value)">
+      <button class="btn btnP btnSm" onclick="kundenAkteZeigen(document.getElementById('akteSearch').value)">Akte öffnen</button>
+    </div>
     <div class="searchBar">
-      <span style="color:var(--text2)">\ud83d\udd0d</span>
-      <input type="text" id="kvSuche" placeholder="Name, Ort, Telefon suchen\u2026" oninput="kvRender()">
+      <span style="color:var(--text2)">🔍</span>
+      <input type="text" id="kvSuche" placeholder="Liste filtern: Name, Ort, Telefon…" oninput="kvRender()">
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
       <button class="chip ak" id="kfAlle" onclick="kvFilter('alle')">Alle</button>
-      <button class="chip" id="kfFaellig" onclick="kvFilter('faellig')">\u26a0\ufe0f F\u00e4llig</button>
-      <button class="chip" id="kfPv" onclick="kvFilter('fotovoltaik')">\u2600\ufe0f PV</button>
-      <button class="chip" id="kfLueft" onclick="kvFilter('lueftung')">\ud83d\udca8 L\u00fcftung</button>
-      <button class="chip" id="kfHeiz" onclick="kvFilter('heizung')">\ud83c\udf21\ufe0f Heizung</button>
-      <button class="chip" id="kfWart" onclick="kvFilter('wartung')">\ud83d\udd27 Wartung</button>
+      <button class="chip" id="kfFaellig" onclick="kvFilter('faellig')">⚠️ Fällig</button>
+      <button class="chip" id="kfPv" onclick="kvFilter('pv')">☀️ PV</button>
+      <button class="chip" id="kfLueft" onclick="kvFilter('lueftung')">💨 Lüftung</button>
+      <button class="chip" id="kfHeiz" onclick="kvFilter('heizung')">🔧 Heizung</button>
+      <button class="chip" id="kfSonst" onclick="kvFilter('sonstiges')">📋 Sonstiges</button>
     </div>
     <div class="card" id="kundenListe"></div>
   </div>
@@ -520,17 +514,17 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   <!-- JOURNAL -->
   <div id="tab-journal" class="tabContent">
     <div class="secHead">
-      <h2>\ud83d\udccb Arbeitsjournal</h2>
+      <h2>📋 Arbeitsjournal</h2>
       <button class="btn btnG" onclick="auftragNeu()">+ Neuer Auftrag</button>
     </div>
     <div class="searchBar">
-      <span style="color:var(--text2)">\ud83d\udd0d</span>
-      <input type="text" id="jSuche" placeholder="Kunde, Leistung suchen\u2026" oninput="jRender()">
+      <span style="color:var(--text2)">🔍</span>
+      <input type="text" id="jSuche" placeholder="Kunde, Leistung suchen…" oninput="jRender()">
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
       <button class="chip ak" id="jfAlle" onclick="jFilter('alle')">Alle</button>
       <button class="chip" id="jfOffen" onclick="jFilter('offen')">Offen</button>
-      <button class="chip" id="jfBezahlt" onclick="jFilter('bezahlt')">\u2705 Bezahlt</button>
+      <button class="chip" id="jfBezahlt" onclick="jFilter('bezahlt')">✅ Bezahlt</button>
     </div>
     <div id="journalListe"></div>
   </div>
@@ -538,104 +532,74 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   <!-- KALENDER -->
   <div id="tab-kalender" class="tabContent">
     <div class="secHead">
-      <h2>\ud83d\udcc5 Kalender</h2>
-      <div style="display:flex;gap:8px">
-        <button class="btn btnOut btnSm" onclick="icalExport()">\ud83d\udce4 iCal</button>
-        <button class="btn btnG" onclick="terminNeu()">+ Termin</button>
+      <h2>📅 Kalender</h2>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btnOut btnSm ak" id="kalViewBtn-monat" onclick="kalViewWechsel('monat')">📅 Monat</button>
+        <button class="btn btnOut btnSm" id="kalViewBtn-woche" onclick="kalViewWechsel('woche')">📋 Woche</button>
+        <button class="btn btnOut btnSm" onclick="icalExport()">📤 iCal</button>
+        <button class="btn btnG btnSm" onclick="terminNeu()">+ Termin</button>
       </div>
     </div>
-    <div class="card">
+    <div class="card" id="kalMonatCard">
       <div class="cardBody" style="padding:14px">
         <div class="kalNavRow">
-          <button class="btn btnOut btnSm" onclick="kalMonat(-1)" aria-label="Vorheriger Monat">\u2039 Zur\u00fcck</button>
+          <button class="btn btnOut btnSm" onclick="kalMonat(-1)">‹ Zurück</button>
           <h3 id="kalMonatTitel" style="font-size:1rem;font-weight:800;color:var(--dark)"></h3>
-          <button class="btn btnOut btnSm" onclick="kalMonat(1)" aria-label="N\u00e4chster Monat">Weiter \u203a</button>
+          <button class="btn btnOut btnSm" onclick="kalMonat(1)">Weiter ›</button>
         </div>
         <div class="kalGrid" style="margin-bottom:6px">
           <div class="kalTag">Mo</div><div class="kalTag">Di</div><div class="kalTag">Mi</div>
           <div class="kalTag">Do</div><div class="kalTag">Fr</div>
-          <div class="kalTag" style="color:var(--pri)">Sa</div>
-          <div class="kalTag" style="color:var(--pri)">So</div>
+          <div class="kalTag" style="color:var(--p)">Sa</div>
+          <div class="kalTag" style="color:var(--p)">So</div>
         </div>
         <div class="kalGrid" id="kalZellen"></div>
       </div>
     </div>
     <div id="kalTerminListe"></div>
+    <div id="kalWocheView" style="display:none"></div>
   </div>
 
   <!-- FORMULARE -->
   <div id="tab-formulare" class="tabContent">
-    <div class="secHead"><h2>\ud83d\udcc4 Formulare & KV</h2></div>
-    <div id="formListe">
-      <div class="card">
-        <div class="listItem" onclick="formOeffnen('pv')" tabindex="0" onkeydown="if(event.key==='Enter')formOeffnen('pv')">
-          <div class="listAvatar" style="background:#f3e8ff;color:#8e44ad">\u2600\ufe0f</div>
-          <div class="listMain"><strong>Fotovoltaik Reinigung KV</strong><span>Berechnung & Protokoll</span></div>
-          <span style="color:var(--text2);font-size:1.3rem;font-weight:300">\u203a</span>
-        </div>
-        <div class="listItem" onclick="formOeffnen('lueftung')" tabindex="0" onkeydown="if(event.key==='Enter')formOeffnen('lueftung')">
-          <div class="listAvatar" style="background:var(--grn2);color:var(--grn)">\ud83d\udca8</div>
-          <div class="listMain"><strong>L\u00fcftungsanlage Wartung KV</strong><span>Service & Kostenvoranschlag</span></div>
-          <span style="color:var(--text2);font-size:1.3rem;font-weight:300">\u203a</span>
-        </div>
-        <div class="listItem" onclick="formOeffnen('heizung')" tabindex="0" onkeydown="if(event.key==='Enter')formOeffnen('heizung')">
-          <div class="listAvatar" style="background:var(--orange2);color:var(--orange)">\ud83c\udf21\ufe0f</div>
-          <div class="listMain"><strong>Heizung Service Protokoll</strong><span>Wartung & Dokumentation</span></div>
-          <span style="color:var(--text2);font-size:1.3rem;font-weight:300">\u203a</span>
-        </div>
-        <div class="listItem" onclick="formOeffnen('wartung')" tabindex="0" onkeydown="if(event.key==='Enter')formOeffnen('wartung')">
-          <div class="listAvatar" style="background:var(--blue2);color:var(--blue)">\ud83d\udd27</div>
-          <div class="listMain"><strong>Allgemeines Wartungsprotokoll</strong><span>F\u00fcr alle Anlagen & Ger\u00e4te</span></div>
-          <span style="color:var(--text2);font-size:1.3rem;font-weight:300">\u203a</span>
-        </div>
-        <div class="listItem" onclick="formOeffnen('elektro')" tabindex="0" onkeydown="if(event.key==='Enter')formOeffnen('elektro')">
-          <div class="listAvatar" style="background:#fef9c3;color:#854d0e">\u26a1</div>
-          <div class="listMain"><strong>Elektro Protokoll</strong><span>Anlagen & Installationen</span></div>
-          <span style="color:var(--text2);font-size:1.3rem;font-weight:300">\u203a</span>
-        </div>
-        <div class="listItem" onclick="formOeffnen('maengel')" tabindex="0" onkeydown="if(event.key==='Enter')formOeffnen('maengel')">
-          <div class="listAvatar" style="background:var(--red2);color:var(--pri)">\u26a0\ufe0f</div>
-          <div class="listMain"><strong>M\u00e4ngelbericht</strong><span>M\u00e4ngel dokumentieren & melden</span></div>
-          <span style="color:var(--text2);font-size:1.3rem;font-weight:300">\u203a</span>
-        </div>
-      </div>
-    </div>
+    <div class="secHead"><h2>📄 Formulare & KV</h2></div>
+    <div id="formListe"></div>
     <div id="formAnzeige" style="display:none">
-      <button class="btn btnOut btnSm" onclick="formZurueck()" style="margin-bottom:14px">\u2039 Zur\u00fcck</button>
+      <button class="btn btnOut btnSm" onclick="formZurueck()" style="margin-bottom:14px">‹ Zurück</button>
       <div id="formInhalt"></div>
     </div>
   </div>
 
   <!-- ADMIN -->
   <div id="tab-admin" class="tabContent">
-    <div class="secHead"><h2>\u2699\ufe0f Administration</h2></div>
+    <div class="secHead"><h2>⚙️ Administration</h2></div>
     <div class="card">
-      <div class="cardHead"><h3>\ud83d\udcca Jahresstatistik</h3></div>
+      <div class="cardHead"><h3>📊 Jahresstatistik</h3></div>
       <div class="cardBody" id="adminStats"></div>
     </div>
     <div class="card">
       <div class="cardHead">
-        <h3>\ud83d\udc64 Mitarbeiter & Zug\u00e4nge</h3>
+        <h3>👤 Mitarbeiter & Zugänge</h3>
         <button class="btn btnSm btnG" onclick="maModalOffen()">+ Neu</button>
       </div>
       <div id="maListe"></div>
     </div>
     <div class="card">
-      <div class="cardHead"><h3>\ud83d\udce4 Kalender Export</h3></div>
-      <div class="cardBody">
-        <p style="font-size:.84rem;color:var(--text2);margin-bottom:14px">Termine als .ics Datei f\u00fcr Apple Calendar exportieren.</p>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn btnP" onclick="icalExport()">\ud83d\udcc5 Aktueller Monat</button>
-          <button class="btn btnOut" onclick="icalExportAlle()">\ud83d\udccb Alle Termine</button>
-        </div>
-        <div style="margin-top:12px;background:var(--bg);border-radius:8px;padding:12px;font-size:.79rem;color:var(--text2);line-height:1.6">
-          <strong>Import in Apple Calendar:</strong> .ics herunterladen \u2192 Doppelklick \u2192 Kalender ausw\u00e4hlen \u2192 Hinzuf\u00fcgen klicken
-        </div>
+      <div class="cardHead">
+        <h3>💰 Preisliste (automatisch)</h3>
+        <span style="font-size:.73rem;color:var(--text2)">aus bezahlten Aufträgen</span>
       </div>
+      <div class="cardBody" id="adminPreise"></div>
     </div>
     <div class="card">
-      <div class="cardHead"><h3>\ud83d\udcb0 Preisliste</h3></div>
-      <div class="cardBody" id="adminPreise"></div>
+      <div class="cardHead"><h3>📤 Kalender Export</h3></div>
+      <div class="cardBody">
+        <p style="font-size:.84rem;color:var(--text2);margin-bottom:14px">Termine als .ics für Apple Calendar exportieren.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btnP" onclick="icalExport()">📅 Aktueller Monat</button>
+          <button class="btn btnOut" onclick="icalExportAlle()">📋 Alle Termine</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -649,7 +613,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   <div class="modalBox">
     <div class="modalHead">
       <h3 id="modalTitel"></h3>
-      <button class="modalClose" onclick="modalZu()" aria-label="Schlie\u00dfen">\u2715</button>
+      <button class="modalClose" onclick="modalZu()">✕</button>
     </div>
     <div class="modalBody" id="modalBody"></div>
   </div>
@@ -659,25 +623,25 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
 <script>
 const SB='https://bvodhzacatfuduwtlwut.supabase.co/rest/v1';
+function sauber(s){return String(s||'').replace(/["\'´`\u201c\u201d\u201e\u2018\u2019]/g,'').replace(/\s+/g,' ').trim();}
 const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2b2RoemFjYXRmdWR1d3Rsd3V0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxODUwMjcsImV4cCI6MjA5NTc2MTAyN30.kX03LLhpIm-iD1VQqreIpCCwAHzsT0pmYdIsl8uSeuY';
-const MONATE=['Januar','Februar','M\u00e4rz','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+const MONATE=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 const TYPEN={
-  fotovoltaik:{l:'\u2600\ufe0f Fotovoltaik',p:120,c:'#8e44ad'},
-  lueftung:{l:'\ud83d\udca8 L\u00fcftung',p:85,c:'#1e8a4c'},
-  heizung:{l:'\ud83c\udf21\ufe0f Heizung',p:85,c:'#e67e22'},
-  wartung:{l:'\ud83d\udd27 Wartung',p:55,c:'#2980b9'},
-  elektro:{l:'\u26a1 Elektro',p:75,c:'#854d0e'},
-  sonstiges:{l:'\ud83d\udccb Sonstiges',p:0,c:'#7f5a5a'}
+  pv:          {l:'☀️ PV Reinigung',    p:120, c:'#7c3aed'},
+  lueftung:    {l:'💨 Lüftung',         p:85,  c:'#065f46'},
+  heizservice: {l:'🔧 Heizungs Service',p:85,  c:'#1e3a8a'},
+  brandschutz: {l:'🔥 Brandschutz',     p:65,  c:'#991b1b'},
+  sonstiges:   {l:'📋 Sonstiges',       p:0,   c:'#374151'}
 };
-const PREISE={'PV bis 20 Module':120,'PV je Modul (>20)':8,'L\u00fcftung je m':8.5,'Heizung Service':85,'Wartung Grundgeb\u00fchr':55,'Elektro Stundensatz':75};
+// DB-Feld Mapping: TYPEN-Key → kunden DB-Spaltenname
+const DB_MAP={pv:'fotovoltaik',lueftung:'lueftung',heizservice:'heizung',brandschutz:'wartung',sonstiges:'kehren'};
 
-let user=null;
-let DB={kunden:[],auftraege:[],termine:[],mitarbeiter:[]};
-let aktivTab='home',kalJahr,kalMonatIdx;
+let user=null,DB={kunden:[],auftraege:[],termine:[],mitarbeiter:[]};
+let aktivTab='home',kalJahr,kalMonatIdx,kalView='monat',_wocheOffset=0;
 let kvFilterAkt='alle',jFilterAkt='alle';
 let pinEingabe='';
 
-// API
+// ══ API ══
 async function api(p,o={}){
   const h={'Content-Type':'application/json','apikey':KEY,'Authorization':'Bearer '+KEY,'Prefer':'return=representation'};
   const r=await fetch(SB+p,{...o,headers:{...h,...(o.headers||{})}});
@@ -685,74 +649,73 @@ async function api(p,o={}){
   const t=await r.text();return t?JSON.parse(t):[];
 }
 
-// LOGIN
+// ══ LOGIN ══
 function pinBauen(){
   const g=document.getElementById('pinGrid');g.innerHTML='';
-  [1,2,3,4,5,6,7,8,9,'\u232b',0,'\u2713'].forEach(k=>{
-    const b=document.createElement('button');b.className='pinKey';b.textContent=k;
-    b.onclick=()=>pinTaste(k);g.appendChild(b);
+  [1,2,3,4,5,6,7,8,9,'⌫',0,'✓'].forEach(k=>{
+    const b=document.createElement('button');b.className='pinKey';b.textContent=k;b.onclick=()=>pinTaste(k);g.appendChild(b);
   });
 }
 function pinTaste(k){
-  if(k==='\u232b')pinEingabe=pinEingabe.slice(0,-1);
-  else if(k==='\u2713'){pinPruefen();return;}
+  if(k==='⌫')pinEingabe=pinEingabe.slice(0,-1);
+  else if(k==='✓'){pinPruefen();return;}
   else if(pinEingabe.length<4)pinEingabe+=k;
   if(pinEingabe.length===4)pinPruefen();
   pinAnzeigen();
 }
 function pinAnzeigen(){for(let i=0;i<4;i++)document.getElementById('pd'+i).classList.toggle('filled',i<pinEingabe.length);}
-
 async function pinPruefen(){
   if(pinEingabe.length<4)return;
   const err=document.getElementById('pinError');
-  err.textContent='Pr\u00fcfe\u2026';
-  const PINS={
-    '3010':{id:'roland',name:'Roland',pin:'3010',rolle:'admin',aktiv:true},
-    '1234':{id:'ma1',name:'Mitarbeiter',pin:'1234',rolle:'mitarbeiter',aktiv:true}
-  };
+  err.textContent='Prüfe…';
+  const PINS={'3010':{id:'roland',name:'Roland',pin:'3010',rolle:'admin',aktiv:true},'1234':{id:'ma1',name:'Mitarbeiter',pin:'1234',rolle:'mitarbeiter',aktiv:true}};
   try{
-    const ma=await Promise.race([
-      api('/mitarbeiter?pin=eq.'+pinEingabe+'&aktiv=eq.true'),
-      new Promise((_,r)=>setTimeout(()=>r(new Error('t')),5000))
-    ]);
+    const ma=await Promise.race([api('/mitarbeiter?pin=eq.'+pinEingabe+'&aktiv=eq.true'),new Promise((_,r)=>setTimeout(()=>r(new Error('t')),5000))]);
     if(ma&&ma.length>0){user=ma[0];sessionStorage.setItem('gu',JSON.stringify(user));err.textContent='';await appStart();return;}
   }catch(e){}
   if(PINS[pinEingabe]){user=PINS[pinEingabe];sessionStorage.setItem('gu',JSON.stringify(user));err.textContent='';await appStart();return;}
-  err.textContent='Falscher PIN \u2014 bitte nochmals versuchen';
-  pinEingabe='';pinAnzeigen();
+  err.textContent='Falscher PIN';pinEingabe='';pinAnzeigen();
 }
 function logout(){sessionStorage.removeItem('gu');user=null;location.reload();}
 function isAdmin(){return user?.rolle==='admin';}
 
-// APP START
+// ══ APP START ══
 async function appStart(){
-  ['loginScreen'].forEach(id=>document.getElementById(id).style.display='none');
-  ['appHeader','navBar','navSide','main'].forEach(id=>document.getElementById(id).style.display=id==='main'?'block':id==='navSide'?'flex':'flex');
-  document.getElementById('headerUser').textContent=user.name;
-  if(isAdmin()){
-    document.getElementById('nb-admin').style.display='flex';
-    document.getElementById('ns-admin').style.display='flex';
-  }
+  document.getElementById('loginScreen').style.display='none';
+  ['appHeader','navBar','navSide','main'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.style.display=id==='main'?'block':'flex';
+  });
+  document.getElementById('hUser').textContent=user.name;
+  if(isAdmin()){document.getElementById('nb-admin').style.display='flex';document.getElementById('ns-admin').style.display='flex';}
   const d=new Date();kalJahr=d.getFullYear();kalMonatIdx=d.getMonth();
   await laden();
-  setInterval(laden,60000);
+  zeigeTab('home');
+  setInterval(laden,300000);
+  window.addEventListener('online',async()=>{toast('Online');await laden();});
 }
-
 async function laden(){
   try{
-    const [k,a,t,m]=await Promise.all([
-      api('/kunden?order=nachname.asc&aktiv=eq.true&bereich=eq.energie'),
-      api('/auftraege?order=datum.desc&bereich=eq.energie'),
-      api('/termine?order=datum.asc&bereich=eq.energie'),
+    // Alle Kunden paginiert laden
+    const alleKunden=[];let seite=0;
+    while(true){
+      const b=await api('/kunden?order=nachname.asc&or=(aktiv.eq.true,aktiv.is.null)&limit=1000&offset='+(seite*1000));
+      if(!b||!b.length)break;alleKunden.push(...b);if(b.length<1000)break;seite++;if(seite>20)break;
+    }
+    const [a,t,m]=await Promise.all([
+      api('/auftraege?order=datum.desc'),
+      api('/termine?order=datum.asc'),
       api('/mitarbeiter?order=name.asc'),
     ]);
-    DB={kunden:k,auftraege:a,termine:t,mitarbeiter:m};
+    DB={kunden:alleKunden,auftraege:a,termine:t,mitarbeiter:m};
     renderAlles();
+    benachrichtigungenPruefen();
   }catch(e){toast('Verbindungsfehler: '+e.message,'err');}
 }
-function renderAlles(){homeRender();kvRender();jRender();kalRender();if(isAdmin())adminRender();}
+function renderAlles(){homeRender();kvRender();jRender();kalRender();formListeRender();if(isAdmin())adminRender();}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-// HOME
+// ══ HOME ══
 function homeRender(){
   const heute=new Date().toISOString().split('T')[0];
   const offen=DB.auftraege.filter(a=>!a.bezahlt).length;
@@ -760,83 +723,98 @@ function homeRender(){
   document.getElementById('homeStats').innerHTML=`
     <div class="statCard"><div class="sv">${DB.kunden.length}</div><div class="sl">Kunden</div></div>
     <div class="statCard"><div class="sv">${offen}</div><div class="sl">Offen</div></div>
-    <div class="statCard"><div class="sv">${DB.auftraege.length}</div><div class="sl">Auftr\u00e4ge</div></div>
-    <div class="statCard"><div class="sv">${isAdmin()?'\u20ac'+umsatz.toFixed(0):'\u2014'}</div><div class="sl">Umsatz ${new Date().getFullYear()}</div></div>`;
-
+    <div class="statCard"><div class="sv">${DB.auftraege.length}</div><div class="sl">Aufträge</div></div>
+    <div class="statCard"><div class="sv">${isAdmin()?'€'+umsatz.toFixed(0):'—'}</div><div class="sl">Umsatz ${new Date().getFullYear()}</div></div>`;
   // Leistungsstatistik
-  const ls={};
-  Object.keys(TYPEN).forEach(t=>{ls[t]={k:new Set(),u:0};});
-  DB.kunden.forEach(k=>Object.keys(TYPEN).forEach(t=>{if(k['rhythmus_'+t]||k['letzt_'+t])ls[t].k.add(k.id);}));
+  const ls={};Object.keys(TYPEN).forEach(t=>{ls[t]={k:new Set(),u:0};});
+  DB.kunden.forEach(k=>{Object.keys(TYPEN).forEach(t=>{const dbK=DB_MAP[t]||t;if(k['rhythmus_'+dbK]||k['letzt_'+dbK]||(t==='pv'&&k.pv_module>0)||(t==='lueftung'&&k.lueftungsanlagen>0))ls[t].k.add(k.id);});});
   if(isAdmin())DB.auftraege.filter(a=>a.bezahlt).forEach(a=>{if(ls[a.typ])ls[a.typ].u+=a.preis||0;});
-  document.getElementById('leistungStats').innerHTML=Object.entries(ls)
-    .filter(([,v])=>v.k.size>0)
-    .map(([t,v])=>`<div class="leistungCard" style="border-top-color:${TYPEN[t].c}" onclick="kvFilter('${t}');zeigeTab('kunden')">
+  document.getElementById('leistungStats').innerHTML=Object.entries(ls).filter(([,v])=>v.k.size>0).map(([t,v])=>`
+    <div class="leistungCard" style="border-top-color:${TYPEN[t].c}" onclick="kvFilter('${t}');zeigeTab('kunden')">
       <div class="lv">${v.k.size}</div>
       <div class="lu">${TYPEN[t].l}</div>
-      ${isAdmin()&&v.u>0?`<div class="le">\u20ac${v.u.toFixed(0)} Umsatz</div>`:''}
+      ${isAdmin()&&v.u>0?`<div class="le">€${v.u.toFixed(0)} Umsatz</div>`:''}
     </div>`).join('');
-
+  // Schnell-Buttons
+  document.getElementById('schnellGrid').innerHTML=Object.entries(TYPEN).map(([k,v])=>{
+    const parts=v.l.split(' ');
+    const icon=parts[0];
+    const text=parts.slice(1).join(' ');
+    return`<button class="schnellBtn" onclick="schnellAuftrag('${k}')">
+      <span class="sIcon">${icon}</span>
+      <span>${text}</span>
+    </button>`;}).join('');
+  // Heutige Termine
   const ht=DB.termine.filter(t=>t.datum===heute);
   document.getElementById('homeTermine').innerHTML=ht.length===0
-    ?'<div style="padding:14px 16px;color:var(--text2);font-size:.84rem">Keine Termine heute</div>'
-    :ht.map(t=>`<div class="listItem"><div class="listAvatar" style="background:var(--red2);color:var(--pri)">\ud83d\udcc5</div><div class="listMain"><strong>${esc(t.titel)}</strong><span>${t.ganztag?'Ganztag':(t.uhrzeit_von||'')+' \u2013 '+(t.uhrzeit_bis||'')} \u00b7 ${esc(t.kunde||'')}</span></div></div>`).join('');
-
+    ?'<div style="padding:14px 18px;color:var(--text2);font-size:.84rem">Keine Termine heute</div>'
+    :ht.map(t=>`<div class="listItem">
+      <div class="listAvatar" style="background:var(--red2);color:var(--p)">📅</div>
+      <div class="listMain">
+        <strong>${esc(t.titel)}</strong>
+        <span>${t.ganztag?'Ganztag':(t.uhrzeit_von||'')+' – '+(t.uhrzeit_bis||'')} · ${esc(t.kunde||'')}${t.beschreibung?' · '+esc(t.beschreibung.split('|')[1]||''):''}</span>
+      </div></div>`).join('');
+  // Fälligkeiten
   const bald=getFaelligkeiten().filter(f=>f.status!=='ok').slice(0,5);
   document.getElementById('homeFaellig').innerHTML=bald.length===0
-    ?'<div style="padding:14px 16px;color:var(--grn);font-size:.84rem;font-weight:600">\u2705 Alles im gr\u00fcnen Bereich!</div>'
-    :bald.map(f=>`<div class="listItem ${f.status==='ueber'?'ampelRed':'ampelOrange'}" style="margin:4px 8px;border-radius:8px;cursor:pointer" onclick="${f.kid?`kundeDetail('${f.kid}')`:f.aid?`auftragDetail('${f.aid}')`:''}" >
-      <div class="listMain"><strong>${esc(f.name)}</strong><span>${f.leistung} \u00b7 F\u00e4llig: ${f.datum}</span></div>
-      <span class="badge ${f.status==='ueber'?'bRed':'bOrange'}">${f.status==='ueber'?'\u00dcberf\u00e4llig':'Bald'}</span>
+    ?'<div style="padding:14px 18px;color:var(--grn3);font-size:.84rem;font-weight:600">✅ Alles im grünen Bereich!</div>'
+    :bald.map(f=>`<div class="listItem ${f.status==='ueber'?'ampelRed':'ampelOrange'}" style="margin:4px 8px;border-radius:10px;cursor:pointer" onclick="${f.kid?`kundeDetail('${f.kid}')`:f.aid?`auftragDetail('${f.aid}')`:''}" >
+      <div class="listMain"><strong>${esc(f.name)}</strong><span>${f.leistung} · Fällig: ${f.datum}</span></div>
+      <span class="badge ${f.status==='ueber'?'bRed':'bOrange'}">${f.status==='ueber'?'Überfällig':'Bald'}</span>
     </div>`).join('');
 }
 
-// KUNDEN
+// ══ KUNDEN ══
 function kvRender(){
+  const lb=document.getElementById('btnLoeschModus');
+  if(lb)lb.style.display=isAdmin()?'inline-flex':'none';
+  const az=document.getElementById('kvAnzahl');
   const suche=(document.getElementById('kvSuche')?.value||'').toLowerCase();
   let liste=DB.kunden.filter(k=>{
     if(suche){const h=((k.nachname||'')+(k.vorname||'')+(k.ort||'')+(k.telefon||'')+(k.firma||'')).toLowerCase();if(!h.includes(suche))return false;}
     if(kvFilterAkt==='faellig')return hatFaelligkeit(k);
-    if(kvFilterAkt==='fotovoltaik')return k.rhythmus_fotovoltaik||k.letzt_fotovoltaik||(k.pv_module>0);
-    if(kvFilterAkt==='lueftung')return k.rhythmus_lueftung||k.letzt_lueftung||(k.lueftungsanlagen>0);
-    if(kvFilterAkt==='heizung')return k.rhythmus_heizung||k.letzt_heizung||(k.heizungsanlagen>0);
-    if(kvFilterAkt==='wartung')return k.rhythmus_wartung||k.letzt_wartung;
+    if(kvFilterAkt==='pv')return k.pv_module>0||k.rhythmus_fotovoltaik||k.letzt_fotovoltaik;
+    if(kvFilterAkt==='lueftung')return k.lueftungsanlagen>0||k.rhythmus_lueftung||k.letzt_lueftung;
+    if(kvFilterAkt==='heizung')return k.rhythmus_heizung||k.letzt_heizung;
+    if(kvFilterAkt==='sonstiges')return !k.pv_module&&!k.lueftungsanlagen&&!k.rhythmus_fotovoltaik&&!k.rhythmus_lueftung;
     return true;
   });
   const el=document.getElementById('kundenListe');if(!el)return;
-  if(liste.length===0){el.innerHTML='<div class="emptyState"><div class="ei">\ud83d\udc65</div><p>Keine Kunden gefunden</p></div>';return;}
+  if(liste.length===0){el.innerHTML='<div class="emptyState"><div class="ei">👥</div><p>Keine Kunden gefunden</p></div>';return;}
   el.innerHTML=liste.map(k=>{
     const name=(k.anrede?k.anrede+' ':'')+(k.vorname?k.vorname+' ':'')+k.nachname;
+    const hatNotiz=k.notiz&&k.notiz.trim().length>0;
     return`<div class="listItem" onclick="kundeDetail('${k.id}')" tabindex="0" onkeydown="if(event.key==='Enter')kundeDetail('${k.id}')">
-      <div class="listAvatar" style="background:var(--red2);color:var(--pri);font-weight:800">${k.nachname.charAt(0).toUpperCase()}</div>
+      <div class="listAvatar" style="background:var(--red2);color:var(--p);font-weight:800;font-size:.9rem">${k.nachname.charAt(0).toUpperCase()}</div>
       <div class="listMain">
-        <strong>${esc(name)}${k.firma?' <span style="font-weight:400;color:var(--text2)">\u00b7 '+esc(k.firma)+'</span>':''}</strong>
-        <span>${esc(k.ort||'')}${k.telefon?' \u00b7 '+esc(k.telefon):''}${k.hinweis?' \u00b7 \u26a0\ufe0f Hinweis':''}</span>
+        <strong>${esc(name)}${k.firma?' · '+esc(k.firma):''}</strong>
+        <span>${esc(k.ort||'')}${k.telefon?' · '+esc(k.telefon):''}${hatNotiz?' · ⚠️':''}</span>
       </div>
-      <div class="listRight">${hatFaelligkeit(k)?'<span class="badge bRed">F\u00e4llig</span>':'<span class="badge bGrn">OK</span>'}</div>
+      <div class="listRight">${hatFaelligkeit(k)?'<span class="badge bRed">Fällig</span>':'<span class="badge bGrn">OK</span>'}</div>
     </div>`;
   }).join('');
 }
 function kvFilter(f){
   kvFilterAkt=f;
-  const chipMap={alle:'kfAlle',faellig:'kfFaellig',fotovoltaik:'kfPv',lueftung:'kfLueft',heizung:'kfHeiz',wartung:'kfWart'};
-  Object.entries(chipMap).forEach(([v,id])=>document.getElementById(id)?.classList.toggle('ak',v===f));
+  ['alle','faellig','pv','lueftung','heizung','sonstiges'].forEach((x,i)=>{
+    const ids=['kfAlle','kfFaellig','kfPv','kfLueft','kfHeiz','kfSonst'];
+    document.getElementById(ids[i])?.classList.toggle('ak',x===f);
+  });
   kvRender();
 }
-function hatFaelligkeit(k){return['lueftung','fotovoltaik','heizung','wartung','elektro'].some(l=>{const r=k['rhythmus_'+l],d=k['letzt_'+l];if(!r||!d)return false;const fd=new Date(d);fd.setFullYear(fd.getFullYear()+r);return fd<=new Date(Date.now()+90*864e5);});}
+function hatFaelligkeit(k){
+  return[{r:k.rhythmus_fotovoltaik,d:k.letzt_fotovoltaik},{r:k.rhythmus_lueftung,d:k.letzt_lueftung},{r:k.rhythmus_heizung,d:k.letzt_heizung},{r:k.rhythmus_wartung,d:k.letzt_wartung}]
+    .some(c=>{if(!c.r||!c.d)return false;const fd=new Date(c.d);fd.setFullYear(fd.getFullYear()+c.r);return fd<=new Date(Date.now()+90*864e5);});
+}
 
-function kundeNeu(){modalOffen('\ud83d\udc64 Neuer Kunde',kvFormHTML(null));}
+// Kunden-Formular
+function kundeNeu(){modalOffen('👤 Neuer Kunde',kvFormHTML(null));}
 function kvFormHTML(k){
   const v=k||{};
+  const anlagenData=v.anlagen?JSON.parse(v.anlagen||'{}'):{};
   return`
     <div class="fGrid fg2">
-      <div class="fRow"><label>Anrede</label>
-        <select id="fAnrede">
-          <option value="">\u2014</option>
-          <option ${v.anrede==='Herr'?'selected':''}>Herr</option>
-          <option ${v.anrede==='Frau'?'selected':''}>Frau</option>
-          <option ${v.anrede==='Firma'?'selected':''}>Firma</option>
-        </select>
-      </div>
+      <div class="fRow"><label>Anrede</label><select id="fAnrede"><option value="">—</option><option ${v.anrede==='Herr'?'selected':''}>Herr</option><option ${v.anrede==='Frau'?'selected':''}>Frau</option><option ${v.anrede==='Firma'?'selected':''}>Firma</option></select></div>
       <div class="fRow"><label>Kundennummer</label><input id="fNummer" value="${esc(v.nummer||'')}"></div>
     </div>
     <div class="fGrid fg2">
@@ -844,7 +822,7 @@ function kvFormHTML(k){
       <div class="fRow"><label>Nachname *</label><input id="fNachname" value="${esc(v.nachname||'')}"></div>
     </div>
     <div class="fRow"><label>Firma</label><input id="fFirma" value="${esc(v.firma||'')}"></div>
-    <div class="fRow"><label>Stra\u00dfe & Hausnummer</label><input id="fStrasse" value="${esc(v.strasse||'')}"></div>
+    <div class="fRow"><label>Straße & Hausnummer</label><input id="fStrasse" value="${esc(v.strasse||'')}"></div>
     <div class="fGrid fg2">
       <div class="fRow"><label>PLZ</label><input id="fPlz" value="${esc(v.plz||'')}"></div>
       <div class="fRow"><label>Ort</label><input id="fOrt" value="${esc(v.ort||'')}"></div>
@@ -853,149 +831,244 @@ function kvFormHTML(k){
       <div class="fRow"><label>Telefon</label><input id="fTel" type="tel" value="${esc(v.telefon||'')}"></div>
       <div class="fRow"><label>E-Mail</label><input id="fEmail" type="email" value="${esc(v.email||'')}"></div>
     </div>
-    <div class="fRow">
-      <label>\u26a0\ufe0f Hinweise & Besonderheiten</label>
-      <textarea id="fHinweis" placeholder="z.B. Hund im Garten, Tor klingeln, Schl\u00fcssel beim Nachbarn, schwer erreichbar\u2026">${esc(v.hinweis||'')}</textarea>
+    <div class="fRow"><label>⚠️ Hinweise & Besonderheiten</label>
+      <textarea id="fNotiz" placeholder="z.B. Hund im Garten, Tor klingeln, Schlüssel beim Nachbarn…">${esc(v.notiz||'')}</textarea>
     </div>
-    <hr style="margin:12px 0;border:none;border-top:2px solid var(--border)">
-    <p style="font-size:.74rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">\ud83c\udfe0 Anlagen</p>
-    <div class="fGrid fg3">
-      <div class="fRow"><label>PV-Module</label><input id="fPv" type="number" min="0" value="${v.pv_module||0}"></div>
-      <div class="fRow"><label>L\u00fcftungen</label><input id="fLueft" type="number" min="0" value="${v.lueftungsanlagen||0}"></div>
-      <div class="fRow"><label>Heizungen</label><input id="fHeiz" type="number" min="0" value="${v.heizungsanlagen||0}"></div>
+    <div class="sDivider"></div>
+    <div class="sLabel">🏠 Anlagen & Geräte</div>
+
+    <div class="anlageKarte">
+      <h4>☀️ Fotovoltaik / PV</h4>
+      <div class="fGrid fg2">
+        <div class="fRow"><label>Anzahl Module</label><input id="fPv" type="number" min="0" value="${v.pv_module||0}"></div>
+        <div class="fRow"><label>Leistung (kWp)</label><input id="fPvKwp" type="number" step=".1" value="${esc(anlagenData.pvKwp||'')}"></div>
+      </div>
+      <div class="fGrid fg2">
+        <div class="fRow"><label>Hersteller</label><input id="fPvHersteller" value="${esc(anlagenData.pvHersteller||'')}"></div>
+        <div class="fRow"><label>Baujahr</label><input id="fPvBaujahr" type="number" value="${esc(anlagenData.pvBaujahr||'')}"></div>
+      </div>
     </div>
-    <hr style="margin:12px 0;border:none;border-top:2px solid var(--border)">
-    <p style="font-size:.74rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">\ud83d\udd04 Rhythmus & letzte Durchf\u00fchrung</p>
-    <div class="rhythmusGrid">
-      ${['fotovoltaik','lueftung','heizung','wartung'].map(l=>`
-        <div class="rhythmusItem">
-          <label>${TYPEN[l].l}</label>
-          <select id="fr_${l}">
-            <option value="">\u2014 kein \u2014</option>
-            ${[1,2,3,4,5].map(j=>`<option value="${j}" ${v['rhythmus_'+l]==j?'selected':''}>${j} ${j===1?'Jahr':'Jahre'}</option>`).join('')}
+
+    <div class="anlageKarte">
+      <h4>💨 Lüftungsanlage</h4>
+      <div class="fGrid fg2">
+        <div class="fRow"><label>Anzahl Anlagen</label><input id="fLueft" type="number" min="0" value="${v.lueftungsanlagen||0}"></div>
+        <div class="fRow"><label>Typ / Hersteller</label><input id="fLueftTyp" value="${esc(anlagenData.lueftTyp||'')}"></div>
+      </div>
+      <div class="fRow"><label>Besonderheiten</label><input id="fLueftInfo" value="${esc(anlagenData.lueftInfo||'')}"></div>
+    </div>
+
+    <div class="anlageKarte">
+      <h4>🔧 Heizungsanlage</h4>
+      <div class="fGrid fg2">
+        <div class="fRow"><label>Heizungsart</label>
+          <select id="fHeizArt">
+            <option value="">—</option>
+            <option ${anlagenData.heizArt==='gas'?'selected':''} value="gas">Gas-Therme</option>
+            <option ${anlagenData.heizArt==='oel'?'selected':''} value="oel">Öl-Heizung</option>
+            <option ${anlagenData.heizArt==='wp'?'selected':''} value="wp">Wärmepumpe</option>
+            <option ${anlagenData.heizArt==='pellets'?'selected':''} value="pellets">Pellets</option>
+            <option ${anlagenData.heizArt==='fern'?'selected':''} value="fern">Fernwärme</option>
+            <option ${anlagenData.heizArt==='sonst'?'selected':''} value="sonst">Sonstiges</option>
           </select>
-          <input type="date" id="fl_${l}" value="${v['letzt_'+l]||''}" style="margin-top:6px" placeholder="Letzte Durchf.">
+        </div>
+        <div class="fRow"><label>Hersteller / Modell</label><input id="fHeizModell" value="${esc(anlagenData.heizModell||'')}"></div>
+      </div>
+      <div class="fGrid fg2">
+        <div class="fRow"><label>Baujahr</label><input id="fHeizBaujahr" type="number" value="${esc(anlagenData.heizBaujahr||'')}"></div>
+        <div class="fRow"><label>Leistung (kW)</label><input id="fHeizKw" type="number" step=".1" value="${esc(anlagenData.heizKw||'')}"></div>
+      </div>
+      <div class="fRow"><label>Besonderheiten / Wartungsinfo</label><input id="fHeizInfo" value="${esc(anlagenData.heizInfo||'')}"></div>
+    </div>
+
+    <div class="anlageKarte">
+      <h4>🔥 Brandschutz</h4>
+      <div class="fGrid fg2">
+        <div class="fRow"><label>Anzahl Melder / Geräte</label><input id="fBsAnz" type="number" min="0" value="${esc(anlagenData.bsAnz||'')}"></div>
+        <div class="fRow"><label>Letzter Service</label><input id="fBsService" type="date" value="${esc(anlagenData.bsService||'')}"></div>
+      </div>
+      <div class="fRow"><label>Typ / Details</label><input id="fBsInfo" value="${esc(anlagenData.bsInfo||'')}"></div>
+    </div>
+
+    <div class="sDivider"></div>
+    <div class="sLabel">🔄 Wiederholungsrhythmus & Letzte Durchführung</div>
+    <div class="rhythmusGrid">
+      ${[
+        {dbKey:'fotovoltaik',label:'☀️ PV Reinigung',formId:'fotovoltaik'},
+        {dbKey:'lueftung',label:'💨 Lüftung',formId:'lueftung'},
+        {dbKey:'heizung',label:'🔧 Heizung',formId:'heizservice'},
+        {dbKey:'wartung',label:'🔥 Brandschutz',formId:'brandschutz'},
+      ].map(({dbKey,label,formId})=>`
+        <div class="rhythmusItem">
+          <label>${label}</label>
+          <select id="fr_${formId}">
+            <option value="">— kein —</option>
+            ${[1,2,3,4,5].map(j=>`<option value="${j}" ${v['rhythmus_'+dbKey]==j?'selected':''}>${j} ${j===1?'Jahr':'Jahre'}</option>`).join('')}
+          </select>
+          <input type="date" id="fl_${formId}" value="${v['letzt_'+dbKey]||''}" style="margin-top:5px" placeholder="Letzte Durchf.">
         </div>`).join('')}
     </div>
-    <div class="fRow" style="margin-top:12px"><label>Allgemeine Notiz</label><textarea id="fNotiz">${esc(v.notiz||'')}</textarea></div>
     <div style="display:flex;gap:10px;margin-top:18px">
-      <button class="btn btnGrn" style="flex:1" onclick="kvSpeichern('${v.id||''}')">\ud83d\udcbe Speichern</button>
+      <button class="btn btnGrn" style="flex:1" onclick="kvSpeichern('${v.id||''}')">💾 Speichern</button>
       <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
     </div>`;
 }
+
 async function kvSpeichern(id){
   const nn=document.getElementById('fNachname')?.value?.trim();
   if(!nn){toast('Bitte Nachname eingeben','err');document.getElementById('fNachname')?.focus();return;}
-  const d={
-    anrede:document.getElementById('fAnrede').value||null,
-    nummer:document.getElementById('fNummer').value||null,
-    vorname:document.getElementById('fVorname').value||null,
-    nachname:nn,
-    firma:document.getElementById('fFirma').value||null,
-    strasse:document.getElementById('fStrasse').value||null,
-    plz:document.getElementById('fPlz').value||null,
-    ort:document.getElementById('fOrt').value||null,
-    telefon:document.getElementById('fTel').value||null,
-    email:document.getElementById('fEmail').value||null,
-    hinweis:document.getElementById('fHinweis').value||null,
-    notiz:document.getElementById('fNotiz').value||null,
-    pv_module:parseInt(document.getElementById('fPv').value)||0,
-    lueftungsanlagen:parseInt(document.getElementById('fLueft').value)||0,
-    heizungsanlagen:parseInt(document.getElementById('fHeiz')?.value)||0,
-    bereich:'energie',
-    geaendert_am:new Date().toISOString()
+  // Anlage-Daten als JSON
+  const anlagenData={
+    pvKwp:document.getElementById('fPvKwp')?.value||null,
+    pvHersteller:document.getElementById('fPvHersteller')?.value||null,
+    pvBaujahr:document.getElementById('fPvBaujahr')?.value||null,
+    lueftTyp:document.getElementById('fLueftTyp')?.value||null,
+    lueftInfo:document.getElementById('fLueftInfo')?.value||null,
+    heizArt:document.getElementById('fHeizArt')?.value||null,
+    heizModell:document.getElementById('fHeizModell')?.value||null,
+    heizBaujahr:document.getElementById('fHeizBaujahr')?.value||null,
+    heizKw:document.getElementById('fHeizKw')?.value||null,
+    heizInfo:document.getElementById('fHeizInfo')?.value||null,
+    bsAnz:document.getElementById('fBsAnz')?.value||null,
+    bsService:document.getElementById('fBsService')?.value||null,
+    bsInfo:document.getElementById('fBsInfo')?.value||null,
   };
-  ['fotovoltaik','lueftung','heizung','wartung'].forEach(l=>{
-    d['rhythmus_'+l]=document.getElementById('fr_'+l)?.value?parseInt(document.getElementById('fr_'+l).value):null;
-    d['letzt_'+l]=document.getElementById('fl_'+l)?.value||null;
+  Object.keys(anlagenData).forEach(k=>{if(!anlagenData[k])delete anlagenData[k];});
+  const d={nachname:nn};
+  const felder={anrede:'fAnrede',nummer:'fNummer',vorname:'fVorname',firma:'fFirma',strasse:'fStrasse',plz:'fPlz',ort:'fOrt',telefon:'fTel',email:'fEmail'};
+  Object.entries(felder).forEach(([col,fid])=>{const v=document.getElementById(fid)?.value;if(v)d[col]=v;});
+  const notizVal=document.getElementById('fNotiz')?.value;if(notizVal)d.notiz=notizVal;
+  const pvVal=parseInt(document.getElementById('fPv')?.value)||0;if(pvVal)d.pv_module=pvVal;
+  const lueftVal=parseInt(document.getElementById('fLueft')?.value)||0;if(lueftVal)d.lueftungsanlagen=lueftVal;
+  if(Object.keys(anlagenData).length>0)d.anlagen=JSON.stringify(anlagenData);
+  // Rhythmus
+  const rhythmusMap={fotovoltaik:'fotovoltaik',lueftung:'lueftung',heizservice:'heizung',brandschutz:'wartung'};
+  Object.entries(rhythmusMap).forEach(([formId,dbKey])=>{
+    const rv=document.getElementById('fr_'+formId)?.value;
+    const lv=document.getElementById('fl_'+formId)?.value;
+    if(rv)d['rhythmus_'+dbKey]=parseInt(rv);
+    if(lv)d['letzt_'+dbKey]=lv;
   });
   try{
-    if(id){await api('/kunden?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});toast('Kunde aktualisiert \u2713');}
-    else{await api('/kunden',{method:'POST',body:JSON.stringify({...d,aktiv:true})});toast('Kunde angelegt \u2713');}
-    modalZu();await laden();
-  }catch(e){toast('Fehler beim Speichern: '+e.message,'err');}
+    if(id){
+      await api('/kunden?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});
+      toast('Kunde aktualisiert ✓');
+      modalZu();await laden();
+    } else {
+      d.aktiv=true;
+      await api('/kunden',{method:'POST',body:JSON.stringify(d)});
+      // Journal-Eintrag nur nach erfolgreichem Speichern
+      const vollName=(d.anrede?d.anrede+' ':'')+(d.vorname?d.vorname+' ':'')+d.nachname+(d.ort?' — '+d.ort:'');
+      await journalAutoErstellen(vollName,d.strasse||null,d.ort||null);
+      toast('✓ Kunde "'+vollName+'" angelegt');
+      modalZu();await laden();
+      zeigeTab('journal');
+    }
+  }catch(e){toast('Fehler: '+e.message.substring(0,80),'err');}
+}
+
+async function journalAutoErstellen(kundenName,strasse,ort){
+  try{
+    await api('/auftraege',{method:'POST',body:JSON.stringify({
+      datum:new Date().toISOString().split('T')[0],
+      kunde:kundenName,
+      strasse:strasse||null,
+      ort:ort||null,
+      arbeit:'Auftrag offen — Leistung & Preis nach Durchführung eintragen',
+      bezahlt:false,
+      notiz:'Erstellt von: '+user.name,
+    })});
+  }catch(e){console.log('Journal Auto Fehler:',e.message);}
 }
 
 function kundeDetail(id){
   const k=DB.kunden.find(x=>x.id===id);if(!k)return;
   const name=(k.anrede?k.anrede+' ':'')+(k.vorname?k.vorname+' ':'')+k.nachname;
-  const auftraege=DB.auftraege.filter(a=>a.kunde&&a.kunde.toLowerCase().includes(k.nachname.toLowerCase()));
+  const auftraege=DB.auftraege.filter(a=>a.kunde&&a.kunde.toLowerCase().includes(k.nachname.toLowerCase())).sort((a,b)=>new Date(b.datum)-new Date(a.datum));
   const letztePreise={};
-  const allePreise=auftraege.filter(a=>a.preis&&a.bezahlt).sort((a,b)=>new Date(b.datum)-new Date(a.datum));
-  allePreise.forEach(a=>{if(!letztePreise[a.typ])letztePreise[a.typ]={preis:a.preis,datum:a.datum};});
+  if(isAdmin())auftraege.filter(a=>a.preis&&a.bezahlt).forEach(a=>{if(!letztePreise[a.typ])letztePreise[a.typ]={preis:a.preis,datum:a.datum};});
+  const gesamtUmsatz=isAdmin()?auftraege.filter(a=>a.bezahlt).reduce((s,a)=>s+(a.preis||0),0):0;
+  let anlagenData={};try{if(k.anlagen)anlagenData=JSON.parse(k.anlagen);}catch(e){}
+  const faelligRows=[
+    {label:'☀️ PV',r:k.rhythmus_fotovoltaik,d:k.letzt_fotovoltaik},
+    {label:'💨 Lüftung',r:k.rhythmus_lueftung,d:k.letzt_lueftung},
+    {label:'🔧 Heizung',r:k.rhythmus_heizung,d:k.letzt_heizung},
+    {label:'🔥 Brandschutz',r:k.rhythmus_wartung,d:k.letzt_wartung},
+  ].filter(x=>x.r||x.d);
   document.getElementById('detailInhalt').innerHTML=`
-    <div class="detailHead" style="background:linear-gradient(135deg,var(--dark),var(--pri2))">
-      <button class="btn btnSm" style="background:rgba(255,255,255,.15);color:#fff;margin-bottom:12px;border:1px solid rgba(255,255,255,.2)" onclick="detailZu()">\u2039 Zur\u00fcck</button>
+    <div class="detailHead" style="background:linear-gradient(135deg,var(--dark),var(--p2))">
+      <button class="btn btnSm" style="background:rgba(255,255,255,.12);color:#fff;margin-bottom:12px;border:1px solid rgba(255,255,255,.15)" onclick="detailZu()">‹ Zurück</button>
       <h2>${esc(name)}</h2>
-      <p>${esc(k.firma||'')}${k.ort?' \u00b7 '+esc(k.ort):''}</p>
+      <p>${esc(k.firma||'')}${k.ort?' · '+esc(k.ort):''}${k.nummer?' · Nr. '+esc(k.nummer):''}</p>
     </div>
     <div class="detailBody">
-      ${k.hinweis?`<div class="hinweisBox"><div class="hb-icon">\u26a0\ufe0f</div><div class="hb-label">Hinweis & Besonderheit</div><p>${esc(k.hinweis)}</p></div>`:''}
-      <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
-        ${k.telefon?`<a href="tel:${k.telefon}" class="btn btnP btnSm">\ud83d\udcde Anrufen</a>`:''}
-        ${k.email?`<a href="mailto:${k.email}" class="btn btnOut btnSm">\u2709\ufe0f E-Mail</a>`:''}
-        <button class="btn btnG btnSm" onclick="kundeBearbeiten('${k.id}')">\u270f\ufe0f Bearbeiten</button>
+      ${k.notiz?`<div class="hinweisBox"><div class="hbLabel">⚠️ Hinweis</div><p>${esc(k.notiz)}</p></div>`:''}
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+        ${k.telefon?`<a href="tel:${k.telefon}" class="btn btnP btnSm">📞 Anrufen</a>`:''}
+        ${k.email?`<a href="mailto:${k.email}" class="btn btnOut btnSm">✉️ E-Mail</a>`:''}
+        <button class="btn btnG btnSm" onclick="kundeBearbeiten('${k.id}')">✏️ Bearbeiten</button>
         <button class="btn btnGrn btnSm" onclick="schnellAuftragKunde('${k.id}')">+ Auftrag</button>
-        <button class="btn btnRed btnSm" onclick="kundeLoeschen('${k.id}')">\ud83d\uddd1</button>
+        <button class="btn btnRed btnSm" onclick="kundeLoeschen('${k.id}')">🗑</button>
       </div>
       <div class="detailSection"><h4>Kontakt & Adresse</h4>
         ${k.strasse?`<div class="detailRow"><span>Adresse</span><span>${esc(k.strasse)}, ${esc(k.plz||'')} ${esc(k.ort||'')}</span></div>`:''}
         ${k.telefon?`<div class="detailRow"><span>Telefon</span><span>${esc(k.telefon)}</span></div>`:''}
         ${k.email?`<div class="detailRow"><span>E-Mail</span><span>${esc(k.email)}</span></div>`:''}
-        ${k.nummer?`<div class="detailRow"><span>Kundennr.</span><span>${esc(k.nummer)}</span></div>`:''}
       </div>
-      ${(k.pv_module||k.lueftungsanlagen||k.heizungsanlagen)?`
-      <div class="detailSection"><h4>\ud83c\udfe0 Anlagen</h4>
-        ${k.pv_module?`<div class="detailRow"><span>PV-Module</span><span>${k.pv_module} Stk.</span></div>`:''}
-        ${k.lueftungsanlagen?`<div class="detailRow"><span>L\u00fcftungsanlagen</span><span>${k.lueftungsanlagen} Stk.</span></div>`:''}
-        ${k.heizungsanlagen?`<div class="detailRow"><span>Heizungsanlagen</span><span>${k.heizungsanlagen} Stk.</span></div>`:''}
+      ${(k.pv_module||k.lueftungsanlagen||Object.keys(anlagenData).length>0)?`
+      <div class="detailSection"><h4>🏠 Anlagen</h4>
+        ${k.pv_module?`<div class="detailRow"><span>☀️ PV-Module</span><span>${k.pv_module} Stk.${anlagenData.pvKwp?' · '+anlagenData.pvKwp+' kWp':''}${anlagenData.pvHersteller?' · '+anlagenData.pvHersteller:''}</span></div>`:''}
+        ${k.lueftungsanlagen?`<div class="detailRow"><span>💨 Lüftung</span><span>${k.lueftungsanlagen} Anlage(n)${anlagenData.lueftTyp?' · '+anlagenData.lueftTyp:''}</span></div>`:''}
+        ${anlagenData.heizArt?`<div class="detailRow"><span>🔧 Heizung</span><span>${anlagenData.heizArt}${anlagenData.heizModell?' · '+anlagenData.heizModell:''}${anlagenData.heizKw?' · '+anlagenData.heizKw+' kW':''}</span></div>`:''}
+        ${anlagenData.bsAnz?`<div class="detailRow"><span>🔥 Brandschutz</span><span>${anlagenData.bsAnz} Geräte${anlagenData.bsInfo?' · '+anlagenData.bsInfo:''}</span></div>`:''}
       </div>`:''}
-      <div class="detailSection"><h4>\ud83d\udd04 F\u00e4lligkeiten</h4>
-        ${['fotovoltaik','lueftung','heizung','wartung'].map(l=>{
-          const r=k['rhythmus_'+l],d=k['letzt_'+l];if(!r&&!d)return'';
-          let fs='\u2014',st='ok';
-          if(r&&d){const fd=new Date(d);fd.setFullYear(fd.getFullYear()+r);fs=fd.toLocaleDateString('de-AT');const diff=(fd-new Date())/864e5;if(diff<0)st='ueber';else if(diff<90)st='bald';}
-          return`<div class="detailRow"><span>${TYPEN[l].l}${r?' (alle '+r+' J.)':''}</span><span><span class="badge ${st==='ueber'?'bRed':st==='bald'?'bOrange':'bGrn'}">${fs}</span></span></div>`;
+      ${faelligRows.length>0?`
+      <div class="detailSection"><h4>🔄 Fälligkeiten</h4>
+        ${faelligRows.map(x=>{
+          let fs='—',st='ok';
+          if(x.r&&x.d){const fd=new Date(x.d);fd.setFullYear(fd.getFullYear()+x.r);fs=fd.toLocaleDateString('de-AT');const diff=(fd-new Date())/864e5;if(diff<0)st='ueber';else if(diff<90)st='bald';}
+          return`<div class="detailRow"><span>${x.label}${x.r?' (alle '+x.r+' J.)':''}</span><span><span class="badge ${st==='ueber'?'bRed':st==='bald'?'bOrange':'bGrn'}">${fs}</span></span></div>`;
         }).join('')}
-      </div>
-      ${isAdmin()&&Object.keys(letztePreise).length>0?`
-      <div class="detailSection"><h4>\ud83d\udcb0 Letzter bezahlter Preis je Leistung</h4>
-        <div class="preisHistorie">
-          ${Object.entries(letztePreise).map(([t,v])=>`
-            <div class="ph-row">
-              <span class="ph-typ">${TYPEN[t]?.l||t}</span>
-              <span class="ph-preis">\u20ac${v.preis.toFixed(2)}</span>
-              <span class="ph-datum">${v.datum?.split('-').reverse().join('.')||''}</span>
-            </div>`).join('')}
-        </div>
       </div>`:''}
-      ${isAdmin()&&allePreise.length>0?`
-      <div class="detailSection"><h4>\ud83d\udcdc Rechnungshistorie</h4>
-        <div class="preisHistorie">
-          ${allePreise.slice(0,8).map(a=>`
-            <div class="ph-row">
-              <span class="ph-typ">${TYPEN[a.typ]?.l||a.typ||'\u2014'}</span>
-              <span class="ph-preis">\u20ac${a.preis.toFixed(2)}</span>
-              <span class="ph-datum">${a.datum?.split('-').reverse().join('.')||''}</span>
-            </div>`).join('')}
+      ${isAdmin()&&gesamtUmsatz>0?`
+      <div class="detailSection" style="background:linear-gradient(135deg,#fff5f5,#fff);border-radius:var(--r2);padding:14px;border:1px solid var(--border)"><h4>💰 Finanzübersicht</h4>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px">
+          <div class="statCard" style="padding:10px"><div class="sv" style="font-size:1.1rem">€${gesamtUmsatz.toFixed(0)}</div><div class="sl">Umsatz</div></div>
+          <div class="statCard" style="padding:10px"><div class="sv" style="font-size:1.1rem">${auftraege.filter(a=>a.bezahlt).length}</div><div class="sl">Bezahlt</div></div>
+          <div class="statCard" style="padding:10px"><div class="sv" style="font-size:1.1rem;color:var(--gold)">${auftraege.filter(a=>!a.bezahlt).length}</div><div class="sl">Offen</div></div>
         </div>
+        ${Object.keys(letztePreise).length>0?`<div class="preisHistorie">${Object.entries(letztePreise).map(([t,v])=>`<div class="ph-row"><span class="ph-typ">${TYPEN[t]?.l||t}</span><span class="ph-preis">€${v.preis.toFixed(2)}</span><span class="ph-datum">${v.datum?.split('-').reverse().join('.')||''}</span></div>`).join('')}</div>`:''}
       </div>`:''}
       ${auftraege.length>0?`
-      <div class="detailSection"><h4>\ud83d\udccb Auftr\u00e4ge</h4>
-        ${auftraege.slice(0,5).map(a=>`
-          <div class="detailRow" style="cursor:pointer" onclick="auftragDetail('${a.id}')">
-            <span>${a.datum?.split('-').reverse().join('.')||''} \u00b7 ${TYPEN[a.typ]?.l||a.typ||''}</span>
-            <span><span class="badge ${a.bezahlt?'bGrn':'bOrange'}">${a.bezahlt?'\u2713 Bezahlt':'Offen'}</span></span>
+      <div class="detailSection"><h4>📋 Auftragshistorie (${auftraege.length})</h4>
+        <div class="akteTimeline">
+          ${auftraege.map(a=>`<div class="akteItem" onclick="auftragDetail('${a.id}')">
+            <div class="aiDatum">${a.datum?.split('-').reverse().join('.')||'—'} · ${TYPEN[a.typ]?.l||a.typ||'—'}</div>
+            <div class="aiTitel">${esc(a.arbeit||'—')}</div>
+            <div class="aiDetail">
+              ${isAdmin()&&a.preis?`<span style="color:var(--p);font-weight:700">€${a.preis.toFixed(2)}</span>`:''}
+              <span class="badge ${a.bezahlt?'bGrn':'bOrange'}">${a.bezahlt?'✓ Bezahlt':'Offen'}</span>
+              ${a.notiz?`<span>${esc(a.notiz.substring(0,40))}</span>`:''}
+            </div>
           </div>`).join('')}
+        </div>
       </div>`:''}
-      ${k.notiz?`<div class="detailSection"><h4>Notiz</h4><p style="font-size:.86rem;color:var(--text2);line-height:1.6">${esc(k.notiz)}</p></div>`:''}
     </div>`;
   document.getElementById('detailOverlay').style.display='block';
 }
-function kundeBearbeiten(id){const k=DB.kunden.find(x=>x.id===id);if(!k)return;detailZu();setTimeout(()=>modalOffen('\u270f\ufe0f Kunde bearbeiten',kvFormHTML(k)),200);}
-async function kundeLoeschen(id){if(!confirm('Kunde wirklich l\u00f6schen?'))return;try{await api('/kunden?id=eq.'+id,{method:'DELETE'});toast('Kunde gel\u00f6scht');detailZu();await laden();}catch(e){toast('Fehler: '+e.message,'err');}}
+function kundeBearbeiten(id){const k=DB.kunden.find(x=>x.id===id);if(!k)return;detailZu();setTimeout(()=>modalOffen('✏️ Kunde bearbeiten',kvFormHTML(k)),200);}
+async function kundeLoeschen(id){if(!confirm('Kunde wirklich löschen?'))return;try{await api('/kunden?id=eq.'+id,{method:'DELETE'});toast('Kunde gelöscht');detailZu();await laden();}catch(e){toast('Fehler: '+e.message,'err');}}
 
-// JOURNAL
+function kundenAkteZeigen(sb){
+  if(!sb||sb.trim().length<2){toast('Mindestens 2 Zeichen eingeben','err');return;}
+  const s=sb.toLowerCase().trim();
+  const treffer=DB.kunden.filter(k=>[(k.nachname||''),(k.vorname||''),(k.firma||''),(k.strasse||''),(k.ort||''),(k.plz||''),(k.telefon||''),(k.nummer||'')].join(' ').toLowerCase().includes(s));
+  if(treffer.length===0){toast('Kein Kunde gefunden','err');return;}
+  if(treffer.length===1){kundeDetail(treffer[0].id);return;}
+  modalOffen('🔍 '+treffer.length+' Treffer',`<div class="card" style="margin:0">${treffer.map(k=>{const name=(k.anrede?k.anrede+' ':'')+(k.vorname?k.vorname+' ':'')+k.nachname;return`<div class="listItem" onclick="modalZu();setTimeout(()=>kundeDetail('${k.id}'),200)" style="cursor:pointer"><div class="listAvatar" style="background:var(--red2);color:var(--p);font-weight:800">${k.nachname.charAt(0).toUpperCase()}</div><div class="listMain"><strong>${esc(name)}</strong><span>${esc(k.ort||'')}${k.nummer?' · Nr.'+esc(k.nummer):''}</span></div><span style="color:var(--text2)">›</span></div>`;}).join('')}</div>`);
+}
+
+// ══ JOURNAL ══
 function jRender(){
   const suche=(document.getElementById('jSuche')?.value||'').toLowerCase();
   let liste=DB.auftraege.filter(a=>{
@@ -1005,22 +1078,25 @@ function jRender(){
     return true;
   });
   const el=document.getElementById('journalListe');if(!el)return;
-  if(liste.length===0){el.innerHTML='<div class="emptyState"><div class="ei">\ud83d\udccb</div><p>Keine Eintr\u00e4ge vorhanden</p></div>';return;}
+  if(liste.length===0){el.innerHTML='<div class="emptyState"><div class="ei">📋</div><p>Keine Einträge</p></div>';return;}
   let html='',lM='';
   liste.forEach(a=>{
     const d=a.datum?new Date(a.datum):null;
-    const monat=d?d.toLocaleDateString('de-AT',{month:'long',year:'numeric'}):'\u2014';
-    if(monat!==lM){if(lM)html+='</div>';html+=`<div style="font-size:.72rem;font-weight:700;color:var(--text2);text-transform:uppercase;padding:10px 2px 4px;letter-spacing:.4px">${monat}</div><div class="card">`;lM=monat;}
-    const farbe=TYPEN[a.typ]?.c||'#7f5a5a';
-    html+=`<div class="listItem" onclick="auftragDetail('${a.id}')" tabindex="0" onkeydown="if(event.key==='Enter')auftragDetail('${a.id}')">
-      <div class="listAvatar" style="background:${farbe}18;color:${farbe}">${(TYPEN[a.typ]?.l||'\ud83d\udccb').split(' ')[0]}</div>
+    const monat=d?d.toLocaleDateString('de-AT',{month:'long',year:'numeric'}):'—';
+    if(monat!==lM){if(lM)html+='</div>';html+=`<div style="font-size:.71rem;font-weight:700;color:var(--text2);text-transform:uppercase;padding:10px 2px 5px;letter-spacing:.4px">${monat}</div><div class="card">`;lM=monat;}
+    const istOffen=!a.bezahlt&&!a.preis;
+    const farbe=TYPEN[a.typ]?.c||'#374151';
+    const klick=isAdmin()&&!a.bezahlt?`preisUndBezahlt('${a.id}','${esc(a.kunde||'')}')`:`auftragDetail('${a.id}')`;
+    html+=`<div class="listItem ${istOffen?'journalOffen':''}" onclick="${klick}" tabindex="0">
+      <div class="listAvatar" style="background:${farbe}15;color:${farbe};font-size:.85rem">${(TYPEN[a.typ]?.l||'📋').split(' ')[0]}</div>
       <div class="listMain">
-        <strong>${esc(a.kunde||'\u2014')}</strong>
-        <span>${a.datum?.split('-').reverse().join('.')||''} \u00b7 ${esc(a.arbeit||TYPEN[a.typ]?.l||'')}</span>
+        <strong>${esc(a.kunde||'—')}</strong>
+        <span>${a.datum?.split('-').reverse().join('.')||''} · ${esc(a.arbeit||TYPEN[a.typ]?.l||'—')}</span>
+        ${a.notiz?`<span style="font-size:.71rem;color:var(--text2)">${esc(a.notiz.substring(0,50))}</span>`:''}
       </div>
       <div class="listRight">
-        ${isAdmin()&&a.preis?`<div style="font-weight:800;font-size:.9rem;color:var(--pri)">\u20ac${a.preis.toFixed(2)}</div>`:''}
-        <span class="badge ${a.bezahlt?'bGrn':'bOrange'}">${a.bezahlt?'\u2713':'Offen'}</span>
+        ${isAdmin()&&a.preis?`<div style="font-weight:800;font-size:.9rem;color:var(--p)">€${a.preis.toFixed(2)}</div>`:''}
+        ${isAdmin()&&!a.bezahlt?`<span class="badge bGold" style="cursor:pointer">💰 Preis eintragen</span>`:`<span class="badge ${a.bezahlt?'bGrn':'bOrange'}">${a.bezahlt?'✓ Bezahlt':'Offen'}</span>`}
       </div>
     </div>`;
   });
@@ -1029,46 +1105,96 @@ function jRender(){
 }
 function jFilter(f){jFilterAkt=f;['alle','offen','bezahlt'].forEach(x=>document.getElementById('jf'+x.charAt(0).toUpperCase()+x.slice(1))?.classList.toggle('ak',x===f));jRender();}
 
+function preisUndBezahlt(id,kunde){
+  const a=DB.auftraege.find(x=>x.id===id);
+  const kvOpt=DB.kunden.map(k=>`<option value="${esc(k.nachname+(k.vorname?' '+k.vorname:'')+(k.ort?', '+k.ort:''))}">`).join('');
+  modalOffen('💰 Abrechnung: '+esc(kunde),`
+    <div style="background:var(--grn2);border-radius:var(--r2);padding:14px;margin-bottom:16px;border-left:4px solid var(--grn3)">
+      <div style="font-weight:700;font-size:.9rem;color:var(--grn)">Auftrag abschließen & abrechnen</div>
+      <div style="font-size:.83rem;color:var(--grn);opacity:.8;margin-top:2px">${esc(kunde)}</div>
+    </div>
+    <div class="fRow"><label>Leistungsart</label>
+      <select id="pbTyp">${Object.entries(TYPEN).map(([k,v])=>'<option value="'+k+'" '+(a?.typ===k?'selected':'')+'>'+v.l+'</option>').join('')}</select>
+    </div>
+    <div class="fRow"><label>Beschreibung der durchgeführten Arbeit</label>
+      <textarea id="pbArbeit" placeholder="Was wurde genau gemacht?">${esc(a?.arbeit&&!a.arbeit.includes('offen')?a.arbeit:'')}</textarea>
+    </div>
+    <div class="fGrid fg2">
+      <div class="fRow"><label>Dauer (Stunden)</label>
+        <input type="number" id="pbDauer" step=".5" min="0" placeholder="z.B. 2.5" value="${a?.dauer||''}">
+      </div>
+      <div class="fRow"><label>Datum der Durchführung</label>
+        <input type="date" id="pbDatum" value="${new Date().toISOString().split('T')[0]}">
+      </div>
+    </div>
+    ${isAdmin()?`
+    <div class="fRow">
+      <label>💰 Preis (€) *</label>
+      <input type="number" id="pbPreis" step=".01" min="0" placeholder="z.B. 120.00"
+        style="font-size:1.3rem;font-weight:800;border-color:var(--p3);text-align:center"
+        value="${a?.preis||''}">
+    </div>`:'<input type="hidden" id="pbPreis">'}
+    <div class="fRow"><label>Notiz / Bemerkung</label>
+      <input id="pbNotiz" placeholder="Optional: Besonderheiten, Material…" value="${esc(a?.notiz&&!a.notiz.includes('Erstellt von')?a.notiz:'')}">
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px">
+      <button class="btn btnGrn" style="flex:1;font-size:.95rem" onclick="preisUndBezahltSpeichern('${id}')">
+        ✅ Speichern & Abschließen
+      </button>
+      <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
+    </div>`);
+  if(isAdmin())setTimeout(()=>document.getElementById('pbPreis')?.focus(),200);
+}
+async function preisUndBezahltSpeichern(id){
+  const arbeit=document.getElementById('pbArbeit')?.value?.trim();
+  const dauer=parseFloat(document.getElementById('pbDauer')?.value)||null;
+  const preis=isAdmin()?parseFloat(document.getElementById('pbPreis')?.value)||null:null;
+  if(isAdmin()&&(!preis||preis<=0)){toast('Bitte Preis eingeben','err');document.getElementById('pbPreis')?.focus();return;}
+  const daten={
+    bezahlt:isAdmin()?true:false,
+    typ:document.getElementById('pbTyp')?.value||null,
+    arbeit:arbeit||null,
+    dauer:dauer,
+    datum:document.getElementById('pbDatum')?.value||new Date().toISOString().split('T')[0],
+    notiz:document.getElementById('pbNotiz')?.value||null,
+    geaendert_am:new Date().toISOString()
+  };
+  if(preis)daten.preis=preis;
+  try{
+    await api('/auftraege?id=eq.'+id,{method:'PATCH',body:JSON.stringify(daten)});
+    toast(isAdmin()?'✓ Abgerechnet & bezahlt markiert!':'✓ Arbeit eingetragen!');
+    modalZu();detailZu();await laden();
+  }catch(e){toast('Fehler: '+e.message,'err');}
+}
+
 function auftragNeu(vorKunde){
   const heute=new Date().toISOString().split('T')[0];
   const kvOpt=DB.kunden.map(k=>`<option value="${esc(k.nachname+(k.vorname?' '+k.vorname:'')+(k.ort?', '+k.ort:''))}">`).join('');
-  modalOffen('\ud83d\udccb Neuer Auftrag',`
+  modalOffen('📋 Neuer Auftrag',`
     <div class="fRow"><label>Datum *</label><input type="date" id="aDatum" value="${heute}"></div>
-    <div class="fRow"><label>Kunde *</label>
-      <input id="aKunde" list="kvA" value="${vorKunde||''}" placeholder="Name eingeben oder ausw\u00e4hlen\u2026">
-      <datalist id="kvA">${kvOpt}</datalist>
-    </div>
-    <div class="fGrid fg2">
-      <div class="fRow"><label>Stra\u00dfe</label><input id="aStrasse"></div>
-      <div class="fRow"><label>Ort</label><input id="aOrt"></div>
-    </div>
-    <div class="fRow"><label>Leistungsart</label>
-      <select id="aTyp" onchange="aTypWechsel()">
-        ${Object.entries(TYPEN).map(([k,v])=>`<option value="${k}">${v.l}</option>`).join('')}
-      </select>
-    </div>
-    <div class="fRow"><label>Beschreibung</label><input id="aArbeit" placeholder="Was wurde gemacht?"></div>
+    <div class="fRow"><label>Kunde *</label><input id="aKunde" list="kvA" value="${vorKunde||''}" placeholder="Name eingeben…"><datalist id="kvA">${kvOpt}</datalist></div>
+    <div class="fGrid fg2"><div class="fRow"><label>Straße</label><input id="aStrasse"></div><div class="fRow"><label>Ort</label><input id="aOrt"></div></div>
+    <div class="fRow"><label>Leistungsart</label><select id="aTyp" onchange="aTypWechsel()">${Object.entries(TYPEN).map(([k,v])=>`<option value="${k}">${v.l}</option>`).join('')}</select></div>
+    <div class="fRow"><label>Beschreibung</label><textarea id="aArbeit" placeholder="Was wurde/wird gemacht?"></textarea></div>
     <div class="fGrid fg2">
       <div class="fRow"><label>Dauer (h)</label><input id="aDauer" type="number" step=".5" min="0"></div>
-      ${isAdmin()?`<div class="fRow"><label>Preis (\u20ac)</label><input id="aPreis" type="number" step=".01" min="0"></div>`:'<input type="hidden" id="aPreis">'}
+      ${isAdmin()?`<div class="fRow"><label>Preis (€)</label><input id="aPreis" type="number" step=".01" min="0"></div>`:'<input type="hidden" id="aPreis">'}
     </div>
     <div class="fGrid fg2">
-      <div class="fRow"><label>N\u00e4chste F\u00e4lligkeit</label><input type="date" id="aFaellig"></div>
+      <div class="fRow"><label>Nächste Fälligkeit</label><input type="date" id="aFaellig"></div>
       <div class="fRow"><label>Bezahlt</label><select id="aBezahlt"><option value="false">Nein</option><option value="true">Ja</option></select></div>
     </div>
-    <div class="fRow"><label>Notiz</label><textarea id="aNotiz"></textarea></div>
+    <div class="fRow"><label>Notiz</label><input id="aNotiz" placeholder="Optional"></div>
     <div style="display:flex;gap:10px;margin-top:18px">
-      <button class="btn btnGrn" style="flex:1" onclick="auftragSpeichern('')">\ud83d\udcbe Speichern</button>
+      <button class="btn btnGrn" style="flex:1" onclick="auftragSpeichern('')">💾 Speichern</button>
       <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
     </div>`);
 }
 function aTypWechsel(){const t=document.getElementById('aTyp')?.value;if(TYPEN[t]&&isAdmin()){const p=document.getElementById('aPreis');if(p&&!p.value&&TYPEN[t].p)p.value=TYPEN[t].p.toFixed(2);}}
-async function auftragSpeichern(id){
-  const datum=document.getElementById('aDatum')?.value;
-  const kunde=document.getElementById('aKunde')?.value?.trim();
-  if(!datum||!kunde){toast('Datum und Kunde sind erforderlich','err');return;}
+async function auftragSpeichern(id,nurSpeichern=false){
+  const datum=document.getElementById('aDatum')?.value;const kunde=document.getElementById('aKunde')?.value?.trim();
+  if(!datum||!kunde){toast('Datum und Kunde erforderlich','err');return;}
   const d={datum,kunde,
-    strasse:document.getElementById('aStrasse')?.value||null,
     ort:document.getElementById('aOrt')?.value||null,
     typ:document.getElementById('aTyp')?.value||null,
     arbeit:document.getElementById('aArbeit')?.value||null,
@@ -1077,38 +1203,39 @@ async function auftragSpeichern(id){
     naechste_faelligkeit:document.getElementById('aFaellig')?.value||null,
     bezahlt:document.getElementById('aBezahlt')?.value==='true',
     notiz:document.getElementById('aNotiz')?.value||null,
-    bereich:'energie',geaendert_am:new Date().toISOString()
+    geaendert_am:new Date().toISOString()
   };
+  Object.keys(d).forEach(k=>{if(d[k]===null||d[k]===undefined)delete d[k];});
   try{
-    if(id){await api('/auftraege?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});toast('Auftrag aktualisiert \u2713');}
-    else{await api('/auftraege',{method:'POST',body:JSON.stringify(d)});toast('Auftrag gespeichert \u2713');}
-    modalZu();await laden();
+    if(id){await api('/auftraege?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});toast('Auftrag aktualisiert ✓');}
+    else{await api('/auftraege',{method:'POST',body:JSON.stringify(d)});toast('Auftrag gespeichert ✓');}
+    await laden();if(!nurSpeichern)modalZu();
   }catch(e){toast('Fehler: '+e.message,'err');}
 }
 function auftragDetail(id){
   const a=DB.auftraege.find(x=>x.id===id);if(!a)return;
-  const farbe=TYPEN[a.typ]?.c||'#7f5a5a';
+  const farbe=TYPEN[a.typ]?.c||'#374151';
   document.getElementById('detailInhalt').innerHTML=`
     <div class="detailHead" style="background:linear-gradient(135deg,${farbe}cc,${farbe})">
-      <button class="btn btnSm" style="background:rgba(255,255,255,.2);color:#fff;margin-bottom:12px;border:1px solid rgba(255,255,255,.2)" onclick="detailZu()">\u2039 Zur\u00fcck</button>
-      <h2>${esc(a.kunde||'\u2014')}</h2>
-      <p>${TYPEN[a.typ]?.l||a.typ||''} \u00b7 ${a.datum?.split('-').reverse().join('.')||''}</p>
+      <button class="btn btnSm" style="background:rgba(255,255,255,.15);color:#fff;margin-bottom:12px;border:1px solid rgba(255,255,255,.15)" onclick="detailZu()">‹ Zurück</button>
+      <h2>${esc(a.kunde||'—')}</h2>
+      <p>${TYPEN[a.typ]?.l||a.typ||''} · ${a.datum?.split('-').reverse().join('.')||''}</p>
     </div>
     <div class="detailBody">
       <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
-        <button class="btn btnG btnSm" onclick="auftragBearbeiten('${a.id}')">\u270f\ufe0f Bearbeiten</button>
-        ${!a.bezahlt&&isAdmin()?`<button class="btn btnGrn btnSm" onclick="auftragBezahlt('${a.id}')">\u2705 Als bezahlt markieren</button>`:''}
-        <button class="btn btnRed btnSm" onclick="auftragLoeschen('${a.id}')">\ud83d\uddd1 L\u00f6schen</button>
+        ${!a.bezahlt?`<button class="btn btnGrn btnSm" onclick="preisUndBezahlt('${a.id}','${esc(a.kunde||'')}')">💰 ${isAdmin()?'Abrechnen':'Arbeit eintragen'}</button>`:''}
+        <button class="btn btnG btnSm" onclick="auftragBearbeiten('${a.id}')">✏️ Bearbeiten</button>
+        <button class="btn btnRed btnSm" onclick="auftragLoeschen('${a.id}')">🗑 Löschen</button>
       </div>
       <div class="detailSection"><h4>Details</h4>
-        <div class="detailRow"><span>Datum</span><span>${a.datum?.split('-').reverse().join('.')||'\u2014'}</span></div>
+        <div class="detailRow"><span>Datum</span><span>${a.datum?.split('-').reverse().join('.')||'—'}</span></div>
         ${a.ort?`<div class="detailRow"><span>Ort</span><span>${esc(a.ort)}</span></div>`:''}
-        <div class="detailRow"><span>Leistung</span><span>${TYPEN[a.typ]?.l||a.typ||'\u2014'}</span></div>
+        <div class="detailRow"><span>Leistung</span><span>${TYPEN[a.typ]?.l||a.typ||'—'}</span></div>
         ${a.arbeit?`<div class="detailRow"><span>Beschreibung</span><span>${esc(a.arbeit)}</span></div>`:''}
         ${a.dauer?`<div class="detailRow"><span>Dauer</span><span>${a.dauer} h</span></div>`:''}
-        ${isAdmin()&&a.preis?`<div class="detailRow"><span>Preis</span><span style="font-weight:800;color:var(--pri);font-size:.95rem">\u20ac${a.preis.toFixed(2)}</span></div>`:''}
-        <div class="detailRow"><span>Status</span><span><span class="badge ${a.bezahlt?'bGrn':'bOrange'}">${a.bezahlt?'\u2713 Bezahlt':'Offen'}</span></span></div>
-        ${a.naechste_faelligkeit?`<div class="detailRow"><span>N\u00e4chste F\u00e4lligkeit</span><span>${a.naechste_faelligkeit?.split('-').reverse().join('.')||''}</span></div>`:''}
+        ${isAdmin()&&a.preis?`<div class="detailRow"><span>Preis</span><span style="font-weight:800;color:var(--p);font-size:.95rem">€${a.preis.toFixed(2)}</span></div>`:''}
+        <div class="detailRow"><span>Status</span><span><span class="badge ${a.bezahlt?'bGrn':'bOrange'}">${a.bezahlt?'✓ Bezahlt':'Offen'}</span></span></div>
+        ${a.naechste_faelligkeit?`<div class="detailRow"><span>Nächste Fälligkeit</span><span>${a.naechste_faelligkeit?.split('-').reverse().join('.')||''}</span></div>`:''}
       </div>
       ${a.notiz?`<div class="detailSection"><h4>Notiz</h4><p style="font-size:.86rem;color:var(--text2);line-height:1.6">${esc(a.notiz)}</p></div>`:''}
     </div>`;
@@ -1118,73 +1245,70 @@ function auftragBearbeiten(id){
   const a=DB.auftraege.find(x=>x.id===id);if(!a)return;
   const kvOpt=DB.kunden.map(k=>`<option value="${esc(k.nachname+(k.vorname?' '+k.vorname:'')+(k.ort?', '+k.ort:''))}">`).join('');
   detailZu();
-  setTimeout(()=>modalOffen('\u270f\ufe0f Auftrag bearbeiten',`
+  setTimeout(()=>modalOffen('✏️ Auftrag bearbeiten',`
     <div class="fRow"><label>Datum</label><input type="date" id="aDatum" value="${a.datum||''}"></div>
     <div class="fRow"><label>Kunde</label><input id="aKunde" list="kvB" value="${esc(a.kunde||'')}"><datalist id="kvB">${kvOpt}</datalist></div>
-    <div class="fGrid fg2"><div class="fRow"><label>Stra\u00dfe</label><input id="aStrasse" value="${esc(a.strasse||'')}"></div><div class="fRow"><label>Ort</label><input id="aOrt" value="${esc(a.ort||'')}"></div></div>
+    <div class="fGrid fg2"><div class="fRow"><label>Straße</label><input id="aStrasse" value="${esc(a.strasse||'')}"></div><div class="fRow"><label>Ort</label><input id="aOrt" value="${esc(a.ort||'')}"></div></div>
     <div class="fRow"><label>Leistungsart</label><select id="aTyp">${Object.entries(TYPEN).map(([k,v])=>`<option value="${k}" ${a.typ===k?'selected':''}>${v.l}</option>`).join('')}</select></div>
-    <div class="fRow"><label>Beschreibung</label><input id="aArbeit" value="${esc(a.arbeit||'')}"></div>
+    <div class="fRow"><label>Beschreibung</label><textarea id="aArbeit">${esc(a.arbeit||'')}</textarea></div>
     <div class="fGrid fg2">
       <div class="fRow"><label>Dauer (h)</label><input id="aDauer" type="number" step=".5" value="${a.dauer||''}"></div>
-      ${isAdmin()?`<div class="fRow"><label>Preis (\u20ac)</label><input id="aPreis" type="number" step=".01" value="${a.preis||''}"></div>`:'<input type="hidden" id="aPreis">'}
+      ${isAdmin()?`<div class="fRow"><label>Preis (€)</label><input id="aPreis" type="number" step=".01" value="${a.preis||''}"></div>`:'<input type="hidden" id="aPreis">'}
     </div>
     <div class="fGrid fg2">
-      <div class="fRow"><label>F\u00e4lligkeit</label><input type="date" id="aFaellig" value="${a.naechste_faelligkeit||''}"></div>
+      <div class="fRow"><label>Fälligkeit</label><input type="date" id="aFaellig" value="${a.naechste_faelligkeit||''}"></div>
       <div class="fRow"><label>Bezahlt</label><select id="aBezahlt"><option value="false" ${!a.bezahlt?'selected':''}>Nein</option><option value="true" ${a.bezahlt?'selected':''}>Ja</option></select></div>
     </div>
-    <div class="fRow"><label>Notiz</label><textarea id="aNotiz">${esc(a.notiz||'')}</textarea></div>
-    <div style="display:flex;gap:10px;margin-top:18px">
-      <button class="btn btnGrn" style="flex:1" onclick="auftragSpeichern('${a.id}')">\ud83d\udcbe Aktualisieren</button>
-      <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
+    <div class="fRow"><label>Notiz</label><input id="aNotiz" value="${esc(a.notiz||'')}"></div>
+    <div style="background:#fef2f2;border-radius:8px;padding:10px;margin:8px 0">
+      <p style="font-size:.78rem;font-weight:700;color:var(--p);margin-bottom:7px">⚠️ Nicht stattgefunden?</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btnOut btnSm" onclick="auftragDatumAendern('${a.id}')">📅 Datum verschieben</button>
+        <button class="btn btnRed btnSm" onclick="if(confirm('Löschen?'))auftragLoeschen('${a.id}')">🗑 Löschen</button>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn btnGrn" style="flex:1" onclick="auftragSpeichern('${a.id}')">💾 Speichern</button>
+      <button class="btn btnOut" onclick="auftragSpeichern('${a.id}',true)" style="font-size:.8rem">💾 Nur speichern</button>
     </div>`),200);
 }
-async function auftragBezahlt(id){try{await api('/auftraege?id=eq.'+id,{method:'PATCH',body:JSON.stringify({bezahlt:true,geaendert_am:new Date().toISOString()})});toast('Als bezahlt markiert \u2713');detailZu();await laden();}catch(e){toast('Fehler: '+e.message,'err');}}
-async function auftragLoeschen(id){if(!confirm('Auftrag wirklich l\u00f6schen?'))return;try{await api('/auftraege?id=eq.'+id,{method:'DELETE'});toast('Auftrag gel\u00f6scht');detailZu();await laden();}catch(e){toast('Fehler: '+e.message,'err');}}
+async function auftragLoeschen(id){if(!confirm('Auftrag wirklich löschen?'))return;try{await api('/auftraege?id=eq.'+id,{method:'DELETE'});toast('Auftrag gelöscht');detailZu();await laden();}catch(e){toast('Fehler: '+e.message,'err');}}
 
 function schnellAuftrag(typ){
   const heute=new Date().toISOString().split('T')[0];
   const kvOpt=DB.kunden.map(k=>`<option value="${esc(k.nachname+(k.vorname?' '+k.vorname:'')+(k.ort?', '+k.ort:''))}">`).join('');
-  modalOffen('\u26a1 '+TYPEN[typ]?.l,`
+  modalOffen('⚡ '+TYPEN[typ]?.l,`
     <div class="fRow"><label>Datum *</label><input type="date" id="aDatum" value="${heute}"></div>
-    <div class="fRow"><label>Kunde *</label><input id="aKunde" list="kvS" placeholder="Name eingeben\u2026"><datalist id="kvS">${kvOpt}</datalist></div>
+    <div class="fRow"><label>Kunde *</label><input id="aKunde" list="kvS" placeholder="Name eingeben…"><datalist id="kvS">${kvOpt}</datalist></div>
     <div class="fRow"><label>Ort</label><input id="aOrt"></div>
-    <div class="fRow"><label>Beschreibung</label><input id="aArbeit"></div>
-    ${isAdmin()?`<div class="fRow"><label>Preis (\u20ac)</label><input id="aPreis" type="number" step=".01" value="${TYPEN[typ]?.p?.toFixed(2)||''}"></div>`:'<input type="hidden" id="aPreis">'}
+    <div class="fRow"><label>Beschreibung</label><textarea id="aArbeit" placeholder="Was wurde gemacht?"></textarea></div>
+    ${isAdmin()?`<div class="fRow"><label>Preis (€)</label><input id="aPreis" type="number" step=".01" value="${TYPEN[typ]?.p?.toFixed(2)||''}"></div>`:'<input type="hidden" id="aPreis">'}
     <input type="hidden" id="aTyp" value="${typ}">
-    <input type="hidden" id="aStrasse"><input type="hidden" id="aDauer">
-    <input type="hidden" id="aFaellig"><input type="hidden" id="aNotiz">
+    <input type="hidden" id="aStrasse"><input type="hidden" id="aDauer"><input type="hidden" id="aFaellig">
+    <input type="hidden" id="aNotiz">
     <select id="aBezahlt" style="display:none"><option value="false">Nein</option></select>
     <div style="display:flex;gap:10px;margin-top:18px">
-      <button class="btn btnGrn" style="flex:1" onclick="auftragSpeichern('')">\ud83d\udcbe Speichern</button>
+      <button class="btn btnGrn" style="flex:1" onclick="auftragSpeichern('')">💾 Speichern</button>
       <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
     </div>`);
 }
 function schnellAuftragKunde(kid){const k=DB.kunden.find(x=>x.id===kid);if(!k)return;detailZu();const name=k.nachname+(k.vorname?' '+k.vorname:'')+(k.ort?', '+k.ort:'');setTimeout(()=>auftragNeu(name),200);}
 
-// KALENDER
+// ══ KALENDER ══
 function kalRender(){
   const el=document.getElementById('kalMonatTitel');if(el)el.textContent=MONATE[kalMonatIdx]+' '+kalJahr;
   const zEl=document.getElementById('kalZellen');if(!zEl)return;
-  const erster=new Date(kalJahr,kalMonatIdx,1);
-  const letzter=new Date(kalJahr,kalMonatIdx+1,0);
-  const startTag=(erster.getDay()+6)%7;
-  const heute=new Date().toISOString().split('T')[0];
+  const erster=new Date(kalJahr,kalMonatIdx,1);const letzter=new Date(kalJahr,kalMonatIdx+1,0);
+  const startTag=(erster.getDay()+6)%7;const heute=new Date().toISOString().split('T')[0];
   let html='';
   for(let i=0;i<startTag;i++)html+='<div></div>';
   for(let t=1;t<=letzter.getDate();t++){
     const d=kalJahr+'-'+String(kalMonatIdx+1).padStart(2,'0')+'-'+String(t).padStart(2,'0');
-    const hatT=DB.termine.some(x=>x.datum===d);
-    const istH=d===heute;
-    const isWE=(new Date(d).getDay()===0||new Date(d).getDay()===6);
-    html+=`<div class="kalZelle ${istH?'heute':''} ${hatT?'hatTermin':''}" 
-      style="${isWE&&!istH?'color:var(--pri);font-weight:600':''}"
-      onclick="kalTagKlick('${d}')" tabindex="0" 
-      onkeydown="if(event.key==='Enter'||event.key===' ')kalTagKlick('${d}')">
-      <div style="text-align:center;line-height:36px">${t}</div>
-    </div>`;
+    const hatT=DB.termine.some(x=>x.datum===d);const istH=d===heute;
+    const isWE=new Date(d).getDay()===0||new Date(d).getDay()===6;
+    html+=`<div class="kalZelle ${istH?'heute':''} ${hatT?'hatTermin':''}" style="${isWE&&!istH?'color:var(--p);':''}" onclick="kalTagKlick('${d}')" tabindex="0" onkeydown="if(event.key==='Enter')kalTagKlick('${d}')"><div style="text-align:center;line-height:38px">${t}</div></div>`;
   }
-  zEl.innerHTML=html;
-  kalTerminListe(heute);
+  zEl.innerHTML=html;kalTerminListe(heute);
 }
 function kalMonat(d){kalMonatIdx+=d;if(kalMonatIdx<0){kalMonatIdx=11;kalJahr--;}if(kalMonatIdx>11){kalMonatIdx=0;kalJahr++;}kalRender();}
 function kalTagKlick(d){kalTerminListe(d);}
@@ -1192,309 +1316,349 @@ function kalTerminListe(datum){
   const el=document.getElementById('kalTerminListe');if(!el)return;
   const termine=DB.termine.filter(t=>t.datum===datum);
   if(termine.length===0){el.innerHTML=`<div style="text-align:center;padding:18px;color:var(--text2);font-size:.84rem">Keine Termine am ${datum?.split('-').reverse().join('.')}</div>`;return;}
-  el.innerHTML='<div class="card">'+termine.map(t=>`
-    <div class="listItem">
-      <div class="listAvatar" style="background:var(--red2);color:var(--pri)">\ud83d\udcc5</div>
+  el.innerHTML='<div class="card">'+termine.map(t=>{
+    // Wer hat angelegt - aus beschreibung parsen
+    const beschParts=(t.beschreibung||'').split('|');
+    const beschText=beschParts[0]?.trim()||'';
+    const angelegt=beschParts.find(p=>p.includes('Eingetragen von:'))?.replace('Eingetragen von:','').trim()||'';
+    const faellig=t.naechste_faelligkeit||null;
+    return`<div class="listItem">
+      <div class="listAvatar" style="background:var(--red2);color:var(--p)">📅</div>
       <div class="listMain">
         <strong>${esc(t.titel)}</strong>
-        <span>${t.ganztag?'Ganztag':(t.uhrzeit_von||'')+'\u2013'+(t.uhrzeit_bis||'')} \u00b7 ${esc(t.kunde||'')}</span>
+        <span>${t.ganztag?'Ganztag':(t.uhrzeit_von||'')+'–'+(t.uhrzeit_bis||'')}${t.kunde?' · '+esc(t.kunde):''}</span>
+        ${beschText?`<span style="font-size:.72rem">${esc(beschText)}</span>`:''}
+        <span style="font-size:.71rem;color:var(--text2)">${angelegt?'👤 '+angelegt:''}${isAdmin()&&t.preis?' · 💰 €'+parseFloat(t.preis).toFixed(2):''}</span>
+        ${faellig?`<span style="font-size:.71rem"><span class="badge bOrange">Fällig: ${faellig.split('-').reverse().join('.')}</span></span>`:''}
       </div>
-      <button class="btn btnRed btnSm" onclick="terminLoeschen('${t.id}')">\ud83d\uddd1</button>
-    </div>`).join('')+'</div>';
+      <button class="btn btnRed btnSm" onclick="terminLoeschen('${t.id}')">🗑</button>
+    </div>`;
+  }).join('')+'</div>';
 }
+function kalViewWechsel(v){
+  kalView=v;
+  document.getElementById('kalViewBtn-monat')?.classList.toggle('ak',v==='monat');
+  document.getElementById('kalViewBtn-woche')?.classList.toggle('ak',v==='woche');
+  const mc=document.getElementById('kalMonatCard');
+  if(mc)mc.style.display=v==='monat'?'block':'none';
+  document.getElementById('kalTerminListe').style.display=v==='monat'?'block':'none';
+  document.getElementById('kalWocheView').style.display=v==='woche'?'block':'none';
+  if(v==='woche'){_wocheOffset=0;wocheRender();}
+}
+function wocheRender(){
+  const el=document.getElementById('kalWocheView');if(!el)return;
+  const heute=new Date();const mon=new Date(heute);
+  mon.setDate(heute.getDate()-((heute.getDay()+6)%7)+_wocheOffset);
+  const TAGE=['Mo','Di','Mi','Do','Fr','Sa','So'];
+  let html=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+    <button class="btn btnOut btnSm" onclick="wocheVorZurueck(-7)">‹ Zurück</button>
+    <span style="font-size:.9rem;font-weight:800;color:var(--dark)" id="wocheTitel">—</span>
+    <button class="btn btnOut btnSm" onclick="wocheVorZurueck(7)">Weiter ›</button>
+  </div><div class="wocheGrid">`;
+  for(let i=0;i<7;i++){
+    const tag=new Date(mon);tag.setDate(mon.getDate()+i);
+    const ds=tag.toISOString().split('T')[0];
+    const istH=ds===heute.toISOString().split('T')[0];
+    const isWE=tag.getDay()===0||tag.getDay()===6;
+    const termine=DB.termine.filter(t=>t.datum===ds);
+    const auftraege=DB.auftraege.filter(a=>a.datum===ds);
+    const alle=[...termine.map(t=>({...t,_art:'termin'})),...auftraege.map(a=>({...a,_art:'auftrag'}))];
+    html+=`<div class="wocheTag">
+      <div class="wocheTagHead ${istH?'heute':isWE?'wochenende':''}">
+        <span>${TAGE[i]} ${tag.getDate()}.${tag.getMonth()+1}.</span>
+        ${alle.length>0?`<span style="background:rgba(255,255,255,.2);padding:1px 7px;border-radius:10px;font-size:.68rem">${alle.length}</span>`:''}
+      </div>
+      ${alle.length===0?`<div class="wocheLeer">—</div>`:''}
+      ${alle.map(e=>{
+        const farbe=TYPEN[e.typ]?.c||'var(--p)';
+        if(e._art==='termin')return`<div class="wocheEintrag" style="border-left-color:${farbe}" onclick="kalTagKlick('${ds}');kalViewWechsel('monat')"><strong>${esc(e.titel)}</strong><span>${esc(e.kunde||'')}</span></div>`;
+        return`<div class="wocheEintrag" style="border-left-color:${farbe};background:#eff6ff" onclick="auftragDetail('${e.id}')"><strong>${esc(e.kunde||'—')}</strong><span>${TYPEN[e.typ]?.l||''}</span></div>`;
+      }).join('')}
+    </div>`;
+  }
+  html+='</div>';
+  el.innerHTML=html;
+  const son=new Date(mon);son.setDate(mon.getDate()+6);
+  setTimeout(()=>{const t=document.getElementById('wocheTitel');if(t)t.textContent=mon.getDate()+'.'+(mon.getMonth()+1)+'. – '+son.getDate()+'.'+(son.getMonth()+1)+'.'+son.getFullYear();},10);
+}
+function wocheVorZurueck(t){_wocheOffset+=t;wocheRender();}
+
 function terminNeu(){
   const heute=new Date().toISOString().split('T')[0];
   const kvOpt=DB.kunden.map(k=>`<option value="${esc(k.nachname+(k.vorname?' '+k.vorname:'')+(k.ort?', '+k.ort:''))}">`).join('');
-  modalOffen('\ud83d\udcc5 Neuer Termin',`
-    <div class="fRow"><label>Bezeichnung *</label><input id="tTitel" placeholder="z.B. Wartung bei M\u00fcller"></div>
+  modalOffen('📅 Neuer Termin',`
+    <div class="fRow"><label>Bezeichnung *</label><input id="tTitel" placeholder="z.B. Wartung bei Müller"></div>
     <div class="fRow"><label>Datum *</label><input type="date" id="tDatum" value="${heute}"></div>
-    <div class="fRow"><label>Ganzt\u00e4gig</label>
-      <select id="tGanztag" onchange="terminGanztag()">
-        <option value="true">Ja \u2014 Ganztag</option>
-        <option value="false">Nein \u2014 Uhrzeit eingeben</option>
-      </select>
-    </div>
-    <div id="tZeitenDiv" style="display:none">
-      <div class="fGrid fg2">
-        <div class="fRow"><label>Von</label><input type="time" id="tVon" value="08:00"></div>
-        <div class="fRow"><label>Bis</label><input type="time" id="tBis" value="10:00"></div>
-      </div>
-    </div>
-    <div class="fRow"><label>Kunde</label>
-      <input id="tKunde" list="kvT" placeholder="Optional\u2026">
-      <datalist id="kvT">${kvOpt}</datalist>
-    </div>
-    <div class="fRow"><label>Leistungsart</label>
-      <select id="tTyp">
-        <option value="">\u2014 Optional \u2014</option>
-        ${Object.entries(TYPEN).map(([k,v])=>`<option value="${k}">${v.l}</option>`).join('')}
-      </select>
-    </div>
-    <div class="fRow"><label>Beschreibung</label>
-      <textarea id="tBeschreibung" placeholder="Was ist geplant?"></textarea>
-    </div>
+    <div class="fRow"><label>Ganztägig</label><select id="tGanztag" onchange="terminGanztag()"><option value="true">Ja — Ganztag</option><option value="false">Nein — Uhrzeit</option></select></div>
+    <div id="tZeitenDiv" style="display:none"><div class="fGrid fg2"><div class="fRow"><label>Von</label><input type="time" id="tVon" value="08:00"></div><div class="fRow"><label>Bis</label><input type="time" id="tBis" value="10:00"></div></div></div>
+    <div class="fRow"><label>Kunde</label><input id="tKunde" list="kvT" placeholder="Optional…"><datalist id="kvT">${kvOpt}</datalist></div>
+    <div class="fRow"><label>Ort / Adresse</label><input id="tOrt" placeholder="Optional"></div>
+    <div class="fRow"><label>Leistungsart</label><select id="tTyp"><option value="">—</option>${Object.entries(TYPEN).map(([k,v])=>`<option value="${k}">${v.l}</option>`).join('')}</select></div>
+    <div class="fRow"><label>Beschreibung / Was ist zu tun?</label><textarea id="tBeschreibung" placeholder="Details zum Termin…"></textarea></div>
+    ${isAdmin()?`<div class="fRow"><label>Preis (€) — optional</label><input type="number" id="tPreis" step=".01" min="0" placeholder="z.B. 85.00"></div>`:''}
+    <div class="fRow"><label>Fällig bis</label><input type="date" id="tFaellig"></div>
     <div style="display:flex;gap:10px;margin-top:18px">
-      <button class="btn btnGrn" style="flex:1" onclick="terminSpeichern()">\ud83d\udcbe Speichern</button>
+      <button class="btn btnGrn" style="flex:1" onclick="terminSpeichern()">💾 Speichern</button>
       <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
     </div>`);
 }
 function terminGanztag(){document.getElementById('tZeitenDiv').style.display=document.getElementById('tGanztag')?.value==='true'?'none':'block';}
 async function terminSpeichern(){
-  const titel=document.getElementById('tTitel')?.value?.trim();
-  const datum=document.getElementById('tDatum')?.value;
+  const titel=document.getElementById('tTitel')?.value?.trim();const datum=document.getElementById('tDatum')?.value;
   if(!titel){toast('Bitte Bezeichnung eingeben','err');document.getElementById('tTitel')?.focus();return;}
   if(!datum){toast('Bitte Datum eingeben','err');return;}
   const ganztag=document.getElementById('tGanztag')?.value==='true';
+  const beschreibung=document.getElementById('tBeschreibung')?.value||'';
+  const preis=document.getElementById('tPreis')?.value;
+  // Eingetragen von + Preis in Beschreibung speichern
+  const beschFinal=[beschreibung,`Eingetragen von: ${user.name}`,preis?`Preis: €${parseFloat(preis).toFixed(2)}`:''].filter(Boolean).join(' | ');
+  const faellig=document.getElementById('tFaellig')?.value||null;
   const d={titel,datum,ganztag,
     uhrzeit_von:ganztag?null:(document.getElementById('tVon')?.value||null),
     uhrzeit_bis:ganztag?null:(document.getElementById('tBis')?.value||null),
     kunde:document.getElementById('tKunde')?.value||null,
     typ:document.getElementById('tTyp')?.value||null,
-    beschreibung:document.getElementById('tBeschreibung')?.value||null,
-    farbe:'#c0392b',bereich:'energie'
+    beschreibung:beschFinal,
+    ort:document.getElementById('tOrt')?.value||null,
+    farbe:'#991b1b'
   };
-  try{
-    await api('/termine',{method:'POST',body:JSON.stringify(d)});
-    toast('Termin gespeichert \u2713');modalZu();await laden();zeigeTab('kalender');
-  }catch(e){toast('Speicherfehler: '+e.message,'err');}
+  if(faellig)d.naechste_faelligkeit=faellig;
+  Object.keys(d).forEach(k=>{if(d[k]===null||d[k]===undefined||d[k]==='')delete d[k];});
+  try{await api('/termine',{method:'POST',body:JSON.stringify(d)});toast('Termin gespeichert ✓');modalZu();await laden();zeigeTab('kalender');}
+  catch(e){toast('Fehler: '+e.message,'err');}
 }
-async function terminLoeschen(id){if(!confirm('Termin wirklich l\u00f6schen?'))return;try{await api('/termine?id=eq.'+id,{method:'DELETE'});toast('Termin gel\u00f6scht');await laden();}catch(e){toast('Fehler: '+e.message,'err');}}
+async function terminLoeschen(id){if(!confirm('Termin wirklich löschen?'))return;try{await api('/termine?id=eq.'+id,{method:'DELETE'});toast('Termin gelöscht');await laden();}catch(e){toast('Fehler: '+e.message,'err');}}
 
-// F\u00c4LLIGKEITEN
+// ══ FÄLLIGKEITEN ══
 function getFaelligkeiten(){
   const heute=new Date();const result=[];
   DB.kunden.forEach(k=>{
-    ['fotovoltaik','lueftung','heizung','wartung'].forEach(l=>{
-      const r=k['rhythmus_'+l],d=k['letzt_'+l];if(!r||!d)return;
-      const fd=new Date(d);fd.setFullYear(fd.getFullYear()+r);
-      const diff=(fd-heute)/864e5;let status='ok';
-      if(diff<0)status='ueber';else if(diff<90)status='bald';
-      result.push({name:(k.vorname?k.vorname+' ':'')+k.nachname,leistung:TYPEN[l].l,datum:fd.toLocaleDateString('de-AT'),status,diff,kid:k.id});
+    [{r:k.rhythmus_fotovoltaik,d:k.letzt_fotovoltaik,l:'☀️ PV'},{r:k.rhythmus_lueftung,d:k.letzt_lueftung,l:'💨 Lüftung'},{r:k.rhythmus_heizung,d:k.letzt_heizung,l:'🔧 Heizung'},{r:k.rhythmus_wartung,d:k.letzt_wartung,l:'🔥 Brandschutz'}]
+    .forEach(x=>{
+      if(!x.r||!x.d)return;const fd=new Date(x.d);fd.setFullYear(fd.getFullYear()+x.r);
+      const diff=(fd-heute)/864e5;let status='ok';if(diff<0)status='ueber';else if(diff<90)status='bald';
+      result.push({name:(k.vorname?k.vorname+' ':'')+k.nachname,leistung:x.l,datum:fd.toLocaleDateString('de-AT'),status,diff,kid:k.id});
     });
   });
   DB.auftraege.filter(a=>a.naechste_faelligkeit).forEach(a=>{
     const fd=new Date(a.naechste_faelligkeit);const diff=(fd-heute)/864e5;
     let status='ok';if(diff<0)status='ueber';else if(diff<90)status='bald';
-    result.push({name:a.kunde||'\u2014',leistung:TYPEN[a.typ]?.l||'Auftrag',datum:a.naechste_faelligkeit?.split('-').reverse().join('.')||'',status,diff,aid:a.id});
+    result.push({name:a.kunde||'—',leistung:TYPEN[a.typ]?.l||'Auftrag',datum:a.naechste_faelligkeit?.split('-').reverse().join('.')||'',status,diff,aid:a.id});
   });
   return result.sort((a,b)=>a.diff-b.diff);
 }
 
-// FORMULARE
+// ══ FORMULARE ══
+const ALLE_FORMULARE={
+  pv:          {t:'☀️ PV Reinigung KV',         icon:'☀️',bg:'#ede9fe',c:'#7c3aed'},
+  lueftung:    {t:'💨 Lüftungsanlage Wartung KV',icon:'💨',bg:' #d1fae5',c:'#065f46'},
+  heizservice: {t:'🔧 Heizungs Service',          icon:'🔧',bg:'#dbeafe',c:'#1e3a8a'},
+  brandschutz: {t:'🔥 Brandschutz Installation',  icon:'🔥',bg:'#fee2e2',c:'#991b1b'},
+};
+function formListeRender(){
+  const el=document.getElementById('formListe');if(!el)return;
+  const erlaubt=isAdmin()?Object.keys(ALLE_FORMULARE):(user?.formulare||Object.keys(ALLE_FORMULARE));
+  const sichtbar=Object.entries(ALLE_FORMULARE).filter(([k])=>erlaubt.includes(k));
+  if(sichtbar.length===0){el.innerHTML='<div class="emptyState"><div class="ei">🔒</div><p>Keine Formulare freigeschaltet.</p></div>';return;}
+  el.innerHTML='<div class="card">'+sichtbar.map(([k,f])=>`
+    <div class="listItem" onclick="formOeffnen('${k}')" tabindex="0" onkeydown="if(event.key==='Enter')formOeffnen('${k}')">
+      <div class="listAvatar" style="background:${f.bg};color:${f.c}">${f.icon}</div>
+      <div class="listMain"><strong>${f.t}</strong></div>
+      <span style="color:var(--text2);font-size:1.2rem">›</span>
+    </div>`).join('')+'</div>';
+}
 function formOeffnen(typ){
   document.getElementById('formListe').style.display='none';
   document.getElementById('formAnzeige').style.display='block';
   const kvOpt=DB.kunden.map(k=>`<option value="${esc(k.nachname+(k.vorname?' '+k.vorname:'')+(k.ort?', '+k.ort:''))}">`).join('');
   const heute=new Date().toISOString().split('T')[0];
   const base=`
-    <div class="fRow"><label>Kunde *</label>
-      <input id="fKunde" list="kvF" placeholder="Name eingeben oder ausw\u00e4hlen\u2026">
-      <datalist id="kvF">${kvOpt}</datalist>
-    </div>
-    <div class="fGrid fg2">
-      <div class="fRow"><label>Stra\u00dfe</label><input id="fStrasse"></div>
-      <div class="fRow"><label>Ort</label><input id="fOrt"></div>
-    </div>
+    <div class="fRow"><label>Kunde *</label><input id="fKunde" list="kvF" placeholder="Name eingeben…"><datalist id="kvF">${kvOpt}</datalist></div>
+    <div class="fGrid fg2"><div class="fRow"><label>Straße</label><input id="fStrasse"></div><div class="fRow"><label>Ort</label><input id="fOrt"></div></div>
     <div class="fRow"><label>Datum</label><input type="date" id="fDatum" value="${heute}"></div>`;
-  const saveBtns=(typ,pid)=>`
-    <div style="display:flex;gap:10px;margin-top:16px">
-      <button class="btn btnGrn" style="flex:1" onclick="fInJournal('${typ}','${pid||''}')">\ud83d\udccb In Journal speichern</button>
-      <button class="btn btnP" onclick="window.print()">\ud83d\udda8\ufe0f Drucken</button>
-    </div>`;
+  const saveBtns=(t,pid)=>`<div style="display:flex;gap:10px;margin-top:18px"><button class="btn btnGrn" style="flex:1" onclick="fInJournal('${t}','${pid||''}')">📋 In Journal</button><button class="btn btnP" onclick="window.print()">🖨️ Drucken</button></div>`;
+  const pf=(def)=>isAdmin()?`<div class="fRow"><label>Preis (€)</label><input id="fPreis" type="number" step=".01" value="${def}"></div>`:'<input type="hidden" id="fPreis">';
   const forms={
-    pv:{t:'\u2600\ufe0f Fotovoltaik Reinigung KV',html:`
-      <div class="card"><div class="cardHead"><h3>\u2600\ufe0f Fotovoltaik Reinigung</h3></div><div class="cardBody">
-        ${base}
-        <div class="fRow"><label>Anzahl Module</label><input id="fModule" type="number" min="1" value="20" oninput="pvBer()"></div>
-        <div class="preisBox">
-          <div class="pb-row"><span style="color:var(--text2)">Netto</span><span id="pvN" style="font-weight:600">\u20ac 0,00</span></div>
-          <div class="pb-row"><span style="color:var(--text2)">MwSt 20%</span><span id="pvM" style="font-weight:600">\u20ac 0,00</span></div>
-          <div class="pb-total"><span>Gesamt Brutto</span><span id="pvB">\u20ac 0,00</span></div>
-        </div>
-        <div class="fRow"><label>Bemerkungen</label><textarea id="fNotiz" placeholder="Zustand, Verschmutzungsgrad\u2026"></textarea></div>
-        ${saveBtns('fotovoltaik','pvB')}
-      </div></div>`},
-    lueftung:{t:'\ud83d\udca8 L\u00fcftungsanlage Wartung KV',html:`
-      <div class="card"><div class="cardHead"><h3>\ud83d\udca8 L\u00fcftung Wartungsprotokoll</h3></div><div class="cardBody">
-        ${base}
-        <div class="fRow"><label>L\u00fcftungsl\u00e4nge (m)</label><input id="fMeter" type="number" min="1" value="10" oninput="lBer()"></div>
-        <div class="preisBox">
-          <div class="pb-row"><span style="color:var(--text2)">Netto</span><span id="lN" style="font-weight:600">\u20ac 0,00</span></div>
-          <div class="pb-row"><span style="color:var(--text2)">MwSt 20%</span><span id="lM" style="font-weight:600">\u20ac 0,00</span></div>
-          <div class="pb-total"><span>Gesamt Brutto</span><span id="lB">\u20ac 0,00</span></div>
-        </div>
-        <div class="fRow"><label>Filter gewechselt</label><select id="fFilter"><option>Ja</option><option>Nein</option></select></div>
-        <div class="fRow"><label>Bemerkungen</label><textarea id="fNotiz"></textarea></div>
-        ${saveBtns('lueftung','lB')}
-      </div></div>`},
-    heizung:{t:'\ud83c\udf21\ufe0f Heizung Service Protokoll',html:`
-      <div class="card"><div class="cardHead"><h3>\ud83c\udf21\ufe0f Heizung Service</h3></div><div class="cardBody">
-        ${base}
-        <div class="fRow"><label>Heizungsart</label>
-          <select id="fHeizArt"><option>Gas-Therme</option><option>\u00d6l-Heizung</option><option>W\u00e4rmepumpe</option><option>Pellets</option><option>Sonstiges</option></select>
-        </div>
-        <div class="fGrid fg2">
-          <div class="fRow"><label>Baujahr</label><input id="fBaujahr" type="number" placeholder="z.B. 2015"></div>
-          ${isAdmin()?`<div class="fRow"><label>Preis (\u20ac)</label><input id="fPreis" type="number" step=".01" value="85.00"></div>`:'<input type="hidden" id="fPreis">'}
-        </div>
-        <div class="fRow"><label>Ergebnis</label>
-          <select id="fErgebnis"><option value="ok">\u2705 Einwandfrei</option><option value="maengel">\u26a0\ufe0f M\u00e4ngel festgestellt</option><option value="tausch">\ud83d\udd04 Austausch empfohlen</option></select>
-        </div>
-        <div class="fRow"><label>Durchgef\u00fchrte Arbeiten</label><textarea id="fNotiz" placeholder="Was wurde gemacht?"></textarea></div>
-        ${saveBtns('heizung','fPreis')}
-      </div></div>`},
-    wartung:{t:'\ud83d\udd27 Allgemeines Wartungsprotokoll',html:`
-      <div class="card"><div class="cardHead"><h3>\ud83d\udd27 Wartungsprotokoll</h3></div><div class="cardBody">
-        ${base}
-        <div class="fRow"><label>Anlage / Ger\u00e4t</label><input id="fAnlage" placeholder="Was wurde gewartet?"></div>
-        <div class="fGrid fg2">
-          <div class="fRow"><label>Dauer (h)</label><input id="fDauer" type="number" step=".5" value="1"></div>
-          ${isAdmin()?`<div class="fRow"><label>Preis (\u20ac)</label><input id="fPreis" type="number" step=".01" value="55.00"></div>`:'<input type="hidden" id="fPreis">'}
-        </div>
-        <div class="fRow"><label>Durchgef\u00fchrte Arbeiten</label><textarea id="fNotiz" placeholder="Beschreibung\u2026"></textarea></div>
-        <div class="fRow"><label>N\u00e4chste Wartung</label><input type="date" id="fFaellig"></div>
-        ${saveBtns('wartung','fPreis')}
-      </div></div>`},
-    elektro:{t:'\u26a1 Elektro Protokoll',html:`
-      <div class="card"><div class="cardHead"><h3>\u26a1 Elektro Protokoll</h3></div><div class="cardBody">
-        ${base}
-        <div class="fRow"><label>Art der Arbeit</label><input id="fArt" placeholder="z.B. Unterverteilung, Steckdosen\u2026"></div>
-        <div class="fGrid fg2">
-          <div class="fRow"><label>Dauer (h)</label><input id="fDauer" type="number" step=".5" value="1"></div>
-          ${isAdmin()?`<div class="fRow"><label>Preis (\u20ac)</label><input id="fPreis" type="number" step=".01" value="75.00"></div>`:'<input type="hidden" id="fPreis">'}
-        </div>
-        <div class="fRow"><label>Ergebnis</label><select id="fErgebnis"><option>\u2705 Einwandfrei</option><option>\u26a0\ufe0f M\u00e4ngel festgestellt</option></select></div>
-        <div class="fRow"><label>Bemerkungen</label><textarea id="fNotiz"></textarea></div>
-        ${saveBtns('elektro','fPreis')}
-      </div></div>`},
-    maengel:{t:'\u26a0\ufe0f M\u00e4ngelbericht',html:`
-      <div class="card"><div class="cardHead"><h3>\u26a0\ufe0f M\u00e4ngelbericht</h3></div><div class="cardBody">
-        ${base}
-        <div class="fRow"><label>Schwere des Mangels</label>
-          <select id="fSchwere">
-            <option value="gering">\ud83d\udfe1 Gering \u2014 Keine unmittelbare Gefahr</option>
-            <option value="mittel">\ud83d\udfe0 Mittel \u2014 Baldige Behebung n\u00f6tig</option>
-            <option value="hoch">\ud83d\udd34 Hoch \u2014 Sofort beheben!</option>
-            <option value="gesperrt">\u26d4 Kritisch \u2014 Anlage gesperrt</option>
-          </select>
-        </div>
-        <div class="fRow"><label>Beschreibung der M\u00e4ngel *</label><textarea id="fNotiz" placeholder="M\u00e4ngel genau beschreiben\u2026" style="min-height:100px"></textarea></div>
-        <div class="fRow"><label>Behebung bis</label><input type="date" id="fFaellig"></div>
-        ${saveBtns('sonstiges',null)}
-      </div></div>`},
+    pv:{t:'☀️ PV Reinigung KV',html:`<div class="card"><div class="cardHead"><h3>☀️ PV Reinigung</h3></div><div class="cardBody">${base}<div class="fRow"><label>Anzahl Module</label><input id="fModule" type="number" min="1" value="20" oninput="pvBer()"></div><div class="preisBox"><div class="pb-row"><span style="color:var(--text2)">Netto</span><span id="pvN">€ 0,00</span></div><div class="pb-row"><span style="color:var(--text2)">MwSt 20%</span><span id="pvM">€ 0,00</span></div><div class="pb-total"><span>Gesamt Brutto</span><span id="pvB">€ 0,00</span></div></div><div class="fRow"><label>Bemerkungen</label><textarea id="fNotiz" placeholder="Zustand, Verschmutzung…"></textarea></div>${saveBtns('pv','pvB')}</div></div>`},
+    lueftung:{t:'💨 Lüftungsanlage Wartung KV',html:`<div class="card"><div class="cardHead"><h3>💨 Lüftung Wartung</h3></div><div class="cardBody">${base}<div class="fRow"><label>Lüftungslänge (m)</label><input id="fMeter" type="number" min="1" value="10" oninput="lBer()"></div><div class="preisBox"><div class="pb-row"><span style="color:var(--text2)">Netto</span><span id="lN">€ 0,00</span></div><div class="pb-row"><span style="color:var(--text2)">MwSt 20%</span><span id="lM">€ 0,00</span></div><div class="pb-total"><span>Gesamt Brutto</span><span id="lB">€ 0,00</span></div></div><div class="fGrid fg2"><div class="fRow"><label>Filter gewechselt</label><select id="fFilter"><option>Ja</option><option>Nein</option></select></div><div class="fRow"><label>Nächste Wartung</label><input type="date" id="fFaellig"></div></div><div class="fRow"><label>Durchgeführte Arbeiten</label><textarea id="fNotiz"></textarea></div>${saveBtns('lueftung','lB')}</div></div>`},
+    heizservice:{t:'🔧 Heizungs Service',html:`<div class="card"><div class="cardHead"><h3>🔧 Heizungs Service</h3></div><div class="cardBody">${base}<div class="fGrid fg2"><div class="fRow"><label>Heizungsart</label><select id="fHeizArt"><option>Gas-Therme</option><option>Öl-Heizung</option><option>Wärmepumpe</option><option>Pellets</option><option>Fernwärme</option><option>Sonstiges</option></select></div><div class="fRow"><label>Baujahr</label><input id="fBaujahr" type="number" placeholder="z.B. 2015"></div></div><div class="fGrid fg2"><div class="fRow"><label>Betriebsstunden</label><input id="fStunden" type="number"></div>${pf('85.00')}</div><div class="fRow"><label>Ergebnis</label><select id="fErgebnis"><option value="ok">✅ Einwandfrei</option><option value="maengel">⚠️ Mängel</option><option value="tausch">🔄 Austausch empfohlen</option></select></div><div class="fRow"><label>Durchgeführte Arbeiten</label><textarea id="fNotiz" placeholder="Was wurde gemacht?"></textarea></div><div class="fRow"><label>Nächste Wartung</label><input type="date" id="fFaellig"></div>${saveBtns('heizservice','fPreis')}</div></div>`},
+    brandschutz:{t:'🔥 Brandschutz Installation',html:`<div class="card"><div class="cardHead"><h3>🔥 Brandschutz</h3></div><div class="cardBody">${base}<div class="fRow"><label>Art der Installation</label><select id="fBsArt"><option>Brandmeldeanlage</option><option>Rauchmelder</option><option>Feuerlöscher Überprüfung</option><option>Brandschutztüren</option><option>Fluchtwegsbeleuchtung</option><option>Sonstiges</option></select></div><div class="fGrid fg2"><div class="fRow"><label>Anzahl Geräte</label><input id="fAnz" type="number" min="1" value="1" oninput="bsBer()"></div>${pf('65.00')}</div><div class="preisBox"><div class="pb-row"><span style="color:var(--text2)">Grundgebühr</span><span id="bsG">€ 65,00</span></div><div class="pb-row"><span style="color:var(--text2)">Geräte</span><span id="bsD">€ 18,00</span></div><div class="pb-row"><span style="color:var(--text2)">MwSt 20%</span><span id="bsM">€ 0,00</span></div><div class="pb-total"><span>Gesamt Brutto</span><span id="bsB">€ 0,00</span></div></div><div class="fRow"><label>Ergebnis</label><select id="fErgebnis"><option value="ok">✅ Vorschriftsgemäß</option><option value="nacharbeit">🔄 Nacharbeit nötig</option><option value="maengel">⚠️ Mängel</option></select></div><div class="fRow"><label>Beschreibung</label><textarea id="fNotiz" placeholder="Was wurde installiert/überprüft?"></textarea></div><div class="fRow"><label>Nächste Überprüfung</label><input type="date" id="fFaellig"></div>${saveBtns('brandschutz','bsB')}</div></div>`},
   };
   const f=forms[typ];if(!f)return;
-  document.getElementById('formInhalt').innerHTML=`<h3 style="font-size:1rem;font-weight:800;color:var(--pri);margin-bottom:14px">${f.t}</h3>${f.html}`;
-  setTimeout(()=>{pvBer();lBer();document.getElementById('fKunde')?.focus();},100);
+  document.getElementById('formInhalt').innerHTML=`<h3 style="font-size:1rem;font-weight:800;color:var(--p);margin-bottom:14px">${f.t}</h3>${f.html}`;
+  setTimeout(()=>{pvBer();lBer();bsBer();document.getElementById('fKunde')?.focus();},100);
 }
 function formZurueck(){document.getElementById('formAnzeige').style.display='none';document.getElementById('formListe').style.display='block';}
-function pvBer(){const m=parseInt(document.getElementById('fModule')?.value)||0;const n=m<=20?120:m*8;const mw=n*.2;const b=n+mw;const f=v=>'\u20ac '+v.toFixed(2).replace('.',',');[['pvN',n],['pvM',mw],['pvB',b]].forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.textContent=f(v);});}
-function lBer(){const m=parseInt(document.getElementById('fMeter')?.value)||0;const n=m*8.5;const mw=n*.2;const b=n+mw;const f=v=>'\u20ac '+v.toFixed(2).replace('.',',');[['lN',n],['lM',mw],['lB',b]].forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.textContent=f(v);});}
+function pvBer(){const m=parseInt(document.getElementById('fModule')?.value)||0;const n=m<=20?120:m*8;const mw=n*.2;const b=n+mw;const f=v=>'€ '+v.toFixed(2).replace('.',',');[['pvN',n],['pvM',mw],['pvB',b]].forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.textContent=f(v);});}
+function lBer(){const m=parseInt(document.getElementById('fMeter')?.value)||0;const n=m*8.5;const mw=n*.2;const b=n+mw;const f=v=>'€ '+v.toFixed(2).replace('.',',');[['lN',n],['lM',mw],['lB',b]].forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.textContent=f(v);});}
+function bsBer(){const anz=parseInt(document.getElementById('fAnz')?.value)||0;const n=65+(anz*18);const mw=n*.2;const b=n+mw;const f=v=>'€ '+v.toFixed(2).replace('.',',');const el=id=>document.getElementById(id);if(el('bsG'))el('bsG').textContent='€ 65,00';if(el('bsD'))el('bsD').textContent=f(anz*18)+'('+anz+'×€18)';if(el('bsM'))el('bsM').textContent=f(mw);if(el('bsB'))el('bsB').textContent=f(b);if(el('fPreis')&&isAdmin())el('fPreis').value=b.toFixed(2);}
 async function fInJournal(typ,preisId){
-  const kunde=document.getElementById('fKunde')?.value?.trim();
-  const datum=document.getElementById('fDatum')?.value;
+  const kunde=document.getElementById('fKunde')?.value?.trim();const datum=document.getElementById('fDatum')?.value;
   if(!kunde){toast('Bitte Kunden eingeben','err');document.getElementById('fKunde')?.focus();return;}
   let preis=null;
-  if(isAdmin()&&preisId){
-    const el=document.getElementById(preisId);
-    if(el){const t=(el.textContent||el.value||'').replace(/[\u20ac\\s]/g,'').replace(',','.');preis=parseFloat(t)||null;}
-  }
-  try{
-    await api('/auftraege',{method:'POST',body:JSON.stringify({
-      datum:datum||new Date().toISOString().split('T')[0],
-      kunde,
-      strasse:document.getElementById('fStrasse')?.value||null,
-      ort:document.getElementById('fOrt')?.value||null,
-      typ,arbeit:document.getElementById('fNotiz')?.value||TYPEN[typ]?.l||typ,
-      preis,bezahlt:false,bereich:'energie',
-      naechste_faelligkeit:document.getElementById('fFaellig')?.value||null
-    })});
-    toast('\u2713 In Journal gespeichert!');await laden();
-  }catch(e){toast('Fehler: '+e.message,'err');}
+  if(isAdmin()&&preisId){const el=document.getElementById(preisId);if(el){const t=(el.textContent||el.value||'').replace(/[€\\\\s]/g,'').replace(',','.');preis=parseFloat(t)||null;}}
+  const daten={datum:datum||new Date().toISOString().split('T')[0],kunde,ort:document.getElementById('fOrt')?.value||null,typ,arbeit:document.getElementById('fNotiz')?.value||ALLE_FORMULARE[typ]?.t||typ,bezahlt:false};
+  if(preis)daten.preis=preis;
+  if(document.getElementById('fFaellig')?.value)daten.naechste_faelligkeit=document.getElementById('fFaellig').value;
+  try{await api('/auftraege',{method:'POST',body:JSON.stringify(daten)});toast('✓ In Journal gespeichert!');await laden();}
+  catch(e){toast('Fehler: '+e.message,'err');}
 }
 
-// ADMIN
+// ══ ADMIN ══
 function adminRender(){
+  leistungsUebersicht();
   const jahr=new Date().getFullYear();
   const umsatz=DB.auftraege.filter(a=>a.bezahlt&&a.datum?.startsWith(jahr)).reduce((s,a)=>s+(a.preis||0),0);
   const offen=DB.auftraege.filter(a=>!a.bezahlt).reduce((s,a)=>s+(a.preis||0),0);
   const stunden=DB.auftraege.reduce((s,a)=>s+(a.dauer||0),0);
-  document.getElementById('adminStats').innerHTML=`
-    <div class="statsRow" style="margin:0">
-      <div class="statCard"><div class="sv">\u20ac${umsatz.toFixed(0)}</div><div class="sl">Umsatz ${jahr}</div></div>
-      <div class="statCard"><div class="sv">\u20ac${offen.toFixed(0)}</div><div class="sl">Offen</div></div>
-      <div class="statCard"><div class="sv">${stunden.toFixed(1)}h</div><div class="sl">Stunden</div></div>
-      <div class="statCard"><div class="sv">${DB.kunden.length}</div><div class="sl">Kunden</div></div>
-    </div>`;
+  document.getElementById('adminStats').innerHTML=`<div class="statsRow" style="margin:0">
+    <div class="statCard"><div class="sv">€${umsatz.toFixed(0)}</div><div class="sl">Umsatz ${jahr}</div></div>
+    <div class="statCard"><div class="sv">€${offen.toFixed(0)}</div><div class="sl">Offen</div></div>
+    <div class="statCard"><div class="sv">${stunden.toFixed(1)}h</div><div class="sl">Stunden</div></div>
+    <div class="statCard"><div class="sv">${DB.kunden.length}</div><div class="sl">Kunden</div></div>
+  </div>`;
   document.getElementById('maListe').innerHTML=DB.mitarbeiter.map(m=>`
     <div class="listItem">
-      <div class="listAvatar" style="background:var(--red2);color:var(--pri)">\ud83d\udc64</div>
+      <div class="listAvatar" style="background:var(--red2);color:var(--p)">${m.rolle==='admin'?'👑':'👤'}</div>
       <div class="listMain">
         <strong>${esc(m.name)}</strong>
-        <span>${m.rolle==='admin'?'Administrator':'Mitarbeiter'} \u00b7 PIN: ${m.pin}</span>
+        <span>${m.rolle==='admin'?'Administrator':'Mitarbeiter'} · PIN: ${m.pin}</span>
       </div>
-      <div class="listRight">
+      <div class="listRight" style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
         <span class="badge ${m.aktiv?'bGrn':'bRed'}">${m.aktiv?'Aktiv':'Inaktiv'}</span>
+        <button class="btn btnOut btnSm" onclick="maModalOffen('${m.id}')">✏️</button>
       </div>
     </div>`).join('');
-  document.getElementById('adminPreise').innerHTML=Object.entries(PREISE).map(([l,p])=>`
-    <div class="detailRow"><span>${l}</span><span style="font-weight:800;color:var(--pri)">\u20ac${p.toFixed(2)}</span></div>`).join('');
+  // Auto-Preisliste
+  const preisMap={};
+  DB.auftraege.filter(a=>a.preis&&a.bezahlt).forEach(a=>{
+    const key=TYPEN[a.typ]?.l||a.typ||'Sonstiges';
+    if(!preisMap[key])preisMap[key]={eintraege:[],typ:a.typ};
+    preisMap[key].eintraege.push({preis:a.preis,datum:a.datum,kunde:a.kunde,id:a.id});
+  });
+  if(Object.keys(preisMap).length===0){
+    document.getElementById('adminPreise').innerHTML='<p style="font-size:.84rem;color:var(--text2);padding:4px 0">Noch keine bezahlten Aufträge. Die Liste füllt sich automatisch.</p>';
+  } else {
+    document.getElementById('adminPreise').innerHTML=Object.entries(preisMap).map(([typ,data])=>{
+      const pp=data.eintraege.map(e=>e.preis).sort((a,b)=>a-b);
+      const avg=pp.reduce((s,p)=>s+p,0)/pp.length;
+      const letzt=data.eintraege.sort((a,b)=>new Date(b.datum)-new Date(a.datum))[0];
+      return`<div style="padding:12px 0;border-bottom:1px solid var(--border)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-weight:700;font-size:.9rem">${esc(typ)}</span>
+          <span style="font-weight:800;color:var(--p)">Ø €${avg.toFixed(2)}</span>
+        </div>
+        <div style="font-size:.77rem;color:var(--text2);margin-bottom:6px">Min: €${pp[0].toFixed(2)} · Max: €${pp[pp.length-1].toFixed(2)} · ${pp.length}× verrechnet</div>
+        <div class="preisHistorie">${data.eintraege.map(e=>`
+          <div class="ph-row">
+            <span class="ph-typ">${e.datum?.split('-').reverse().join('.')||''} · ${esc(e.kunde||'')}</span>
+            <span class="ph-preis">€${e.preis.toFixed(2)}</span>
+            <button class="ph-del" onclick="preisEintragLoeschen('${e.id}')" title="Löschen">🗑</button>
+          </div>`).join('')}
+        </div>
+      </div>`;
+    }).join('');
+  }
 }
-function maModalOffen(){
-  modalOffen('\ud83d\udc64 Neuer Mitarbeiter',`
-    <div class="fRow"><label>Name *</label><input id="maName" placeholder="Vorname Nachname"></div>
-    <div class="fRow"><label>PIN (4-stellig) *</label><input id="maPin" type="number" placeholder="z.B. 5678" maxlength="4"></div>
+async function preisEintragLoeschen(id){
+  if(!confirm('Diesen Preis-Eintrag wirklich löschen?'))return;
+  try{await api('/auftraege?id=eq.'+id,{method:'PATCH',body:JSON.stringify({preis:null,bezahlt:false})});toast('Eintrag aus Preisliste entfernt');await laden();}
+  catch(e){toast('Fehler: '+e.message,'err');}
+}
+function maModalOffen(editId){
+  const m=editId?DB.mitarbeiter.find(x=>x.id===editId):null;
+  const erlF=m?.formulare||Object.keys(ALLE_FORMULARE);
+  const erlT=m?.typen||Object.keys(TYPEN);
+  const rolle=m?.rolle||'mitarbeiter';
+  modalOffen(m?'✏️ Mitarbeiter bearbeiten':'👤 Neuer Mitarbeiter',`
+    <div class="fRow"><label>Name *</label><input id="maName" value="${esc(m?.name||'')}" placeholder="Vorname Nachname"></div>
+    <div class="fRow"><label>PIN (4-stellig) *</label><input id="maPin" type="number" value="${m?.pin||''}" placeholder="z.B. 5678" maxlength="4"></div>
     <div class="fRow"><label>Rolle</label>
-      <select id="maRolle">
-        <option value="mitarbeiter">Mitarbeiter \u2014 kein Zugang zu Preisen</option>
-        <option value="admin">Administrator \u2014 sieht alles</option>
+      <select id="maRolle" onchange="document.getElementById('maPerms').style.display=this.value==='admin'?'none':'block'">
+        <option value="mitarbeiter" ${rolle!=='admin'?'selected':''}>Mitarbeiter</option>
+        <option value="admin" ${rolle==='admin'?'selected':''}>Administrator</option>
       </select>
     </div>
+    <div id="maPerms" style="${rolle==='admin'?'display:none':''}">
+      <div style="background:#fef2f2;border-radius:var(--r2);padding:14px;margin-bottom:12px">
+        <p style="font-size:.74rem;font-weight:700;color:var(--p);text-transform:uppercase;margin-bottom:10px">📄 Formulare freischalten</p>
+        ${Object.entries(ALLE_FORMULARE).map(([k,f])=>`<label style="display:flex;align-items:center;gap:8px;padding:7px 0;cursor:pointer;font-size:.86rem;border-bottom:1px solid var(--border)"><input type="checkbox" id="maf_${k}" ${erlF.includes(k)?'checked':''} style="width:16px;height:16px;accent-color:var(--p)"> ${f.icon} ${f.t}</label>`).join('')}
+        <p style="font-size:.74rem;font-weight:700;color:var(--p);text-transform:uppercase;margin:14px 0 10px">📅 Leistungsarten</p>
+        ${Object.entries(TYPEN).map(([k,v])=>`<label style="display:flex;align-items:center;gap:8px;padding:7px 0;cursor:pointer;font-size:.86rem;border-bottom:1px solid var(--border)"><input type="checkbox" id="mat_${k}" ${erlT.includes(k)?'checked':''} style="width:16px;height:16px;accent-color:var(--p)"> ${v.l}</label>`).join('')}
+      </div>
+    </div>
+    ${m?`<div class="fRow"><label>Status</label><select id="maAktiv"><option value="true" ${m.aktiv?'selected':''}>✅ Aktiv</option><option value="false" ${!m.aktiv?'selected':''}>❌ Inaktiv</option></select></div>`:''}
     <div style="display:flex;gap:10px;margin-top:18px">
-      <button class="btn btnGrn" style="flex:1" onclick="maSpeichern()">\ud83d\udcbe Speichern</button>
+      <button class="btn btnGrn" style="flex:1" onclick="maSpeichern('${editId||''}')">💾 Speichern</button>
       <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
     </div>`);
 }
-async function maSpeichern(){
+async function maSpeichern(id){
   const name=document.getElementById('maName')?.value?.trim();
   const pin=String(document.getElementById('maPin')?.value||'').trim();
   if(!name||pin.length!==4){toast('Name und 4-stelliger PIN erforderlich','err');return;}
+  const rolle=document.getElementById('maRolle')?.value||'mitarbeiter';
+  const aktiv=document.getElementById('maAktiv')?.value!=='false';
+  const formulare=rolle==='admin'?Object.keys(ALLE_FORMULARE):Object.keys(ALLE_FORMULARE).filter(k=>document.getElementById('maf_'+k)?.checked);
+  const typen=rolle==='admin'?Object.keys(TYPEN):Object.keys(TYPEN).filter(k=>document.getElementById('mat_'+k)?.checked);
+  const dBasis={name,pin,rolle,aktiv};
   try{
-    await api('/mitarbeiter',{method:'POST',body:JSON.stringify({name,pin,rolle:document.getElementById('maRolle')?.value||'mitarbeiter',aktiv:true,bereiche:['energie']})});
-    toast('Mitarbeiter angelegt \u2713');modalZu();await laden();
+    if(id){await api('/mitarbeiter?id=eq.'+id,{method:'PATCH',body:JSON.stringify(dBasis)});toast('Mitarbeiter aktualisiert ✓');}
+    else{await api('/mitarbeiter',{method:'POST',body:JSON.stringify(dBasis)});toast('Mitarbeiter angelegt ✓');}
+    try{
+      const extra={formulare,typen,bereiche:['energie']};
+      if(id)await api('/mitarbeiter?id=eq.'+id,{method:'PATCH',body:JSON.stringify(extra)});
+    }catch(e2){console.log('Berechtigungen nicht gespeichert - SQL nötig');}
+    await laden();if(!nurSpeichern)modalZu();
   }catch(e){toast('Fehler: '+e.message,'err');}
 }
 
-// iCAL
+// ══ BENACHRICHTIGUNGEN ══
+function benachrichtigungenPruefen(){
+  const morgen=new Date();morgen.setDate(morgen.getDate()+1);
+  const morgenStr=morgen.toISOString().split('T')[0];
+  const morgenTermine=DB.termine.filter(t=>t.datum===morgenStr);
+  const faellig=getFaelligkeiten().filter(f=>f.status==='ueber').slice(0,3);
+  inAppBannerZeigen(morgenTermine,faellig);
+  if(Notification.permission==='granted'){
+    if(morgenTermine.length>0)new Notification('Grieer - Morgen '+morgenTermine.length+' Termin(e)',{body:morgenTermine.map(t=>t.titel+(t.kunde?' bei '+t.kunde:'')).join(', '),tag:'termin-morgen'});
+    if(faellig.length>0)new Notification('Grieer - '+faellig.length+' ueberfaellige Eintraege',{body:faellig.map(f=>f.name+': '+f.leistung).join(', '),tag:'faellig'});
+  }
+}
+function inAppBannerZeigen(morgenTermine,faellig){
+  const c=document.getElementById('notifContainer');if(!c)return;c.innerHTML='';
+  if(morgenTermine.length>0)c.innerHTML+=`<div class="notifBanner"><span class="ni">📅</span><div class="nt"><strong>Morgen ${morgenTermine.length} Termin(e)</strong><span>${morgenTermine.map(t=>t.titel+(t.kunde?' bei '+t.kunde:'')).join(' · ')}</span></div><button onclick="this.parentElement.remove()">✕</button></div>`;
+  if(faellig.length>0)c.innerHTML+=`<div class="notifBanner" style="background:linear-gradient(135deg,#7f1d1d,var(--p3))"><span class="ni">⚠️</span><div class="nt"><strong>${faellig.length} überfällige Einträge</strong><span>${faellig.slice(0,2).map(f=>f.name+': '+f.leistung).join(' · ')}</span></div><button onclick="zeigeTab('kunden')" style="white-space:nowrap">Anzeigen</button></div>`;
+}
+
+// ══ iCAL ══
 function icalExport(){
   const termine=DB.termine.filter(t=>t.datum?.startsWith(kalJahr+'-'+String(kalMonatIdx+1).padStart(2,'0')));
   if(!termine.length){toast('Keine Termine in diesem Monat','err');return;}
   icalDownload(termine,'Grieer_ET_'+MONATE[kalMonatIdx]+'_'+kalJahr);
 }
-function icalExportAlle(){if(!DB.termine.length){toast('Keine Termine vorhanden','err');return;}icalDownload(DB.termine,'Grieer_ET_AlleTermine');}
+function icalExportAlle(){if(!DB.termine.length){toast('Keine Termine','err');return;}icalDownload(DB.termine,'Grieer_ET_AlleTermine');}
 function icalDownload(termine,name){
-  const z=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Grieer Energietechnik OG//DE","CALSCALE:GREGORIAN","METHOD:PUBLISH","X-WR-CALNAME:Grieer Energietechnik","X-WR-TIMEZONE:Europe/Vienna"];
+  const z=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Grieer//DE','CALSCALE:GREGORIAN'];
   const now=new Date().toISOString().replace(/[-:.]/g,'').slice(0,15)+'Z';
   termine.forEach(t=>{
     const d=(t.datum||'').replace(/-/g,'');if(!d)return;
-    z.push("BEGIN:VEVENT","UID:"+t.id+"@grieer.at","DTSTAMP:"+now);
-    if(t.ganztag){z.push("DTSTART;VALUE=DATE:"+d,"DTEND;VALUE=DATE:"+d);}
-    else{const von=(t.uhrzeit_von||'08:00').replace(':','')+'00';const bis=(t.uhrzeit_bis||'09:00').replace(':','')+'00';z.push("DTSTART;TZID=Europe/Vienna:"+d+"T"+von,"DTEND;TZID=Europe/Vienna:"+d+"T"+bis);}
-    z.push("SUMMARY:"+(t.titel||'Termin'));
-    if(t.kunde)z.push("DESCRIPTION:Kunde: "+t.kunde+(t.beschreibung?"\
-"+t.beschreibung:""));
-    z.push("END:VEVENT");
+    z.push('BEGIN:VEVENT','UID:'+t.id+'@grieer.at','DTSTAMP:'+now);
+    if(t.ganztag){z.push('DTSTART;VALUE=DATE:'+d,'DTEND;VALUE=DATE:'+d);}
+    else{const v=(t.uhrzeit_von||'08:00').replace(':','')+'00';const b=(t.uhrzeit_bis||'09:00').replace(':','')+'00';
+      z.push('DTSTART;TZID=Europe/Vienna:'+d+'T'+v,'DTEND;TZID=Europe/Vienna:'+d+'T'+b);}
+    z.push('SUMMARY:'+(t.titel||'Termin'));
+    if(t.beschreibung)z.push('DESCRIPTION:'+t.beschreibung.replace(/\n/g,' '));
+    if(t.kunde)z.push('LOCATION:'+t.kunde);
+    z.push('END:VEVENT');
   });
-  z.push("END:VCALENDAR");
-  const blob=new Blob([z.join("\\r\
-")],{type:"text/calendar;charset=utf-8"});
-  const url=URL.createObjectURL(blob);const a=document.createElement("a");
-  a.href=url;a.download=name+".ics";
+  z.push('END:VCALENDAR');
+  const blob=new Blob([z.join('\r\n')],{type:'text/calendar'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=name+'.ics';
   document.body.appendChild(a);a.click();document.body.removeChild(a);
-  URL.revokeObjectURL(url);toast("iCal heruntergeladen \u2713");
+  URL.revokeObjectURL(url);toast('iCal heruntergeladen');
 }
-
-// NAVIGATION
 function zeigeTab(t){
   aktivTab=t;
   document.querySelectorAll('.tabContent').forEach(el=>el.classList.remove('ak'));
@@ -1503,55 +1667,306 @@ function zeigeTab(t){
   document.getElementById('nb-'+t)?.classList.add('ak');
   document.getElementById('ns-'+t)?.classList.add('ak');
   if(t==='kalender')kalRender();
+  if(t==='formulare')formListeRender();
   window.scrollTo(0,0);
 }
-function modalOffen(titel,body){
-  document.getElementById('modalTitel').textContent=titel;
-  document.getElementById('modalBody').innerHTML=body;
-  document.getElementById('modal').classList.add('open');
-  setTimeout(()=>document.querySelector('#modalBody input:not([type=hidden]),#modalBody select')?.focus(),150);
-}
+function modalOffen(titel,body){document.getElementById('modalTitel').textContent=titel;document.getElementById('modalBody').innerHTML=body;document.getElementById('modal').classList.add('open');setTimeout(()=>document.querySelector('#modalBody input:not([type=hidden]),#modalBody select')?.focus(),150);}
 function modalZu(){document.getElementById('modal').classList.remove('open');}
 function detailZu(){document.getElementById('detailOverlay').style.display='none';}
-function toast(msg,typ){
-  const el=document.getElementById('toast');
-  el.textContent=msg;
-  el.style.background=typ==='err'?'var(--pri)':'var(--dark)';
-  el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'),3200);
-}
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function toast(msg,typ){const el=document.getElementById('toast');el.textContent=msg;el.style.background=typ==='err'?'var(--p3)':typ==='warn'?'var(--orange)':'var(--dark)';el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3200);}
 
 // TASTATUR
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){
-    if(document.getElementById('modal').classList.contains('open')){modalZu();return;}
-    if(document.getElementById('detailOverlay').style.display==='block'){detailZu();return;}
-    if(document.getElementById('formAnzeige')?.style.display==='block'){formZurueck();return;}
-  }
-  if(e.altKey){
-    const tabs={1:'home',2:'kunden',3:'journal',4:'kalender',5:'formulare',6:'admin'};
-    if(tabs[e.key]){e.preventDefault();zeigeTab(tabs[e.key]);}
-  }
-  if(document.getElementById('tab-kalender')?.classList.contains('ak')){
-    if(e.key==='ArrowLeft'&&!document.getElementById('modal').classList.contains('open'))kalMonat(-1);
-    if(e.key==='ArrowRight'&&!document.getElementById('modal').classList.contains('open'))kalMonat(1);
-  }
-  if(e.key==='Enter'&&e.target.tagName==='INPUT'&&e.target.type!=='date'&&e.target.type!=='time'&&document.getElementById('modal').classList.contains('open')){
-    document.querySelector('#modalBody .btnGrn')?.click();
-  }
+  if(e.key==='Escape'){if(document.getElementById('modal').classList.contains('open')){modalZu();return;}if(document.getElementById('detailOverlay').style.display==='block'){detailZu();return;}if(document.getElementById('formAnzeige')?.style.display==='block'){formZurueck();return;}}
+  if(e.altKey){const tabs={1:'home',2:'kunden',3:'journal',4:'kalender',5:'formulare',6:'admin'};if(tabs[e.key]){e.preventDefault();zeigeTab(tabs[e.key]);}}
+  if(document.getElementById('tab-kalender')?.classList.contains('ak')&&!document.getElementById('modal').classList.contains('open')){if(e.key==='ArrowLeft')kalMonat(-1);if(e.key==='ArrowRight')kalMonat(1);}
+  if(e.key==='Enter'&&e.target.tagName==='INPUT'&&e.target.type!=='date'&&e.target.type!=='time'&&document.getElementById('modal').classList.contains('open'))document.querySelector('#modalBody .btnGrn')?.click();
+  if(document.getElementById('loginScreen').style.display!=='none'){if(e.key>='0'&&e.key<='9')pinTaste(parseInt(e.key));if(e.key==='Backspace')pinTaste('⌫');if(e.key==='Enter')pinTaste('✓');}
 });
+
+// ══ SYNC ══
+async function appAktualisieren(){
+  const icon=document.getElementById('updateIcon');
+  const txt=document.getElementById('updateText');
+  const btn=document.getElementById('updateBtn');
+  if(btn)btn.disabled=true;
+  if(icon)icon.textContent='⏳';if(txt)txt.textContent='Lädt…';
+  try{
+    await laden();
+    if(icon)icon.textContent='✓';if(txt)txt.textContent='Aktuell!';
+    toast('✅ Sync: '+DB.kunden.length+' Kunden, '+DB.termine.length+' Termine');
+  }catch(e){toast('Verbindungsfehler','err');}
+  finally{setTimeout(()=>{if(icon)icon.textContent='↺';if(txt)txt.textContent='Sync';if(btn)btn.disabled=false;},3000);}
+}
+
+// ══ LÖSCH-MODUS ══
+let loeschModus=false,ausgewaehlt=new Set();
+function loeschModusToggle(){
+  if(!isAdmin())return;loeschModus=!loeschModus;ausgewaehlt.clear();
+  const bar=document.getElementById('loeschBar');
+  const btn=document.getElementById('btnLoeschModus');
+  if(loeschModus){if(bar)bar.style.display='flex';if(btn)btn.textContent='✕ Abbrechen';}
+  else{if(bar)bar.style.display='none';if(btn)btn.textContent='🗑 Auswählen';}
+  kvRender();
+}
+function loeschAnzahlUpdate(){
+  const el=document.getElementById('loeschAnzahl');if(el)el.textContent=ausgewaehlt.size+' ausgewählt';
+  const btn=document.getElementById('btnJetztLoeschen');if(btn)btn.disabled=ausgewaehlt.size===0;
+}
+function alleAuswaehlen(){document.querySelectorAll('.kvCheck').forEach(cb=>{cb.checked=true;ausgewaehlt.add(cb.dataset.id);});loeschAnzahlUpdate();}
+function alleAbwaehlen(){document.querySelectorAll('.kvCheck').forEach(cb=>{cb.checked=false;});ausgewaehlt.clear();loeschAnzahlUpdate();}
+async function ausgewaehltLoeschen(){
+  if(!ausgewaehlt.size)return;
+  if(!confirm(ausgewaehlt.size+' Kunden loeschen?'))return;
+  let ok=0;
+  for(const id of ausgewaehlt){try{await api('/kunden?id=eq.'+id,{method:'DELETE'});ok++;}catch(e){}}
+  toast('✅ '+ok+' gelöscht');loeschModus=false;ausgewaehlt.clear();
+  document.getElementById('loeschBar').style.display='none';
+  document.getElementById('btnLoeschModus').textContent='🗑 Auswählen';
+  await laden();
+}
+
+// ══ CSV IMPORT ══
+function csvImportModal(){
+  modalOffen('📥 CSV Import',`
+    <div style="background:#eff6ff;border-left:4px solid #3b82f6;padding:10px 12px;border-radius:0 8px 8px 0;font-size:.81rem;color:#1e3a8a;margin-bottom:12px;line-height:1.7">
+      <strong>Format (Tab-getrennt):</strong><br>Nummer · Anrede · TitelName · PLZ · Ort · Strasse · HNR · EMail · Tel1<br>
+      <small>UTF-8 und Windows-1252 werden erkannt</small>
+    </div>
+    <div class="fRow"><label>Datei</label>
+      <input type="file" id="csvFile" accept=".csv,.txt,.tsv,.tab" onchange="csvLaden(this)" style="min-height:44px">
+      <span id="csvInfo" style="font-size:.75rem;color:var(--grn);display:block;margin-top:4px"></span>
+    </div>
+    <div id="csvPrev" style="display:none;margin-bottom:12px">
+      <p id="csvPrevInfo" style="font-size:.83rem;font-weight:600;color:var(--grn)"></p>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btnP" id="btnCsvUpd" onclick="csvImport('update')" disabled>🔄 Aktualisieren</button>
+      <button class="btn btnOut" id="btnCsvNeu" onclick="csvImport('neu')" disabled>➕ Nur neue</button>
+      <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
+    </div>`);
+}
+function csvLaden(input){
+  const file=input.files[0];if(!file)return;
+  const r1=new FileReader();
+  r1.onload=e=>{
+    const arr=new Uint8Array(e.target.result);let enc='UTF-8';
+    if(arr[0]===0xFF&&arr[1]===0xFE)enc='UTF-16LE';
+    else for(let i=0;i<Math.min(arr.length,3000);i++){if([0xE4,0xF6,0xFC,0xDF,0xC4,0xD6,0xDC].includes(arr[i])){enc='windows-1252';break;}}
+    const r2=new FileReader();
+    r2.onload=e2=>{
+      let text=e2.target.result;if(text.charCodeAt(0)===0xFEFF)text=text.slice(1);
+      window._csv=text;const {daten}=csvParsen(text);
+      document.getElementById('csvInfo').textContent='✅ '+enc+' · '+Math.round(file.size/1024)+' KB';
+      document.getElementById('csvPrevInfo').textContent='✅ '+daten.length+' Kunden erkannt';
+      document.getElementById('csvPrev').style.display='block';
+      document.getElementById('btnCsvUpd').disabled=false;
+      document.getElementById('btnCsvNeu').disabled=false;
+    };r2.readAsText(file,enc);
+  };r1.readAsArrayBuffer(file);
+}
+function csvParsen(text){
+  const zeilen=text.split('\n').filter(z=>z.trim());if(!zeilen.length)return{daten:[]};
+  const sep=zeilen[0].includes('\t')?'\t':(zeilen[0].includes(';')?';':',');
+  const hdr=zeilen[0].split(sep).map(h=>h.toLowerCase().replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss').trim());
+  const hatHdr=hdr.some(h=>['nummer','titelname','smsindex','nachname','name2'].includes(h));
+  const col={};
+  const m={'nummer':'nr','kundennummer':'nr','titelname':'ti','titlename':'ti','name2':'nn','nachname':'nn',
+    'name3':'vn','vorname':'vn','anrede':'anr','strasse':'str','straße':'str','hnr':'hnr',
+    'plz':'plz','ort':'ort','email':'email','e-mail':'email','adresse':'email','tel1':'tel','telefon':'tel'};
+  hdr.forEach((h,i)=>{if(m[h]&&col[m[h]]===undefined)col[m[h]]=i;});
+  const dZ=hatHdr?zeilen.slice(1):zeilen;
+  const daten=dZ.map(z=>{
+    if(!z.trim())return null;
+    const t=z.split(sep).map(x=>x.trim().replace(/^"|"$/g,''));
+    const g=k=>col[k]!==undefined&&col[k]<t.length?t[col[k]].trim():'';
+    let ti=g('ti'),nn=g('nn'),vn=g('vn');
+    if(ti&&!nn){const p=ti.split(' ').filter(Boolean);nn=p[p.length-1];vn=p.slice(0,-1).join(' ');}
+    if(!nn)return null;
+    const str=g('str'),hnr=g('hnr');
+    return{nummer:sauber(g('nr'))||null,anrede:sauber(g('anr'))||null,nachname:sauber(nn),vorname:sauber(vn)||null,
+      strasse:sauber(str+(hnr?' '+hnr:''))||null,plz:sauber(g('plz'))||null,ort:sauber(g('ort'))||null,
+      email:sauber(g('email'))||null,telefon:sauber(g('tel'))||null};
+  }).filter(Boolean);
+  return{daten};
+}
+async function csvImport(modus){
+  const text=window._csv;if(!text){toast('Bitte Datei wählen','err');return;}
+  const {daten}=csvParsen(text);if(!daten.length){toast('Keine Daten','err');return;}
+  let nrMap={};
+  if(modus==='update'){
+    let alle=[],p=0;
+    while(true){const b=await api('/kunden?select=id,nummer&limit=1000&offset='+(p*1000));if(!b||!b.length)break;alle.push(...b);if(b.length<1000)break;p++;if(p>20)break;}
+    alle.forEach(k=>{if(k.nummer)nrMap[String(k.nummer).trim()]=k.id;});
+  }
+  modalZu();let neu=0,upd=0,err=0;toast('Importiere '+daten.length+'…');
+  for(let i=0;i<daten.length;i++){
+    const k=daten[i];const d={aktiv:true,nachname:k.nachname};
+    ['nummer','anrede','vorname','strasse','plz','ort','email','telefon'].forEach(f=>{if(k[f])d[f]=k[f];});
+    try{
+      const xId=k.nummer?nrMap[String(k.nummer).trim()]:null;
+      if(modus==='update'&&xId){await api('/kunden?id=eq.'+xId,{method:'PATCH',body:JSON.stringify(d)});upd++;}
+      else{await api('/kunden',{method:'POST',body:JSON.stringify(d)});neu++;}
+    }catch(e){err++;}
+    if(i%20===19)await new Promise(r=>setTimeout(r,30));
+  }
+  toast('✅ '+neu+' neu · '+upd+' akt.'+(err?' · '+err+' Err':''));await laden();
+}
+
+// ══ AKTE SUCHE ══
+function akteLiveSearch(sb){
+  const el=document.getElementById('akteLiveList');if(!el)return;
+  if(!sb||sb.trim().length<2){el.innerHTML='';return;}
+  const norm=t=>sauber(String(t||'')).toLowerCase().replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss');
+  const sn=norm(sb);
+  const treffer=DB.kunden.filter(k=>[k.nachname,k.vorname,k.anrede,k.firma,k.strasse,k.plz,k.ort,k.telefon,k.email,k.nummer].map(f=>norm(f)).join(' ').includes(sn)).slice(0,7);
+  if(!treffer.length){el.innerHTML='<p style="font-size:.8rem;color:var(--text2);padding:6px 0">Keine Treffer</p>';return;}
+  el.innerHTML='<div style="background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:var(--sh)">'+
+    treffer.map(k=>{
+      const nn=sauber(k.nachname);const vn=sauber(k.vorname);const anr=sauber(k.anrede);
+      const name=(anr?anr+' ':'')+(vn?vn+' ':'')+nn;
+      const adr=[k.strasse,k.plz?k.plz+' '+k.ort:k.ort].filter(Boolean).join(', ');
+      return`<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer"
+        onclick="document.getElementById('akteSearch').value='';document.getElementById('akteLiveList').innerHTML='';kundeDetail('${k.id}')">
+        <div style="width:36px;height:36px;border-radius:10px;background:var(--red2);color:var(--p);font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">${(nn||'?').charAt(0).toUpperCase()}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:.87rem;font-weight:700">${esc(name)}</div>
+          <div style="font-size:.74rem;color:var(--text2)">${esc(adr)}${k.nummer?' · Nr.'+esc(k.nummer):''}</div>
+        </div>›</div>`;
+    }).join('')+'</div>';
+}
+function kundenAkteZeigen(sb){
+  if(!sb||sb.trim().length<1){toast('Suchbegriff eingeben','err');return;}
+  const norm=t=>sauber(String(t||'')).toLowerCase().replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss');
+  const sn=norm(sb);
+  const treffer=DB.kunden.filter(k=>[k.nachname,k.vorname,k.anrede,k.firma,k.strasse,k.plz,k.ort,k.telefon,k.email,k.nummer].map(f=>norm(f)).join(' ').includes(sn));
+  document.getElementById('akteLiveList').innerHTML='';
+  if(!treffer.length){toast('Kein Kunde gefunden','err');return;}
+  if(treffer.length===1){kundeDetail(treffer[0].id);return;}
+  modalOffen('🔍 '+treffer.length+' Treffer',
+    '<div class="card" style="margin:0;max-height:60vh;overflow-y:auto">'+
+    treffer.slice(0,50).map(k=>{
+      const nn=sauber(k.nachname);const vn=sauber(k.vorname);const anr=sauber(k.anrede);
+      const name=(anr?anr+' ':'')+(vn?vn+' ':'')+nn;
+      const adr=[k.strasse,k.plz?k.plz+' '+k.ort:k.ort].filter(Boolean).join(', ');
+      return`<div class="listItem" onclick="modalZu();setTimeout(()=>kundeDetail('${k.id}'),150)" style="cursor:pointer">
+        <div class="listAvatar" style="background:var(--red2);color:var(--p);font-weight:800">${(nn||'?').charAt(0).toUpperCase()}</div>
+        <div class="listMain"><strong>${esc(name)}</strong><span>${esc(adr)}${k.nummer?' · Nr.'+k.nummer:''}</span></div>
+        <span style="color:var(--text2)">›</span></div>`;
+    }).join('')+
+    (treffer.length>50?`<div style="padding:10px;text-align:center;color:var(--text2);font-size:.82rem">... ${treffer.length-50} weitere — bitte verfeinern</div>`:'')+
+    '</div>');
+}
+
+// ══ LEISTUNGSÜBERSICHT ══
+function leistungsUebersicht(){
+  const el=document.getElementById('leistungsGrid');if(!el)return;
+  const jahr=parseInt(document.getElementById('leistJahr')?.value||new Date().getFullYear());
+  const auf=DB.auftraege.filter(a=>a.datum&&a.datum.startsWith(jahr));
+  const stats={};Object.keys(TYPEN).forEach(t=>{stats[t]={anz:0,umsatz:0};});
+  auf.forEach(a=>{if(a.typ&&stats[a.typ]){stats[a.typ].anz++;if(a.bezahlt)stats[a.typ].umsatz+=a.preis||0;}});
+  el.innerHTML=Object.entries(TYPEN).map(([t,v])=>`
+    <div style="background:var(--card);border-radius:var(--r);padding:14px;border:1px solid var(--border);border-left:4px solid ${v.c}">
+      <div style="font-size:.78rem;font-weight:700;color:var(--text2);margin-bottom:6px">${v.l}</div>
+      <div style="font-size:1.8rem;font-weight:800;color:var(--p);line-height:1">${stats[t].anz}</div>
+      <div style="font-size:.72rem;color:var(--text2)">Aufträge</div>
+      ${isAdmin()&&stats[t].umsatz>0?`<div style="font-size:.88rem;font-weight:700;color:var(--grn);margin-top:4px">€${stats[t].umsatz.toFixed(0)}</div>`:''}
+    </div>`).join('');
+}
+
+// ══ TERMIN BEARBEITEN ══
+function terminBearbeiten(id){
+  const t=DB.termine.find(x=>x.id===id);if(!t)return;
+  const kvOpt=DB.kunden.map(k=>`<option value="${esc(sauber((k.vorname?k.vorname+' ':'')+k.nachname)+(k.ort?', '+k.ort:''))}">`).join('');
+  modalOffen('✏️ Termin bearbeiten',`
+    <div class="fGrid fg2">
+      <div class="fRow"><label>Datum *</label><input type="date" id="tDatum" value="${t.datum||''}"></div>
+      <div class="fRow"><label>Ganztägig</label>
+        <select id="tGanztag" onchange="document.getElementById('tZeiten').style.display=this.value==='true'?'none':'block'">
+          <option value="false" ${!t.ganztag?'selected':''}>Nein — Uhrzeit</option>
+          <option value="true" ${t.ganztag?'selected':''}>Ja — Ganztag</option>
+        </select>
+      </div>
+    </div>
+    <div id="tZeiten" style="display:${t.ganztag?'none':'block'}">
+      <div class="fGrid fg2">
+        <div class="fRow"><label>Von</label><input type="time" id="tVon" value="${t.uhrzeit_von||'08:00'}"></div>
+        <div class="fRow"><label>Bis</label><input type="time" id="tBis" value="${t.uhrzeit_bis||'10:00'}"></div>
+      </div>
+    </div>
+    <div class="fRow"><label>Bezeichnung *</label><input id="tTitel" value="${esc(t.titel||'')}"></div>
+    <div class="fRow"><label>Kunde</label>
+      <input id="tKunde" list="tKL" value="${esc(sauber(t.kunde||''))}" placeholder="Kunden suchen…">
+      <datalist id="tKL">${kvOpt}</datalist>
+    </div>
+    <div class="fRow"><label>Leistungsart</label>
+      <select id="tTyp"><option value="">— Optional —</option>
+        ${Object.entries(TYPEN).map(([k,v])=>`<option value="${k}" ${t.typ===k?'selected':''}>${v.l}</option>`).join('')}
+      </select>
+    </div>
+    <div class="fRow"><label>Notiz</label><textarea id="tBeschr">${esc(t.beschreibung||'')}</textarea></div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btnGrn" style="flex:1" onclick="terminUpdate('${t.id}')">💾 Speichern</button>
+      <button class="btn btnRed btnSm" onclick="if(confirm('Termin loeschen?'))terminLoeschen('${t.id}')">🗑</button>
+      <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
+    </div>`);
+}
+async function terminUpdate(id){
+  const titel=(document.getElementById('tTitel')?.value||'').trim();
+  const datum=document.getElementById('tDatum')?.value;
+  if(!titel||!datum){toast('Titel und Datum erforderlich','err');return;}
+  const ganztag=document.getElementById('tGanztag')?.value==='true';
+  const d={titel,datum,ganztag,
+    uhrzeit_von:ganztag?null:(document.getElementById('tVon')?.value||null),
+    uhrzeit_bis:ganztag?null:(document.getElementById('tBis')?.value||null),
+    kunde:document.getElementById('tKunde')?.value||null,
+    typ:document.getElementById('tTyp')?.value||null,
+    beschreibung:document.getElementById('tBeschr')?.value||null};
+  try{
+    await api('/termine?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});
+    toast('Termin gespeichert ✓');modalZu();await laden();zeigeTab('kalender');
+  }catch(e){toast('Fehler: '+e.message,'err');}
+}
+
+// ══ DATENPFLEGE ══
+async function alleAktivieren(){
+  try{
+    await api('/kunden?aktiv=is.null',{method:'PATCH',body:JSON.stringify({aktiv:true})});
+    await api('/kunden?aktiv=eq.false',{method:'PATCH',body:JSON.stringify({aktiv:true})});
+    toast('Alle aktiviert');await laden();
+  }catch(e){toast('Fehler','err');}
+}
+async function alleKundenBereinigen(){
+  if(!confirm('Anführungszeichen bei allen Kunden entfernen?'))return;
+  let alle=[],p=0;
+  while(true){
+    const b=await api('/kunden?select=id,nachname,vorname,anrede,firma&limit=1000&offset='+(p*1000));
+    if(!b||!b.length)break;alle.push(...b);if(b.length<1000)break;p++;if(p>20)break;
+  }
+  let ok=0;
+  const re=/["\'´`\u201c\u201d\u201e\u2018\u2019]/;
+  for(const k of alle){
+    const d={};
+    ['nachname','vorname','anrede','firma'].forEach(f=>{if(k[f]&&re.test(k[f]))d[f]=sauber(k[f]);});
+    if(Object.keys(d).length){try{await api('/kunden?id=eq.'+k.id,{method:'PATCH',body:JSON.stringify(d)});ok++;}catch(e){}}
+  }
+  toast('✅ '+ok+' Kunden bereinigt');await laden();
+}
+
+// ══ JOURNAL DATUM VERSCHIEBEN ══
+async function auftragDatumAendern(id){
+  const a=DB.auftraege.find(x=>x.id===id);if(!a)return;
+  const n=prompt('Neues Datum (JJJJ-MM-TT):',a.datum||new Date().toISOString().split('T')[0]);
+  if(!n||!/\d{4}-\d{2}-\d{2}/.test(n)){toast('Ungültiges Datum','err');return;}
+  try{
+    await api('/auftraege?id=eq.'+id,{method:'PATCH',body:JSON.stringify({datum:n,notiz:(a.notiz||'')+(a.notiz?' | ':'')+'Verschoben von '+a.datum})});
+    toast('Datum geändert ✓');modalZu();await laden();
+  }catch(e){toast('Fehler','err');}
+}
 
 // INIT
 (function init(){
   pinBauen();
-  document.addEventListener('keydown',e=>{
-    if(document.getElementById('loginScreen').style.display!=='none'&&document.getElementById('loginScreen').style.display!==''){
-      if(e.key>='0'&&e.key<='9')pinTaste(parseInt(e.key));
-      if(e.key==='Backspace')pinTaste('\u232b');
-      if(e.key==='Enter')pinTaste('\u2713');
-    }
-  });
   const saved=sessionStorage.getItem('gu');
   if(saved){try{user=JSON.parse(saved);appStart();}catch{sessionStorage.removeItem('gu');}}
 })();
