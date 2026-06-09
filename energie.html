@@ -520,7 +520,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   <!-- JOURNAL -->
   <div id="tab-journal" class="tabContent">
     <div class="secHead">
-      <h2>📋 Arbeitsjournal</h2>
+      <h2>📋 Arbeitsjournal <span id="jCount" style="font-size:.78rem;font-weight:400;color:var(--text2)"></span></h2>
       <button class="btn btnG" onclick="auftragNeu()">+ Neuer Auftrag</button>
     </div>
     <div class="searchBar">
@@ -1093,40 +1093,114 @@ function kundenAkteZeigen(sb){
 // ══ JOURNAL ══
 function jRender(){
   const suche=(document.getElementById('jSuche')?.value||'').toLowerCase();
-  let liste=DB.auftraege.filter(a=>{
+  const heute=new Date().toISOString().split('T')[0];
+
+  // Aufträge
+  let auftraege=DB.auftraege.filter(a=>{
     if(suche){const h=((a.kunde||'')+(a.arbeit||'')+(a.typ||'')).toLowerCase();if(!h.includes(suche))return false;}
     if(jFilterAkt==='offen')return!a.bezahlt;
     if(jFilterAkt==='bezahlt')return a.bezahlt;
     return true;
   });
+
+  // Termine (außer bei Filter "Bezahlt")
+  let termine=[];
+  if(jFilterAkt!=='bezahlt'){
+    termine=DB.termine.filter(t=>{
+      if(!t.datum)return false;
+      if(suche){const h=((t.kunde||'')+(t.titel||'')+(t.typ||'')).toLowerCase();if(!h.includes(suche))return false;}
+      return true;
+    }).map(t=>({
+      _isTermin:true,
+      _vergangen:t.datum<heute,
+      id:'t_'+t.id,
+      _terminId:t.id,
+      datum:t.datum,
+      kunde:t.kunde||'',
+      typ:t.typ||'',
+      arbeit:t.titel||'Termin',
+      uhrzeit_von:t.uhrzeit_von||null,
+      uhrzeit_bis:t.uhrzeit_bis||null,
+      notiz:t.beschreibung||'',
+      bezahlt:false,preis:null,
+    }));
+  }
+
+  // Zusammenführen + sortieren
+  // Zukünftige Termine oben (aufsteigend), dann alles andere absteigend
+  const zukunft=termine.filter(t=>!t._vergangen).sort((a,b)=>a.datum.localeCompare(b.datum));
+  const rest=[...auftraege,...termine.filter(t=>t._vergangen)].sort((a,b)=>(b.datum||'').localeCompare(a.datum||''));
+  const liste=[...zukunft,...rest];
+
+  // Zähler
+  const jCount=document.getElementById('jCount');
+  if(jCount)jCount.textContent='('+auftraege.length+' Auftr. · '+termine.length+' Termine)';
+
   const el=document.getElementById('journalListe');if(!el)return;
   if(liste.length===0){el.innerHTML='<div class="emptyState"><div class="ei">📋</div><p>Keine Einträge</p></div>';return;}
+
   let html='',lM='';
   liste.forEach(a=>{
-    const d=a.datum?new Date(a.datum):null;
-    const monat=d?d.toLocaleDateString('de-AT',{month:'long',year:'numeric'}):'—';
-    if(monat!==lM){if(lM)html+='</div>';html+=`<div style="font-size:.71rem;font-weight:700;color:var(--text2);text-transform:uppercase;padding:10px 2px 5px;letter-spacing:.4px">${monat}</div><div class="card">`;lM=monat;}
+    const monat=a.datum?new Date(a.datum).toLocaleDateString('de-AT',{month:'long',year:'numeric'}):'—';
+    if(monat!==lM){
+      if(lM)html+='</div>';
+      const isZukunft=a._isTermin&&!a._vergangen;
+      html+=`<div style="font-size:.71rem;font-weight:700;color:${isZukunft?'#1d4ed8':'var(--text2)'};text-transform:uppercase;padding:10px 2px 5px;letter-spacing:.4px">${isZukunft?'📅 ':''} ${monat}</div><div class="card">`;
+      lM=monat;
+    }
+
+    if(a._isTermin){
+      const zt=a.uhrzeit_von?(a.uhrzeit_von+(a.uhrzeit_bis?' – '+a.uhrzeit_bis:'')):'';
+      const bg=a._vergangen?'#fff8f0':'#f0f7ff';
+      const bc=a._vergangen?'#f97316':'#3b82f6';
+      const tc=a._vergangen?'#c2410c':'#1d4ed8';
+      const badgeTxt=a._vergangen?'⚠️ Offen':'📅 Geplant';
+      const badgeBg=a._vergangen?'#ffedd5':'#dbeafe';
+      html+=`<div class="listItem" style="border-left:3px solid ${bc};background:${bg}">
+        <div class="listAvatar" style="background:${badgeBg};color:${tc};font-size:.9rem">${(TYPEN[a.typ]?.l||'📅').split(' ')[0]}</div>
+        <div class="listMain">
+          <strong style="color:${tc}">${esc(sauber(a.kunde||'—'))}</strong>
+          <span style="font-weight:600">${a.datum?.split('-').reverse().join('.')||''}${zt?' · '+zt:''}</span>
+          <span>${esc(a.arbeit)}</span>
+          ${a.notiz?`<span style="font-size:.72rem;color:var(--text2)">${esc(a.notiz.substring(0,50))}</span>`:''}
+        </div>
+        <div class="listRight" style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          <span style="background:${badgeBg};color:${tc};padding:2px 7px;border-radius:10px;font-size:.68rem;font-weight:700">${badgeTxt}</span>
+          <div style="display:flex;gap:4px;margin-top:2px">
+            <button class="btn btnGrn btnSm" style="padding:4px 8px;font-size:.7rem"
+              onclick="event.stopPropagation();terminZuAuftrag('${a._terminId}')">✓ Erledigt</button>
+            <button class="btn btnOut btnSm" style="padding:4px 8px"
+              onclick="event.stopPropagation();terminBearbeiten('${a._terminId}')">✏️</button>
+            <button class="btn btnRed btnSm" style="padding:4px 8px"
+              onclick="event.stopPropagation();if(confirm('Termin loeschen?'))terminLoeschen('${a._terminId}')">🗑</button>
+          </div>
+        </div>
+      </div>`;
+      return;
+    }
+
+    // Auftrag
     const istOffen=!a.bezahlt&&!a.preis;
     const farbe=TYPEN[a.typ]?.c||'#374151';
+    const zt2=a.uhrzeit_von?(' · '+a.uhrzeit_von+(a.uhrzeit_bis?' – '+a.uhrzeit_bis:'')):'';
     html+=`<div class="listItem ${istOffen?'journalOffen':''}" tabindex="0">
       <div class="listAvatar" style="background:${farbe}15;color:${farbe};font-size:.85rem">${(TYPEN[a.typ]?.l||'📋').split(' ')[0]}</div>
-      <div class="listMain">
-        <strong style="cursor:pointer" onclick="auftragDetail('${a.id}')">${esc(sauber(a.kunde||'—'))}</strong>
-        <span>${a.datum?.split('-').reverse().join('.')||''}${a.uhrzeit_von?' · '+a.uhrzeit_von:''} · ${esc(a.arbeit||TYPEN[a.typ]?.l||'—')}</span>
+      <div class="listMain" onclick="auftragDetail('${a.id}')" style="cursor:pointer">
+        <strong>${esc(sauber(a.kunde||'—'))}</strong>
+        <span>${a.datum?.split('-').reverse().join('.')||''}${zt2}</span>
+        <span>${esc(a.arbeit||TYPEN[a.typ]?.l||'—')}</span>
         ${a.notiz?`<span style="font-size:.71rem;color:var(--text2)">${esc(a.notiz.substring(0,50))}</span>`:''}
       </div>
-      <div class="listRight">
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-          ${isAdmin()&&a.preis?`<div style="font-weight:800;font-size:.88rem;color:var(--p)">€${a.preis.toFixed(2)}</div>`:''}
-          <span class="badge ${a.bezahlt?'bGrn':istOffen?'bOrange':'bBlue'}">${a.bezahlt?'✓ Bezahlt':istOffen?'Offen':'—'}</span>
-          <div style="display:flex;gap:4px;margin-top:2px">
-            <button class="btn btnOut btnSm" style="padding:5px 9px;min-height:34px"
-              onclick="event.stopPropagation();auftragBearbeiten('${a.id}')" title="Bearbeiten">✏️</button>
-            ${isAdmin()&&!a.bezahlt?`<button class="btn btnGrn btnSm" style="padding:5px 9px;min-height:34px"
-              onclick="event.stopPropagation();preisUndBezahlt('${a.id}','${esc(sauber(a.kunde||''))}')" title="Abrechnen">€</button>`:''}
-            <button class="btn btnRed btnSm" style="padding:5px 9px;min-height:34px"
-              onclick="event.stopPropagation();if(confirm('Eintrag loeschen?'))auftragLoeschen('${a.id}')" title="Löschen">🗑</button>
-          </div>
+      <div class="listRight" style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        ${isAdmin()&&a.preis?`<div style="font-weight:800;font-size:.88rem;color:var(--p)">€${a.preis.toFixed(2)}</div>`:''}
+        <span class="badge ${a.bezahlt?'bGrn':istOffen?'bOrange':'bBlue'}">${a.bezahlt?'✓ Bezahlt':istOffen?'Offen':'—'}</span>
+        <div style="display:flex;gap:4px;margin-top:2px">
+          <button class="btn btnOut btnSm" style="padding:5px 9px;min-height:34px"
+            onclick="event.stopPropagation();auftragBearbeiten('${a.id}')">✏️</button>
+          ${isAdmin()&&!a.bezahlt?`<button class="btn btnGrn btnSm" style="padding:5px 9px;min-height:34px"
+            onclick="event.stopPropagation();preisUndBezahlt('${a.id}','${esc(sauber(a.kunde||''))}')">€</button>`:''}
+          <button class="btn btnRed btnSm" style="padding:5px 9px;min-height:34px"
+            onclick="event.stopPropagation();if(confirm('Eintrag loeschen?'))auftragLoeschen('${a.id}')">🗑</button>
         </div>
       </div>
     </div>`;
@@ -1506,6 +1580,45 @@ async function terminSpeichern(){
   Object.keys(d).forEach(k=>{if(d[k]===null||d[k]===undefined||d[k]==='')delete d[k];});
   try{await api('/termine',{method:'POST',body:JSON.stringify(d)});toast('Termin gespeichert ✓');modalZu();await laden();zeigeTab('kalender');}
   catch(e){toast('Fehler: '+e.message,'err');}
+}
+async function terminZuAuftrag(terminId){
+  const t=DB.termine.find(x=>x.id===terminId);if(!t)return;
+  const kvOpt=DB.kunden.map(k=>`<option value="${esc(sauber((k.vorname?k.vorname+' ':'')+k.nachname+(k.ort?', '+k.ort:'')))}">` ).join('');
+  modalOffen('✅ Termin abschließen',`
+    <div style="background:#d1fae5;border-radius:8px;padding:10px;margin-bottom:12px">
+      <strong>${esc(sauber(t.titel||''))}</strong> · ${t.datum?.split('-').reverse().join('.')||''}
+      ${t.uhrzeit_von?' · '+t.uhrzeit_von:''}
+    </div>
+    <div class="fGrid fg2">
+      <div class="fRow"><label>Datum</label><input type="date" id="aDatum" value="${t.datum||''}"></div>
+      <div class="fRow"><label>Dauer (h)</label><input type="number" id="aDauer" step=".5" placeholder="z.B. 2"></div>
+    </div>
+    <div class="fGrid fg2">
+      <div class="fRow"><label>Von</label><input type="time" id="aVon" value="${t.uhrzeit_von||''}"></div>
+      <div class="fRow"><label>Bis</label><input type="time" id="aBis" value="${t.uhrzeit_bis||''}"></div>
+    </div>
+    <div class="fRow"><label>Kunde</label>
+      <input id="aKunde" list="kvTA" value="${esc(sauber(t.kunde||''))}" placeholder="Kunde suchen…">
+      <datalist id="kvTA">${kvOpt}</datalist>
+    </div>
+    <div class="fRow"><label>Leistungsart</label>
+      <select id="aTyp">${Object.entries(TYPEN).map(([k,v])=>`<option value="${k}" ${t.typ===k?'selected':''}>${v.l}</option>`).join('')}</select>
+    </div>
+    <div class="fRow"><label>Was wurde gemacht?</label>
+      <textarea id="aArbeit" placeholder="Beschreibung der Arbeit…"></textarea>
+    </div>
+    ${isAdmin()?`<div class="fRow"><label>Preis (€)</label>
+      <input type="number" id="aPreis" step=".01" placeholder="${TYPEN[t.typ]?.p||'0'}"></div>`
+      :'<input type="hidden" id="aPreis">'}
+    <input type="hidden" id="aOrt" value="${esc(t.beschreibung||'')}">
+    <input type="hidden" id="aStrasse" value="">
+    <input type="hidden" id="aNotiz" value="">
+    <input type="hidden" id="aFaellig" value="">
+    <input type="hidden" id="aBezahlt" value="false">
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btnGrn" style="flex:1" onclick="auftragSpeichern(null)">✅ Als Auftrag speichern</button>
+      <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
+    </div>`);
 }
 async function terminLoeschen(id){if(!confirm('Termin wirklich löschen?'))return;try{await api('/termine?id=eq.'+id,{method:'DELETE'});toast('Termin gelöscht');await laden();}catch(e){toast('Fehler: '+e.message,'err');}}
 
