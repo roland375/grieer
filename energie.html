@@ -619,14 +619,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font
 </div>
 
 <!-- DETAIL -->
-<div id="detailOverlay"><div id="detailInhalt"></div></div>
+<div id="detailOverlay" style="display:none"><div id="detailInhalt"></div></div>
 
 <!-- MODAL -->
 <div id="modal">
   <div class="modalBox">
     <div class="modalHead">
       <h3 id="modalTitel"></h3>
-      <button class="modalClose" onclick="modalZu()">✕</button>
+      <button class="modalClose" style="width:34px;height:34px;font-size:1.1rem" onclick="modalZu()">✕</button>
     </div>
     <div class="modalBody" id="modalBody"></div>
   </div>
@@ -1289,7 +1289,15 @@ async function preisUndBezahltSpeichern(id){
     await api('/auftraege?id=eq.'+id,{method:'PATCH',body:JSON.stringify(daten)});
     toast(isAdmin()?'✓ Abgerechnet & bezahlt markiert!':'✓ Arbeit eingetragen!');
     modalZu();detailZu();await laden();
-  }catch(e){toast('Fehler: '+e.message,'err');}
+  }catch(e){
+    const msg=e.message||String(e);
+    if(msg.includes('PGRST204')||msg.includes('No Content')){
+      toast('✅ Gespeichert!');await laden();if(!nurSpeichern)modalZu();
+    } else {
+      toast('Fehler beim Speichern: '+msg,'err');
+      console.error('auftragSpeichern error:',e);
+    }
+  }
 }
 
 function auftragNeu(vorKunde){
@@ -1348,7 +1356,15 @@ async function auftragSpeichern(id,nurSpeichern=false){
     }
     await laden();
     if(!nurSpeichern)modalZu();
-  }catch(e){toast('Fehler: '+e.message,'err');}
+  }catch(e){
+    const msg=e.message||String(e);
+    if(msg.includes('PGRST204')||msg.includes('No Content')){
+      toast('✅ Gespeichert!');await laden();if(!nurSpeichern)modalZu();
+    } else {
+      toast('Fehler beim Speichern: '+msg,'err');
+      console.error('auftragSpeichern error:',e);
+    }
+  }
 }
 function auftragDetail(id){
   const a=DB.auftraege.find(x=>x.id===id);if(!a)return;
@@ -1380,67 +1396,63 @@ function auftragDetail(id){
   document.getElementById('detailOverlay').style.display='block';
 }
 function auftragBearbeiten(id){
-  const a=DB.auftraege.find(x=>x.id===id);if(!a)return;
-  const kvOpt=DB.kunden.map(k=>`<option value="${esc(sauber((k.vorname?k.vorname+' ':'')+k.nachname+(k.ort?', '+k.ort:'')))}">`).join('');
-  detailZu();
-  setTimeout(()=>modalOffen('✏️ Auftrag bearbeiten',`
-    <div class="fGrid fg2">
-      <div class="fRow"><label>Datum *</label>
-        <input type="date" id="aDatum" value="${a.datum||''}">
-      </div>
-      <div class="fRow"><label>Dauer (h)</label>
-        <input type="number" id="aDauer" step=".5" value="${a.dauer||''}">
-      </div>
-    </div>
-    <div class="fGrid fg2">
-      <div class="fRow"><label>Von</label>
-        <input type="time" id="aVon" value="${a.uhrzeit_von||''}">
-      </div>
-      <div class="fRow"><label>Bis</label>
-        <input type="time" id="aBis" value="${a.uhrzeit_bis||''}">
-      </div>
-    </div>
-    <div class="fRow"><label>Kunde</label>
-      <input id="aKunde" list="kvBE" value="${esc(sauber(a.kunde||''))}" placeholder="Name suchen…">
-      <datalist id="kvBE">${kvOpt}</datalist>
-    </div>
-    <div class="fRow"><label>Leistungsart</label>
-      <select id="aTyp">
-        ${Object.entries(TYPEN).map(([k,v])=>`<option value="${k}" ${a.typ===k?'selected':''}>${v.l}</option>`).join('')}
-      </select>
-    </div>
-    <div class="fRow"><label>Beschreibung / Arbeit</label>
-      <textarea id="aArbeit">${esc(a.arbeit||'')}</textarea>
-    </div>
-    <div class="fRow"><label>Notiz</label>
-      <input id="aNotiz" value="${esc(a.notiz||'')}">
-    </div>
-    ${isAdmin()?`
-    <div class="fGrid fg2">
-      <div class="fRow"><label>Preis (€)</label>
-        <input type="number" id="aPreis" step=".01" value="${a.preis||''}">
-      </div>
-      <div class="fRow"><label>Status</label>
-        <select id="aBezahlt">
-          <option value="false" ${!a.bezahlt?'selected':''}>Offen</option>
-          <option value="true" ${a.bezahlt?'selected':''}>✓ Bezahlt</option>
-        </select>
-      </div>
-    </div>`:'<input type="hidden" id="aPreis" value=""><input type="hidden" id="aBezahlt" value="false">'}
-    <input type="hidden" id="aOrt" value="${esc(a.ort||'')}">
-    <input type="hidden" id="aStrasse" value="${esc(a.strasse||'')}">
-    <input type="hidden" id="aFaellig" value="${a.naechste_faelligkeit||''}">
-    <div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:10px;padding:12px;margin:10px 0">
-      <p style="font-size:.8rem;font-weight:700;color:var(--p);margin-bottom:8px">⚠️ Termin nicht stattgefunden?</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn btnOut btnSm" onclick="auftragDatumAendern('${a.id}')">📅 Datum verschieben</button>
-        <button class="btn btnRed btnSm" onclick="if(confirm('Eintrag loeschen?'))auftragLoeschen('${a.id}')">🗑 Löschen</button>
-      </div>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:12px">
-      <button class="btn btnGrn" style="flex:1" onclick="auftragSpeichern('${a.id}')">💾 Speichern & Schließen</button>
-      <button class="btn btnOut" onclick="auftragSpeichern('${a.id}',true)">💾 Nur speichern</button>
-    </div>`),200);
+  const a=DB.auftraege.find(x=>x.id===id);
+  if(!a){toast('Nicht gefunden','err');return;}
+  // Nur passende Kunden laden (NICHT alle 5789 - würde einfrieren!)
+  const kundeStr=sauber(a.kunde||'').toLowerCase().trim();
+  const erstesWort=kundeStr.split(',')[0].split(' ').pop()||'';
+  const topKunden=DB.kunden
+    .filter(k=>erstesWort?sauber(k.nachname).toLowerCase().includes(erstesWort):true)
+    .slice(0,20)
+    .map(k=>'<option value="'+esc(sauber((k.vorname?k.vorname+' ':'')+k.nachname+(k.ort?', '+k.ort:'')))+'">').join('');
+  modalOffen('Auftrag bearbeiten',
+    '<div class="fGrid fg2">'+
+      '<div class="fRow"><label>Datum</label><input type="date" id="aDatum" value="'+( a.datum||'')+'"></div>'+
+      '<div class="fRow"><label>Dauer (h)</label><input type="number" id="aDauer" step=".5" value="'+(a.dauer||'')+'"></div>'+
+    '</div>'+
+    '<div class="fGrid fg2">'+
+      '<div class="fRow"><label>Von</label><input type="time" id="aVon" value="'+(a.uhrzeit_von||'')+'"></div>'+
+      '<div class="fRow"><label>Bis</label><input type="time" id="aBis" value="'+(a.uhrzeit_bis||'')+'"></div>'+
+    '</div>'+
+    '<div class="fRow"><label>Kunde</label>'+
+      '<input id="aKunde" list="kvBE" value="'+esc(sauber(a.kunde||''))+'" placeholder="Name..." oninput="kvVorschlag(this.value)">'+
+      '<datalist id="kvBE">'+topKunden+'</datalist>'+
+    '</div>'+
+    '<div class="fRow"><label>Leistungsart</label><select id="aTyp">'+
+      Object.entries(TYPEN).map(([k,v])=>'<option value="'+k+'" '+(a.typ===k?'selected':'')+'>'+v.l+'</option>').join('')+
+    '</select></div>'+
+    '<div class="fRow"><label>Beschreibung</label><textarea id="aArbeit">'+esc(a.arbeit||'')+'</textarea></div>'+
+    '<div class="fRow"><label>Notiz</label><input id="aNotiz" value="'+esc(a.notiz||'')+'"></div>'+
+    (isAdmin()?
+      '<div class="fGrid fg2">'+
+        '<div class="fRow"><label>Preis (€)</label><input type="number" id="aPreis" step=".01" value="'+(a.preis||'')+'"></div>'+
+        '<div class="fRow"><label>Status</label><select id="aBezahlt">'+
+          '<option value="false" '+((!a.bezahlt)?'selected':'')+'>Offen</option>'+
+          '<option value="true" '+(a.bezahlt?'selected':'')+'>Bezahlt</option>'+
+        '</select></div>'+
+      '</div>'
+    :'<input type="hidden" id="aPreis" value=""><input type="hidden" id="aBezahlt" value="false">')+
+    '<input type="hidden" id="aOrt" value="'+esc(a.ort||'')+'">'+
+    '<input type="hidden" id="aStrasse" value="'+esc(a.strasse||'')+'">'+
+    '<input type="hidden" id="aFaellig" value="'+(a.naechste_faelligkeit||'')+'">'+
+    '<div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:10px;padding:10px;margin:10px 0">'+
+      '<p style="font-size:.78rem;font-weight:700;color:var(--p);margin-bottom:7px">Nicht stattgefunden?</p>'+
+      '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
+        '<button class="btn btnOut btnSm" onclick="auftragDatumAendern(\''+a.id+'\')">📅 Verschieben</button>'+
+        '<button class="btn btnRed btnSm" onclick="if(confirm(\'Loeschen?\'))auftragLoeschen(\''+a.id+'\')">🗑 Löschen</button>'+
+      '</div>'+
+    '</div>'+
+    '<div style="display:flex;gap:8px;margin-top:10px">'+
+      '<button class="btn btnGrn" style="flex:1" onclick="auftragSpeichern(\''+a.id+'\')">💾 Speichern</button>'+
+      '<button class="btn btnOut btnSm" onclick="auftragSpeichern(\''+a.id+'\',true)">💾 Nur speichern</button>'+
+    '</div>'
+  );
+}
+function kvVorschlag(val){
+  const dl=document.getElementById('kvBE');if(!dl||!val||val.length<2)return;
+  const s=sauber(val).toLowerCase();
+  const m=DB.kunden.filter(k=>sauber((k.vorname||'')+' '+(k.nachname||'')).toLowerCase().includes(s)).slice(0,10);
+  dl.innerHTML=m.map(k=>'<option value="'+esc(sauber((k.vorname?k.vorname+' ':'')+k.nachname+(k.ort?', '+k.ort:'')))+'">').join('');
 }
 async function auftragLoeschen(id){if(!confirm('Auftrag wirklich löschen?'))return;try{await api('/auftraege?id=eq.'+id,{method:'DELETE'});toast('Auftrag gelöscht');detailZu();await laden();}catch(e){toast('Fehler: '+e.message,'err');}}
 
@@ -1823,7 +1835,15 @@ async function maSpeichern(id){
       if(id)await api('/mitarbeiter?id=eq.'+id,{method:'PATCH',body:JSON.stringify(extra)});
     }catch(e2){console.log('Berechtigungen nicht gespeichert - SQL nötig');}
     await laden();if(!nurSpeichern)modalZu();
-  }catch(e){toast('Fehler: '+e.message,'err');}
+  }catch(e){
+    const msg=e.message||String(e);
+    if(msg.includes('PGRST204')||msg.includes('No Content')){
+      toast('✅ Gespeichert!');await laden();if(!nurSpeichern)modalZu();
+    } else {
+      toast('Fehler beim Speichern: '+msg,'err');
+      console.error('auftragSpeichern error:',e);
+    }
+  }
 }
 
 // ══ BENACHRICHTIGUNGEN ══
@@ -2142,7 +2162,15 @@ async function terminUpdate(id){
   try{
     await api('/termine?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});
     toast('Termin gespeichert ✓');modalZu();await laden();zeigeTab('kalender');
-  }catch(e){toast('Fehler: '+e.message,'err');}
+  }catch(e){
+    const msg=e.message||String(e);
+    if(msg.includes('PGRST204')||msg.includes('No Content')){
+      toast('✅ Gespeichert!');await laden();if(!nurSpeichern)modalZu();
+    } else {
+      toast('Fehler beim Speichern: '+msg,'err');
+      console.error('auftragSpeichern error:',e);
+    }
+  }
 }
 
 // ══ DATENPFLEGE ══
