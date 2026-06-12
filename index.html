@@ -924,6 +924,18 @@ select,textarea{
 }
 /* Aber Labels und kleine Texte bleiben klein */
 label,div,span,p{-webkit-text-size-adjust:100%;}
+</style>0.97);}
+
+/* Auftragsformular + KV Mobile */
+@media (max-width:480px){
+  .kv-hdr{flex-direction:column;align-items:flex-start;gap:8px;}
+  .kv-hdr .logo{max-width:80px;}
+  .ap-grid-2{grid-template-columns:1fr!important;}
+  .ap-sig-wrap{min-height:80px;}
+  #page-auftrag .ibox{padding:8px;}
+  #page-auftrag label{font-size:12px;}
+  #page-auftrag input.fin,#page-auftrag textarea{font-size:16px;padding:10px;}
+}
 </style>
 
 
@@ -932,7 +944,7 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Grieer App">
   <meta name="theme-color" content="#1A2B45">
-  <link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,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">
+  <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjgwIiBmaWxsPSIjMUEyQjQ1Ii8+PHJlY3QgeD0iMTgwIiB5PSIxMjAiIHdpZHRoPSI4MCIgaGVpZ2h0PSIyMDAiIHJ4PSI4IiBmaWxsPSIjMkQ0QTdBIi8+PHJlY3QgeD0iMTYwIiB5PSIxMDAiIHdpZHRoPSIxMjAiIGhlaWdodD0iMzAiIHJ4PSI2IiBmaWxsPSIjMjU2M0VCIi8+PGNpcmNsZSBjeD0iMjMwIiBjeT0iNzUiIHI9IjE4IiBmaWxsPSJyZ2JhKDE0OCwxNjMsMTg0LDAuNikiLz48Y2lyY2xlIGN4PSIyNTUiIGN5PSI1NSIgcj0iMTQiIGZpbGw9InJnYmEoMTQ4LDE2MywxODQsMC40NSkiLz48cmVjdCB4PSIyNjUiIHk9IjE2MCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjEwMCIgcng9IjQiIGZpbGw9IiNGNTlFMEIiLz48cmVjdCB4PSIyNTIiIHk9IjI1NSIgd2lkdGg9IjM4IiBoZWlnaHQ9IjEyIiByeD0iMyIgZmlsbD0iI0Q5NzcwNiIvPjxyZWN0IHg9IjI1MiIgeT0iMjcxIiB3aWR0aD0iNCIgaGVpZ2h0PSIyMCIgcng9IjIiIGZpbGw9IiM3ODM1MEYiLz48cmVjdCB4PSIyNjAiIHk9IjI3MSIgd2lkdGg9IjQiIGhlaWdodD0iMjIiIHJ4PSIyIiBmaWxsPSIjNzgzNTBGIi8+PHJlY3QgeD0iMjY4IiB5PSIyNzEiIHdpZHRoPSI0IiBoZWlnaHQ9IjIwIiByeD0iMiIgZmlsbD0iIzc4MzUwRiIvPjxyZWN0IHg9IjI3NiIgeT0iMjcxIiB3aWR0aD0iNCIgaGVpZ2h0PSIyMiIgcng9IjIiIGZpbGw9IiM3ODM1MEYiLz48Y2lyY2xlIGN4PSIzODAiIGN5PSIxNDAiIHI9IjMwIiBmaWxsPSIjRkNEMzREIiBvcGFjaXR5PSIwLjkiLz48bGluZSB4MT0iMzgwIiB5MT0iOTUiIHgyPSIzODAiIHkyPSI4MCIgc3Ryb2tlPSIjRkNEMzREIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxsaW5lIHgxPSIzODAiIHkxPSIxODUiIHgyPSIzODAiIHkyPSIyMDAiIHN0cm9rZT0iI0ZDRDM0RCIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48bGluZSB4MT0iMzM1IiB5MT0iMTQwIiB4Mj0iMzIwIiB5Mj0iMTQwIiBzdHJva2U9IiNGQ0QzNEQiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGxpbmUgeDE9IjQyNSIgeTE9IjE0MCIgeDI9IjQ0MCIgeTI9IjE0MCIgc3Ryb2tlPSIjRkNEMzREIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjx0ZXh0IHg9IjI1NiIgeT0iNDQwIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSI1MiIgZm9udC13ZWlnaHQ9IjkwMCIgZmlsbD0iI0ZGRkZGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjIiPkdSSUVFUjwvdGV4dD48dGV4dCB4PSIyNTYiIHk9IjQ3NSIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI1MDAiIGZpbGw9IiM5NEEzQjgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGxldHRlci1zcGFjaW5nPSIzIj5FTkVSR0lFVEVDSE5JSzwvdGV4dD48L3N2Zz4=">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body onload="pinInit()">
@@ -960,23 +972,24 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
     <button onclick="pinWordSubmit()" style="width:100%;padding:14px;background:linear-gradient(135deg,#1E5799,#2563EB);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation">Einloggen</button>
     <div id="pin-err" style="color:#FCA5A5;font-size:12px;margin-top:10px;min-height:18px"></div>
     <div id="debug-info" style="display:none;background:#1E293B;color:#7DD3FC;font-size:10px;margin-top:8px;padding:8px;border-radius:6px;word-break:break-all;text-align:left"></div>
-    <div style="font-size:10px;color:#475569;margin-top:16px">Zugangscode vergessen: <b>roland</b></div>
+    
   </div>
 </div>
 
 <div class="pg" id="page-aufnahme">
 <div class="card" style="padding:12px;padding-top:16px;margin-top:12px">
 <button onclick="show('ablage')" style="width:100%;padding:10px;background:linear-gradient(135deg,#1A2B45,#2D4A7A);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px">&#128193; Ablage &#8212; gespeicherte Dokumente</button>
-<div style="background:#EFF6FF;border:1.5px solid #BFDBFE;border-radius:10px;padding:8px 10px;margin-bottom:8px"><div style="font-size:11px;font-weight:700;color:#1E3A5F;margin-bottom:6px">&#128100; Kundenerfassung (f&#252;llt alle Formulare vor)</div><div style="display:grid;gap:5px"><div style="display:grid;grid-template-columns:1fr 2fr;gap:5px"><input type="text" id="gk-nr" oninput="gKundeUpdate()" placeholder="Kd-Nr..." style="padding:7px 10px;border:1.5px solid #93C5FD;border-radius:8px;font-size:12px;box-sizing:border-box;background:#fff;width:100%"><input type="text" id="gk-name" oninput="gKundeUpdate()" placeholder="Kundenname..." style="padding:7px 10px;border:1.5px solid #93C5FD;border-radius:8px;font-size:12px;box-sizing:border-box;background:#fff;width:100%"></div><input type="text" id="gk-addr" oninput="gKundeUpdate()" placeholder="Adresse..." style="padding:7px 10px;border:1.5px solid #93C5FD;border-radius:8px;font-size:12px;box-sizing:border-box;background:#fff;width:100%"></div>
-  <div class="frow"><label>PLZ / Ort</label><input type="text" id="gk-plz" class="fin" oninput="gKundeUpdate()" placeholder="7201 Neudörfl"></div>
-  <div class="frow"><label>Telefon</label><input type="tel" id="gk-tel" class="fin" oninput="gKundeUpdate()" placeholder="+43..."></div>
-  <div class="frow"><label>E-Mail</label><input type="email" id="gk-email" class="fin" oninput="gKundeUpdate()" placeholder="name@email.at"></div></div>
+<div style="background:#EFF6FF;border:1.5px solid #BFDBFE;border-radius:10px;padding:8px 10px;margin-bottom:8px"><div style="font-size:11px;font-weight:700;color:#1E3A5F;margin-bottom:6px">&#128100; Kundenerfassung (f&#252;llt alle Formulare vor)</div><div style="display:grid;gap:5px"><div style="display:grid;grid-template-columns:1fr 2fr;gap:5px"><input type="text" id="gk-nr" onblur="gKundeUpdate()" onchange="gKundeUpdate()" placeholder="Kd-Nr..." style="padding:7px 10px;border:1.5px solid #93C5FD;border-radius:8px;font-size:12px;box-sizing:border-box;background:#fff;width:100%"><input type="text" id="gk-name" onblur="gKundeUpdate()" onchange="gKundeUpdate()" placeholder="Kundenname..." style="padding:7px 10px;border:1.5px solid #93C5FD;border-radius:8px;font-size:12px;box-sizing:border-box;background:#fff;width:100%"></div><input type="text" id="gk-addr" onblur="gKundeUpdate()" onchange="gKundeUpdate()" placeholder="Adresse..." style="padding:7px 10px;border:1.5px solid #93C5FD;border-radius:8px;font-size:12px;box-sizing:border-box;background:#fff;width:100%"></div>
+  <div class="frow"><label>PLZ / Ort</label><input type="text" id="gk-plz" class="fin" onblur="gKundeUpdate()" onchange="gKundeUpdate()" placeholder="7201 Neudörfl"></div>
+  <div class="frow"><label>Telefon</label><input type="tel" id="gk-tel" class="fin" onblur="gKundeUpdate()" onchange="gKundeUpdate()" placeholder="+43..."></div>
+  <div class="frow"><label>E-Mail</label><input type="email" id="gk-email" class="fin" onblur="gKundeUpdate()" onchange="gKundeUpdate()" placeholder="name@email.at"></div></div>
 <div style="margin-bottom:6px"><button onclick="toggleMenu('menu-kv')" style="width:100%;padding:10px 14px;background:#E8F4F8;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:#1A2B45"><span>&#128196; Kostenvoranschl&#228;ge</span><span id="arr-kv">&#9660;</span></button><div id="menu-kv" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:8px 0 4px"><button data-page="pv" onclick="show('pv')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#9728;&#65039;<br>PV-Reinigung</button><button data-page="gas" onclick="show('gas')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128293;<br>Gas-Service</button><button data-page="luft" onclick="show('luft')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128168;<br>L&#252;ftung</button><button data-page="brand" onclick="show('brand')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128737;&#65039;<br>Brandschutz</button><button data-page="kamin" onclick="show('kamin')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128682;<br>Kamin</button><button data-page="gesamt" onclick="show('gesamt')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128202;<br>Gesamt-KV</button></div></div>
 <div style="margin-bottom:6px"><button onclick="toggleMenu('menu-prot')" style="width:100%;padding:10px 14px;background:#E8F4F8;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:#1A2B45"><span>&#128221; Protokolle &amp; Befunde</span><span id="arr-prot">&#9658;</span></button><div id="menu-prot" style="display:none;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:8px 0 4px"><button data-page="wprot" onclick="show('wprot')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128203;<br>Wartungs-<br>protokoll</button><button data-page="mess" onclick="show('mess')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128202;<br>Mess-<br>protokoll</button><button data-page="pvprot" onclick="show('pvprot')" class="home-tile" style="background:#E85D04;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#9728;&#65039;<br>PV-Protokoll</button><button data-page="brandprot" onclick="show('brandprot')" class="home-tile" style="background:#7C3AED;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128737;&#65039;<br>Brand-<br>Prot.</button><button data-page="maengel" onclick="show('maengel')" class="home-tile" style="background:#DC2626;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#9888;&#65039;<br>M&#228;ngel</button><button data-page="auftrag" onclick="show('auftrag')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128196;<br>Auftragsformular</button></div></div>
 <div style="margin-bottom:6px"><button onclick="toggleMenu('menu-ueberpruef')" style="width:100%;padding:10px 14px;background:#E8F4F8;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:#1A2B45"><span>&#128269; &#220;berpr&#252;fungen</span><span id="arr-ueberpruef">&#9658;</span></button><div id="menu-ueberpruef" style="display:none;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:8px 0 4px"><button data-page="b8201" onclick="show('b8201')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#127968;<br>B 8201<br>Fangpr&#252;fung</button><button data-page="luft2" onclick="show('luft2')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128168;<br>Luft-<br>&#252;berpr&#252;fung</button></div></div>
 <div style="margin-bottom:6px"><button onclick="toggleMenu('menu-spezial')" style="width:100%;padding:10px 14px;background:#E8F4F8;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:#1A2B45"><span>&#128300; Spezial-Tools</span><span id="arr-spezial">&#9658;</span></button><div id="menu-spezial" style="display:none;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:8px 0 4px"><button data-page="pvrechner" onclick="show('pvrechner')" class="home-tile" style="background:#D97706;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#9728;&#65039;<br>PV-Soiling<br>Kalkulator</button><button data-page="brandinfo" onclick="show('brandinfo')" class="home-tile" style="background:#DC2626;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#129534;<br>Feuerschutz-<br>Info</button></div></div>
 <div style="margin-bottom:6px"><button onclick="toggleMenu('menu-extras')" style="width:100%;padding:10px 14px;background:#E8F4F8;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:#1A2B45"><span>&#128204; Extras</span><span id="arr-extras">&#9658;</span></button><div id="menu-extras" style="display:none;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:8px 0 4px"><button data-page="kehr" onclick="show('kehr')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#127968;<br>Kehrtarif</button><button data-page="verr" onclick="show('verr')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128176;<br>Preisliste</button><button data-page="wart" onclick="show('wart')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128276;<br>Wartungs-<br>erinnerung</button><button data-page="ki" onclick="show('ki')" class="home-tile" style="background:linear-gradient(135deg,#1A2B45,#6D28D9);color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#129504;<br>KI-Berater</button><button data-page="drohne" onclick="show('drohne')" class="home-tile" style="background:#1D4ED8;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128641;<br>Drohnen-<br>Inspektion</button></div></div>
-</div>
+
+<div class="ibox" style="margin-top:10px"><div style="font-size:12px;font-weight:700;color:#1A2B45;margin-bottom:6px">&#128101; Kundenliste</div><div id="kunden-liste-box"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px"><button id="btn-kunden-sync" onclick="kundenCloudSync()" style="padding:10px;background:linear-gradient(135deg,#2563EB,#1A2B45);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;min-height:40px">&#8661; Sync</button><button onclick="renderKundenliste()" style="padding:10px;background:#475569;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;min-height:40px">&#8635; Anzeigen</button></div><div id="kunden-sync-status" style="font-size:10px;color:#64748B;margin-top:4px;text-align:center"></div></div></div>
 </div>
 
 <div class="pg" id="page-pv">
@@ -1203,17 +1216,17 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
   <th class="r" style="width:80px">EP netto</th><th class="c" style="width:52px">Menge</th><th class="r" style="width:90px">GP netto</th>
 </tr></thead>
 <tbody>
-<tr><td class="pos">1</td><td class="bez">Gasservice B-Geräte (Heizung/Therme)</td>
+<tr><td class="pos">1</td><td class="bez">Gasservice B-Geräte 11–35 kW (Raumheizgerät/Therme)</td>
   <td class="c"><input type="checkbox" class="ochk" data-opt="gas-1" checked onchange="ct('gas')"></td>
   <td class="ep-c"><input type="number" class="ep" min="0" step="0.01" data-opt="gas-1" id="ep-gas-1" data-gp="gp-gas-1" oninput="ct('gas')" value="112.5"></td>
   <td class="c"><input type="number" class="qty" min="1" value="1" oninput="ct('gas')"></td>
   <td class="gp-c"><span class="gp" id="gp-gas-1"></span></td></tr>
-<tr class="opt-row"><td class="pos">2</td><td class="bez">Gasservice C-Geräte</td>
+<tr class="opt-row"><td class="pos">2</td><td class="bez">Gasservice C-Geräte bis 35 kW</td>
   <td class="c"><input type="checkbox" class="ochk" data-opt="gas-2" onchange="ct('gas')"></td>
   <td class="ep-c"><input type="number" class="ep" min="0" step="0.01" data-opt="gas-2" id="ep-gas-2" data-gp="gp-gas-2" oninput="ct('gas')" value="130.83"></td>
   <td class="c"><input type="number" class="qty" min="1" value="1" oninput="ct('gas')"></td>
   <td class="gp-c"><span class="gp" id="gp-gas-2"></span></td></tr>
-<tr class="opt-row"><td class="pos">3</td><td class="bez">Gasservice Kombithermen</td>
+<tr class="opt-row"><td class="pos">3</td><td class="bez">Gasservice Kombitherme bis 35 kW</td>
   <td class="c"><input type="checkbox" class="ochk" data-opt="gas-3" onchange="ct('gas')"></td>
   <td class="ep-c"><input type="number" class="ep" min="0" step="0.01" data-opt="gas-3" id="ep-gas-3" data-gp="gp-gas-3" oninput="ct('gas')" value="112.5"></td>
   <td class="c"><input type="number" class="qty" min="1" value="1" oninput="ct('gas')"></td>
@@ -3490,13 +3503,13 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
 <td class="c" style="padding:2px 4px"><input type="number" min="0" step="1" id="vq-g0" placeholder="0" style="width:46px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px;font-size:12px;outline:none" oninput="calcVerr()"></td>
 <td class="c"><input type="number" id="vrab-g0" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-g0">—</td></tr><tr style="background:#F5F7F9" id="vrow-g1">
 <td class="pos">22</td>
-<td class="bez">Gasservice C-Geräte</td>
+<td class="bez">Gasservice C-Geräte bis 35 kW</td>
 <td class="einh">Gerät</td>
 <td class="ep-c-verr" style="padding:2px 4px;text-align:right"><input type="number" class="verr-ep-inp" id="vlbl-g1" min="0" step="0.01" value="130.83" style="width:70px;text-align:right;font-weight:600;color:#E67E22;border:1px solid transparent;border-radius:3px;padding:2px 4px;font-size:12px;background:transparent;outline:none;cursor:pointer;font-family:inherit" title="Preis ändern – Klick zum Bearbeiten" onfocus="this.style.border='1.5px solid #27AE60';this.style.background='#fff'" onblur="verrEpSave(this,'g1')" onchange="verrEpSave(this,'g1')"></td>
 <td class="c" style="padding:2px 4px"><input type="number" min="0" step="1" id="vq-g1" placeholder="0" style="width:46px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px;font-size:12px;outline:none" oninput="calcVerr()"></td>
 <td class="c"><input type="number" id="vrab-g1" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-g1">—</td></tr><tr style="background:#fff" id="vrow-g2">
 <td class="pos">23</td>
-<td class="bez">Gasservice Kombithermen</td>
+<td class="bez">Gasservice Kombitherme bis 35 kW</td>
 <td class="einh">Gerät</td>
 <td class="ep-c-verr" style="padding:2px 4px;text-align:right"><input type="number" class="verr-ep-inp" id="vlbl-g2" min="0" step="0.01" value="112.50" style="width:70px;text-align:right;font-weight:600;color:#E67E22;border:1px solid transparent;border-radius:3px;padding:2px 4px;font-size:12px;background:transparent;outline:none;cursor:pointer;font-family:inherit" title="Preis ändern – Klick zum Bearbeiten" onfocus="this.style.border='1.5px solid #27AE60';this.style.background='#fff'" onblur="verrEpSave(this,'g2')" onchange="verrEpSave(this,'g2')"></td>
 <td class="c" style="padding:2px 4px"><input type="number" min="0" step="1" id="vq-g2" placeholder="0" style="width:46px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px;font-size:12px;outline:none" oninput="calcVerr()"></td>
@@ -3589,7 +3602,7 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
     </div>
 
     <!-- AUFTRAGSDATEN + KUNDENDATEN -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+    <div style="display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:10px">
       <div class="ibox" style="margin:0">
         <div class="btl">Auftrag</div>
         <div class="frow"><label>Protokoll-Nr.</label><input type="text" id="ap-nr" class="fin" placeholder="2026-001"></div>
@@ -3613,22 +3626,22 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
         <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#E3F2FD;border:1px solid #90CAF9;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
           <input type="checkbox" id="ap-w-luft" style="width:20px;height:20px;flex-shrink:0">
           <span style="flex:1;font-size:12px;font-weight:600">💨 Luftmessung (ÖVGW G K62)</span>
-          <button type="button" onclick="show('luft2')" class="no-print" style="margin-left:auto;background:#0D3B6E;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap">Formular</button>
+          <button type="button" onclick="show('luft2')" class="no-print" style="margin-left:auto;background:#0D3B6E;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:11px;cursor:pointer;touch-action:manipulation;white-space:nowrap">Formular</button>
         </label>
         <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#EDE7F6;border:1px solid #B39DDB;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
           <input type="checkbox" id="ap-w-b8201" style="width:20px;height:20px;flex-shrink:0">
           <span style="flex:1;font-size:12px;font-weight:600">🏠 B 8201 Fangprüfung (Dichtheit + Querschnitt)</span>
-          <button type="button" onclick="show('b8201')" class="no-print" style="margin-left:auto;background:#4527A0;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap">Formular</button>
+          <button type="button" onclick="show('b8201')" class="no-print" style="margin-left:auto;background:#4527A0;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:11px;cursor:pointer;touch-action:manipulation;white-space:nowrap">Formular</button>
         </label>
         <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#FFEBEE;border:1px solid #EF9A9A;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
           <input type="checkbox" id="ap-w-maengel" style="width:20px;height:20px;flex-shrink:0">
           <span style="flex:1;font-size:12px;font-weight:600">⚠️ Mängelmeldung</span>
-          <button type="button" onclick="show('maengel')" class="no-print" style="margin-left:auto;background:#C62828;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap">Formular</button>
+          <button type="button" onclick="show('maengel')" class="no-print" style="margin-left:auto;background:#C62828;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:11px;cursor:pointer;touch-action:manipulation;white-space:nowrap">Formular</button>
         </label>
         <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
           <input type="checkbox" id="ap-w-mess" style="width:20px;height:20px;flex-shrink:0">
           <span style="flex:1;font-size:12px;font-weight:600">📊 Messprotokoll (Prüfbericht HK-VO)</span>
-          <button type="button" onclick="show('mess')" class="no-print" style="margin-left:auto;background:#2E7D32;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap">Formular</button>
+          <button type="button" onclick="show('mess')" class="no-print" style="margin-left:auto;background:#2E7D32;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:11px;cursor:pointer;touch-action:manipulation;white-space:nowrap">Formular</button>
         </label>
 
       </div>
@@ -3636,63 +3649,63 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
       <!-- KV-FORMULARE -->
       <div class="ibox" style="margin-bottom:10px;border:2px solid #1A2B45;margin-top:10px">
         <div class="btl" style="color:#1A2B45;margin-bottom:6px">📋 Kostenvoranschläge &amp; Formulare</div>
-        <div style="font-size:10px;color:#64748B;margin-bottom:8px">Ausgeführten KV anhaken — direkt öffnen zum Befüllen &amp; Drucken</div>
+        <div style="font-size:11px;color:#64748B;margin-bottom:8px">Ausgeführten KV anhaken — direkt öffnen zum Befüllen &amp; Drucken</div>
         <div style="display:flex;flex-direction:column;gap:5px">
         <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#FFF8E1;border:1px solid #FFD180;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
           <input type="checkbox" id="ap-kv-kehr" style="width:20px;height:20px;flex-shrink:0">
           <span style="flex:1;font-size:12px;font-weight:600">🏠 Kehrtarif KV (Rauchfangkehren)</span>
-          <button type="button" onclick="show('kehr')" class="no-print" style="margin-left:auto;background:#E65100;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
+          <button type="button" onclick="show('kehr')" class="no-print" style="margin-left:auto;background:#E65100;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:11px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
         </label>
         <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#FFF3E0;border:1px solid #FFCC80;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
           <input type="checkbox" id="ap-kv-gas" style="width:20px;height:20px;flex-shrink:0">
           <span style="flex:1;font-size:12px;font-weight:600">🔥 Gas-Service KV</span>
-          <button type="button" onclick="show('gas')" class="no-print" style="margin-left:auto;background:#E65100;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
+          <button type="button" onclick="show('gas')" class="no-print" style="margin-left:auto;background:#E65100;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:11px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
         </label>
         <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#FFFDE7;border:1px solid #FFF176;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
           <input type="checkbox" id="ap-kv-pv" style="width:20px;height:20px;flex-shrink:0">
           <span style="flex:1;font-size:12px;font-weight:600">☀️ PV-Reinigung KV</span>
-          <button type="button" onclick="show('pv')" class="no-print" style="margin-left:auto;background:#F57F17;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
+          <button type="button" onclick="show('pv')" class="no-print" style="margin-left:auto;background:#F57F17;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:11px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
         </label>
         <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#FBE9E7;border:1px solid #FFAB91;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
           <input type="checkbox" id="ap-kv-brand" style="width:20px;height:20px;flex-shrink:0">
           <span style="flex:1;font-size:12px;font-weight:600">🛡️ Brandschutz / Melder KV</span>
-          <button type="button" onclick="show('brand')" class="no-print" style="margin-left:auto;background:#BF360C;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
+          <button type="button" onclick="show('brand')" class="no-print" style="margin-left:auto;background:#BF360C;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:11px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
         </label>
         <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#E3F2FD;border:1px solid #90CAF9;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
           <input type="checkbox" id="ap-kv-luft" style="width:20px;height:20px;flex-shrink:0">
           <span style="flex:1;font-size:12px;font-weight:600">💨 Lüftung KV</span>
-          <button type="button" onclick="show('luft')" class="no-print" style="margin-left:auto;background:#1565C0;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
+          <button type="button" onclick="show('luft')" class="no-print" style="margin-left:auto;background:#1565C0;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:11px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
         </label>
         <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#F3E5F5;border:1px solid #CE93D8;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
           <input type="checkbox" id="ap-kv-kamin" style="width:20px;height:20px;flex-shrink:0">
           <span style="flex:1;font-size:12px;font-weight:600">🚪 Kamintürl KV</span>
-          <button type="button" onclick="show('kamin')" class="no-print" style="margin-left:auto;background:#6A1B9A;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
+          <button type="button" onclick="show('kamin')" class="no-print" style="margin-left:auto;background:#6A1B9A;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:11px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
         </label>
         <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
           <input type="checkbox" id="ap-kv-gesamt" style="width:20px;height:20px;flex-shrink:0">
           <span style="flex:1;font-size:12px;font-weight:600">📊 Gesamt-KV</span>
-          <button type="button" onclick="show('gesamt')" class="no-print" style="margin-left:auto;background:#2E7D32;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
+          <button type="button" onclick="show('gesamt')" class="no-print" style="margin-left:auto;background:#2E7D32;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:11px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
         </label>
         <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#EDE7F6;border:1px solid #B39DDB;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
           <input type="checkbox" id="ap-kv-wprot" style="width:20px;height:20px;flex-shrink:0">
           <span style="flex:1;font-size:12px;font-weight:600">📝 Wartungsprotokoll Gasheizung</span>
-          <button type="button" onclick="show('wprot')" class="no-print" style="margin-left:auto;background:#4527A0;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
+          <button type="button" onclick="show('wprot')" class="no-print" style="margin-left:auto;background:#4527A0;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:11px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
         </label>
         <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#E0F2F1;border:1px solid #80CBC4;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
           <input type="checkbox" id="ap-kv-verr" style="width:20px;height:20px;flex-shrink:0">
           <span style="flex:1;font-size:12px;font-weight:600">💶 Allg. Verrechnung / Preisliste</span>
-          <button type="button" onclick="show('verr')" class="no-print" style="margin-left:auto;background:#00695C;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
+          <button type="button" onclick="show('verr')" class="no-print" style="margin-left:auto;background:#00695C;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:11px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
         </label>
         <label style="display:flex;align-items:center;gap:8px;padding:8px;background:#FCE4EC;border:1px solid #F48FB1;border-radius:6px;cursor:pointer;touch-action:manipulation;min-height:40px">
           <input type="checkbox" id="ap-kv-wart" style="width:20px;height:20px;flex-shrink:0">
           <span style="flex:1;font-size:12px;font-weight:600">🔔 Wartungserinnerung</span>
-          <button type="button" onclick="show('wart')" class="no-print" style="margin-left:auto;background:#880E4F;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
+          <button type="button" onclick="show('wart')" class="no-print" style="margin-left:auto;background:#880E4F;color:#fff;border:none;border-radius:5px;padding:4px 8px;font-size:11px;cursor:pointer;touch-action:manipulation;white-space:nowrap;min-height:32px">KV öffnen</button>
         </label>
         </div>
       </div>
 
       <div style="margin-top:8px">
-        <label style="font-size:10px;color:#78909C;display:block;margin-bottom:3px">Sonstige durchgeführte Arbeiten:</label>
+        <label style="font-size:11px;color:#78909C;display:block;margin-bottom:3px">Sonstige durchgeführte Arbeiten:</label>
         <textarea id="ap-arbeiten" placeholder="z.B. Verbindungsstücke kontrolliert, Filter gereinigt, ..." rows="3" style="width:100%;padding:8px;border:1.5px solid #E0E4E8;border-radius:6px;font-size:14px;box-sizing:border-box;resize:vertical;background:#fff;font-family:inherit"></textarea>
       </div>
     </div>
@@ -3737,17 +3750,17 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
         <div>
-          <label style="font-size:10px;color:#78909C;display:block;margin-bottom:3px">Zu beheben bis:</label>
+          <label style="font-size:11px;color:#78909C;display:block;margin-bottom:3px">Zu beheben bis:</label>
           <input type="date" id="ap-beheben-datum" class="fin" style="width:100%;box-sizing:border-box">
         </div>
         <div>
-          <label style="font-size:10px;color:#78909C;display:block;margin-bottom:3px">Nächste Kontrolle:</label>
+          <label style="font-size:11px;color:#78909C;display:block;margin-bottom:3px">Nächste Kontrolle:</label>
           <input type="date" id="ap-naechste" class="fin" style="width:100%;box-sizing:border-box">
         </div>
       </div>
 
       <div>
-        <label style="font-size:10px;color:#78909C;display:block;margin-bottom:3px">Beschreibung Mängel / Feststellungen / Empfehlungen:</label>
+        <label style="font-size:11px;color:#78909C;display:block;margin-bottom:3px">Beschreibung Mängel / Feststellungen / Empfehlungen:</label>
         <textarea id="ap-maengel" placeholder="z.B. Verbindungsstück beschädigt, Reinigungsöffnung fehlt, CO-Melder fehlt, ..." rows="4" style="width:100%;padding:8px;border:1.5px solid #E0E4E8;border-radius:6px;font-size:14px;box-sizing:border-box;resize:vertical;background:#fff;font-family:inherit"></textarea>
       </div>
     </div>
@@ -3755,35 +3768,35 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
     <!-- FOTOS -->
     <div class="ibox" style="margin-bottom:10px">
       <div class="btl">📷 Fotos</div>
-      <div style="font-size:10px;color:#78909C;margin-bottom:8px">Fotos werden im Protokoll eingebettet und mit gesendet.</div>
+      <div style="font-size:11px;color:#78909C;margin-bottom:8px">Fotos werden im Protokoll eingebettet und mit gesendet.</div>
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
         <label style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;background:#E3F2FD;border:2px dashed #90CAF9;border-radius:8px;cursor:pointer;touch-action:manipulation;min-height:70px;text-align:center">
           <input type="file" id="ap-foto-1-input" accept="image/*" capture="environment" onchange="apLoadFoto(this,'ap-foto-1','ap-foto-1-prev')" style="display:none">
           <div id="ap-foto-1-prev" style="width:100%;text-align:center">
             <span style="font-size:24px">📸</span>
-            <div style="font-size:10px;color:#1565C0;font-weight:600;margin-top:4px">Foto 1</div>
+            <div style="font-size:11px;color:#1565C0;font-weight:600;margin-top:4px">Foto 1</div>
           </div>
         </label>
         <label style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;background:#E3F2FD;border:2px dashed #90CAF9;border-radius:8px;cursor:pointer;touch-action:manipulation;min-height:70px;text-align:center">
           <input type="file" id="ap-foto-2-input" accept="image/*" capture="environment" onchange="apLoadFoto(this,'ap-foto-2','ap-foto-2-prev')" style="display:none">
           <div id="ap-foto-2-prev" style="width:100%;text-align:center">
             <span style="font-size:24px">📸</span>
-            <div style="font-size:10px;color:#1565C0;font-weight:600;margin-top:4px">Foto 2</div>
+            <div style="font-size:11px;color:#1565C0;font-weight:600;margin-top:4px">Foto 2</div>
           </div>
         </label>
         <label style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;background:#E3F2FD;border:2px dashed #90CAF9;border-radius:8px;cursor:pointer;touch-action:manipulation;min-height:70px;text-align:center">
           <input type="file" id="ap-foto-3-input" accept="image/*" capture="environment" onchange="apLoadFoto(this,'ap-foto-3','ap-foto-3-prev')" style="display:none">
           <div id="ap-foto-3-prev" style="width:100%;text-align:center">
             <span style="font-size:24px">📸</span>
-            <div style="font-size:10px;color:#1565C0;font-weight:600;margin-top:4px">Foto 3</div>
+            <div style="font-size:11px;color:#1565C0;font-weight:600;margin-top:4px">Foto 3</div>
           </div>
         </label>
         <label style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;background:#E3F2FD;border:2px dashed #90CAF9;border-radius:8px;cursor:pointer;touch-action:manipulation;min-height:70px;text-align:center">
           <input type="file" id="ap-foto-4-input" accept="image/*" capture="environment" onchange="apLoadFoto(this,'ap-foto-4','ap-foto-4-prev')" style="display:none">
           <div id="ap-foto-4-prev" style="width:100%;text-align:center">
             <span style="font-size:24px">📸</span>
-            <div style="font-size:10px;color:#1565C0;font-weight:600;margin-top:4px">Foto 4</div>
+            <div style="font-size:11px;color:#1565C0;font-weight:600;margin-top:4px">Foto 4</div>
           </div>
         </label>
       </div>
@@ -3802,19 +3815,19 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
       <div class="btl">Unterschriften</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         <div>
-          <div style="font-size:10px;color:#78909C;font-weight:600;margin-bottom:4px">Techniker / Grieer</div>
+          <div style="font-size:11px;color:#78909C;font-weight:600;margin-bottom:4px">Techniker / Grieer</div>
           <div style="position:relative;background:#fff;border:2px solid #90CAF9;border-radius:8px;overflow:hidden">
-            <canvas id="ap-sig-tech" width="300" height="100" style="display:block;width:100%;height:100px;touch-action:none;cursor:crosshair"></canvas>
-            <button type="button" onclick="apClearSig('ap-sig-tech')" class="no-print" style="position:absolute;top:4px;right:4px;background:rgba(255,255,255,0.9);border:1px solid #ddd;border-radius:4px;padding:3px 6px;font-size:9px;cursor:pointer;color:#E74C3C;font-weight:600">✕</button>
-            <div id="ap-sig-tech-hint" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:10px;color:#90A4AE;pointer-events:none">Hier unterschreiben</div>
+            <canvas id="ap-sig-tech" width="300" height="90" style="display:block;width:100%;height:100px;touch-action:none;cursor:crosshair"></canvas>
+            <button type="button" onclick="apClearSig('ap-sig-tech')" class="no-print" style="position:absolute;top:4px;right:4px;background:rgba(255,255,255,0.9);border:1px solid #ddd;border-radius:4px;padding:3px 6px;font-size:10px;cursor:pointer;color:#E74C3C;font-weight:600">✕</button>
+            <div id="ap-sig-tech-hint" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:11px;color:#90A4AE;pointer-events:none">Hier unterschreiben</div>
           </div>
         </div>
         <div>
-          <div style="font-size:10px;color:#78909C;font-weight:600;margin-bottom:4px">Auftraggeber / Kunde</div>
+          <div style="font-size:11px;color:#78909C;font-weight:600;margin-bottom:4px">Auftraggeber / Kunde</div>
           <div style="position:relative;background:#fff;border:2px solid #90CAF9;border-radius:8px;overflow:hidden">
-            <canvas id="ap-sig-kunde" width="300" height="100" style="display:block;width:100%;height:100px;touch-action:none;cursor:crosshair"></canvas>
-            <button type="button" onclick="apClearSig('ap-sig-kunde')" class="no-print" style="position:absolute;top:4px;right:4px;background:rgba(255,255,255,0.9);border:1px solid #ddd;border-radius:4px;padding:3px 6px;font-size:9px;cursor:pointer;color:#E74C3C;font-weight:600">✕</button>
-            <div id="ap-sig-kunde-hint" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:10px;color:#90A4AE;pointer-events:none">Hier unterschreiben</div>
+            <canvas id="ap-sig-kunde" width="300" height="90" style="display:block;width:100%;height:100px;touch-action:none;cursor:crosshair"></canvas>
+            <button type="button" onclick="apClearSig('ap-sig-kunde')" class="no-print" style="position:absolute;top:4px;right:4px;background:rgba(255,255,255,0.9);border:1px solid #ddd;border-radius:4px;padding:3px 6px;font-size:10px;cursor:pointer;color:#E74C3C;font-weight:600">✕</button>
+            <div id="ap-sig-kunde-hint" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:11px;color:#90A4AE;pointer-events:none">Hier unterschreiben</div>
           </div>
         </div>
       </div>
@@ -3823,7 +3836,7 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
     <!-- AKTIONEN -->
     <div class="no-print" style="padding:12px;background:#F5F7FA;border-radius:12px;border:1.5px solid #E0E4E8">
       
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px">
+      <div style="display:grid;grid-template-columns:1fr;gap:8px;margin-top:8px">
         
         
         
@@ -5160,6 +5173,13 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
 
 </div></div>
 <div class="pg" id="page-ki">
+<div id="ki-status-banner" style="background:linear-gradient(135deg,#166534,#15803D);border-radius:10px;padding:10px 12px;margin-bottom:10px;display:flex;align-items:center;gap:8px">
+  <div style="font-size:20px">&#129504;</div>
+  <div>
+    <div style="font-size:11px;font-weight:700;color:#fff">KI-Berater aktiv &mdash; f&uuml;r alle Mitarbeiter</div>
+    <div style="font-size:9px;color:#BBF7D0;margin-top:1px">Kein API-Key n&ouml;tig &bull; Sucht in Normen, Gesetzen &amp; deinen PDFs</div>
+  </div>
+  </div>
 <div class="card" style="padding:8px;max-width:900px;margin:0 auto;box-sizing:border-box">
 
 <div style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;padding:12px 14px;border-radius:10px;margin-bottom:10px">
@@ -5174,6 +5194,7 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
 </div>
 
 <!-- Chat-Container -->
+<div id="ki-sb-badge" style="display:none;background:#EFF6FF;border-left:4px solid #2563EB;padding:6px 10px;border-radius:0 6px 6px 0;margin-bottom:6px;font-size:10px;color:#1E40AF;font-weight:600"></div>
 <div id="ki-chat" class="ki-chat-fixed" style="min-height:120px;max-height:55vh;overflow-y:auto;overflow-x:hidden;margin-bottom:8px;width:100%;max-width:100%;box-sizing:border-box;padding:4px"></div>
 
 <!-- Wissensbasis-Box -->
@@ -5188,23 +5209,24 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
     <span style="flex:1">🌐 <b>Online-Suche aktivieren</b><br><span style="font-size:10px;font-weight:400;opacity:0.85">Sucht in RIS, ÖNORM, ÖVGW statt Wissensbasis</span></span>
   </label>
 </div>
+<div id="ki-sb-badge" style="display:none;background:#EFF6FF;border-left:4px solid #2563EB;padding:6px 10px;border-radius:0 6px 6px 0;margin-bottom:6px;font-size:10px;color:#1E40AF;font-weight:600"></div>
+<div style="display:flex;gap:4px;margin-bottom:8px;background:#F1F5F9;border-radius:8px;padding:3px"><button id="ki-modus-einfach" onclick="kiSetModus('einfach')" style="flex:1;padding:7px;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;background:#F1F5F9;color:#374151">Einfach</button><button id="ki-modus-mittel" onclick="kiSetModus('mittel')" style="flex:1;padding:7px;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;background:#F1F5F9;color:#374151">Mittel</button><button id="ki-modus-intensiv" onclick="kiSetModus('intensiv')" style="flex:1;padding:7px;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;background:#1A2B45;color:#fff">Intensiv</button></div>
 <div style="background:#fff;border:2px solid #1565C0;border-radius:12px;padding:8px;margin-bottom:10px;display:flex;gap:8px;align-items:stretch">
   <input type="text" id="ki-input" placeholder="Frage eingeben..." onkeydown="if(event.key==='Enter'){kiSend();}" autocomplete="off" autocorrect="off" autocapitalize="sentences" style="flex:1;border:none;font-size:16px;padding:10px 12px;outline:none;min-width:0;background:transparent;-webkit-appearance:none">
   <button type="button" onclick="kiSend()" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:10px;padding:0 20px;font-size:14px;font-weight:700;cursor:pointer;min-height:50px;min-width:80px;flex-shrink:0;touch-action:manipulation;-webkit-tap-highlight-color:rgba(255,255,255,0.2);box-shadow:0 2px 6px rgba(21,101,192,0.3)">Fragen ▶</button>
 </div>
 
-<div style="margin-bottom:10px">
-  <div style="font-size:9px;font-weight:700;color:#666;text-transform:uppercase;margin-bottom:6px">Haeufige Fragen</div>
-  <div style="display:flex;flex-wrap:wrap;gap:5px">
-    <button onclick="kiQuick(this)" style="background:#fff;border:1px solid #1565C0;color:#1565C0;border-radius:14px;padding:5px 11px;font-size:10.5px;font-weight:600;cursor:pointer;touch-action:manipulation">Was kostet Kehrung bis 50 kW?</button>
-    <button onclick="kiQuick(this)" style="background:#fff;border:1px solid #1565C0;color:#1565C0;border-radius:14px;padding:5px 11px;font-size:10.5px;font-weight:600;cursor:pointer;touch-action:manipulation">Pellets Kehrintervalle</button>
-    <button onclick="kiQuick(this)" style="background:#fff;border:1px solid #E74C3C;color:#E74C3C;border-radius:14px;padding:5px 11px;font-size:10.5px;font-weight:600;cursor:pointer;touch-action:manipulation">Heizverbot bei Russbrand</button>
-    <button onclick="kiQuick(this)" style="background:#fff;border:1px solid #1565C0;color:#1565C0;border-radius:14px;padding:5px 11px;font-size:10.5px;font-weight:600;cursor:pointer;touch-action:manipulation">EN 1443 Druckklassen</button>
-    <button onclick="kiQuick(this)" style="background:#fff;border:1px solid #3949AB;color:#3949AB;border-radius:14px;padding:5px 11px;font-size:10.5px;font-weight:600;cursor:pointer;touch-action:manipulation">OVGW G K62 Frist</button>
-    <button onclick="kiQuick(this)" style="background:#fff;border:1px solid #6D4C41;color:#6D4C41;border-radius:14px;padding:5px 11px;font-size:10.5px;font-weight:600;cursor:pointer;touch-action:manipulation">Pelletslager Belüftung</button>
-    <button onclick="kiQuick(this)" style="background:#fff;border:1px solid #D32F2F;color:#D32F2F;border-radius:14px;padding:5px 11px;font-size:10.5px;font-weight:600;cursor:pointer;touch-action:manipulation">CO-Melder Pflicht §</button>
-    <button onclick="kiQuick(this)" style="background:#fff;border:1px solid #2C3E50;color:#2C3E50;border-radius:14px;padding:5px 11px;font-size:10.5px;font-weight:600;cursor:pointer;touch-action:manipulation">§ 11 KehrG Mängelmeldung</button>
-    <button onclick="kiShowPDFs()" style="background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:14px;padding:5px 11px;font-size:10.5px;font-weight:600;cursor:pointer;touch-action:manipulation">📄 Wissens-PDFs</button>
+<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px">
+  <button onclick="kiQuick(this)" style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:16px;padding:5px 10px;font-size:10px;color:#1E40AF;cursor:pointer;white-space:nowrap">Kehrtarif Gas &lt;35kW Bgld</button>
+  <button onclick="kiQuick(this)" style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:16px;padding:5px 10px;font-size:10px;color:#1E40AF;cursor:pointer;white-space:nowrap">TRVB H 105 Abstände</button>
+  <button onclick="kiQuick(this)" style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:16px;padding:5px 10px;font-size:10px;color:#1E40AF;cursor:pointer;white-space:nowrap">Kehrpflicht § HKG</button>
+  <button onclick="kiQuick(this)" style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:16px;padding:5px 10px;font-size:10px;color:#1E40AF;cursor:pointer;white-space:nowrap">CO-Grenzwert §27</button>
+  <button onclick="kiQuick(this)" style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:16px;padding:5px 10px;font-size:10px;color:#1E40AF;cursor:pointer;white-space:nowrap">Pellets Kehrintervall</button>
+  <button onclick="kiQuick(this)" style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:16px;padding:5px 10px;font-size:10px;color:#1E40AF;cursor:pointer;white-space:nowrap">ÖNORM B 8311 Überprüfung</button>
+  <button onclick="kiQuick(this)" style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:16px;padding:5px 10px;font-size:10px;color:#1E40AF;cursor:pointer;white-space:nowrap">OIB-RL 1 Brandschutz</button>
+  <button onclick="kiQuick(this)" style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:16px;padding:5px 10px;font-size:10px;color:#1E40AF;cursor:pointer;white-space:nowrap">Rußbrand Maßnahmen</button>
+  <button onclick="kiShowPDFs()" style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:16px;padding:5px 10px;font-size:10px;color:#166534;cursor:pointer;white-space:nowrap">📄 Was ist gespeichert?</button>
+</div>
   </div>
   </div>
   </div>
@@ -6476,57 +6498,15 @@ function kiSend(){
   if(!inp) return;
   var query = inp.value.trim();
   if(!query) return;
-  var qSafe = query.replace(/[<>&]/g, function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;'}[c];});
-  kiAddMessage('user', '<div style="font-size:9px;font-weight:700;color:#1565C0;text-transform:uppercase;margin-bottom:3px">Frage</div>' + qSafe);
+  var qSafe = query.replace(/[<>&]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[c];});
+  kiAddMessage('user','<div style="font-size:9px;font-weight:700;color:#1565C0;text-transform:uppercase;margin-bottom:3px">Frage</div>'+qSafe);
   inp.value = '';
-  
-  // ONLINE-TOGGLE: Wenn aktiv, direkt online suchen
-  var onlineToggle = document.getElementById('ki-online-toggle');
-  var goOnline = onlineToggle && onlineToggle.checked;
-  
-  if(goOnline){
-    kiAskOnline(query);
-    return;
-  }
-  
-  try {
-    var result = kiSearchKnowledge(query);
-    var queryType = (typeof kiClassifyQuestion === 'function') ? kiClassifyQuestion(query) : '';
-    
-    if(!result){
-      kiAskOnline(query);
-      return;
-    }
-    
-    // Prüfe Confidence: ist die Antwort eine "schwache" Match?
-    var resultLow = (typeof result === 'string' ? result : '').toLowerCase();
-    var queryLow = query.toLowerCase();
-    var queryWords = queryLow.split(/\s+/).filter(function(w){ return w.length > 3; });
-    var matchCount = 0;
-    queryWords.forEach(function(w){
-      if(resultLow.indexOf(w) >= 0) matchCount++;
-    });
-    var matchRatio = queryWords.length > 0 ? matchCount / queryWords.length : 0;
-    var isWeakMatch = matchRatio < 0.3 && queryWords.length >= 2;
-    
-    if(typeof kiFormatAnswer === 'function'){
-      var formatted = kiFormatAnswer(result, queryType, query);
-      // Bei schwacher Confidence: füge Online-Suchen-Button automatisch hinzu
-      if(isWeakMatch){
-        formatted += '<div style="margin-top:12px;padding:10px;background:#FFF3E0;border-left:3px solid #FF9800;border-radius:6px">';
-        formatted += '<div style="font-size:10px;color:#E65100;font-weight:700;margin-bottom:6px">⚠ Antwort nicht ganz passend?</div>';
-        formatted += '<button type="button" onclick="kiAskOnline(\'' + query.replace(/[\\\']/g,'\\\$&') + '\')" style="background:linear-gradient(135deg,#FF9800,#E65100);color:#fff;border:none;border-radius:8px;padding:10px 14px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation;width:100%">🌐 Online weitersuchen</button>';
-        formatted += '</div>';
-      }
-      kiAddMessage('bot', formatted);
-    } else {
-      kiAddMessage('bot', '<div style="font-size:11px;line-height:1.55">' + result + '</div>');
-    }
-  } catch(e){
-    console.error('kiSend error:', e);
-    kiAskOnline(query);
-  }
+  kiShowLoading();
+  // Immer: Supabase-Direktsuche (kein API Key nötig)
+  _kiSupabaseDirectSearch(query);
 }
+function kiAskOnline(query){ var inp=document.getElementById('ki-input');if(inp)inp.value=query;kiSend(); }
+function kiOnlineSearch(query){ var inp=document.getElementById('ki-input');if(inp)inp.value=query;kiSend(); }
 
 function kiQuick(btn){
   var txt = btn.textContent.trim();
@@ -8802,7 +8782,7 @@ var GKV_ROWS = {
     {pos:'PV.5', bez:'Thermografiecheck je Modul', einh:'Stück', ep:3.00, menge:0},
   ],
   gas: [
-    {pos:'GS.1', bez:'Gasservice B-Geräte (Heizung/Therme)', einh:'Gerät', ep:112.50, menge:1},
+    {pos:'GS.1', bez:'Gasservice B-Geräte 11–35 kW (Raumheizgerät/Therme)', einh:'Gerät', ep:112.50, menge:1},
     {pos:'GS.2', bez:'Gasservice C-Geräte', einh:'Gerät', ep:130.83, menge:0},
     {pos:'GS.3', bez:'Gasservice Kombithermen', einh:'Gerät', ep:112.50, menge:0},
   ],
@@ -14384,52 +14364,20 @@ function ablageGetFiltered(){
   return all.filter(function(e){return e.ersteller_id===myId||e.ersteller===_currentUser.name;});
 }
 function ablageMail(){
-  if(!_ablageCurrentEntry) return;
+  if(!_ablageCurrentEntry)return;
   var e=_ablageCurrentEntry;
-  var lines=['GRIEER ENERGIETECHNIK OG','Neugebaeude 10, 7201 Neudoerfl | +43 (0) 2622 77062','',
-    'Dokument: '+e.titel, 'Datum: '+e.datum, 'Erstellt von: '+(e.ersteller||''), ''];
-  var skip=['_pageId','_pageLabel'];
-  Object.keys(e.data||{}).forEach(function(k){
-    if(skip.indexOf(k)>=0||!e.data[k]) return;
-    var lbl=k.replace(/-|_/g,' ').replace(/\w/g,function(c){return c.toUpperCase();});
-    lines.push(lbl+': '+e.data[k]);
-  });
-  lines.push(''); lines.push('--'); lines.push('Grieer Energietechnik OG | www.grieer.at');
-  var subject=encodeURIComponent('[Grieer] '+e.titel);
-  var body=encodeURIComponent(lines.join('\n'));
-  window.location.href='mailto:?subject='+subject+'&body='+body;
+  var lines=['GRIEER ENERGIETECHNIK OG','Neugebaeude 10, 7201 Neudoerfl | +43 (0) 2622 77062','','Dokument: '+e.titel,'Datum: '+e.datum,''];
+  Object.keys(e.data||{}).forEach(function(k){if(e.data[k])lines.push(k+': '+e.data[k]);});
+  lines.push('','--','www.grieer.at');
+  window.location.href='mailto:?subject='+encodeURIComponent('[Grieer] '+e.titel)+'&body='+encodeURIComponent(lines.join('\n'));
 }
 function ablageOpen(id){
-  var entries=ablageGetAll();
-  var entry=entries.find(function(e){return e.id===id;});
-  if(!entry) return;
-  _ablageCurrentEntry=entry;
-  var titleEl=document.getElementById('ablage-preview-title');
-  if(titleEl) titleEl.textContent=entry.titel;
-  var contentEl=document.getElementById('ablage-preview-content');
-  if(contentEl){
-    if(entry.html&&entry.html.length>50){
-      var tmp=document.createElement('div');
-      tmp.innerHTML=entry.html;
-      tmp.querySelectorAll('button').forEach(function(b){b.style.display='none';});
-      tmp.querySelectorAll('input,select,textarea').forEach(function(el){el.setAttribute('disabled','true');el.style.background='#F8FAFC';el.style.pointerEvents='none';});
-      contentEl.innerHTML='<div style="font-size:12px;line-height:1.5">'+tmp.innerHTML+'</div>';
-    } else {
-      var rows=''; var skip=['_pageId','_pageLabel'];
-      var dataObj=entry.data||{};
-      Object.keys(dataObj).forEach(function(k){
-        if(skip.indexOf(k)>=0||!dataObj[k]) return;
-        var lbl=k.replace(/-|_/g,' ').replace(/\w/g,function(c){return c.toUpperCase();});
-        rows+='<div style="display:flex;padding:5px 0;border-bottom:1px solid #F1F5F9">';
-        rows+='<div style="width:40%;font-size:12px;color:#64748B">'+lbl+'</div>';
-        rows+='<div style="width:60%;font-size:12px;font-weight:600;color:#1A2B45">'+dataObj[k]+'</div>';
-        rows+='</div>';
-      });
-      contentEl.innerHTML=rows||'<div style="color:#94A3B8;text-align:center;padding:16px">Keine Daten</div>';
-    }
-  }
-  var overlay=document.getElementById('ablage-preview-overlay');
-  if(overlay) overlay.style.display='flex';
+  var entry=ablageGetAll().find(function(e){return e.id===id;});
+  if(!entry)return;_ablageCurrentEntry=entry;
+  var t=document.getElementById('ablage-preview-title');if(t)t.textContent=entry.titel;
+  var c=document.getElementById('ablage-preview-content');
+  if(c){if(entry.html&&entry.html.length>50){var tmp=document.createElement('div');tmp.innerHTML=entry.html;tmp.querySelectorAll('button').forEach(function(b){b.style.display='none';});tmp.querySelectorAll('input,select,textarea').forEach(function(el){el.setAttribute('disabled','true');el.style.background='#F8FAFC';el.style.pointerEvents='none';});c.innerHTML='<div style="font-size:12px">'+tmp.innerHTML+'</div>';}else{var rows='';Object.keys(entry.data||{}).forEach(function(k){if(entry.data[k])rows+='<div style="display:flex;padding:5px 0;border-bottom:1px solid #F1F5F9"><div style="width:40%;font-size:12px;color:#64748B">'+k+'</div><div style="width:60%;font-size:12px;font-weight:600">'+entry.data[k]+'</div></div>';});c.innerHTML=rows||'<div style="color:#94A3B8;text-align:center;padding:16px">Keine Daten</div>';}}
+  var ov=document.getElementById('ablage-preview-overlay');if(ov)ov.style.display='flex';
 }
 function ablagePrint(){
   if(!_ablageCurrentEntry) return;
@@ -14927,14 +14875,36 @@ function drohneTrocken(val){
 
 function gKundeFill(pageId){
   var n=window._gKunde||'',a=window._gAdresse||'',plz=window._gPlz||'',t=window._gTelefon||'',e=window._gEmail||'';
-  if(!n&&!a)return;
+  if(!n&&!a) return;
   var root=pageId?document.getElementById('page-'+pageId)||document:document;
-  function fc(cls,val){if(!val)return;root.querySelectorAll('.'+cls).forEach(function(el){if(!el.value)el.value=val;});}
+  // CSS-Klassen (alle KV-Formulare)
+  function fc(cls,val){if(!val)return;root.querySelectorAll('.'+cls).forEach(function(el){el.value=val;});}
   fc('kd-name',n);fc('kd-str',a);fc('kd-plz',plz);fc('kd-tel',t);fc('kd-email',e);
+  // Direkte IDs (PV-Rechner + Auftragsformular + weitere)
+  var idMap={
+    'pvc-kunde':n,'pvc-adresse':a,           // PV Soiling
+    'ap-name':n,'ap-adr':a,'ap-plz':plz,'ap-tel':t,  // Auftragsformular
+    'dr-kunde':n,'dr-adresse':a,             // Drohnen
+    'bi-kunde':n,'bi-adresse':a,             // Brandinfo
+    'bsp-kunde':n,'bsp-adresse':a,           // BS-Protokoll
+    'pvp-kunde':n,'pvp-adresse':a,           // PV-Protokoll
+    'mess-kunde':n,'mess-adresse':a,         // Messprotokoll
+    'l2-kunde':n,'l2-adresse':a,             // Luftüberprüfung
+    'wp-kunde':n,'wp-adresse':a,             // Wartungsprotokoll
+    'kehr-kunde':n,'kehr-adresse':a,         // Kehrtarif
+    'wart-kunde':n,'wart-adresse':a          // Wartungserinnerung
+  };
+  Object.keys(idMap).forEach(function(id){
+    if(!idMap[id]) return;
+    var el=root.getElementById?root.getElementById(id):document.getElementById(id);
+    if(!el) el=document.getElementById(id);
+    if(el&&!el.value) el.value=idMap[id];
+  });
 }
 function gKundeUpdate(){
-  var n=(document.getElementById('gk-name')?.value||'').trim(),a=(document.getElementById('gk-addr')?.value||'').trim(),plz=(document.getElementById('gk-plz')?.value||'').trim(),t=(document.getElementById('gk-tel')?.value||'').trim(),e2=(document.getElementById('gk-email')?.value||'').trim();
-  window._gKunde=n;window._gAdresse=a;window._gPlz=plz;window._gTelefon=t;window._gEmail=e2;
+  var n=(document.getElementById('gk-name')?.value||'').trim(),a=(document.getElementById('gk-addr')?.value||'').trim();
+  var plz=(document.getElementById('gk-plz')?.value||'').trim(),t=(document.getElementById('gk-tel')?.value||'').trim(),em=(document.getElementById('gk-email')?.value||'').trim();
+  window._gKunde=n;window._gAdresse=a;window._gPlz=plz;window._gTelefon=t;window._gEmail=em;
   try{localStorage.setItem('_grieer_lk_name',n);localStorage.setItem('_grieer_lk_addr',a);}catch(ex){}
   document.querySelectorAll('.pg').forEach(function(pg){if(pg.style.display!=='none'&&pg.id&&pg.id!=='page-aufnahme')gKundeFill(pg.id.replace('page-',''));});
   try{_grieerToast('✅ Kundendaten übertragen','#16A34A',1500);}catch(ex){}
@@ -14960,41 +14930,54 @@ function pvCalcMonateUpdate(v){
 }
 
 function pvCalcRun(){
-  function gv(id){ return parseFloat(document.getElementById(id)?.value)||0; }
-  var kwp=gv('pvc-kwp')||10, strahlung=gv('pvc-strahlung')||1300;
-  var neigung=gv('pvc-neigung')||30, hoehe=gv('pvc-hoehe')||200;
-  var monate=gv('pvc-monate')||12, rate=gv('pvc-rate')||0.10;
-  var einspeis=gv('pvc-einspeis')||0.082, eigenstr=gv('pvc-eigenstr')||0.28;
-  var eigenanteil=gv('pvc-eigenanteil')||30, reinigkosten=gv('pvc-reinigkosten')||150;
+  function gv(id){return parseFloat(document.getElementById(id)?.value)||0;}
+  var kwp=gv('pvc-kwp')||10,strahlung=gv('pvc-strahlung')||1300;
+  var neigung=gv('pvc-neigung')||30,hoehe=gv('pvc-hoehe')||200;
+  var monate=gv('pvc-monate')||12,rate=gv('pvc-rate')||0.10;
+  var einspeis=gv('pvc-einspeis')||0.068,eigenstr=gv('pvc-eigenstr')||0.23;
+  var eigenanteil=gv('pvc-eigenanteil')||30,reinigkosten=gv('pvc-reinigkosten')||150;
+  var jahreModus=(document.getElementById('pvc-monate-einheit')?.value==='jahre')||false;
   var neigFak=neigung<10?1.35:neigung<20?1.15:neigung<35?1.00:neigung<50?0.85:0.70;
   var hoehFak=hoehe<100?1.10:hoehe<300?1.00:hoehe<700?0.90:0.75;
-  var rawLoss=monate<=6?rate*monate:rate*6+rate*0.5*(monate-6);
-  rawLoss=Math.min(rawLoss*neigFak*hoehFak,25);
-  var jahrKwh=kwp*(strahlung/1000)*0.78*1000;
-  var verlustKwh=jahrKwh*(rawLoss/100)*0.6;
-  var eigenAnt=eigenanteil/100, einsAnt=1-eigenAnt;
+  var periodeM=jahreModus?monate*12:monate;
+  var rawLoss=rate*Math.min(periodeM,72)*neigFak*hoehFak;
+  rawLoss=Math.min(rawLoss,30);
+  var jahrKwh=kwp*(strahlung/1000)*0.80*1000;
+  var verlustKwh=jahrKwh*(rawLoss/100);
+  var eigenAnt=eigenanteil/100,einsAnt=1-eigenAnt;
   var verlustEur=verlustKwh*(eigenAnt*eigenstr+einsAnt*einspeis);
   var roiMon=reinigkosten>0?(reinigkosten/(verlustEur/12)).toFixed(1):'\u221e';
-  function se(id,v){ var e=document.getElementById(id); if(e) e.textContent=v; }
+  function se(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
   se('pvc-r-verlust',rawLoss.toFixed(2)+' %');
   se('pvc-r-kwh',Math.round(verlustKwh)+' kWh');
   se('pvc-r-eur',verlustEur.toFixed(0)+' \u20ac');
   se('pvc-r-roi',roiMon+' Mon.');
   var det=document.getElementById('pvc-r-detail');
-  if(det) det.innerHTML='\u2705 Jahresertrag (netto): <b>'+Math.round(jahrKwh)+' kWh</b><br>'+
-    '\u2705 Ertragsverlust: <b>'+Math.round(verlustKwh)+' kWh</b> ('+rawLoss.toFixed(2)+'%)<br>'+
-    '\u2705 Neigungskorrektur: <b>'+(neigFak*100).toFixed(0)+'%</b> | H\u00f6henkorrektur: <b>'+(hoehFak*100).toFixed(0)+'%</b><br>'+
-    '\u2705 Eigenstrom-Verlust: <b>'+(verlustKwh*eigenAnt*eigenstr).toFixed(0)+'\u20ac</b> | Einspeise-Verlust: <b>'+(verlustKwh*einsAnt*einspeis).toFixed(0)+'\u20ac</b>';
+  if(det)det.innerHTML='\u2705 Jahresertrag: <b>'+Math.round(jahrKwh)+' kWh</b><br>\u2705 Ertragsverlust: <b>'+Math.round(verlustKwh)+' kWh ('+rawLoss.toFixed(2)+'%)</b><br>\u2705 Neigungskorrektur: <b>'+(neigFak*100).toFixed(0)+'%</b> | H\u00f6henkorrektur: <b>'+(hoehFak*100).toFixed(0)+'%</b>';
   var emp=document.getElementById('pvc-r-empfehlung');
-  if(emp){
-    if(rawLoss>=8) emp.innerHTML='<span style="color:#FCD34D">\u26a0\ufe0f DRINGEND: Reinigung wirtschaftlich sehr empfohlen!</span>';
-    else if(rawLoss>=4) emp.innerHTML='<span style="color:#FDE68A">\ud83d\udca1 Reinigung empfohlen \u2014 Verlust signifikant</span>';
-    else if(rawLoss>=2) emp.innerHTML='<span style="color:#A7F3D0">\u2705 M\u00e4\u00dfiger Verlust \u2014 Reinigung bei n\u00e4chster Gelegenheit</span>';
-    else emp.innerHTML='<span style="color:#6EE7B7">\u2705 Geringer Verlust \u2014 noch keine dringende Reinigung n\u00f6tig</span>';
+  if(emp){if(rawLoss>=8)emp.innerHTML='<span style="color:#FCD34D">\u26a0\ufe0f DRINGEND: Reinigung wirtschaftlich sehr empfohlen!</span>';else if(rawLoss>=4)emp.innerHTML='<span style="color:#FDE68A">\uD83D\uDCA1 Reinigung empfohlen</span>';else if(rawLoss>=2)emp.innerHTML='<span style="color:#A7F3D0">\u2705 M\u00e4\u00dfiger Verlust</span>';else emp.innerHTML='<span style="color:#6EE7B7">\u2705 Geringer Verlust</span>';}
+  /* MEHRJAHRES-STAFFEL */
+  var maxJahre=jahreModus?Math.max(1,Math.ceil(monate)):Math.max(1,Math.ceil(periodeM/12));
+  maxJahre=Math.min(maxJahre,15);
+  var staffelDiv=document.getElementById('pvc-r-staffel');
+  var staffelList=document.getElementById('pvc-r-staffel-list');
+  if(staffelDiv)staffelDiv.style.display='block';
+  var totalKwh=0,totalEur=0,sHtml='';
+  for(var j=1;j<=Math.min(maxJahre,10);j++){
+    var lJ=Math.min(rate*j*12*neigFak*hoehFak,30);
+    var kwJ=jahrKwh*(lJ/100);
+    var eurJ=kwJ*(eigenAnt*eigenstr+einsAnt*einspeis);
+    totalKwh+=kwJ;totalEur+=eurJ;
+    sHtml+='<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.08)"><span style="color:#94A3B8">Jahr '+j+'</span><span style="color:#FCD34D">'+lJ.toFixed(1)+'% | '+Math.round(kwJ)+' kWh</span><span style="color:#6EE7B7">'+eurJ.toFixed(0)+'\u20ac/a</span></div>';
   }
-  window._pvcResult={kwp,strahlung,neigung,hoehe,monate,rate:rate,verlustPct:rawLoss,verlustKwh:Math.round(verlustKwh),verlustEur:verlustEur.toFixed(0),roiMon};
+  if(staffelList)staffelList.innerHTML=sHtml;
+  var gKwh=document.getElementById('pvc-r-gesamt-kwh');if(gKwh)gKwh.textContent=Math.round(totalKwh);
+  var gEur=document.getElementById('pvc-r-gesamt-eur');if(gEur)gEur.textContent=totalEur.toFixed(0)+'\u20ac';
+  var gJahre=document.getElementById('pvc-r-jahre');if(gJahre)gJahre.textContent=maxJahre;
+  /* ERGEBNISSCHREIBEN */
+  window._pvcResult={kwp,strahlung,neigung,hoehe,monate:maxJahre,rate,verlustPct:rawLoss,verlustKwh:Math.round(verlustKwh),verlustEur:verlustEur.toFixed(0),roiMon,totalKwh:Math.round(totalKwh),totalEur:totalEur.toFixed(0),maxJahre};
+  if(typeof _pvGenerateBrief==='function')_pvGenerateBrief();
 }
-
 function pvCalcSave(){
   var r=window._pvcResult||{};
   var adresse=(document.getElementById('pvc-adresse')?.value||'').trim();
@@ -15402,300 +15385,109 @@ function ablageWhatsapp(){
 }
 
 /* === END ADDITIONS === */
-
-/* =======================================================
-   GRIEER VOLLSTÄNDIGE CLOUD-SYNCHRONISATION
-   Alle Daten: Einstellungen, Mitarbeiter, Kunden, Ablage, KI
-   ======================================================= */
-
-var _sbReady = false;
-var _kiSupabaseWissen = '';
 var _pvStandortData={land:{rate:0.08,farbe:'#16A34A',text:'Laendlich',info:'0.08%/Mon.'},stadt:{rate:0.12,farbe:'#2563EB',text:'Stadt',info:'0.12%/Mon.'},industrie:{rate:0.20,farbe:'#DC2626',text:'Industrie',info:'0.20%/Mon.'}};
 var _drFotos=[];
+(function(){try{window._gKunde=localStorage.getItem('_grieer_lk_name')||'';window._gAdresse=localStorage.getItem('_grieer_lk_addr')||'';}catch(e){}})();
+function pvStandort(typ){var d=_pvStandortData[typ];if(!d)return;['land','stadt','industrie'].forEach(function(t){var btn=document.getElementById('pvc-st-'+t);if(!btn)return;btn.style.background=t===typ?d.farbe:'#fff';btn.style.color=t===typ?'#fff':'#1A2B45';btn.style.borderColor=t===typ?d.farbe:'#CBD5E1';});var rEl=document.getElementById('pvc-rate');if(rEl)rEl.value=d.rate.toFixed(2);var hid=document.getElementById('pvc-standort-val');if(hid)hid.value=typ;if(typeof pvCalcRun==='function')pvCalcRun();}
+function pvMonateEinheit(){if(typeof pvCalcRun==='function')pvCalcRun();}
+function pvBriefKopieren(){var el=document.getElementById('pvc-brief-text');if(!el)return;if(navigator.clipboard){navigator.clipboard.writeText(el.value).then(function(){try{_grieerToast('✅ Kopiert!','#16A34A',2000);}catch(e){}});}else{el.select();document.execCommand('copy');}}
+function kiSetQuestion(q){var inp=document.getElementById('ki-input');if(inp){inp.value=q;inp.focus();}}
+function drFotoAdd(input){var files=Array.from(input.files);var preview=document.getElementById('dr-fotos-preview');files.forEach(function(file){var reader=new FileReader();reader.onload=function(e){var idx=_drFotos.length;_drFotos.push({name:file.name,data:e.target.result});if(preview){var div=document.createElement('div');div.style.cssText='position:relative;border-radius:6px;overflow:hidden;';var img=document.createElement('img');img.src=e.target.result;img.style.cssText='width:100%;height:70px;object-fit:cover;border-radius:6px;display:block;';var del=document.createElement('button');del.textContent='×';del.style.cssText='position:absolute;top:2px;right:2px;background:rgba(220,38,38,0.85);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:12px;cursor:pointer;';del.onclick=(function(i,d){return function(){_drFotos.splice(i,1);d.parentNode&&d.parentNode.removeChild(d);};})(idx,div);div.appendChild(img);div.appendChild(del);preview.appendChild(div);}};reader.readAsDataURL(file);});input.value='';}
 
-// Geräte-übergreifende Einstellungen aus localStorage
+/* =====================================================
+   SUPABASE INTEGRATION
+   ===================================================== */
+var _SB_SERVICE_KEY = '';
+var _kiSupabaseWissen = '';
 (function(){
-  try{
-    window._gKunde=localStorage.getItem('_grieer_lk_name')||'';
-    window._gAdresse=localStorage.getItem('_grieer_lk_addr')||'';
-    window._gPlz=localStorage.getItem('_grieer_lk_plz')||'';
-    window._gTelefon=localStorage.getItem('_grieer_lk_tel')||'';
-    window._gEmail=localStorage.getItem('_grieer_lk_email')||'';
-  }catch(e){}
+  try{_SB_SERVICE_KEY = localStorage.getItem('grieer_sb_service_key')||'';}catch(e){}
 })();
 
-function sbCheckOnline(){return typeof _SB_URL!=='undefined'&&_SB_URL&&navigator.onLine;}
-
-/* ── EINSTELLUNGEN CLOUD-SYNC ── */
-async function settingsSaveToCloud(key, value){
-  if(!sbCheckOnline()) return;
-  try{
-    await fetch(_SB_URL+'/rest/v1/grieer_einstellungen',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
-      body:JSON.stringify({id:'grieer_'+key,firma_id:'grieer',key_name:key,value_data:value,aktualisiert_am:new Date().toISOString()})
-    });
-  }catch(e){}
-}
-
-async function settingsLoadFromCloud(){
-  if(!sbCheckOnline()) return;
-  try{
-    var resp=await fetch(_SB_URL+'/rest/v1/grieer_einstellungen?firma_id=eq.grieer',{
-      headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}
-    });
-    if(!resp.ok) return;
-    var rows=await resp.json();
-    if(!Array.isArray(rows)) return;
-    rows.forEach(function(r){
-      if(!r.key_name||!r.value_data) return;
-      try{localStorage.setItem('grieer_'+r.key_name, r.value_data);}catch(e){}
-    });
-    // Werte in Memory laden
-    var svcKey=localStorage.getItem('grieer_sb_service_key')||'';
-    if(svcKey) window._SB_SERVICE_KEY=svcKey;
-    var claudeKey=localStorage.getItem('grieer_claude_key')||'';
-    if(claudeKey) window._claudeApiKey=claudeKey;
-  }catch(e){}
-}
+function sbCheckOnline(){return typeof _SB_URL!=='undefined' && _SB_URL && navigator.onLine;}
+function sbKey(){return _SB_SERVICE_KEY || _SB_KEY;}
 
 function saveServiceKey(){
-  var inp=document.getElementById('sb-service-key-input');
-  var val=(inp?.value||'').trim();
-  if(!val){try{_grieerToast('Bitte Key eingeben','#F59E0B',2000);}catch(e){}return;}
-  window._SB_SERVICE_KEY=val;
-  try{localStorage.setItem('grieer_sb_service_key',val);}catch(e){}
-  settingsSaveToCloud('sb_service_key',val);
-  try{_grieerToast('\u2705 Service Key gespeichert + sync!','#16A34A',2000);}catch(e){}
-  if(inp) inp.value=val.slice(0,15)+'...';
+  var v=(document.getElementById('sb-service-key-input')?.value||'').trim();
+  if(!v){try{_grieerToast('Bitte Key eingeben','#F59E0B',2000);}catch(e){}return;}
+  _SB_SERVICE_KEY=v;
+  try{localStorage.setItem('grieer_sb_service_key',v);}catch(e){}
+  // Service Key bleibt NUR lokal – wird nicht in Cloud synchronisiert (Sicherheit)
+  try{_grieerToast('✅ Service Key lokal gespeichert!','#16A34A',2000);}catch(e){}
+  var inp=document.getElementById('sb-service-key-input');if(inp)inp.value=v.slice(0,15)+'...';
 }
-
-function saveClaudeKey(){
-  var inp=document.getElementById('claude-api-key-input');
-  var val=(inp?.value||'').trim();
-  if(!val){try{_grieerToast('Bitte Key eingeben','#F59E0B',2000);}catch(e){}return;}
-  window._claudeApiKey=val;
-  try{localStorage.setItem('grieer_claude_key',val);}catch(e){}
-  settingsSaveToCloud('claude_key',val);
-  try{_grieerToast('\u2705 Claude Key gespeichert + sync!','#16A34A',2000);}catch(e){}
-  if(inp) inp.value=val.slice(0,15)+'...';
-}
-
-function sbKey(){return window._SB_SERVICE_KEY||(localStorage.getItem('grieer_sb_service_key')||'')||_SB_KEY;}
-function claudeKey(){return window._claudeApiKey||(localStorage.getItem('grieer_claude_key')||'');}
-
-/* ── MITARBEITER SYNC ── */
-async function syncUsersToCloud(){
-  if(!sbCheckOnline()) return;
-  var users=typeof _loadUsers==='function'?_loadUsers():[];
-  if(!users||!users.length) return;
-  try{
-    var rows=users.filter(function(u){return u&&u.id;}).map(function(u){
-      return {id:u.id,firma_id:'grieer',name:u.name||'',
-        code:Array.isArray(u.code)?u.code.join(','):(u.code||''),
-        role:u.role||'user',pages:JSON.stringify(u.pages||[]),
-        aktualisiert_am:new Date().toISOString()};
-    });
-    await fetch(_SB_URL+'/rest/v1/grieer_mitarbeiter',{method:'POST',
-      headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
-      body:JSON.stringify(rows)});
-  }catch(e){}
-}
-
-async function syncUsersFromCloud(){
-  if(!sbCheckOnline()) return;
-  try{
-    var resp=await fetch(_SB_URL+'/rest/v1/grieer_mitarbeiter?firma_id=eq.grieer',{
-      headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}
-    });
-    if(!resp.ok) return;
-    var rows=await resp.json();
-    if(!Array.isArray(rows)||!rows.length) return;
-    var cloud=rows.map(function(r){
-      var pages=[];try{pages=JSON.parse(r.pages||'[]');}catch(e){}
-      var code=(r.code||'').includes(',')?r.code.split(','):[r.code||''];
-      return {id:r.id,name:r.name||'',code:code,role:r.role||'user',pages:pages};
-    });
-    var local=typeof _loadUsers==='function'?_loadUsers():[];
-    var map={};
-    local.forEach(function(u){if(u&&u.id)map[u.id]=u;});
-    cloud.forEach(function(u){if(u&&u.id&&!map[u.id])map[u.id]=u;});
-    var merged=Object.values(map).filter(function(u){return u&&u.id;});
-    if(typeof _saveUsers==='function')_saveUsers(merged);
-    setTimeout(function(){if(typeof adminShowUsers==='function')adminShowUsers();},200);
-    _syncUpdateStatus('Mitarbeiter \u2705');
-  }catch(e){console.error('syncUsersFromCloud:',e);}
-}
-
-/* ── KUNDEN SYNC ── */
-async function kundenSyncToCloud(){
-  if(!sbCheckOnline()) return 0;
-  var kunden=[];try{kunden=JSON.parse(localStorage.getItem('grieer-kunden')||'[]');}catch(e){}
-  if(!kunden.length) return 0;
-  try{
-    var rows=kunden.filter(function(k){return k&&(k.name||k.nr);}).map(function(k){
-      var id=k.id||'kd_'+(k.nr||'').replace(/\W/g,'_')+'_'+Math.random().toString(36).slice(2,6);
-      return {id:id,firma_id:'grieer',nr:k.nr||'',name:k.name||'',
-        adresse:k.str||k.adresse||'',plz:k.plz||'',ort:k.ort||'',
-        telefon:k.tel||k.telefon||'',email:k.email||'',notizen:k.notizen||'',
-        aktualisiert_am:new Date().toISOString()};
-    });
-    var r=await fetch(_SB_URL+'/rest/v1/grieer_kunden',{method:'POST',
-      headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
-      body:JSON.stringify(rows)});
-    return r.ok?rows.length:0;
-  }catch(e){return 0;}
-}
-
-async function syncKundenFromCloud(){
-  if(!sbCheckOnline()) return 0;
-  try{
-    var resp=await fetch(_SB_URL+'/rest/v1/grieer_kunden?firma_id=eq.grieer&order=name',{
-      headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}
-    });
-    if(!resp.ok) return 0;
-    var cloud=await resp.json();
-    if(!Array.isArray(cloud)||!cloud.length) return 0;
-    var local=[];try{local=JSON.parse(localStorage.getItem('grieer-kunden')||'[]');}catch(e){}
-    var map={};
-    local.forEach(function(k){if(k)map[k.id||k.nr||k.name]=k;});
-    var neu=0;
-    cloud.forEach(function(r){
-      var key=r.id||(r.nr||'')+'_'+(r.name||'').toLowerCase();
-      if(!map[key]){map[key]={id:r.id,nr:r.nr||'',name:r.name||'',str:r.adresse||'',plz:r.plz||'',ort:r.ort||'',tel:r.telefon||'',email:r.email||'',notizen:r.notizen||''};neu++;}
-    });
-    var merged=Object.values(map).filter(function(k){return k&&k.name;});
-    try{localStorage.setItem('grieer-kunden',JSON.stringify(merged));}catch(e){}
-    _syncUpdateStatus('Kunden \u2705');
-    return neu;
-  }catch(e){return 0;}
-}
-
-async function kundenCloudSync(){
-  var btn=document.getElementById('btn-kunden-sync');
-  var status=document.getElementById('kunden-sync-status');
-  function upd(msg,col){if(status){status.textContent=msg;status.style.color=col||'#374151';}}
-  if(btn){btn.disabled=true;btn.textContent='Synchronisiere...';}
-  if(!sbCheckOnline()){upd('\u274C Kein Internet','#DC2626');if(btn){btn.disabled=false;btn.textContent='\u21C5 Kunden synchronisieren';}return;}
-  var up=await kundenSyncToCloud();
-  var down=await syncKundenFromCloud();
-  upd('\u2705 '+up+' hoch | '+down+' neu herunter','#16A34A');
-  try{_grieerToast('\u2705 Kunden sync: '+up+' hoch, '+down+' neu','#16A34A',3000);}catch(e){}
-  if(btn){btn.disabled=false;btn.textContent='\u21C5 Kunden synchronisieren';}
-}
-
-/* ── KI WISSEN SYNC ── */
-async function kiLadeWissenAusSupabase(){
-  if(!sbCheckOnline()) return false;
-  try{
-    var resp=await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen?order=kategorie&limit=200',{
-      headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}
-    });
-    if(!resp.ok) return false;
-    var rows=await resp.json();
-    if(!Array.isArray(rows)||!rows.length) return false;
-    var text='';rows.forEach(function(r){text+='\n==='+r.kategorie+': '+r.titel+'===\n'+r.inhalt+'\n';});
-    _kiSupabaseWissen=text;
-    var badge=document.getElementById('ki-sb-badge');
-    if(badge){badge.textContent='\u2601\uFE0F '+rows.length+' Wissenseintr\u00e4ge aus Cloud';badge.style.display='block';}
-    _syncUpdateStatus('KI-Wissen \u2705');
-    return true;
-  }catch(e){return false;}
-}
-
-async function kiWissenHochladen(kat,titel,inhalt){
-  if(!sbCheckOnline()) return false;
-  try{
-    var r=await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen',{method:'POST',
-      headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
-      body:JSON.stringify({kategorie:kat,titel:titel,inhalt:inhalt,aktualisiert_am:new Date().toISOString()})});
-    return r.ok;
-  }catch(e){return false;}
-}
-
-async function kiUploadSystemWissen(){
-  if(!sbCheckOnline()){alert('Kein Internet');return;}
-  var btn=document.getElementById('btn-ki-upload');
-  if(btn){btn.disabled=true;btn.textContent='Lade hoch...';}
-  var ab=(typeof KI_SYSTEM==='string'?KI_SYSTEM:'').split(/\n={50,}\n/);
-  var ok=0;
-  for(var i=0;i<ab.length;i++){
-    var s=ab[i].trim();if(!s||s.length<30)continue;
-    var tm=s.match(/^([A-Z\u00c4\u00d6\u00dc][^\n]{3,80})/);
-    var titel=tm?tm[1].replace(/[\u2550\u2554]/g,'').trim().slice(0,80):'Teil '+(i+1);
-    var km=s.match(/TRVB|\u00d6NORM|MB \d|Kehrgesetz|HKG|Tarif|Sperl|OIB|Gas/i);
-    var kat=km?km[0].toUpperCase().slice(0,20):'ALLGEMEIN';
-    var r=await kiWissenHochladen(kat,titel.slice(0,80),s.slice(0,3000));
-    if(r)ok++;
-  }
-  if(btn){btn.disabled=false;btn.textContent='\u2705 '+ok+' hochgeladen';}
-  try{_grieerToast('\u2705 '+ok+' in Supabase!','#16A34A',3000);}catch(e){}
-  await kiLadeWissenAusSupabase();
-}
-
-/* ── ABLAGE SYNC ── */
 function ablageSaveEntry(entry){
-  var all=ablageGetAll();
-  var idx=all.findIndex(function(e){return e.id===entry.id;});
-  if(idx>=0)all[idx]=entry;else all.unshift(entry);
+  var all = ablageGetAll();
+  var idx = all.findIndex(function(e){return e.id===entry.id;});
+  if(idx>=0) all[idx]=entry; else all.unshift(entry);
   try{localStorage.setItem('grieer-ablage',JSON.stringify(all));}catch(e){}
   if(sbCheckOnline()){
-    fetch(_SB_URL+'/rest/v1/grieer_dokumente',{method:'POST',
+    fetch(_SB_URL+'/rest/v1/grieer_dokumente',{
+      method:'POST',
       headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
       body:JSON.stringify({id:entry.id,firma_id:'grieer',doc_type:entry.type||'ablage',doc_nr:entry.id,data:entry,ersteller:entry.ersteller||'',datum:entry.datum||''})
     }).catch(function(){});
   }
 }
 
-/* ── VOLLSTÄNDIGER SYNC ── */
-function _syncUpdateStatus(msg){
-  var el=document.getElementById('sync-status');
-  if(el) el.textContent=(el.textContent?el.textContent+' | ':'')+msg;
+/* KI-Wissen aus Supabase laden */
+async function kiLadeWissenAusSupabase(){
+  if(!sbCheckOnline()) return false;
+  try{
+    var resp = await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen?order=kategorie&limit=200',{
+      headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}
+    });
+    if(!resp.ok) return false;
+    var rows = await resp.json();
+    if(!Array.isArray(rows)||rows.length===0) return false;
+    var text='';
+    rows.forEach(function(r){text+='\n==='+r.kategorie+': '+r.titel+'===\n'+r.inhalt+'\n';});
+    _kiSupabaseWissen = text;
+    var badge = document.getElementById('ki-sb-badge');
+    if(badge){badge.textContent='\u2601\uFE0F '+rows.length+' Wissenseintr\u00e4ge aus Cloud';badge.style.display='block';}
+    return true;
+  }catch(e){return false;}
 }
 
-async function syncFromCloud(){
-  if(!sbCheckOnline()) return;
-  await settingsLoadFromCloud();
-  await syncUsersFromCloud();
-  await syncKundenFromCloud();
+/* KI-Wissenseintrag speichern */
+async function kiWissenHochladen(kat,titel,inhalt){
+  if(!sbCheckOnline()) return false;
+  try{
+    var r = await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify({kategorie:kat,titel:titel,inhalt:inhalt,aktualisiert_am:new Date().toISOString()})
+    });
+    return r.ok;
+  }catch(e){return false;}
+}
+
+/* Eingebautes KI-Wissen in Supabase hochladen */
+async function kiUploadSystemWissen(){
+  if(!sbCheckOnline()){alert('Bitte Internet verbinden');return;}
+  var btn = document.getElementById('btn-ki-upload');
+  if(btn){btn.disabled=true;btn.textContent='Lade hoch...';}
+  var abschnitte = (typeof KI_SYSTEM==='string'?KI_SYSTEM:'').split(/\n={50,}\n/);
+  var ok=0;
+  for(var i=0;i<abschnitte.length;i++){
+    var ab=abschnitte[i].trim();
+    if(!ab||ab.length<30) continue;
+    var tm=ab.match(/^([A-Z\u00c4\u00d6\u00dc][^\n]{3,80})/);
+    var titel=tm?tm[1].replace(/[\u2550\u2554]/g,'').trim().slice(0,80):'Teil '+(i+1);
+    var km=ab.match(/TRVB|\u00d6NORM|MB \d|Kehrgesetz|HKG|Tarif|Sperl|OIB|Gas|Rauchfang/i);
+    var kat=km?km[0].toUpperCase().slice(0,20):'ALLGEMEIN';
+    var r=await kiWissenHochladen(kat,titel.slice(0,80),ab.slice(0,3000));
+    if(r) ok++;
+  }
+  if(btn){btn.disabled=false;btn.textContent='\u2705 '+ok+' hochgeladen';}
+  var stat=document.getElementById('ki-upload-status');
+  if(stat) stat.textContent='\u2705 '+ok+' Eintr\u00e4ge gespeichert';
+  try{_grieerToast('\u2705 '+ok+' in Supabase!','#16A34A',3000);}catch(e){}
   await kiLadeWissenAusSupabase();
-  // Sync-Anzeige in Settings aktualisieren
-  var el=document.getElementById('sync-status');
-  if(el&&!el.textContent) el.textContent='\u2705 Alles synchronisiert';
 }
 
-async function grieerSyncAll(btn){
-  if(btn){btn.disabled=true;btn.textContent='Synchronisiere...';}
-  var status=document.getElementById('sync-status');
-  if(status) status.textContent='';
-  if(!sbCheckOnline()){
-    if(status) status.textContent='\u274C Kein Internet';
-    if(btn){btn.disabled=false;btn.textContent='\u21BB Jetzt synchronisieren';}
-    return;
-  }
-  // Alles hochladen + runterladen
-  await syncUsersToCloud();
-  await syncUsersFromCloud();
-  await kundenSyncToCloud();
-  await syncKundenFromCloud();
-  // Ablage hochladen
-  var ablage=[];try{ablage=JSON.parse(localStorage.getItem('grieer-ablage')||'[]');}catch(e){}
-  if(ablage.length){
-    try{
-      await fetch(_SB_URL+'/rest/v1/grieer_dokumente',{method:'POST',
-        headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
-        body:JSON.stringify(ablage.map(function(e){return{id:e.id,firma_id:'grieer',doc_type:e.type||'ablage',doc_nr:e.id,data:e,ersteller:e.ersteller||'',datum:e.datum||''};}))});
-    }catch(ex){}
-  }
-  var el=document.getElementById('sync-status');
-  if(el) el.textContent='\u2705 Alles synchronisiert!';
-  try{_grieerToast('\u2705 Komplett synchronisiert!','#16A34A',2500);}catch(e){}
-  if(btn){btn.disabled=false;btn.textContent='\u21BB Jetzt synchronisieren';}
-}
-
-/* ── PDF UPLOAD ── */
+/* PDF-Datei hochladen (Text extrahieren + Supabase) */
 async function pdfUploadStart(input){
-  var file=input.files[0];if(!file)return;
+  var file=input.files[0]; if(!file) return;
   if(!sbCheckOnline()){try{_grieerToast('Kein Internet','#DC2626',2000);}catch(e){}return;}
   var kat=(document.getElementById('pdf-upload-kategorie')?.value||'').trim()||'ALLGEMEIN';
   var statusEl=document.getElementById('pdf-upload-status');
@@ -15704,29 +15496,481 @@ async function pdfUploadStart(input){
   try{
     var ab=await new Promise(function(res,rej){var r=new FileReader();r.onload=function(e){res(e.target.result);};r.onerror=rej;r.readAsArrayBuffer(file);});
     var lib=window['pdfjs-dist/build/pdf'];
-    if(!lib){upd('PDF.js fehlt','#DC2626');return;}
+    if(!lib){upd('PDF.js nicht geladen \u2013 Seite neu laden','#DC2626');return;}
     lib.GlobalWorkerOptions.workerSrc='';
     var pdf=await lib.getDocument({data:ab,useSystemFonts:true}).promise;
+    upd(pdf.numPages+' Seiten \u2013 extrahiere...');
     var txt='';
-    for(var p=1;p<=Math.min(pdf.numPages,40);p++){var pg=await pdf.getPage(p);var tc=await pg.getTextContent();txt+=tc.items.map(function(x){return x.str;}).join(' ')+'\n';}
+    for(var p=1;p<=Math.min(pdf.numPages,40);p++){
+      var pg=await pdf.getPage(p);
+      var tc=await pg.getTextContent();
+      txt+=tc.items.map(function(x){return x.str;}).join(' ')+'\n';
+    }
     if(txt.trim().length<50){upd('Kein Text (verschl\u00fcsselt?)','#F59E0B');return;}
     var fname=file.name.replace('.pdf','').replace(/_/g,' ');
     var parts=txt.split(/\n{2,}/);var cur='';var ci=1;var chunks=[];
-    parts.forEach(function(pt){if((cur+pt).length>2500&&cur.length>100){chunks.push({t:fname+(ci>1?' T'+ci:''),c:cur.trim()});ci++;cur=pt+'\n\n';}else{cur+=pt+'\n\n';}});
-    if(cur.trim().length>50)chunks.push({t:fname+(ci>1?' T'+ci:''),c:cur.trim()});
-    var ok=0;for(var j=0;j<chunks.length;j++){var r2=await kiWissenHochladen(kat,chunks[j].t.slice(0,80),chunks[j].c.slice(0,3000));if(r2)ok++;}
-    upd('\u2705 '+ok+' Abschnitte gespeichert!','#16A34A');
+    parts.forEach(function(pt){
+      if((cur+pt).length>2500&&cur.length>100){chunks.push({t:fname+(ci>1?' T'+ci:''),c:cur.trim()});ci++;cur=pt+'\n\n';}
+      else{cur+=pt+'\n\n';}
+    });
+    if(cur.trim().length>50) chunks.push({t:fname+(ci>1?' T'+ci:''),c:cur.trim()});
+    var ok=0;
+    for(var j=0;j<chunks.length;j++){
+      var r2=await kiWissenHochladen(kat,chunks[j].t.slice(0,80),chunks[j].c.slice(0,3000));
+      if(r2) ok++;
+    }
+    upd('\u2705 '+ok+' Abschnitte in Supabase!','#16A34A');
     try{_grieerToast('\u2705 PDF hochgeladen','#16A34A',2500);}catch(e){}
     await kiLadeWissenAusSupabase();
   }catch(err){upd('Fehler: '+err.message,'#DC2626');}
   input.value='';
 }
 
-/* ── STORAGE IMPORT ── */
+/* PDFs aus Supabase Storage importieren */
 async function kiImportManuell(){
   var bucketName=(document.getElementById('storage-bucket-name')?.value||'grieer-pdfs').trim();
   var statusEl=document.getElementById('storage-import-status');
   function upd(msg,col){if(statusEl){statusEl.innerHTML+='<div style="color:'+(col||'#374151')+'">'+msg+'</div>';}}
+  if(statusEl) statusEl.innerHTML='';
+  if(!sbCheckOnline()){upd('\u274C Kein Internet','#DC2626');return;}
+  var btn=document.getElementById('btn-storage-import');
+  function setBtn(t,d){if(btn){btn.textContent=t;btn.disabled=!!d;}}
+  setBtn('Verbinde...',true);
+  try{
+    var lr=await fetch(_SB_URL+'/storage/v1/object/list/'+bucketName,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':sbKey(),'Authorization':'Bearer '+sbKey()},
+      body:JSON.stringify({limit:200,offset:0,prefix:'',sortBy:{column:'name',order:'asc'}})
+    });
+    if(lr.status===403||lr.status===400){
+      upd('\u274C Zugriff verweigert! Bucket ist privat.','#DC2626');
+      upd('\u2192 Service Role Key eingeben ODER Bucket auf Public stellen','#7C3AED');
+      setBtn('&#128196; PDFs aus Storage importieren',false); return;
+    }
+    if(lr.status===404){upd('\u274C Bucket "'+bucketName+'" nicht gefunden.','#DC2626');setBtn('&#128196; PDFs aus Storage importieren',false);return;}
+    if(!lr.ok){upd('\u274C Fehler: '+lr.status,'#DC2626');setBtn('&#128196; PDFs aus Storage importieren',false);return;}
+    var files=await lr.json();
+    var pdfs=files.filter(function(f){return f.name&&f.name.toLowerCase().endsWith('.pdf');});
+    upd('\u2705 '+pdfs.length+' PDFs in "'+bucketName+'"');
+    if(!pdfs.length){upd('Keine PDFs. Bitte PDFs in den Bucket hochladen.','#F59E0B');setBtn('&#128196; PDFs aus Storage importieren',false);return;}
+    var lib=window['pdfjs-dist/build/pdf'];
+    if(!lib){upd('\u274C PDF.js nicht geladen','#DC2626');return;}
+    lib.GlobalWorkerOptions.workerSrc='';
+    var ok=0,skip=0;
+    for(var i=0;i<pdfs.length;i++){
+      setBtn('('+(i+1)+'/'+pdfs.length+') '+pdfs[i].name.slice(0,20)+'...',true);
+      try{
+        var dl=await fetch(_SB_URL+'/storage/v1/object/'+bucketName+'/'+encodeURIComponent(pdfs[i].name),{
+          headers:{'apikey':sbKey(),'Authorization':'Bearer '+sbKey()}
+        });
+        if(!dl.ok){skip++;continue;}
+        var ab2=await dl.arrayBuffer();
+        var pdf2=await lib.getDocument({data:ab2,useSystemFonts:true}).promise;
+        var txt2='';
+        for(var p=1;p<=Math.min(pdf2.numPages,40);p++){
+          var pg2=await pdf2.getPage(p);var tc2=await pg2.getTextContent();
+          txt2+=tc2.items.map(function(x){return x.str;}).join(' ')+'\n';
+        }
+        if(txt2.trim().length<50){skip++;continue;}
+        var fn2=pdfs[i].name.toUpperCase();
+        var kat2=fn2.includes('TRVB')?'TRVB':fn2.includes('OENORM')||fn2.includes('ÖNORM')?'OENORM':fn2.includes('OIB')?'OIB':fn2.includes('HKG')||fn2.includes('KEHR')||fn2.includes('BGLD')?'BGLD_RECHT':fn2.includes('MB_')?'MERKBLATT':'ALLGEMEIN';
+        var parts2=txt2.split(/\n{2,}/);var cur2='';var ci2=1;var ch2=[];
+        parts2.forEach(function(pt){if((cur2+pt).length>2500&&cur2.length>100){ch2.push({t:pdfs[i].name.replace('.pdf','')+(ci2>1?' T'+ci2:''),c:cur2.trim()});ci2++;cur2=pt+'\n\n';}else{cur2+=pt+'\n\n';}});
+        if(cur2.trim().length>50) ch2.push({t:pdfs[i].name.replace('.pdf','')+(ci2>1?' T'+ci2:''),c:cur2.trim()});
+        for(var j=0;j<ch2.length;j++) await kiWissenHochladen(kat2,ch2[j].t.slice(0,80),ch2[j].c.slice(0,3000));
+        ok++;
+      }catch(er){skip++;}
+    }
+    await kiLadeWissenAusSupabase();
+    upd('\u2705 '+ok+' PDFs importiert | '+skip+' \u00fcbersprungen','#16A34A');
+    setBtn('&#128196; PDFs aus Storage importieren',false);
+    try{_grieerToast('\u2705 '+ok+' PDFs in KI!','#16A34A',3000);}catch(e){}
+  }catch(err){
+    upd('\u274C '+err.message,'#DC2626');
+    setBtn('&#128196; PDFs aus Storage importieren',false);
+  }
+}
+
+/* Verbindungstest */
+async function supabaseDiagnostik(){
+  var el=document.getElementById('sb-diag-output');
+  function log(msg,col){if(el)el.innerHTML+='<div style="color:'+(col||'#374151')+'">'+msg+'</div>';}
+  if(el) el.innerHTML='';
+  if(!navigator.onLine){log('\u274C Kein Internet','#DC2626');return;}
+  log('\u2705 Internet OK');
+  try{var p=await fetch(_SB_URL+'/rest/v1/',{headers:{'apikey':_SB_KEY}});log('\u2705 Supabase erreichbar ('+p.status+')');}
+  catch(e){log('\u274C Supabase nicht erreichbar: '+e.message,'#DC2626');return;}
+  try{
+    var r1=await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen?limit=1',{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+    if(r1.status===200){var d=await r1.json();log('\u2705 grieer_ki_wissen: '+d.length+' Eintr\u00e4ge'+(d.length===0?' \u2192 bitte Wissen hochladen!':''));}
+    else log('\u274C grieer_ki_wissen fehlt \u2192 SQL ausf\u00fchren!','#DC2626');
+  }catch(e){}
+  var bn=(document.getElementById('storage-bucket-name')?.value||'grieer-pdfs').trim();
+  try{
+    var lr=await fetch(_SB_URL+'/storage/v1/object/list/'+bn,{
+      method:'POST',headers:{'Content-Type':'application/json','apikey':sbKey(),'Authorization':'Bearer '+sbKey()},
+      body:JSON.stringify({limit:5,offset:0,prefix:'',sortBy:{column:'name',order:'asc'}})
+    });
+    if(lr.status===200){var fs=await lr.json();var ps=fs.filter(function(f){return f.name&&f.name.toLowerCase().endsWith('.pdf');});log('\u2705 Bucket "'+bn+'": '+fs.length+' Dateien, '+ps.length+' PDFs'+(ps.length>0?' \u2192 Bereit zum Import!':' \u274C keine PDFs'));}
+    else if(lr.status===403||lr.status===400){log('\u274C Bucket privat \u2192 Service Key eingeben oder Public aktivieren','#DC2626');}
+    else{log('\u274C Bucket "'+bn+'" nicht gefunden ('+lr.status+')','#DC2626');}
+  }catch(e){log('\u274C Storage: '+e.message,'#DC2626');}
+  try{var ab=JSON.parse(localStorage.getItem('grieer-ablage')||'[]');log('\u2705 Lokale Ablage: '+ab.length+' Eintr\u00e4ge');}catch(e){}
+  log('\u23F9 Fertig.','#64748B');
+}
+
+/* Auto-load beim Start */
+window.addEventListener('load',function(){
+  setTimeout(function(){
+    if(typeof kiLadeWissenAusSupabase==='function') kiLadeWissenAusSupabase();
+  },2000);
+});
+window.addEventListener('online',function(){
+  if(typeof kiLadeWissenAusSupabase==='function') kiLadeWissenAusSupabase();
+});
+
+/* =====================================================
+   MITARBEITER + KUNDEN CLOUD-SYNC
+   ===================================================== */
+
+/* ─── MITARBEITER ─────────────────────────────────── */
+async function syncUsersToCloud(){
+  if(!sbCheckOnline()) return;
+  var users = _loadUsers().filter(function(u){return u.id!=='admin';});
+  if(!users.length) return;
+  try{
+    await fetch(_SB_URL+'/rest/v1/grieer_mitarbeiter',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
+      body: JSON.stringify(users.map(function(u){return {
+        id: u.id, firma_id:'grieer', name:u.name||'',
+        code: typeof u.code==='string'?u.code:(u.code||[]).join(','),
+        role: u.role||'user',
+        pages: JSON.stringify(u.pages||[]),
+        aktualisiert_am: new Date().toISOString()
+      };}))
+    });
+  }catch(e){}
+}
+
+async function syncUsersFromCloud(){
+  if(!sbCheckOnline()) return;
+  try{
+    var resp = await fetch(_SB_URL+'/rest/v1/grieer_mitarbeiter?firma_id=eq.grieer',{
+      headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}
+    });
+    if(!resp.ok) return;
+    var rows = await resp.json();
+    if(!Array.isArray(rows)||rows.length===0) return;
+    var cloudUsers = rows.map(function(r){
+      var pages;
+      try{pages=JSON.parse(r.pages||'[]');}catch(e){pages=r.pages||[];}
+      return {id:r.id,name:r.name||'',code:r.code||'',role:r.role||'user',pages:pages};
+    });
+    // Merge: lokale Users + Cloud-Users (Cloud gewinnt bei Konflikt)
+    var local = _loadUsers();
+    var map = {};
+    local.forEach(function(u){map[u.id]=u;});
+    cloudUsers.forEach(function(u){map[u.id]=u;});
+    var admin = local.find(function(u){return u.role==='admin';});
+    if(admin) map[admin.id]=admin; // Admin immer lokal behalten
+    _saveUsers(Object.values(map));
+    if(typeof adminShowUsers==='function') adminShowUsers();
+  }catch(e){}
+}
+
+/* ─── KUNDEN ──────────────────────────────────────── */
+async function syncKundenToCloud(kunden){
+  if(!sbCheckOnline()) return;
+  kunden = kunden || JSON.parse(localStorage.getItem('grieer-kunden')||'[]');
+  if(!kunden.length) return;
+  try{
+    await fetch(_SB_URL+'/rest/v1/grieer_kunden',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
+      body: JSON.stringify(kunden.map(function(k){return {
+        id: k.id||(k.nr?'k_'+k.nr:'k_'+Math.random().toString(36).slice(2)),
+        firma_id:'grieer', nr:k.nr||'', name:k.name||'',
+        adresse:k.adresse||k.str||'', plz:k.plz||'', ort:k.ort||'',
+        telefon:k.telefon||k.tel||'', email:k.email||'',
+        notizen:k.notizen||'',
+        aktualisiert_am:new Date().toISOString()
+      };}))
+    });
+  }catch(e){}
+}
+
+async function syncKundenFromCloud(){
+  if(!sbCheckOnline()) return;
+  try{
+    var resp = await fetch(_SB_URL+'/rest/v1/grieer_kunden?firma_id=eq.grieer&order=name',{
+      headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}
+    });
+    if(!resp.ok) return;
+    var rows = await resp.json();
+    if(!Array.isArray(rows)||rows.length===0) return;
+    // Merge mit lokalen Kunden
+    var local = JSON.parse(localStorage.getItem('grieer-kunden')||'[]');
+    var map = {};
+    local.forEach(function(k){if(k.id||k.nr) map[k.id||k.nr]=k;});
+    rows.forEach(function(r){map[r.id]={id:r.id,nr:r.nr,name:r.name,adresse:r.adresse,plz:r.plz,ort:r.ort,telefon:r.telefon,email:r.email,notizen:r.notizen};});
+    var merged = Object.values(map);
+    localStorage.setItem('grieer-kunden', JSON.stringify(merged));
+    return merged.length;
+  }catch(e){return 0;}
+}
+
+/* ─── VOLLSTÄNDIGER SYNC ──────────────────────────── */
+async function grieerSyncAll(btn){
+  if(btn){btn.disabled=true;btn.textContent='Synchronisiere...';}
+  var status = document.getElementById('sync-status');
+  function upd(msg,col){if(status){status.textContent=msg;status.style.color=col||'#64748B';}}
+  
+  if(!sbCheckOnline()){upd('Kein Internet \u2013 Sync nicht m\u00f6glich','#DC2626');if(btn){btn.disabled=false;btn.textContent='\u21BB Jetzt synchronisieren';}return;}
+  
+  upd('Synchronisiere Mitarbeiter...');
+  await syncUsersToCloud();
+  await syncUsersFromCloud();
+  
+  upd('Synchronisiere Kunden...');
+  var kCount = await syncKundenFromCloud();
+  await syncKundenToCloud();
+  
+  upd('Synchronisiere Ablage...');
+  // Ablage: lokale Eintr\u00e4ge in Cloud schieben
+  var ablage = JSON.parse(localStorage.getItem('grieer-ablage')||'[]');
+  if(ablage.length){
+    try{
+      await fetch(_SB_URL+'/rest/v1/grieer_dokumente',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
+        body:JSON.stringify(ablage.map(function(e){return {id:e.id,firma_id:'grieer',doc_type:e.type||'ablage',doc_nr:e.id,data:e,ersteller:e.ersteller||'',datum:e.datum||''};}))
+      });
+    }catch(ex){}
+  }
+  
+  upd('\u2705 Sync abgeschlossen!','#16A34A');
+  try{_grieerToast('\u2705 Alles synchronisiert!','#16A34A',2500);}catch(e){}
+  if(btn){btn.disabled=false;btn.textContent='\u21BB Jetzt synchronisieren';}
+}
+
+/* Auto-Sync beim Start */
+window.addEventListener('load',function(){
+  setTimeout(async function(){
+    if(!sbCheckOnline()) return;
+    await syncUsersFromCloud();
+    await syncKundenFromCloud();
+  },3000);
+});
+
+/* ═══ CLOUD SYNC + KI ERWEITERUNGEN ════════════════════ */
+var _kiAntwortModus='intensiv';
+var _kiSupabaseWissen='';
+var _pvStandortData={land:{rate:0.08,farbe:'#16A34A',text:'Laendlich',info:'0.08%/Mon.'},stadt:{rate:0.12,farbe:'#2563EB',text:'Stadt',info:'0.12%/Mon.'},industrie:{rate:0.20,farbe:'#DC2626',text:'Industrie',info:'0.20%/Mon.'}};
+var _drFotos=[];
+var _SB_SERVICE_KEY='';
+var _claudeApiKey='';
+(function(){try{
+  _SB_SERVICE_KEY=localStorage.getItem('grieer_sb_service_key')||'';
+  _claudeApiKey=localStorage.getItem('grieer_claude_key')||'';
+  window._gKunde=localStorage.getItem('_grieer_lk_name')||'';
+  window._gAdresse=localStorage.getItem('_grieer_lk_addr')||'';
+  window._gPlz=localStorage.getItem('_grieer_lk_plz')||'';
+  window._gTelefon=localStorage.getItem('_grieer_lk_tel')||'';
+  window._gEmail=localStorage.getItem('_grieer_lk_email')||'';
+}catch(e){}})();
+
+function sbCheckOnline(){return typeof _SB_URL!=='undefined'&&_SB_URL&&navigator.onLine;}
+function sbKey(){return _SB_SERVICE_KEY||(localStorage.getItem('grieer_sb_service_key')||'')||_SB_KEY;}
+function claudeKey(){return _claudeApiKey||(localStorage.getItem('grieer_claude_key')||'');}
+
+function saveServiceKey(){
+  var v=(document.getElementById('sb-service-key-input')?.value||'').trim();
+  if(!v){try{_grieerToast('Bitte Key eingeben','#F59E0B',2000);}catch(e){}return;}
+  _SB_SERVICE_KEY=v;try{localStorage.setItem('grieer_sb_service_key',v);}catch(e){}
+  settingsSaveToCloud('sb_service_key',v);
+  try{_grieerToast('\u2705 Service Key gespeichert!','#16A34A',2000);}catch(e){}
+  var inp=document.getElementById('sb-service-key-input');if(inp)inp.value=v.slice(0,15)+'...';
+}
+function saveClaudeKey(){
+  var v=(document.getElementById('claude-api-key-input')?.value||'').trim();
+  if(!v){try{_grieerToast('Bitte Key eingeben','#F59E0B',2000);}catch(e){}return;}
+  _claudeApiKey=v;try{localStorage.setItem('grieer_claude_key',v);}catch(e){}
+  settingsSaveToCloud('claude_key',v);
+  try{_grieerToast('\u2705 Claude Key gespeichert!','#16A34A',2000);}catch(e){}
+  var inp=document.getElementById('claude-api-key-input');if(inp)inp.value=v.slice(0,15)+'...';
+}
+
+async function settingsSaveToCloud(key,value){
+  if(!sbCheckOnline())return;
+  try{await fetch(_SB_URL+'/rest/v1/grieer_einstellungen',{method:'POST',
+    headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
+    body:JSON.stringify({id:'grieer_'+key,firma_id:'grieer',key_name:key,value_data:value,aktualisiert_am:new Date().toISOString()})
+  });}catch(e){}
+}
+async function settingsLoadFromCloud(){
+  if(!sbCheckOnline())return;
+  try{
+    var r=await fetch(_SB_URL+'/rest/v1/grieer_einstellungen?firma_id=eq.grieer',{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+    if(!r.ok)return;
+    var rows=await r.json();
+    if(!Array.isArray(rows))return;
+    rows.forEach(function(r){if(!r.key_name||!r.value_data)return;try{localStorage.setItem('grieer_'+r.key_name,r.value_data);}catch(e){}});
+    // Service Key wird nicht aus Cloud geladen (nur lokal)
+    _claudeApiKey=localStorage.getItem('grieer_claude_key')||'';
+  }catch(e){}
+}
+
+async function syncUsersToCloud(){
+  if(!sbCheckOnline())return;
+  var users=typeof _loadUsers==='function'?_loadUsers():[];
+  if(!users||!users.length)return;
+  try{await fetch(_SB_URL+'/rest/v1/grieer_mitarbeiter',{method:'POST',
+    headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
+    body:JSON.stringify(users.filter(function(u){return u&&u.id;}).map(function(u){
+      return{id:u.id,firma_id:'grieer',name:u.name||'',code:Array.isArray(u.code)?u.code.join(','):(u.code||''),role:u.role||'user',pages:JSON.stringify(u.pages||[]),aktualisiert_am:new Date().toISOString()};
+    }))});}catch(e){}
+}
+async function syncUsersFromCloud(){
+  if(!sbCheckOnline())return;
+  try{
+    var r=await fetch(_SB_URL+'/rest/v1/grieer_mitarbeiter?firma_id=eq.grieer',{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+    if(!r.ok)return;
+    var rows=await r.json();
+    if(!Array.isArray(rows)||!rows.length)return;
+    var cloud=rows.map(function(r){var pages=[];try{pages=JSON.parse(r.pages||'[]');}catch(e){}var code=(r.code||'').includes(',')?r.code.split(','):[r.code||''];return{id:r.id,name:r.name||'',code:code,role:r.role||'user',pages:pages};});
+    var local=typeof _loadUsers==='function'?_loadUsers():[];
+    var map={};local.forEach(function(u){if(u&&u.id)map[u.id]=u;});
+    cloud.forEach(function(u){if(u&&u.id&&!map[u.id])map[u.id]=u;});
+    var merged=Object.values(map).filter(function(u){return u&&u.id;});
+    if(typeof _saveUsers==='function')_saveUsers(merged);
+    setTimeout(function(){if(typeof adminShowUsers==='function')adminShowUsers();},200);
+  }catch(e){}
+}
+
+async function kundenSyncToCloud(){
+  if(!sbCheckOnline())return 0;
+  var kunden=[];try{kunden=JSON.parse(localStorage.getItem('grieer-kunden')||'[]');}catch(e){}
+  if(!kunden.length)return 0;
+  try{
+    var rows=kunden.filter(function(k){return k&&(k.name||k.nr);}).map(function(k){
+      var id=k.id||'kd_'+(k.nr||'').replace(/\W/g,'_')+'_'+Math.random().toString(36).slice(2,6);
+      return{id:id,firma_id:'grieer',nr:k.nr||'',name:k.name||'',adresse:k.str||k.adresse||'',plz:k.plz||'',ort:k.ort||'',telefon:k.tel||k.telefon||'',email:k.email||'',notizen:k.notizen||'',aktualisiert_am:new Date().toISOString()};
+    });
+    var r=await fetch(_SB_URL+'/rest/v1/grieer_kunden',{method:'POST',headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(rows)});
+    return r.ok?rows.length:0;
+  }catch(e){return 0;}
+}
+async function syncKundenFromCloud(){
+  if(!sbCheckOnline())return 0;
+  try{
+    var r=await fetch(_SB_URL+'/rest/v1/grieer_kunden?firma_id=eq.grieer&order=name',{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+    if(!r.ok)return 0;
+    var cloud=await r.json();
+    if(!Array.isArray(cloud)||!cloud.length)return 0;
+    var local=[];try{local=JSON.parse(localStorage.getItem('grieer-kunden')||'[]');}catch(e){}
+    var map={};local.forEach(function(k){if(k)map[k.id||k.nr||k.name]=k;});
+    var neu=0;cloud.forEach(function(r){var key=r.id||(r.nr||'')+'_'+(r.name||'').toLowerCase();if(!map[key]){map[key]={id:r.id,nr:r.nr||'',name:r.name||'',str:r.adresse||'',plz:r.plz||'',ort:r.ort||'',tel:r.telefon||'',email:r.email||'',notizen:r.notizen||''};neu++;}});
+    try{localStorage.setItem('grieer-kunden',JSON.stringify(Object.values(map).filter(function(k){return k&&k.name;})));}catch(e){}
+    return neu;
+  }catch(e){return 0;}
+}
+async function kundenCloudSync(){
+  var btn=document.getElementById('btn-kunden-sync');
+  var status=document.getElementById('kunden-sync-status');
+  function upd(m,c){if(status){status.textContent=m;status.style.color=c||'#374151';}}
+  if(btn){btn.disabled=true;btn.textContent='Sync...';}
+  if(!sbCheckOnline()){upd('\u274C Kein Internet','#DC2626');if(btn){btn.disabled=false;btn.textContent='\u21C5 Kunden sync';}return;}
+  var up=await kundenSyncToCloud(),down=await syncKundenFromCloud();
+  upd('\u2705 '+up+' hoch | '+down+' neu','#16A34A');
+  if(btn){btn.disabled=false;btn.textContent='\u21C5 Kunden sync';}
+}
+
+async function kiLadeWissenAusSupabase(){
+  if(!sbCheckOnline())return false;
+  try{
+    var r=await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen?order=kategorie&limit=200',{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+    if(!r.ok)return false;
+    var rows=await r.json();
+    if(!Array.isArray(rows)||!rows.length)return false;
+    var text='';rows.forEach(function(r){text+='\n==='+r.kategorie+': '+r.titel+'===\n'+r.inhalt+'\n';});
+    _kiSupabaseWissen=text;
+    var badge=document.getElementById('ki-sb-badge');if(badge){badge.textContent='\u2601\uFE0F '+rows.length+' Wissenseintr\u00e4ge';badge.style.display='block';}
+    return true;
+  }catch(e){return false;}
+}
+async function kiWissenHochladen(kat,titel,inhalt){
+  if(!sbCheckOnline())return false;
+  try{var r=await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen',{method:'POST',headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},body:JSON.stringify({kategorie:kat,titel:titel,inhalt:inhalt,aktualisiert_am:new Date().toISOString()})});return r.ok;}catch(e){return false;}
+}
+async function kiUploadSystemWissen(){
+  if(!sbCheckOnline()){alert('Kein Internet');return;}
+  var btn=document.getElementById('btn-ki-upload');if(btn){btn.disabled=true;btn.textContent='Lade hoch...';}
+  var ab=(typeof KI_SYSTEM==='string'?KI_SYSTEM:'').split(/\n={50,}\n/);var ok=0;
+  for(var i=0;i<ab.length;i++){var s=ab[i].trim();if(!s||s.length<30)continue;var tm=s.match(/^([A-Z\u00c4\u00d6\u00dc][^\n]{3,80})/);var titel=tm?tm[1].replace(/[\u2550\u2554]/g,'').trim().slice(0,80):'Teil '+(i+1);var km=s.match(/TRVB|\u00d6NORM|MB \d|Kehrgesetz|HKG|Tarif|Sperl|OIB|Gas/i);var kat=km?km[0].toUpperCase().slice(0,20):'ALLGEMEIN';if(await kiWissenHochladen(kat,titel.slice(0,80),s.slice(0,3000)))ok++;}
+  if(btn){btn.disabled=false;btn.textContent='\u2705 '+ok+' hochgeladen';}
+  var stat=document.getElementById('ki-upload-status');if(stat)stat.textContent='\u2705 '+ok+' Eintr\u00e4ge';
+  try{_grieerToast('\u2705 '+ok+' in Supabase!','#16A34A',3000);}catch(e){}
+  await kiLadeWissenAusSupabase();
+}
+
+async function ablageSaveEntry(entry){
+  var all=ablageGetAll?ablageGetAll():[];
+  var idx=all.findIndex(function(e){return e.id===entry.id;});
+  if(idx>=0)all[idx]=entry;else all.unshift(entry);
+  try{localStorage.setItem('grieer-ablage',JSON.stringify(all));}catch(e){}
+  if(sbCheckOnline()){fetch(_SB_URL+'/rest/v1/grieer_dokumente',{method:'POST',headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},body:JSON.stringify({id:entry.id,firma_id:'grieer',doc_type:entry.type||'ablage',doc_nr:entry.id,data:entry,ersteller:entry.ersteller||'',datum:entry.datum||''})}).catch(function(){});}
+}
+
+async function syncFromCloud(){
+  if(!sbCheckOnline())return;
+  await settingsLoadFromCloud();
+  await syncUsersFromCloud();
+  await syncKundenFromCloud();
+  await kiLadeWissenAusSupabase();
+  var el=document.getElementById('sync-status');if(el)el.textContent='\u2705 Synchronisiert';
+}
+async function grieerSyncAll(btn){
+  if(btn){btn.disabled=true;btn.textContent='Sync...';}
+  if(!sbCheckOnline()){if(btn){btn.disabled=false;btn.textContent='\u21BB Sync';}return;}
+  await syncUsersToCloud();await syncUsersFromCloud();
+  await kundenSyncToCloud();await syncKundenFromCloud();
+  var ablage=[];try{ablage=JSON.parse(localStorage.getItem('grieer-ablage')||'[]');}catch(e){}
+  if(ablage.length){try{await fetch(_SB_URL+'/rest/v1/grieer_dokumente',{method:'POST',headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(ablage.map(function(e){return{id:e.id,firma_id:'grieer',doc_type:e.type||'ablage',doc_nr:e.id,data:e,ersteller:e.ersteller||'',datum:e.datum||''};}))});}catch(ex){}}
+  try{_grieerToast('\u2705 Alles synchronisiert!','#16A34A',2500);}catch(e){}
+  if(btn){btn.disabled=false;btn.textContent='\u21BB Sync';}
+}
+
+async function pdfUploadStart(input){
+  var file=input.files[0];if(!file)return;
+  if(!sbCheckOnline()){try{_grieerToast('Kein Internet','#DC2626',2000);}catch(e){}return;}
+  var kat=(document.getElementById('pdf-upload-kategorie')?.value||'').trim()||'ALLGEMEIN';
+  var statusEl=document.getElementById('pdf-upload-status');
+  function upd(m,c){if(statusEl){statusEl.textContent=m;statusEl.style.color=c||'#374151';}}
+  upd('Lese PDF...');
+  try{
+    var ab=await new Promise(function(res,rej){var r=new FileReader();r.onload=function(e){res(e.target.result);};r.onerror=rej;r.readAsArrayBuffer(file);});
+    var lib=window['pdfjs-dist/build/pdf'];if(!lib){upd('PDF.js fehlt','#DC2626');return;}
+    lib.GlobalWorkerOptions.workerSrc='';
+    var pdf=await lib.getDocument({data:ab,useSystemFonts:true}).promise;
+    var txt='';for(var p=1;p<=Math.min(pdf.numPages,40);p++){var pg=await pdf.getPage(p);var tc=await pg.getTextContent();txt+=tc.items.map(function(x){return x.str;}).join(' ')+'\n';}
+    if(txt.trim().length<50){upd('Kein Text','#F59E0B');return;}
+    var fname=file.name.replace('.pdf','').replace(/_/g,' ');
+    var parts=txt.split(/\n{2,}/);var cur='';var ci=1;var chunks=[];
+    parts.forEach(function(pt){if((cur+pt).length>2500&&cur.length>100){chunks.push({t:fname+(ci>1?' T'+ci:''),c:cur.trim()});ci++;cur=pt+'\n\n';}else{cur+=pt+'\n\n';}});
+    if(cur.trim().length>50)chunks.push({t:fname+(ci>1?' T'+ci:''),c:cur.trim()});
+    var ok=0;for(var j=0;j<chunks.length;j++){if(await kiWissenHochladen(kat,chunks[j].t.slice(0,80),chunks[j].c.slice(0,3000)))ok++;}
+    upd('\u2705 '+ok+' Abschnitte','#16A34A');
+    try{_grieerToast('\u2705 PDF hochgeladen','#16A34A',2500);}catch(e){}
+    await kiLadeWissenAusSupabase();
+  }catch(err){upd('Fehler: '+err.message,'#DC2626');}
+  input.value='';
+}
+
+async function kiImportManuell(){
+  var bucketName=(document.getElementById('storage-bucket-name')?.value||'grieer-pdfs').trim();
+  var statusEl=document.getElementById('storage-import-status');
+  function upd(m,c){if(statusEl){statusEl.innerHTML+='<div style="color:'+(c||'#374151')+'">'+m+'</div>';}}
   if(statusEl)statusEl.innerHTML='';
   if(!sbCheckOnline()){upd('\u274C Kein Internet','#DC2626');return;}
   var btn=document.getElementById('btn-storage-import');
@@ -15734,16 +15978,13 @@ async function kiImportManuell(){
   setBtn('Verbinde...',true);
   try{
     var key=sbKey();
-    var lr=await fetch(_SB_URL+'/storage/v1/object/list/'+bucketName,{method:'POST',
-      headers:{'Content-Type':'application/json','apikey':key,'Authorization':'Bearer '+key},
-      body:JSON.stringify({limit:200,offset:0,prefix:'',sortBy:{column:'name',order:'asc'}})});
-    if(lr.status===403||lr.status===400){upd('\u274C Zugriff verweigert - Service Role Key eingeben oder Bucket auf Public stellen','#DC2626');setBtn('&#128196; PDFs aus Storage importieren',false);return;}
-    if(lr.status===404){upd('\u274C Bucket "'+bucketName+'" nicht gefunden','#DC2626');setBtn('&#128196; PDFs aus Storage importieren',false);return;}
-    if(!lr.ok){upd('\u274C Fehler: '+lr.status,'#DC2626');setBtn('&#128196; PDFs aus Storage importieren',false);return;}
-    var files=await lr.json();
-    var pdfs=files.filter(function(f){return f.name&&f.name.toLowerCase().endsWith('.pdf');});
-    upd('\u2705 '+pdfs.length+' PDFs in "'+bucketName+'"');
-    if(!pdfs.length){upd('Keine PDFs im Bucket','#F59E0B');setBtn('&#128196; PDFs aus Storage importieren',false);return;}
+    var lr=await fetch(_SB_URL+'/storage/v1/object/list/'+bucketName,{method:'POST',headers:{'Content-Type':'application/json','apikey':key,'Authorization':'Bearer '+key},body:JSON.stringify({limit:200,offset:0,prefix:'',sortBy:{column:'name',order:'asc'}})});
+    if(lr.status===403||lr.status===400){upd('\u274C Zugriff verweigert \u2192 Service Role Key eingeben','#DC2626');setBtn('&#128196; PDFs importieren',false);return;}
+    if(lr.status===404){upd('\u274C Bucket nicht gefunden','#DC2626');setBtn('&#128196; PDFs importieren',false);return;}
+    if(!lr.ok){upd('\u274C Fehler: '+lr.status,'#DC2626');setBtn('&#128196; PDFs importieren',false);return;}
+    var files=await lr.json();var pdfs=files.filter(function(f){return f.name&&f.name.toLowerCase().endsWith('.pdf');});
+    upd('\u2705 '+pdfs.length+' PDFs gefunden');
+    if(!pdfs.length){upd('Keine PDFs im Bucket','#F59E0B');setBtn('&#128196; PDFs importieren',false);return;}
     var lib=window['pdfjs-dist/build/pdf'];if(!lib){upd('\u274C PDF.js fehlt','#DC2626');return;}
     lib.GlobalWorkerOptions.workerSrc='';
     var ok=0,skip=0;
@@ -15754,8 +15995,7 @@ async function kiImportManuell(){
         if(!dl.ok){skip++;continue;}
         var ab2=await dl.arrayBuffer();
         var pdf2=await lib.getDocument({data:ab2,useSystemFonts:true}).promise;
-        var txt2='';
-        for(var p=1;p<=Math.min(pdf2.numPages,40);p++){var pg2=await pdf2.getPage(p);var tc2=await pg2.getTextContent();txt2+=tc2.items.map(function(x){return x.str;}).join(' ')+'\n';}
+        var txt2='';for(var p=1;p<=Math.min(pdf2.numPages,40);p++){var pg2=await pdf2.getPage(p);var tc2=await pg2.getTextContent();txt2+=tc2.items.map(function(x){return x.str;}).join(' ')+'\n';}
         if(txt2.trim().length<50){skip++;continue;}
         var fn2=pdfs[i].name.toUpperCase();
         var kat2=fn2.includes('TRVB')?'TRVB':fn2.includes('OENORM')||fn2.includes('ÖNORM')?'OENORM':fn2.includes('OIB')?'OIB':fn2.includes('HKG')||fn2.includes('KEHR')||fn2.includes('BGLD')?'BGLD_RECHT':fn2.includes('MB_')?'MERKBLATT':'ALLGEMEIN';
@@ -15768,138 +16008,66 @@ async function kiImportManuell(){
     }
     await kiLadeWissenAusSupabase();
     upd('\u2705 '+ok+' PDFs importiert | '+skip+' \u00fcbersprungen','#16A34A');
-    setBtn('&#128196; PDFs aus Storage importieren',false);
+    setBtn('&#128196; PDFs importieren',false);
     try{_grieerToast('\u2705 '+ok+' PDFs in KI!','#16A34A',3000);}catch(e){}
-  }catch(err){upd('\u274C '+err.message,'#DC2626');setBtn('&#128196; PDFs aus Storage importieren',false);}
+  }catch(err){upd('\u274C '+err.message,'#DC2626');setBtn('&#128196; PDFs importieren',false);}
 }
 
-/* ── DIAGNOSE ── */
 async function supabaseDiagnostik(){
   var el=document.getElementById('sb-diag-output');
-  function log(msg,col){if(el)el.innerHTML+='<div style="color:'+(col||'#374151')+'">'+msg+'</div>';}
+  function log(m,c){if(el)el.innerHTML+='<div style="color:'+(c||'#374151')+'">'+m+'</div>';}
   if(el)el.innerHTML='';
   if(!navigator.onLine){log('\u274C Kein Internet','#DC2626');return;}
   log('\u2705 Internet OK');
-  try{var p=await fetch(_SB_URL+'/rest/v1/',{headers:{'apikey':_SB_KEY}});log('\u2705 Supabase ('+p.status+')');}
-  catch(e){log('\u274C Supabase: '+e.message,'#DC2626');return;}
+  try{var p=await fetch(_SB_URL+'/rest/v1/',{headers:{'apikey':_SB_KEY}});log('\u2705 Supabase ('+p.status+')');}catch(e){log('\u274C Supabase: '+e.message,'#DC2626');return;}
   for(var tbl of['grieer_ki_wissen','grieer_mitarbeiter','grieer_kunden','grieer_dokumente','grieer_einstellungen']){
-    try{
-      var r=await fetch(_SB_URL+'/rest/v1/'+tbl+'?limit=1',{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
-      if(r.status===200){var d=await r.json();log('\u2705 '+tbl+': '+d.length+' Eintr\u00e4ge');}
-      else log('\u274C '+tbl+' fehlt (Status '+r.status+') \u2192 SQL ausf\u00fchren!','#DC2626');
-    }catch(e){log('\u274C '+tbl+': '+e.message,'#DC2626');}
+    try{var r=await fetch(_SB_URL+'/rest/v1/'+tbl+'?limit=1',{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});if(r.status===200){var d=await r.json();log('\u2705 '+tbl+': '+d.length+' Eintr\u00e4ge');}else log('\u274C '+tbl+' fehlt \u2192 SQL ausf\u00fchren!','#DC2626');}catch(e){log('\u274C '+tbl+': '+e.message,'#DC2626');}
   }
-  var bn=(document.getElementById('storage-bucket-name')?.value||'grieer-pdfs').trim();
-  try{
-    var key=sbKey();
-    var lr=await fetch(_SB_URL+'/storage/v1/object/list/'+bn,{method:'POST',
-      headers:{'Content-Type':'application/json','apikey':key,'Authorization':'Bearer '+key},
-      body:JSON.stringify({limit:5,offset:0,prefix:'',sortBy:{column:'name',order:'asc'}})});
-    if(lr.status===200){var fs=await lr.json();var ps=fs.filter(function(f){return f.name&&f.name.toLowerCase().endsWith('.pdf');});log('\u2705 Bucket "'+bn+'": '+fs.length+' Dateien, '+ps.length+' PDFs');}
-    else if(lr.status===403||lr.status===400){log('\u274C Bucket privat \u2192 Service Role Key eingeben','#DC2626');}
-    else{log('\u274C Bucket "'+bn+'" nicht gefunden','#DC2626');}
-  }catch(e){log('\u274C Storage: '+e.message,'#DC2626');}
   log('\u23F9 Fertig.','#64748B');
 }
 
-/* ── KI FUNKTIONEN ── */
-function _kiSucheInSupabaseWissen(query){
-  if(!_kiSupabaseWissen) return '';
-  var q=query.toLowerCase();
-  var qWords=q.split(/\s+/).filter(function(w){return w.length>3;});
-  var sections=_kiSupabaseWissen.split(/\n===([^=]+)===/);
-  var best={score:0,text:'',title:''};
-  for(var i=1;i<sections.length;i+=2){
-    var title=sections[i]||'',body=sections[i+1]||'';
-    var text=(title+' '+body).toLowerCase();
-    var score=0;qWords.forEach(function(w){if(text.includes(w))score++;});
-    if(score>best.score)best={score:score,text:body.trim().slice(0,600),title:title.trim()};
-  }
-  if(best.score===0) return '';
-  return '<b>'+best.title+'</b><br>'+best.text;
+function kiSetModus(modus){
+  _kiAntwortModus=modus;
+  ['einfach','mittel','intensiv'].forEach(function(m){var btn=document.getElementById('ki-modus-'+m);if(!btn)return;btn.style.background=m===modus?'#1A2B45':'#F1F5F9';btn.style.color=m===modus?'#fff':'#374151';});
 }
 
-async function _kiSearchAndAsk(query,apiKey){
-  var sysPrompt=KI_SYSTEM;
-  var quellen=[];
-  if(sbCheckOnline()){
-    try{
-      var resp=await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen?order=kategorie&limit=200',{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
-      if(resp.ok){
-        var rows=await resp.json();
-        if(Array.isArray(rows)&&rows.length>0){
-          var qWords=query.toLowerCase().split(/\s+/).filter(function(w){return w.length>3;});
-          var relevant=rows.filter(function(r){var text=((r.kategorie||'')+(r.titel||'')+(r.inhalt||'')).toLowerCase();return qWords.some(function(w){return text.includes(w);});});
-          if(!relevant.length)relevant=rows.slice(0,5);
-          relevant=relevant.slice(0,8);
-          if(relevant.length>0){
-            sysPrompt+='\n\n=== WISSENSDATENBANK ===\n';
-            relevant.forEach(function(r,i){sysPrompt+='\n[Quelle '+(i+1)+': '+r.kategorie+' \u2013 '+r.titel+']\n'+r.inhalt+'\n';quellen.push(r.kategorie+' \u2013 '+r.titel);});
-          }
-        }
-      }
-    }catch(e){}
-  }
-  sysPrompt+='\n\nANTWORTE UMFASSEND: 1) Direkte Antwort mit konkreten Werten/Paragraphen 2) Gesetzliche Grundlage (§ + Gesetz/Norm) 3) Praktische Hinweise 4) Am Ende: QUELLEN mit Fundort. Verwende KEINE externen URLs.';
+async function kiShowPDFs(){
+  var box=document.getElementById('ki-pdfs-box');if(!box)return;
+  if(box.style.display==='block'){box.style.display='none';return;}
+  box.innerHTML='<div style="font-size:11px;color:#64748B">Lade...</div>';box.style.display='block';
+  if(!sbCheckOnline()){box.innerHTML='<div style="font-size:11px;color:#DC2626">Kein Internet</div>';return;}
   try{
-    var r2=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,system:sysPrompt,messages:[{role:'user',content:query}]})});
-    kiHideLoading();
-    var data=await r2.json();
-    var txt=(data.content&&data.content[0]&&data.content[0].text)||'';
-    if(!txt){kiAddMessage('bot','<span style="color:#DC2626">API-Fehler. Nutze lokale Suche.</span>');return;}
-    var html=txt.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\n{2,}/g,'<br><br>').replace(/\n/g,'<br>');
-    html=html.replace(/(§\s*\d+[a-z]?[^<,;]{0,40}(?:KehrG|HKG|GewO|StGB|ABGB))/gi,'<span style="background:#FEF3C7;padding:1px 4px;border-radius:3px;font-weight:600">$1</span>');
-    html=html.replace(/(ÖNORM\s+[A-Z]\s*\d+[\d-]*|TRVB\s+[A-Z0-9]+\s*H?\d*|OIB-RL\s*\d*)/gi,'<span style="background:#DBEAFE;padding:1px 4px;border-radius:3px;font-weight:600">$1</span>');
-    if(quellen.length>0){html+='<div style="margin-top:10px;padding:8px;background:#F0FDF4;border-radius:6px;border-left:3px solid #16A34A"><div style="font-size:10px;font-weight:700;color:#166534;margin-bottom:4px">\uD83D\uDCDA Quellen:</div>';quellen.forEach(function(q,i){html+='<div style="font-size:10px;color:#374151">'+(i+1)+'. '+q+'</div>';});html+='</div>';}
-    kiAddMessage('bot',html);
-  }catch(e){kiHideLoading();kiAddMessage('bot','<span style="color:#DC2626">Fehler: '+e.message+'</span>');}
+    var r=await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen?order=kategorie,titel&limit=200&select=id,kategorie,titel',{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+    if(!r.ok){box.innerHTML='<div style="font-size:11px;color:#DC2626">Fehler '+r.status+'</div>';return;}
+    var rows=await r.json();
+    if(!rows.length){box.innerHTML='<div style="font-size:11px;color:#64748B">Keine Eintr\u00e4ge. KI-Wissen hochladen!</div>';return;}
+    var byKat={};rows.forEach(function(r){var k=r.kategorie||'ALLGEMEIN';if(!byKat[k])byKat[k]=[];byKat[k].push(r.titel);});
+    var html='<div style="font-size:11px;font-weight:700;color:#1A2B45;margin-bottom:6px">\uD83D\uDCDA '+rows.length+' Eintr\u00e4ge:</div>';
+    Object.keys(byKat).sort().forEach(function(kat){html+='<div style="margin-bottom:4px"><div style="font-size:10px;font-weight:700;color:#2563EB;background:#EFF6FF;padding:2px 6px;border-radius:4px;display:inline-block">'+kat+' ('+byKat[kat].length+')</div>';byKat[kat].forEach(function(t){html+='<div style="font-size:9px;color:#374151;padding-left:8px;margin-top:1px">\u2022 '+t+'</div>';});html+='</div>';});
+    box.innerHTML=html;
+  }catch(e){box.innerHTML='<div style="font-size:11px;color:#DC2626">'+e.message+'</div>';}
 }
 
-/* ── KI SEND (lokale Suche + optional Claude API) ── */
-function kiSend(){
-  var inp=document.getElementById('ki-input');
-  if(!inp) return;
-  var query=inp.value.trim();if(!query)return;
-  var qSafe=query.replace(/[<>&]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[c];});
-  kiAddMessage('user','<div style="font-size:9px;font-weight:700;color:#1565C0;text-transform:uppercase;margin-bottom:3px">Frage</div>'+qSafe);
-  inp.value='';
-  kiShowLoading();
-  var ck=claudeKey();
-  if(ck&&navigator.onLine){_kiSearchAndAsk(query,ck);return;}
+function renderKundenliste(){
+  var container=document.getElementById('kunden-liste-box');if(!container)return;
+  var kunden=[];try{kunden=JSON.parse(localStorage.getItem('grieer-kunden')||'[]');}catch(e){}
+  if(!kunden.length){container.innerHTML='<div style="font-size:11px;color:#94A3B8;padding:8px;text-align:center">Keine Kunden. CSV importieren oder Sync tippen.</div>';return;}
+  var html='<div style="font-size:10px;font-weight:700;color:#1A2B45;margin-bottom:4px">'+kunden.length+' Kunden:</div>';
+  kunden.slice(0,30).forEach(function(k){html+='<div onclick="kundeAuswahl(\''+encodeURIComponent(JSON.stringify(k))+'\')" style="padding:8px 10px;border-bottom:1px solid #F1F5F9;cursor:pointer;display:flex;justify-content:space-between;align-items:center;min-height:44px"><div><div style="font-size:12px;font-weight:600;color:#1A2B45">'+(k.name||'\u2013')+'</div><div style="font-size:10px;color:#64748B">'+(k.nr?'Nr.'+k.nr+' | ':'')+(k.str||k.adresse||'')+(k.plz?' '+k.plz:'')+'</div></div><span style="font-size:18px;color:#CBD5E1">\u203a</span></div>';});
+  if(kunden.length>30)html+='<div style="font-size:10px;color:#94A3B8;text-align:center;padding:4px">...und '+(kunden.length-30)+' weitere</div>';
+  container.innerHTML=html;
+}
+function kundeAuswahl(encoded){
   try{
-    var result=typeof kiSearchKnowledge==='function'?kiSearchKnowledge(query)||'':'';
-    kiHideLoading();
-    if(result&&result.length>50){
-      var html=typeof kiFormatAnswer==='function'?kiFormatAnswer(result,'',query):'<div>'+result+'</div>';
-      var cloud=_kiSucheInSupabaseWissen(query);
-      if(cloud)html+='<div style="margin-top:8px;padding:8px;background:#EFF6FF;border-left:3px solid #2563EB;border-radius:6px;font-size:10px;line-height:1.6"><b style="color:#1E40AF">\u2601\uFE0F Cloud:</b><br>'+cloud+'</div>';
-      kiAddMessage('bot',html);
-    } else {
-      var cloudAnswer=_kiSucheInSupabaseWissen(query);
-      if(cloudAnswer&&cloudAnswer.length>50){kiAddMessage('bot','<div style="padding:8px;background:#EFF6FF;border-left:3px solid #2563EB;border-radius:6px;font-size:11px;line-height:1.6">'+cloudAnswer+'<div style="font-size:9px;color:#64748B;margin-top:6px">\u2601\uFE0F Quelle: Cloud-Wissen</div></div>');}
-      else{kiAddMessage('bot','<div style="padding:10px;background:#FFF7ED;border-left:3px solid #F59E0B;border-radius:6px;font-size:11px;line-height:1.6">Keine Antwort gefunden.<br><small style="color:#64748B">Tipp: Claude API Key in \u2699\uFE0F f\u00fcr intelligentere Antworten</small></div>');}
-    }
-  }catch(e){kiHideLoading();kiAddMessage('bot','<span style="color:#DC2626">Fehler: '+e.message+'</span>');}
+    var k=JSON.parse(decodeURIComponent(encoded));
+    window._gKunde=k.name||'';window._gAdresse=k.str||k.adresse||'';window._gPlz=k.plz||'';window._gTelefon=k.tel||k.telefon||'';window._gEmail=k.email||'';
+    var flds={'gk-name':k.name,'gk-addr':k.str||k.adresse,'gk-plz':k.plz,'gk-tel':k.tel||k.telefon,'gk-email':k.email};
+    Object.keys(flds).forEach(function(id){var el=document.getElementById(id);if(el&&flds[id])el.value=flds[id];});
+    document.querySelectorAll('.pg').forEach(function(pg){if(pg.style.display!=='none'&&pg.id)gKundeFill(pg.id.replace('page-',''));});
+    try{_grieerToast('\u2705 Kunde: '+k.name,'#16A34A',2000);}catch(e){}
+  }catch(er){console.error(er);}
 }
 
-function kiAskOnline(query){
-  kiShowLoading();
-  var ck=claudeKey();
-  if(ck&&navigator.onLine){_kiSearchAndAsk(query,ck);return;}
-  kiHideLoading();
-  var res=typeof kiSearchKnowledge==='function'?kiSearchKnowledge(query)||'':'';
-  var cloud=_kiSucheInSupabaseWissen(query);
-  var answer=res||cloud||'Keine Antwort. Bitte Claude API Key in \u2699\uFE0F eintragen.';
-  if(typeof kiFormatAnswer==='function'&&res)answer=kiFormatAnswer(res,'',query);
-  kiAddMessage('bot',answer);
-}
-
-function kiOnlineSearch(query){kiAskOnline(query);}
-function kiSetQuestion(q){var inp=document.getElementById('ki-input');if(inp){inp.value=q;inp.focus();}}
-
-/* ── PV / DROHNE HELPER ── */
 function pvStandort(typ){
   var d=_pvStandortData[typ];if(!d)return;
   ['land','stadt','industrie'].forEach(function(t){var btn=document.getElementById('pvc-st-'+t);if(!btn)return;btn.style.background=t===typ?d.farbe:'#fff';btn.style.color=t===typ?'#fff':'#1A2B45';btn.style.borderColor=t===typ?d.farbe:'#CBD5E1';});
@@ -15909,29 +16077,169 @@ function pvStandort(typ){
 }
 function pvMonateEinheit(){if(typeof pvCalcRun==='function')pvCalcRun();}
 function pvBriefKopieren(){var el=document.getElementById('pvc-brief-text');if(!el)return;if(navigator.clipboard){navigator.clipboard.writeText(el.value).then(function(){try{_grieerToast('\u2705 Kopiert!','#16A34A',2000);}catch(e){}});}else{el.select();document.execCommand('copy');}}
+function kiSetQuestion(q){var inp=document.getElementById('ki-input');if(inp){inp.value=q;inp.focus();}}
 function drFotoAdd(input){var files=Array.from(input.files);var preview=document.getElementById('dr-fotos-preview');files.forEach(function(file){var reader=new FileReader();reader.onload=function(e){var idx=_drFotos.length;_drFotos.push({name:file.name,data:e.target.result});if(preview){var div=document.createElement('div');div.style.cssText='position:relative;border-radius:6px;overflow:hidden;';var img=document.createElement('img');img.src=e.target.result;img.style.cssText='width:100%;height:70px;object-fit:cover;border-radius:6px;display:block;';var del=document.createElement('button');del.textContent='\u00d7';del.style.cssText='position:absolute;top:2px;right:2px;background:rgba(220,38,38,0.85);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:12px;cursor:pointer;';del.onclick=(function(i,d){return function(){_drFotos.splice(i,1);d.parentNode&&d.parentNode.removeChild(d);};})(idx,div);div.appendChild(img);div.appendChild(del);preview.appendChild(div);}};reader.readAsDataURL(file);});input.value='';}
 
-/* ── AUTO SYNC BEIM START ── */
+function _kiSucheInSupabaseWissen(query){
+  if(!_kiSupabaseWissen)return '';
+  var q=query.toLowerCase(),qWords=q.split(/\s+/).filter(function(w){return w.length>2;});
+  var sections=_kiSupabaseWissen.split(/\n===([^=]+)===/),best={score:0,text:'',title:''};
+  for(var i=1;i<sections.length;i+=2){var title=sections[i]||'',body=sections[i+1]||'',text=(title+' '+body).toLowerCase(),score=0;qWords.forEach(function(w){if(text.includes(w))score++;});if(score>best.score)best={score:score,text:body.trim().slice(0,600),title:title.trim()};}
+  if(best.score===0)return '';
+  return '<b>'+best.title+'</b><br>'+best.text;
+}
+
+async function _kiSearchAndAsk(query,apiKey){
+  var sysPrompt=KI_SYSTEM,quellen=[];
+  if(sbCheckOnline()){try{
+    var qWords=query.toLowerCase().split(/\s+/).filter(function(w){return w.length>2;});
+    var allRows=[],seen={};
+    for(var wi=0;wi<Math.min(qWords.length,4);wi++){
+      var w=qWords[wi];
+      var url=_SB_URL+'/rest/v1/grieer_ki_wissen?or=(inhalt.ilike.*'+encodeURIComponent(w)+'*,titel.ilike.*'+encodeURIComponent(w)+'*)&limit=10';
+      var resp=await fetch(url,{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+      if(resp.ok){var rows=await resp.json();rows.forEach(function(r){if(r.id&&!seen[r.id]){seen[r.id]=true;allRows.push(r);}});}
+    }
+    if(allRows.length){allRows.forEach(function(r){var text=((r.kategorie||'')+(r.titel||'')+(r.inhalt||'')).toLowerCase();var score=0;qWords.forEach(function(w){score+=(text.match(new RegExp(w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'))||[]).length;});r._score=score;});allRows.sort(function(a,b){return b._score-a._score;});var rel=allRows.filter(function(r){return r._score>0;}).slice(0,8);if(rel.length){sysPrompt+='\n\n=== WISSENSDATENBANK ===\n';rel.forEach(function(r,i){sysPrompt+='\n[Quelle '+(i+1)+': '+r.kategorie+' \u2013 '+r.titel+']\n'+r.inhalt+'\n';quellen.push(r.kategorie+' \u2013 '+r.titel);});}}
+  }catch(e){}}
+  sysPrompt+='\n\nANTWORTE UMFASSEND mit §-Angaben, Normen, Quellenangaben. Modus: '+(_kiAntwortModus||'intensiv').toUpperCase()+'. Keine externen URLs.';
+  try{
+    var r2=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,system:sysPrompt,messages:[{role:'user',content:query}]})});
+    kiHideLoading();
+    var data=await r2.json();var txt=(data.content&&data.content[0]&&data.content[0].text)||'';
+    if(!txt){kiAddMessage('bot','<span style="color:#DC2626">API-Fehler</span>');return;}
+    var html=txt.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\n{2,}/g,'<br><br>').replace(/\n/g,'<br>');
+    html=html.replace(/(§\s*\d+[a-z]?(?:\s*Abs\.\s*\d+)?[^<,;]{0,40}(?:KehrG|HKG|GewO|StGB|ABGB))/gi,'<span style="background:#FEF3C7;padding:1px 3px;border-radius:3px;font-weight:600">$1</span>');
+    html=html.replace(/(ÖNORM\s+[A-Z]\s*\d+[\d-]*|TRVB\s+[A-Z0-9]+\s*H?\d*|OIB-RL\s*\d*|LGBl\.\s*[\d\/]+)/gi,'<span style="background:#DBEAFE;padding:1px 3px;border-radius:3px;font-weight:600">$1</span>');
+    if(quellen.length){html+='<div style="margin-top:10px;padding:8px;background:#F0FDF4;border-radius:6px;border-left:3px solid #16A34A"><div style="font-size:10px;font-weight:700;color:#166534;margin-bottom:4px">\uD83D\uDCDA Quellen:</div>';quellen.forEach(function(q,i){html+='<div style="font-size:10px;color:#374151">'+(i+1)+'. '+q+'</div>';});html+='</div>';}
+    kiAddMessage('bot',html);
+  }catch(e){kiHideLoading();kiAddMessage('bot','<span style="color:#DC2626">Fehler: '+e.message+'</span>');}
+}
+
+async function _kiSupabaseDirectSearch(query){
+  var modus=typeof _kiAntwortModus!=='undefined'?_kiAntwortModus:'intensiv';
+  var maxLocal=modus==='einfach'?2:modus==='mittel'?4:99,maxCloud=modus==='einfach'?2:modus==='mittel'?5:10;
+  var html='';
+  try{
+    var localRes=typeof kiSearchKnowledge==='function'?kiSearchKnowledge(query):null;
+    if(localRes&&localRes.found&&localRes.paragraphs&&localRes.paragraphs.length){
+      var paras=localRes.paragraphs.slice(0,maxLocal);
+      html+='<div style="padding:10px;background:#F0FDF4;border-left:4px solid #16A34A;border-radius:0 8px 8px 0;margin-bottom:10px">';
+      html+='<div style="font-size:9px;font-weight:700;color:#166534;text-transform:uppercase;margin-bottom:6px">\u2705 Eingebautes Fachwissen ('+paras.length+' Treffer)</div>';
+      paras.forEach(function(p,i){
+        var txt=p.text||'';
+        (localRes.qwords||[]).forEach(function(w){if(w.length<3)return;txt=txt.replace(new RegExp('('+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark style="background:#FEF08A;padding:0 1px;border-radius:2px">$1</mark>');});
+        txt=txt.replace(/(§\s*\d+[a-z]?(?:\s*Abs\.\s*\d+)?[^<]{0,50}(?:KehrG|HKG|GewO|StGB|ABGB))/gi,'<span style="background:#FEF3C7;padding:1px 3px;border-radius:3px;font-weight:700">$1</span>');
+        txt=txt.replace(/(ÖNORM\s+[A-Z]\s*\d+[\d-]*|TRVB\s+[A-Z0-9]+\s*H?\d*|OIB-RL\s*\d*|LGBl\.\s*[\d\/]+)/gi,'<span style="background:#DBEAFE;padding:1px 3px;border-radius:3px;font-weight:700">$1</span>');
+        txt=txt.replace(/(\d+[,.]?\d*\s*€)/g,'<span style="color:#166534;font-weight:700">$1</span>');
+        html+='<div style="'+(i>0?'margin-top:8px;padding-top:8px;border-top:1px solid #D1FAE5':'')+'">';
+        html+='<div style="font-size:11px;line-height:1.8;color:#1A2B45;white-space:pre-wrap">'+txt+'</div>';
+        html+='</div>';
+      });
+      html+='</div>';
+    }
+  }catch(e){}
+  if(sbCheckOnline()){try{
+    var qWords=query.toLowerCase().split(/\s+/).filter(function(w){return w.length>2;});
+    var allRows=[],seen={};
+    for(var wi=0;wi<Math.min(qWords.length,4);wi++){
+      var w=qWords[wi];
+      var url=_SB_URL+'/rest/v1/grieer_ki_wissen?or=(inhalt.ilike.*'+encodeURIComponent(w)+'*,titel.ilike.*'+encodeURIComponent(w)+'*,kategorie.ilike.*'+encodeURIComponent(w)+'*)&limit=20';
+      var resp=await fetch(url,{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+      if(resp.ok){var rows=await resp.json();rows.forEach(function(r){if(r.id&&!seen[r.id]){seen[r.id]=true;allRows.push(r);}});}
+    }
+    if(allRows.length){
+      allRows.forEach(function(r){var text=((r.kategorie||'')+(r.titel||'')+(r.inhalt||'')).toLowerCase();var score=0;qWords.forEach(function(w){score+=(text.match(new RegExp(w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'))||[]).length;});r._score=score;});
+      allRows.sort(function(a,b){return b._score-a._score;});
+      var relevant=allRows.filter(function(r){return r._score>0;}).slice(0,maxCloud);
+      if(relevant.length){
+        html+='<div style="font-size:10px;font-weight:700;color:#1565C0;margin:8px 0 6px">\u2601\uFE0F '+relevant.length+' Treffer in Cloud ('+allRows.length+' durchsucht):</div>';
+        relevant.forEach(function(r,idx){
+          var bg=idx===0?'#EFF6FF':'#F8FAFC',border=idx===0?'#2563EB':'#CBD5E1';
+          var inhalt=modus==='einfach'?r.inhalt.slice(0,400):(modus==='mittel'?r.inhalt.slice(0,800):r.inhalt)||'';
+          qWords.forEach(function(w){inhalt=inhalt.replace(new RegExp('('+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark style="background:#FEF08A;padding:0 1px;border-radius:2px">$1</mark>');});
+          inhalt=inhalt.replace(/(§\s*\d+[a-z]?(?:\s*Abs\.\s*\d+)?[^<]{0,50}(?:KehrG|HKG|GewO|StGB|ABGB))/gi,'<span style="background:#FEF3C7;padding:1px 3px;border-radius:3px;font-weight:700">$1</span>');
+          inhalt=inhalt.replace(/(ÖNORM\s+[A-Z]\s*\d+[\d-]*|TRVB\s+[A-Z0-9]+\s*H?\d*|OIB-RL\s*\d*|LGBl\.\s*[\d\/]+)/gi,'<span style="background:#DBEAFE;padding:1px 3px;border-radius:3px;font-weight:700">$1</span>');
+          inhalt=inhalt.replace(/(\d+[,.]?\d*\s*€)/g,'<span style="color:#166534;font-weight:700">$1</span>');
+          html+='<div style="border:1.5px solid '+border+';background:'+bg+';border-radius:8px;padding:10px;margin-bottom:8px">';
+          html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">';
+          html+='<div><span style="font-size:10px;font-weight:700;color:#1E40AF;background:#DBEAFE;padding:2px 7px;border-radius:10px">'+(r.kategorie||'?')+'</span> <span style="font-size:11px;font-weight:600;color:#1A2B45">'+(r.titel||'')+'</span></div>';
+          html+='<span style="font-size:9px;color:#94A3B8">'+r._score+'</span></div>';
+          html+='<div style="font-size:11px;line-height:1.8;color:#374151;white-space:pre-wrap">'+inhalt+'</div></div>';
+        });
+      }
+    }
+  }catch(e){}}
+  kiHideLoading();
+  if(!html){
+    kiAddMessage('bot','<div style="padding:10px;background:#FFF7ED;border-left:3px solid #F59E0B;border-radius:8px;font-size:11px;line-height:1.6">Keine Antwort gefunden f\u00fcr: <b>'+query+'</b><br><br>\u2022 Andere Suchbegriffe versuchen<br>\u2022 PDFs hochladen: \u2699\uFE0F \u2192 PDF hochladen<br>\u2022 KI-Wissen uploaden: \u2699\uFE0F \u2192 Eingebautes Wissen hochladen</div>');
+    return;
+  }
+  if(modus!=='intensiv'){html+='<div style="text-align:center;margin-top:6px"><button onclick="kiSetModus(\'intensiv\');document.getElementById(\'ki-input\').value='+JSON.stringify(query)+';kiSend();" style="font-size:10px;color:#7C3AED;background:#EDE9FE;border:none;border-radius:20px;padding:5px 14px;cursor:pointer;font-weight:600">Intensiv-Suche \u25B6</button></div>';}
+  kiAddMessage('bot',html);
+}
+
+function kiSend(){
+  var inp=document.getElementById('ki-input');if(!inp)return;
+  var query=inp.value.trim();if(!query)return;
+  var qSafe=query.replace(/[<>&]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[c];});
+  kiAddMessage('user','<div style="font-size:9px;font-weight:700;color:#1565C0;text-transform:uppercase;margin-bottom:3px">Frage</div>'+qSafe);
+  inp.value='';kiShowLoading();
+  var ck=claudeKey();
+  if(ck&&navigator.onLine){_kiSearchAndAsk(query,ck);return;}
+  _kiSupabaseDirectSearch(query);
+}
+function kiAskOnline(query){kiSend();}
+function kiOnlineSearch(query){var inp=document.getElementById('ki-input');if(inp)inp.value=query;kiSend();}
+
+function _pvGenerateBrief(){
+  var r=window._pvcResult;if(!r)return;
+  var kd=(document.getElementById('pvc-kunde')?.value||window._gKunde||'Auftraggeber').trim();
+  var adr=(document.getElementById('pvc-adresse')?.value||window._gAdresse||'').trim();
+  var datum=new Date().toLocaleDateString('de-AT');
+  var lines=['GRIEER ENERGIETECHNIK OG','Neugebäude 10 | 7201 Neudörfl | Burgenland','Tel: +43 (0) 2622 77062 | www.grieer.at','','Neudörfl, '+datum,'','An: '+kd+(adr?' | '+adr:''),'','Betreff: PV-Soiling-Analyse','\u2550'.repeat(50),'','ANLAGENDATEN:','  Leistung:        '+r.kwp+' kWp','  Einstrahlung:    '+r.strahlung+' kWh/m\u00b2/Jahr','  Neigung:         '+r.neigung+'\u00b0','  Höhe:            '+r.hoehe+' m ü. NN','','ERGEBNIS ('+r.maxJahre+' Jahr'+(r.maxJahre>1?'e':'')+'):','  Ertragsverlust:  '+r.verlustPct.toFixed(2)+' %','  Verlust/Jahr:    '+r.verlustKwh+' kWh = '+r.verlustEur+' EUR',(r.maxJahre>1?'  Gesamt:          '+r.totalKwh+' kWh / '+r.totalEur+' EUR':''),'  Amortisation:    '+r.roiMon+' Monate','','MEHRJAHRES-STAFFEL:'];
+  for(var j=1;j<=Math.min(r.maxJahre,10);j++){var lJ=Math.min((r.rate||0.10)*j*12,30);lines.push('  Jahr '+j+':  '+lJ.toFixed(1)+'% | '+Math.round(r.verlustKwh*(lJ/(r.verlustPct||0.1)))+' kWh | '+Math.round(r.verlustEur*(lJ/(r.verlustPct||0.1)))+' EUR');}
+  lines.push('','EMPFEHLUNG:',(r.verlustPct>=8)?'  DRINGEND reinigen! Wirtschaftlichkeit kritisch.':(r.verlustPct>=4)?'  Reinigung empfohlen.':'  Geringer Verlust - bei nächster Gelegenheit.','','Mit freundlichen Grüßen','Grieer Energietechnik OG','Roland Greer, Rauchfangkehrermeister');
+  var brief=lines.filter(function(l){return l!==undefined;}).join('\n');
+  var bEl=document.getElementById('pvc-brief-text');if(bEl)bEl.value=brief;
+  var bBox=document.getElementById('pvc-brief-box');if(bBox)bBox.style.display='block';
+}
+
 window.addEventListener('load',function(){
   setTimeout(async function(){
-    if(!sbCheckOnline()) return;
-    await settingsLoadFromCloud(); // Einstellungen/Keys von Cloud laden
-    await syncUsersFromCloud();    // Mitarbeiter
-    await syncKundenFromCloud();   // Kunden  
-    await kiLadeWissenAusSupabase(); // KI Wissen
+    if(!navigator.onLine) return;
+    if(typeof settingsLoadFromCloud==='function') await settingsLoadFromCloud();
+    if(typeof syncUsersFromCloud==='function') await syncUsersFromCloud();
+    if(typeof syncKundenFromCloud==='function') await syncKundenFromCloud();
+    if(typeof kiLadeWissenAusSupabase==='function') await kiLadeWissenAusSupabase();
+    // Ablage aus Supabase laden
+    try{
+      if(typeof _SB_URL!=='undefined'&&_SB_URL){
+        var resp=await fetch(_SB_URL+'/rest/v1/grieer_dokumente?firma_id=eq.grieer&order=erstellt_am.desc&limit=500',{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+        if(resp.ok){
+          var rows=await resp.json();
+          if(Array.isArray(rows)&&rows.length>0){
+            var entries=rows.map(function(r){return r.data||{};}).filter(function(e){return e&&e.id;});
+            var local=[];try{local=JSON.parse(localStorage.getItem('grieer-ablage')||'[]');}catch(e){}
+            var map={};local.forEach(function(e){if(e&&e.id)map[e.id]=e;});
+            entries.forEach(function(e){if(e&&e.id&&!map[e.id])map[e.id]=e;});
+            var merged=Object.values(map).sort(function(a,b){return new Date(b.datum||0)-new Date(a.datum||0);});
+            try{localStorage.setItem('grieer-ablage',JSON.stringify(merged));}catch(e){}
+            if(typeof ablageRender==='function') ablageRender();
+          }
+        }
+      }
+    }catch(e){}
   },2500);
 });
 window.addEventListener('online',function(){
   setTimeout(function(){
-    if(typeof settingsLoadFromCloud==='function') settingsLoadFromCloud();
-    if(typeof syncUsersFromCloud==='function') syncUsersFromCloud();
-    if(typeof kiLadeWissenAusSupabase==='function') kiLadeWissenAusSupabase();
+    if(typeof settingsLoadFromCloud==='function')settingsLoadFromCloud();
+    if(typeof kiLadeWissenAusSupabase==='function')kiLadeWissenAusSupabase();
   },1000);
 });
-</script>
-<script>
-/* === EIGENSTÄNDIGER LOGIN (DEBUG) === */
-window.addEventListener('load', function(){
+window.addEventListener('DOMContentLoaded',function(){try{if(typeof kiSetModus==='function')kiSetModus('intensiv');}catch(e){}});
+window.addEventListener('load',function(){
   var ov = document.getElementById('pin-overlay');
   var dbg = document.getElementById('debug-info');
   if(dbg){
@@ -16267,25 +16575,23 @@ function grieerSyncAll(btn){
   <div id="sync-status" style="font-size:11px;color:#64748B;text-align:center;min-height:18px"></div>
 </div>
 
-<div id="ki-sb-badge" style="display:none;background:#EFF6FF;border-left:4px solid #2563EB;padding:6px 10px;border-radius:0 6px 6px 0;margin-bottom:6px;font-size:10px;color:#1E40AF;font-weight:600"></div>
-
 <div style="background:#EDE9FE;border:1.5px solid #C4B5FD;border-radius:12px;padding:12px;margin-bottom:8px">
-  <div style="font-size:12px;font-weight:700;color:#5B21B6;margin-bottom:4px">&#129504; Claude API Key</div>
-  <div style="font-size:10px;color:#374151;line-height:1.5;margin-bottom:6px">anthropic.com &#8594; API Keys &#8594; Key erstellen<br><b>Wird automatisch auf alle Geräte synchronisiert!</b></div>
+  <div style="font-size:12px;font-weight:700;color:#5B21B6;margin-bottom:4px">&#129504; Claude API Key <span style="font-size:10px;font-weight:400;color:#7C3AED">(optional &ndash; f&uuml;r noch bessere Antworten)</span></div>
+  <div style="font-size:10px;color:#374151;line-height:1.5;margin-bottom:6px">anthropic.com &#8594; API Keys &#8594; Key erstellen<br><b>Wird automatisch auf alle Ger&#228;te synchronisiert!</b></div>
   <input type="password" id="claude-api-key-input" placeholder="sk-ant-api03-..." style="width:100%;padding:9px;border:1.5px solid #C4B5FD;border-radius:8px;font-size:12px;box-sizing:border-box;margin-bottom:6px;font-family:monospace">
   <button onclick="saveClaudeKey()" style="width:100%;padding:10px;background:#7C3AED;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;min-height:40px">&#129504; Key speichern &amp; sync</button>
 </div>
 
 <div style="background:#FFF7ED;border:1.5px solid #FED7AA;border-radius:12px;padding:12px;margin-bottom:8px">
-  <div style="font-size:12px;font-weight:700;color:#C2410C;margin-bottom:4px">&#128273; Service Role Key (Storage)</div>
-  <div style="font-size:10px;color:#374151;line-height:1.5;margin-bottom:6px">Supabase &#8594; Project Settings &#8594; API &#8594; service_role<br><b>Wird automatisch auf alle Geräte synchronisiert!</b></div>
+  <div style="font-size:12px;font-weight:700;color:#C2410C;margin-bottom:4px">&#128273; Service Role Key (f&#252;r Storage-Zugriff)</div>
+  <div style="font-size:10px;color:#374151;line-height:1.5;margin-bottom:6px">Supabase &#8594; Project Settings &#8594; API &#8594; <b>service_role</b> kopieren</div>
   <input type="password" id="sb-service-key-input" placeholder="eyJhbGciOiJIUzI1NiIs..." style="width:100%;padding:9px;border:1.5px solid #FED7AA;border-radius:8px;font-size:12px;box-sizing:border-box;margin-bottom:6px;font-family:monospace">
-  <button onclick="saveServiceKey()" style="width:100%;padding:10px;background:#EA580C;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;min-height:40px">&#128273; Key speichern &amp; sync</button>
+  <button onclick="saveServiceKey()" style="width:100%;padding:10px;background:#EA580C;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;min-height:40px">&#128273; Key speichern</button>
 </div>
 
 <div style="background:#F0FDF4;border:1.5px solid #BBF7D0;border-radius:12px;padding:12px;margin-bottom:8px">
-  <div style="font-size:12px;font-weight:700;color:#166534;margin-bottom:6px">&#128196; PDF hochladen &#8594; KI Wissensbasis</div>
-  <input type="text" id="pdf-upload-kategorie" placeholder="Kategorie: ÖNORM, Gas, TRVB..." style="width:100%;padding:9px;border:1.5px solid #BBF7D0;border-radius:8px;font-size:14px;box-sizing:border-box;margin-bottom:6px">
+  <div style="font-size:12px;font-weight:700;color:#166534;margin-bottom:6px">&#128196; PDF direkt hochladen (Text &#8594; KI)</div>
+  <input type="text" id="pdf-upload-kategorie" placeholder="Kategorie z.B. ÖNORM, Gas, TRVB..." style="width:100%;padding:9px;border:1.5px solid #BBF7D0;border-radius:8px;font-size:14px;box-sizing:border-box;margin-bottom:6px">
   <input type="file" id="pdf-upload-input" accept=".pdf" onchange="pdfUploadStart(this)" style="display:none">
   <button onclick="document.getElementById('pdf-upload-input').click()" style="width:100%;padding:11px;background:#16A34A;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;min-height:44px">&#128196; PDF ausw&#228;hlen &amp; hochladen</button>
   <div id="pdf-upload-status" style="font-size:10px;color:#374151;margin-top:5px;min-height:14px"></div>
@@ -16293,21 +16599,21 @@ function grieerSyncAll(btn){
 
 <div style="background:#FFF7ED;border:1.5px solid #FED7AA;border-radius:12px;padding:12px;margin-bottom:8px">
   <div style="font-size:12px;font-weight:700;color:#C2410C;margin-bottom:4px">&#127760; PDFs aus Supabase Storage importieren</div>
-  <input type="text" id="storage-bucket-name" value="grieer-pdfs" style="width:100%;padding:9px;border:1.5px solid #FED7AA;border-radius:8px;font-size:14px;box-sizing:border-box;margin-bottom:6px">
+  <input type="text" id="storage-bucket-name" value="grieer-pdfs" placeholder="Bucket-Name" style="width:100%;padding:9px;border:1.5px solid #FED7AA;border-radius:8px;font-size:14px;box-sizing:border-box;margin-bottom:6px">
   <button id="btn-storage-import" onclick="kiImportManuell()" style="width:100%;padding:11px;background:#EA580C;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;min-height:44px">&#128196; PDFs aus Storage importieren</button>
   <div id="storage-import-status" style="font-size:10px;color:#374151;margin-top:6px;min-height:14px;line-height:1.5;max-height:100px;overflow-y:auto"></div>
 </div>
 
 <div style="background:#EFF6FF;border:1.5px solid #BFDBFE;border-radius:12px;padding:12px;margin-bottom:8px">
-  <div style="font-size:12px;font-weight:700;color:#1E40AF;margin-bottom:6px">&#9650; Eingebautes KI-Wissen hochladen</div>
-  <button id="btn-ki-upload" onclick="kiUploadSystemWissen()" style="width:100%;padding:11px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;min-height:44px">&#9650; TRVB, ÖNORMs, Kehrgesetz hochladen</button>
+  <div style="font-size:12px;font-weight:700;color:#1E40AF;margin-bottom:6px">&#9650; Eingebautes KI-Wissen in Supabase hochladen</div>
+  <button id="btn-ki-upload" onclick="kiUploadSystemWissen()" style="width:100%;padding:11px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;min-height:44px">&#9650; Jetzt hochladen</button>
   <div id="ki-upload-status" style="font-size:10px;color:#64748B;text-align:center;margin-top:4px;min-height:14px"></div>
 </div>
 
 <div style="background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:12px;padding:12px;margin-bottom:8px">
   <div style="font-size:12px;font-weight:700;color:#1A2B45;margin-bottom:6px">&#128269; Verbindungstest</div>
-  <button onclick="supabaseDiagnostik()" style="width:100%;padding:10px;background:#475569;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;min-height:40px;margin-bottom:6px">&#128269; Alle Tabellen pr&#252;fen</button>
-  <div id="sb-diag-output" style="font-size:10px;line-height:1.8;min-height:20px;max-height:160px;overflow-y:auto;background:#fff;border-radius:6px;padding:6px;border:1px solid #E2E8F0"></div>
+  <button onclick="supabaseDiagnostik()" style="width:100%;padding:10px;background:#475569;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;min-height:40px;margin-bottom:6px">&#128269; Verbindung testen</button>
+  <div id="sb-diag-output" style="font-size:10px;line-height:1.8;min-height:20px;max-height:150px;overflow-y:auto;background:#fff;border-radius:6px;padding:6px;border:1px solid #E2E8F0"></div>
 </div>
 <div style="background:#FEF2F2;border:1.5px solid #FECACA;border-radius:12px;padding:12px">
   <button onclick="pinLock()" style="width:100%;padding:12px;background:#DC2626;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;min-height:44px">&#128274; Abmelden</button>
@@ -16431,10 +16737,14 @@ function grieerSyncAll(btn){
 
 <div id="pvc-brief-container" style="display:none;margin-top:12px">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-    <div style="font-size:11px;font-weight:700;color:#1A2B45">&#128140; Antwortschreiben / Kundenmitteilung</div>
+    <div id="pvc-brief-box" style="display:none;background:#1A2B45;border-radius:10px;padding:12px;margin-top:10px">
+  <div style="font-size:11px;font-weight:700;color:#FCD34D;margin-bottom:6px">&#128196; Ergebnisschreiben</div>
+<div style="font-size:11px;font-weight:700;color:#1A2B45">&#128140; Antwortschreiben / Kundenmitteilung</div>
     <button onclick="pvBriefKopieren()" style="background:#2563EB;color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:10px;font-weight:700;cursor:pointer">&#128203; Kopieren</button>
   </div>
   <textarea id="pvc-brief-text" rows="12" readonly style="width:100%;padding:10px;border:1.5px solid #CBD5E1;border-radius:8px;font-size:11px;font-family:inherit;line-height:1.6;box-sizing:border-box;background:#F8FAFC;color:#374151;resize:vertical"></textarea>
+</div>
+  <button onclick="pvBriefKopieren()" style="width:100%;padding:10px;background:#2563EB;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;min-height:44px;margin-top:8px">&#128203; Kopieren</button>
 </div>
 </div><!-- end panel-manual -->
 
@@ -16445,7 +16755,7 @@ function grieerSyncAll(btn){
 </div>
 <select id="pvc-bundesland" onchange="pvBundeslandApply()" style="width:100%;padding:11px;border:1.5px solid #CBD5E1;border-radius:8px;font-size:16px;font-weight:700;box-sizing:border-box;background:#fff;margin-bottom:8px">
   <option value="">&#8212; Bundesland w&#228;hlen &#8212;</option>
-  <option value="1350">Burgenland (1350 kWh/m&#178;)</option>
+  <option value="1350" selected>&#127462;&#127481; Burgenland (1350 kWh/m&#178;)</option>
   <option value="1200">Nieder&#246;sterreich (1200 kWh/m&#178;)</option>
   <option value="1180">Wien (1180 kWh/m&#178;)</option>
   <option value="1150">Steiermark (1150 kWh/m&#178;)</option>
@@ -16547,5 +16857,6 @@ function grieerSyncAll(btn){
   </div>
 </div>
 </div>
+<div id="print-back-overlay" style="display:none;position:fixed;bottom:20px;right:20px;z-index:99998"><button onclick="document.getElementById('print-back-overlay').style.display='none'" style="background:#1A2B45;color:#fff;border:none;border-radius:50px;padding:14px 22px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,0.4);min-height:50px">&#8592; Zurück</button></div>
 </body>
 </html>
