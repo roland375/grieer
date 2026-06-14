@@ -1496,26 +1496,73 @@ function kalMonat(d){kalMonatIdx+=d;if(kalMonatIdx<0){kalMonatIdx=11;kalJahr--;}
 function kalTagKlick(d){kalTerminListe(d);}
 function kalTerminListe(datum){
   const el=document.getElementById('kalTerminListe');if(!el)return;
-  const termine=DB.termine.filter(t=>t.datum===datum);
-  if(termine.length===0){el.innerHTML=`<div style="text-align:center;padding:18px;color:var(--text2);font-size:.84rem">Keine Termine am ${datum?.split('-').reverse().join('.')}</div>`;return;}
-  el.innerHTML='<div class="card">'+termine.map(t=>{
-    // Wer hat angelegt - aus beschreibung parsen
-    const beschParts=(t.beschreibung||'').split('|');
-    const beschText=beschParts[0]?.trim()||'';
-    const angelegt=beschParts.find(p=>p.includes('Eingetragen von:'))?.replace('Eingetragen von:','').trim()||'';
-    const faellig=t.naechste_faelligkeit||null;
-    return`<div class="listItem">
-      <div class="listAvatar" style="background:var(--red2);color:var(--p)">📅</div>
-      <div class="listMain">
-        <strong>${esc(t.titel)}</strong>
-        <span>${t.ganztag?'Ganztag':(t.uhrzeit_von||'')+'–'+(t.uhrzeit_bis||'')}${t.kunde?' · '+esc(t.kunde):''}</span>
-        ${beschText?`<span style="font-size:.72rem">${esc(beschText)}</span>`:''}
-        <span style="font-size:.71rem;color:var(--text2)">${angelegt?'👤 '+angelegt:''}${isAdmin()&&t.preis?' · 💰 €'+parseFloat(t.preis).toFixed(2):''}</span>
-        ${faellig?`<span style="font-size:.71rem"><span class="badge bOrange">Fällig: ${faellig.split('-').reverse().join('.')}</span></span>`:''}
-      </div>
-      <button class="btn btnRed btnSm" onclick="terminLoeschen('${t.id}')">🗑</button>
-    </div>`;
-  }).join('')+'</div>';
+  // Termine des Tages
+  const termine=DB.termine.filter(t=>t.datum===datum)
+    .sort((a,b)=>(a.uhrzeit_von||'00:00').localeCompare(b.uhrzeit_von||'00:00'));
+  // Aufträge des Tages (die NICHT durch einen Termin abgedeckt sind)
+  const auftraege=DB.auftraege.filter(a=>a.datum===datum)
+    .sort((a,b)=>(a.uhrzeit_von||'00:00').localeCompare(b.uhrzeit_von||'00:00'));
+
+  if(!termine.length&&!auftraege.length){
+    el.innerHTML='<div style="padding:16px;text-align:center;color:var(--text2);font-size:.84rem">'+
+      'Keine Einträge am '+datum.split('-').reverse().join('.')+'</div>';
+    return;
+  }
+
+  let html='<div class="card">';
+
+  // Termine anzeigen
+  termine.forEach(t=>{
+    const von=(t.uhrzeit_von||'').substring(0,5);
+    const bis=(t.uhrzeit_bis||'').substring(0,5);
+    const typInfo=t.typ&&TYPEN[t.typ]?TYPEN[t.typ].l:'';
+    const beschText=(t.beschreibung||'').split('|')[0].trim();
+    // Prüfen ob dazu ein Auftrag existiert
+    const hatAuftrag=DB.auftraege.some(a=>a.datum===datum&&sauber(a.kunde||'').toLowerCase()===sauber(t.kunde||'').toLowerCase());
+    html+='<div class="kalTerminCard">'+
+      '<div class="ktZeit">'+
+        (t.ganztag?'<strong style="font-size:.7rem">GANZ</strong><small>TAG</small>':
+          '<strong>'+(von||'--')+'</strong><small>'+(bis||'--')+'</small>')+
+      '</div>'+
+      '<div class="ktMain">'+
+        '<b>'+esc(t.titel||'Termin')+'</b>'+
+        (t.kunde?'<span>👤 '+esc(sauber(t.kunde))+'</span>':'')+
+        (typInfo?'<span>'+typInfo+'</span>':'')+
+        (beschText?'<span style="font-size:.72rem">'+esc(beschText.substring(0,60))+'</span>':'')+
+        (hatAuftrag?'<span class="badge bGrn" style="font-size:.65rem">✓ Im Journal</span>':'<span class="badge bOrange" style="font-size:.65rem">Noch offen</span>')+
+      '</div>'+
+      '<div class="ktActions">'+
+        '<button class="btn btnOut btnSm" onclick="event.stopPropagation();terminBearbeiten(\''+t.id+'\')">✏️</button>'+
+        '<button class="btn btnRed btnSm" onclick="event.stopPropagation();if(confirm(\'Termin loeschen?\'))terminLoeschen(\''+t.id+'\')">🗑</button>'+
+        (!hatAuftrag?'<button class="btn btnGrn btnSm" onclick="event.stopPropagation();terminZuAuftrag(\''+t.id+'\')" title="Als erledigt erfassen">✓</button>':'')+
+      '</div>'+
+    '</div>';
+  });
+
+  // Aufträge anzeigen (falls extra erfasst)
+  auftraege.forEach(a=>{
+    const von=(a.uhrzeit_von||'').substring(0,5);
+    const bis=(a.uhrzeit_bis||'').substring(0,5);
+    const farbe=TYPEN[a.typ]?.c||'#374151';
+    html+='<div class="kalTerminCard" style="border-left:3px solid '+farbe+';background:#f9f9f9">'+
+      '<div class="ktZeit" style="background:'+farbe+'15">'+
+        (von?'<strong style="color:'+farbe+'">'+von+'</strong><small>'+bis+'</small>':
+          '<strong style="font-size:.8rem">'+(TYPEN[a.typ]?.l||'📋').split(' ')[0]+'</strong>')+
+      '</div>'+
+      '<div class="ktMain">'+
+        '<b>'+esc(sauber(a.kunde||'Auftrag'))+'</b>'+
+        (TYPEN[a.typ]?'<span>'+TYPEN[a.typ].l+'</span>':'')+
+        (a.arbeit?'<span>'+esc(a.arbeit.substring(0,50))+'</span>':'')+
+        '<span class="badge '+(a.bezahlt?'bGrn':'bOrange')+'" style="font-size:.65rem">'+(a.bezahlt?'✓ Bezahlt':'Offen')+'</span>'+
+      '</div>'+
+      '<div class="ktActions">'+
+        '<button class="btn btnOut btnSm" onclick="event.stopPropagation();auftragBearbeiten(\''+a.id+'\')">✏️</button>'+
+      '</div>'+
+    '</div>';
+  });
+
+  html+='</div>';
+  el.innerHTML=html;
 }
 function kalViewWechsel(v){
   kalView=v;
@@ -1567,52 +1614,107 @@ function wocheVorZurueck(t){_wocheOffset+=t;wocheRender();}
 
 function terminNeu(){
   const heute=new Date().toISOString().split('T')[0];
-  const kvOpt=DB.kunden.map(k=>{
-    const nn=sauber(k.nachname);const vn=sauber(k.vorname);
-    const name=(vn?vn+' ':'')+nn;
-    const adr=[k.strasse,k.plz?k.plz+' '+k.ort:k.ort].filter(Boolean).join(', ');
-    return`<option value="${esc(name+(adr?' — '+adr:'')+(k.nummer?' Nr.'+k.nummer:''))}">`;
-  }).join('');  modalOffen('📅 Neuer Termin',`
-    <div class="fRow"><label>Bezeichnung *</label><input id="tTitel" placeholder="z.B. Wartung bei Müller"></div>
-    <div class="fRow"><label>Datum *</label><input type="date" id="tDatum" value="${heute}"></div>
-    <div class="fRow"><label>Ganztägig</label><select id="tGanztag" onchange="terminGanztag()"><option value="true">Ja — Ganztag</option><option value="false">Nein — Uhrzeit</option></select></div>
-    <div id="tZeitenDiv" style="display:none"><div class="fGrid fg2"><div class="fRow"><label>Von</label><input type="time" id="tVon" value="08:00"></div><div class="fRow"><label>Bis</label><input type="time" id="tBis" value="10:00"></div></div></div>
-    <div class="fRow"><label>Kunde</label><input id="tKunde" list="kvT" placeholder="Optional…"><datalist id="kvT">${kvOpt}</datalist></div>
-    <div class="fRow"><label>Ort / Adresse</label><input id="tOrt" placeholder="Optional"></div>
-    <div class="fRow"><label>Leistungsart</label><select id="tTyp"><option value="">—</option>${Object.entries(TYPEN).map(([k,v])=>`<option value="${k}">${v.l}</option>`).join('')}</select></div>
-    <div class="fRow"><label>Beschreibung / Was ist zu tun?</label><textarea id="tBeschreibung" placeholder="Details zum Termin…"></textarea></div>
-    ${isAdmin()?`<div class="fRow"><label>Preis (€) — optional</label><input type="number" id="tPreis" step=".01" min="0" placeholder="z.B. 85.00"></div>`:''}
-    <div class="fRow"><label>Fällig bis</label><input type="date" id="tFaellig"></div>
-    <div style="display:flex;gap:10px;margin-top:18px">
-      <button class="btn btnGrn" style="flex:1" onclick="terminSpeichern()">💾 Speichern</button>
-      <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
-    </div>`);
+  const topKunden=DB.kunden.slice(0,50).map(k=>'<option value="'+esc(sauber((k.vorname?k.vorname+' ':'')+k.nachname+(k.ort?', '+k.ort:'')))+'">').join('');
+  modalOffen('📅 Neuer Termin / Auftrag',
+    '<div class="fGrid fg2">'+
+      '<div class="fRow"><label>Datum *</label><input type="date" id="tDatum" value="'+heute+'"></div>'+
+      '<div class="fRow"><label>Leistungsart</label><select id="tTyp">'+
+        Object.entries(TYPEN).map(([k,v])=>'<option value="'+k+'">'+v.l+'</option>').join('')+
+      '</select></div>'+
+    '</div>'+
+    '<div class="fGrid fg2">'+
+      '<div class="fRow"><label>Von</label><input type="time" id="tVon" value="08:00"></div>'+
+      '<div class="fRow"><label>Bis</label><input type="time" id="tBis" value="10:00"></div>'+
+    '</div>'+
+    '<div class="fRow"><label>Kunde *</label>'+
+      '<input id="tKunde" list="kvTN" placeholder="Name suchen…" oninput="kvVorschlag2(this.value)">'+
+      '<datalist id="kvTN">'+topKunden+'</datalist>'+
+    '</div>'+
+    '<div class="fRow"><label>Beschreibung / Was ist geplant?</label>'+
+      '<textarea id="tBeschr" placeholder="z.B. PV-Reinigung, Wartung Heizung…"></textarea>'+
+    '</div>'+
+    '<div class="fGrid fg2">'+
+      '<div class="fRow"><label>Dauer (h)</label><input type="number" id="tDauer" step=".5" placeholder="z.B. 2"></div>'+
+      '<div class="fRow"><label>Preis (€)</label><input type="number" id="tPreis" step=".01" placeholder="0.00"></div>'+
+    '</div>'+
+    '<div class="fRow"><label>Status</label>'+
+      '<select id="tStatus">'+
+        '<option value="geplant">📅 Geplant (noch nicht durchgeführt)</option>'+
+        '<option value="erledigt">✅ Bereits erledigt</option>'+
+        '<option value="bezahlt">💰 Erledigt + Bezahlt</option>'+
+      '</select>'+
+    '</div>'+
+    '<div class="fRow"><label>Notiz (optional)</label>'+
+      '<input id="tNotiz" placeholder="Besonderheiten, Material…">'+
+    '</div>'+
+    '<div style="display:flex;gap:8px;margin-top:14px">'+
+      '<button class="btn btnGrn" style="flex:1" onclick="terminSpeichern()">💾 Speichern</button>'+
+      '<button class="btn btnOut" onclick="modalZu()">Abbrechen</button>'+
+    '</div>'
+  );
 }
-function terminGanztag(){document.getElementById('tZeitenDiv').style.display=document.getElementById('tGanztag')?.value==='true'?'none':'block';}
+function kvVorschlag2(val){
+  const dl=document.getElementById('kvTN');if(!dl||!val||val.length<2)return;
+  const s=sauber(val).toLowerCase();
+  const m=DB.kunden.filter(k=>sauber((k.vorname||'')+' '+(k.nachname||'')).toLowerCase().includes(s)).slice(0,10);
+  dl.innerHTML=m.map(k=>'<option value="'+esc(sauber((k.vorname?k.vorname+' ':'')+k.nachname+(k.ort?', '+k.ort:'')))+'">').join('');
+}
 async function terminSpeichern(){
-  const titel=document.getElementById('tTitel')?.value?.trim();const datum=document.getElementById('tDatum')?.value;
-  if(!titel){toast('Bitte Bezeichnung eingeben','err');document.getElementById('tTitel')?.focus();return;}
+  const datum=document.getElementById('tDatum')?.value;
+  const kunde=(document.getElementById('tKunde')?.value||'').trim();
   if(!datum){toast('Bitte Datum eingeben','err');return;}
-  const ganztag=document.getElementById('tGanztag')?.value==='true';
-  const beschreibung=document.getElementById('tBeschreibung')?.value||'';
-  const preis=document.getElementById('tPreis')?.value;
-  // Eingetragen von + Preis in Beschreibung speichern
-  const beschFinal=[beschreibung,`Eingetragen von: ${user.name}`,preis?`Preis: €${parseFloat(preis).toFixed(2)}`:''].filter(Boolean).join(' | ');
-  const faellig=document.getElementById('tFaellig')?.value||null;
-  const d={titel,datum,ganztag,
-    uhrzeit_von:ganztag?null:(document.getElementById('tVon')?.value||null),
-    uhrzeit_bis:ganztag?null:(document.getElementById('tBis')?.value||null),
-    kunde:document.getElementById('tKunde')?.value||null,
-    typ:document.getElementById('tTyp')?.value||null,
-    beschreibung:beschFinal,
-    ort:document.getElementById('tOrt')?.value||null,
-    farbe:'#991b1b'
-  };
-  if(faellig)d.naechste_faelligkeit=faellig;
-  Object.keys(d).forEach(k=>{if(d[k]===null||d[k]===undefined||d[k]==='')delete d[k];});
-  try{await api('/termine',{method:'POST',body:JSON.stringify(d)});toast('Termin gespeichert ✓');modalZu();await laden();zeigeTab('kalender');}
-  catch(e){toast('Fehler: '+e.message,'err');}
+  const typ=document.getElementById('tTyp')?.value||null;
+  const von=document.getElementById('tVon')?.value||null;
+  const bis=document.getElementById('tBis')?.value||null;
+  const beschr=document.getElementById('tBeschr')?.value||'';
+  const dauer=parseFloat(document.getElementById('tDauer')?.value)||null;
+  const preisVal=document.getElementById('tPreis')?.value;
+  const preis=preisVal?parseFloat(preisVal)||null:null;
+  const status=document.getElementById('tStatus')?.value||'geplant';
+  const notiz=document.getElementById('tNotiz')?.value||null;
+  const titel=kunde?(TYPEN[typ]?.l||'Termin')+' bei '+kunde.split(',')[0]:(TYPEN[typ]?.l||'Termin');
+
+  try{
+    // 1. Immer in Termine speichern (für Kalender)
+    const tDat={
+      titel,datum,typ,
+      uhrzeit_von:von,uhrzeit_bis:bis,
+      kunde:kunde||null,
+      beschreibung:[beschr,user?.name?'Eingetragen von: '+user.name:''].filter(Boolean).join(' | '),
+      ganztag:!von,farbe:'#991b1b',
+    };
+    Object.keys(tDat).forEach(k=>{if(tDat[k]===null||tDat[k]==='')delete tDat[k];});
+    await api('/termine',{method:'POST',body:JSON.stringify(tDat)});
+
+    // 2. Wenn erledigt/bezahlt → auch in Aufträge speichern (für Journal)
+    if(status==='erledigt'||status==='bezahlt'){
+      const aDat={
+        datum,kunde:kunde||null,typ,
+        arbeit:beschr||(TYPEN[typ]?.l||'Auftrag'),
+        uhrzeit_von:von,uhrzeit_bis:bis,
+        dauer,preis,
+        bezahlt:status==='bezahlt',
+        notiz,
+        durchgefuehrt_von:user?.name||null,
+        erstellt_am:new Date().toISOString(),
+      };
+      Object.keys(aDat).forEach(k=>{if(aDat[k]===null||aDat[k]===undefined||aDat[k]==='')delete aDat[k];});
+      await api('/auftraege',{method:'POST',body:JSON.stringify(aDat)});
+    }
+
+    toast('✅ Gespeichert!');
+    modalZu();
+    await laden();
+    zeigeTab('kalender');
+  }catch(e){
+    if(e.message.includes('204')||e.message.includes('PGRST204')){
+      toast('✅ Gespeichert!');modalZu();await laden();zeigeTab('kalender');
+    } else {
+      toast('Fehler: '+e.message,'err');
+    }
+  }
 }
+
 async function terminZuAuftrag(terminId){
   const t=DB.termine.find(x=>x.id===terminId);if(!t)return;
   const kvOpt=DB.kunden.map(k=>`<option value="${esc(sauber((k.vorname?k.vorname+' ':'')+k.nachname+(k.ort?', '+k.ort:'')))}">` ).join('');
