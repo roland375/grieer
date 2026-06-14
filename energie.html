@@ -1239,7 +1239,7 @@ function preisUndBezahlt(id,kunde){
       <div style="font-size:.83rem;color:var(--grn);opacity:.8;margin-top:2px">${esc(kunde)}</div>
     </div>
     <div class="fRow"><label>Leistungsart</label>
-      <select id="pbTyp">${Object.entries(TYPEN).map(([k,v])=>'<option value="'+k+'" '+(a?.typ===k?'selected':'')+'>'+v.l+'</option>').join('')}</select>
+      <select id="pbTyp">${Object.entries(TYPEN).map(([k,v])=>'<option value="'+k+'" '+(a&&a.typ===k?'selected':'')+'>'+v.l+'</option>').join('')}</select>
     </div>
     <div class="fRow"><label>Beschreibung der durchgeführten Arbeit</label>
       <textarea id="pbArbeit" placeholder="Was wurde genau gemacht?">${esc(a?.arbeit&&!a.arbeit.includes('offen')?a.arbeit:'')}</textarea>
@@ -1291,11 +1291,10 @@ async function preisUndBezahltSpeichern(id){
     modalZu();detailZu();await laden();
   }catch(e){
     const msg=e.message||String(e);
-    if(msg.includes('PGRST204')||msg.includes('No Content')){
-      toast('✅ Gespeichert!');await laden();if(!nurSpeichern)modalZu();
+    if(msg.includes('PGRST204')||msg.includes('No Content')||msg.includes('204')){
+      toast('✅ Abgerechnet!');modalZu();detailZu();await laden();
     } else {
-      toast('Fehler beim Speichern: '+msg,'err');
-      console.error('auftragSpeichern error:',e);
+      toast('Fehler: '+msg,'err');
     }
   }
 }
@@ -1358,11 +1357,10 @@ async function auftragSpeichern(id,nurSpeichern=false){
     if(!nurSpeichern)modalZu();
   }catch(e){
     const msg=e.message||String(e);
-    if(msg.includes('PGRST204')||msg.includes('No Content')){
-      toast('✅ Gespeichert!');await laden();if(!nurSpeichern)modalZu();
+    if(msg.includes('PGRST204')||msg.includes('No Content')||msg.includes('204')){
+      toast('✅ Abgerechnet!');modalZu();detailZu();await laden();
     } else {
-      toast('Fehler beim Speichern: '+msg,'err');
-      console.error('auftragSpeichern error:',e);
+      toast('Fehler: '+msg,'err');
     }
   }
 }
@@ -1939,11 +1937,10 @@ async function maSpeichern(id){
     await laden();if(!nurSpeichern)modalZu();
   }catch(e){
     const msg=e.message||String(e);
-    if(msg.includes('PGRST204')||msg.includes('No Content')){
-      toast('✅ Gespeichert!');await laden();if(!nurSpeichern)modalZu();
+    if(msg.includes('PGRST204')||msg.includes('No Content')||msg.includes('204')){
+      toast('✅ Abgerechnet!');modalZu();detailZu();await laden();
     } else {
-      toast('Fehler beim Speichern: '+msg,'err');
-      console.error('auftragSpeichern error:',e);
+      toast('Fehler: '+msg,'err');
     }
   }
 }
@@ -2266,11 +2263,10 @@ async function terminUpdate(id){
     toast('Termin gespeichert ✓');modalZu();await laden();zeigeTab('kalender');
   }catch(e){
     const msg=e.message||String(e);
-    if(msg.includes('PGRST204')||msg.includes('No Content')){
-      toast('✅ Gespeichert!');await laden();if(!nurSpeichern)modalZu();
+    if(msg.includes('PGRST204')||msg.includes('No Content')||msg.includes('204')){
+      toast('✅ Abgerechnet!');modalZu();detailZu();await laden();
     } else {
-      toast('Fehler beim Speichern: '+msg,'err');
-      console.error('auftragSpeichern error:',e);
+      toast('Fehler: '+msg,'err');
     }
   }
 }
