@@ -15601,26 +15601,38 @@ async function syncKundenToCloud(kunden){
 }
 
 async function syncKundenFromCloud(){
-  if(!sbCheckOnline()) return;
+  var statusEl=document.getElementById('kunden-sync-status');
+  function upd(m,c){if(statusEl){statusEl.textContent=m;statusEl.style.color=c||'#374151';}}
+  upd('Verbinde...');
+  if(!navigator.onLine){upd('❌ Kein Internet','#DC2626');return 0;}
   try{
-    var resp = await fetch(_SB_URL+'/rest/v1/grieer_kunden?firma_id=eq.grieer&order=name',{
+    var resp=await fetch(_SB_URL+'/rest/v1/grieer_kunden?firma_id=eq.grieer&order=name&limit=500',{
       headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}
     });
-    if(!resp.ok) return;
-    var rows = await resp.json();
-    if(!Array.isArray(rows)||rows.length===0) return;
-    // Merge mit lokalen Kunden
-    var local = JSON.parse(localStorage.getItem('grieer-kunden')||'[]');
-    var map = {};
-    local.forEach(function(k){if(k.id||k.nr) map[k.id||k.nr]=k;});
-    rows.forEach(function(r){map[r.id]={id:r.id,nr:r.nr,name:r.name,adresse:r.adresse,plz:r.plz,ort:r.ort,telefon:r.telefon,email:r.email,notizen:r.notizen};});
-    var merged = Object.values(map);
-    localStorage.setItem('grieer-kunden', JSON.stringify(merged));
-    return merged.length;
-  }catch(e){return 0;}
+    if(!resp.ok){upd('❌ Fehler '+resp.status,'#DC2626');return 0;}
+    var rows=await resp.json();
+    if(!Array.isArray(rows)){upd('❌ Ungültige Antwort','#DC2626');return 0;}
+    if(rows.length===0){upd('☁ Cloud leer','#94A3B8');return 0;}
+    // Merge: Cloud + Lokal zusammenführen
+    var local=[];try{local=JSON.parse(localStorage.getItem('grieer-kunden')||'[]');}catch(e){}
+    var map={};
+    local.forEach(function(k){if(k&&(k.id||k.nr))map[k.id||(k.nr+'_'+k.name)]=k;});
+    var neu=0;
+    rows.forEach(function(r){
+      var key=r.id||(r.nr+'_'+r.name);
+      if(!map[key]){
+        map[key]={id:r.id,nr:r.nr||'',name:r.name||'',str:r.adresse||'',plz:r.plz||'',ort:r.ort||'',tel:r.telefon||'',email:r.email||''};
+        neu++;
+      }
+    });
+    var merged=Object.values(map).filter(function(k){return k&&k.name;}).sort(function(a,b){return (a.name||'').localeCompare(b.name||'','de');});
+    try{localStorage.setItem('grieer-kunden',JSON.stringify(merged));}catch(e){}
+    upd('✅ '+merged.length+' Kunden ('+neu+' neu)','#16A34A');
+    // Liste sofort aktualisieren
+    if(typeof renderKundenliste==='function')renderKundenliste();
+    return neu;
+  }catch(e){upd('❌ '+e.message,'#DC2626');return 0;}
 }
-
-/* ─── VOLLSTÄNDIGER SYNC ──────────────────────────── */
 async function grieerSyncAll(btn){
   if(btn){btn.disabled=true;btn.textContent='Synchronisiere...';}
   var status = document.getElementById('sync-status');
@@ -15777,15 +15789,32 @@ async function syncKundenFromCloud(){
 }
 async function kundenCloudSync(){
   var btn=document.getElementById('btn-kunden-sync');
-  var status=document.getElementById('kunden-sync-status');
-  function upd(m,c){if(status){status.textContent=m;status.style.color=c||'#374151';}}
-  if(btn){btn.disabled=true;btn.textContent='Sync...';}
-  if(!sbCheckOnline()){upd('\u274C Kein Internet','#DC2626');if(btn){btn.disabled=false;btn.textContent='\u21C5 Kunden sync';}return;}
-  var up=await kundenSyncToCloud(),down=await syncKundenFromCloud();
-  upd('\u2705 '+up+' hoch | '+down+' neu','#16A34A');
-  if(btn){btn.disabled=false;btn.textContent='\u21C5 Kunden sync';}
+  var statusEl=document.getElementById('kunden-sync-status');
+  function upd(m,c){if(statusEl){statusEl.textContent=m;statusEl.style.color=c||'#374151';}}
+  if(btn){btn.disabled=true;btn.textContent='↕ Sync...';}
+  if(!navigator.onLine){upd('❌ Kein Internet','#DC2626');if(btn){btn.disabled=false;btn.textContent='⇅ Sync';}return;}
+  // 1. Lokale Kunden hochladen
+  var kunden=[];try{kunden=JSON.parse(localStorage.getItem('grieer-kunden')||'[]');}catch(e){}
+  var uploaded=0;
+  if(kunden.length>0){
+    try{
+      var rows=kunden.filter(function(k){return k&&k.name;}).map(function(k){
+        return{id:k.id||('kd_'+(k.nr||k.name).replace(/\W/g,'_').slice(0,20)+'_'+Date.now()),
+          firma_id:'grieer',nr:k.nr||'',name:k.name||'',adresse:k.str||k.adresse||'',
+          plz:k.plz||'',ort:k.ort||'',telefon:k.tel||k.telefon||'',email:k.email||'',
+          aktualisiert_am:new Date().toISOString()};
+      });
+      var r2=await fetch(_SB_URL+'/rest/v1/grieer_kunden',{method:'POST',
+        headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
+        body:JSON.stringify(rows)});
+      if(r2.ok)uploaded=rows.length;
+    }catch(e){}
+  }
+  // 2. Aus Cloud herunterladen
+  var neu=await syncKundenFromCloud();
+  upd('✅ '+uploaded+' ↑ hoch | Cloud: '+neu+' neu','#16A34A');
+  if(btn){btn.disabled=false;btn.textContent='⇅ Kunden sync';}
 }
-
 async function kiLadeWissenAusSupabase(){
   if(!sbCheckOnline())return false;
   try{
@@ -15949,25 +15978,53 @@ async function kiShowPDFs(){
 }
 
 function renderKundenliste(){
-  var container=document.getElementById('kunden-liste-box');if(!container)return;
-  var kunden=[];try{kunden=JSON.parse(localStorage.getItem('grieer-kunden')||'[]');}catch(e){}
-  if(!kunden.length){container.innerHTML='<div style="font-size:11px;color:#94A3B8;padding:8px;text-align:center">Keine Kunden. CSV importieren oder Sync tippen.</div>';return;}
-  var html='<div style="font-size:10px;font-weight:700;color:#1A2B45;margin-bottom:4px">'+kunden.length+' Kunden:</div>';
-  kunden.slice(0,30).forEach(function(k){html+='<div onclick="kundeAuswahl(\''+encodeURIComponent(JSON.stringify(k))+'\')" style="padding:8px 10px;border-bottom:1px solid #F1F5F9;cursor:pointer;display:flex;justify-content:space-between;align-items:center;min-height:44px"><div><div style="font-size:12px;font-weight:600;color:#1A2B45">'+(k.name||'\u2013')+'</div><div style="font-size:10px;color:#64748B">'+(k.nr?'Nr.'+k.nr+' | ':'')+(k.str||k.adresse||'')+(k.plz?' '+k.plz:'')+'</div></div><span style="font-size:18px;color:#CBD5E1">\u203a</span></div>';});
-  if(kunden.length>30)html+='<div style="font-size:10px;color:#94A3B8;text-align:center;padding:4px">...und '+(kunden.length-30)+' weitere</div>';
+  var container=document.getElementById('kunden-liste-box');
+  if(!container)return;
+  var kunden=[];
+  try{kunden=JSON.parse(localStorage.getItem('grieer-kunden')||'[]');}catch(e){}
+  if(!kunden.length){
+    container.innerHTML='<div style="font-size:11px;color:#94A3B8;padding:10px;text-align:center">Keine Kunden gespeichert.<br><small>Sync-Button tippen oder CSV importieren.</small></div>';
+    return;
+  }
+  var html='<div style="font-size:10px;font-weight:700;color:#1A2B45;margin-bottom:6px">'+kunden.length+' Kunden:</div>';
+  kunden.slice(0,50).forEach(function(k,idx){
+    // data-idx statt onclick mit Apostrophen!
+    html+='<div data-kidx="'+idx+'" style="padding:10px;border-bottom:1px solid #F1F5F9;cursor:pointer;display:flex;justify-content:space-between;align-items:center;min-height:44px;active-background:#EFF6FF">';
+    html+='<div><div style="font-size:13px;font-weight:600;color:#1A2B45">'+(k.name||'–')+'</div>';
+    html+='<div style="font-size:10px;color:#64748B">'+(k.nr?'Nr.'+k.nr+' | ':'')+((k.str||k.adresse||'')+(k.plz?' '+k.plz:''))+'</div></div>';
+    html+='<span style="font-size:18px;color:#CBD5E1">›</span></div>';
+  });
+  if(kunden.length>50)html+='<div style="font-size:10px;color:#94A3B8;text-align:center;padding:6px">...und '+(kunden.length-50)+' weitere</div>';
   container.innerHTML=html;
+  // Event-Delegation statt onclick auf jedem Element
+  container.onclick=function(e){
+    var el=e.target.closest('[data-kidx]');
+    if(!el)return;
+    var idx=parseInt(el.dataset.kidx);
+    var k=kunden[idx];
+    if(k)kundeAuswahl(k);
+  };
 }
-function kundeAuswahl(encoded){
-  try{
-    var k=JSON.parse(decodeURIComponent(encoded));
-    window._gKunde=k.name||'';window._gAdresse=k.str||k.adresse||'';window._gPlz=k.plz||'';window._gTelefon=k.tel||k.telefon||'';window._gEmail=k.email||'';
-    var flds={'gk-name':k.name,'gk-addr':k.str||k.adresse,'gk-plz':k.plz,'gk-tel':k.tel||k.telefon,'gk-email':k.email};
-    Object.keys(flds).forEach(function(id){var el=document.getElementById(id);if(el&&flds[id])el.value=flds[id];});
-    document.querySelectorAll('.pg').forEach(function(pg){if(pg.style.display!=='none'&&pg.id)gKundeFill(pg.id.replace('page-',''));});
-    try{_grieerToast('\u2705 Kunde: '+k.name,'#16A34A',2000);}catch(e){}
-  }catch(er){console.error(er);}
+function kundeAuswahl(k){
+  if(typeof k==='string'){try{k=JSON.parse(decodeURIComponent(k));}catch(e){return;}}
+  if(!k)return;
+  window._gKunde   = k.name||'';
+  window._gAdresse = k.str||k.adresse||'';
+  window._gPlz     = k.plz||'';
+  window._gTelefon = k.tel||k.telefon||'';
+  window._gEmail   = k.email||'';
+  try{localStorage.setItem('_grieer_lk_name', window._gKunde);}catch(e){}
+  // Felder in Aufnahme setzen
+  ['gk-name','gk-addr','gk-plz','gk-tel','gk-email'].forEach(function(id,i){
+    var el=document.getElementById(id);
+    if(el)el.value=[window._gKunde,window._gAdresse,window._gPlz,window._gTelefon,window._gEmail][i];
+  });
+  // Alle offenen Seiten befüllen
+  document.querySelectorAll('.pg').forEach(function(pg){
+    if(pg.style.display!=='none'&&pg.id)gKundeFill(pg.id.replace('page-',''));
+  });
+  try{_grieerToast('✅ Kunde: '+window._gKunde,'#16A34A',2000);}catch(e){}
 }
-
 function pvStandort(typ){
   var d=_pvStandortData[typ];if(!d)return;
   ['land','stadt','industrie'].forEach(function(t){var btn=document.getElementById('pvc-st-'+t);if(!btn)return;btn.style.background=t===typ?d.farbe:'#fff';btn.style.color=t===typ?'#fff':'#1A2B45';btn.style.borderColor=t===typ?d.farbe:'#CBD5E1';});
@@ -16022,7 +16079,19 @@ async function _kiSupabaseDirectSearch(query){
   var q=query.toLowerCase().trim();
   var qSafe=query.replace(/[<>&]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[c];});
 
-  /* ── Phrasen + Wörter (ab 2 Zeichen + Stammformen) ── */
+  /* ── Stoppwörter entfernen + Phrasen erkennen ── */
+  // Entferne Fragewörter und Stoppwörter – nur Fachbegriffe suchen
+  var STOPW=['der','die','das','ein','eine','einen','einer','eines','dem','den','des',
+    'ich','du','er','sie','es','wir','ihr','sie','mich','dich','sich','uns','euch',
+    'und','oder','aber','denn','weil','wenn','ob','dass','damit',
+    'ist','sind','war','waren','bin','hat','haben','hatte','hatten','wird','werden','kann','darf',
+    'muss','soll','will','kann','darf','sollte','würde','könnte','müsste','dürfte',
+    'in','an','auf','bei','mit','von','zu','aus','nach','vor','über','unter','durch',
+    'für','gegen','ohne','um','bis','seit','ab','als','wie','was','wo','wer','warum',
+    'wie','welche','welcher','welches','machen','mache','machen','gemacht','tun','mach',
+    'gibt','geben','haben','bitte','also','noch','schon','jetzt','hier','dort',
+    'nicht','kein','nein','ja','ok','bitte','danke','mal','einfach','nur'];
+  function isStop(w){return STOPW.indexOf(w.toLowerCase())>=0;}
   var phrases=[],single=[];
   var pPat=[/oib[-\s]?rl\s*\d+/gi,/trvb\s*[a-z0-9\-\s]{0,8}\d+/gi,/önorm\s+[a-z]?\s*\d+[\d\-]*/gi,
     /hk[gvo]+\s*\d*/gi,/§\s*\d+[a-z]?(?:\s*abs\.?\s*\d+)?/gi,/lgbl\.?\s*[\d\/]+/gi,
@@ -16034,12 +16103,16 @@ async function _kiSupabaseDirectSearch(query){
     if(phN!==ph&&phrases.indexOf(phN)<0)phrases.push(phN);
   }});
   q.split(/\s+/).forEach(function(w){
-    if(w.length>=2&&!phrases.some(function(p){return p.includes(w);})){
+    if(w.length>=2&&!isStop(w)&&!phrases.some(function(p){return p.includes(w);})){
       single.push(w);
       // Stammform: bei langen Wörtern (>7 Zeichen) auch Wortstamm (6 Buchstaben) suchen
       if(w.length>7){var stem=w.slice(0,6);if(single.indexOf(stem)<0)single.push(stem);}
     }
   });
+  // Wenn nach Filterung nichts übrig: Original ohne Stoppwörter nochmal versuchen
+  if(phrases.length===0&&single.length===0){
+    q.split(/\s+/).forEach(function(w){if(w.length>4&&!phrases.some(function(p){return p.includes(w);}))single.push(w);});
+  }
   var allTerms=phrases.concat(single);
 
   function scoreText(text){
