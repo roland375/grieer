@@ -1124,6 +1124,16 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
 
 /* ═══ GRIEER MOBILE CSS ═══════════════════════════════ */
 @media(max-width:768px){
+
+/* Nav Logo FIX - verhindert riesiges Logo */
+nav img { 
+  height: 32px !important; 
+  width: auto !important; 
+  max-width: 32px !important; 
+  flex-shrink: 0 !important;
+}
+nav { min-height: 48px !important; max-height: 56px !important; }
+
 body{font-size:14px!important}
 input[type=text],input[type=number],input[type=tel],input[type=email],input[type=date],input[type=password],textarea,select{min-height:44px!important;font-size:16px!important;padding:10px 12px!important;box-sizing:border-box!important;border-radius:8px!important;-webkit-appearance:none!important}
 button{min-height:44px!important;font-size:14px!important;padding:10px 14px!important;touch-action:manipulation!important}
@@ -1139,7 +1149,7 @@ label{font-size:13px!important;line-height:1.5!important;min-height:36px!importa
 .ki-msg{font-size:13px!important;line-height:1.7!important;padding:10px!important}
 canvas{max-width:100%!important;touch-action:none!important}
 *{box-sizing:border-box!important}
-img,svg{max-width:100%!important;height:auto!important}
+img:not(nav img),svg{max-width:100%!important;height:auto!important}
 }
 
 /* Gas Formular: Card Overflow Fix */
@@ -1148,6 +1158,25 @@ img,svg{max-width:100%!important;height:auto!important}
 
 @media screen and (-webkit-min-device-pixel-ratio:1){
 input,select,textarea{font-size:max(16px,1em)!important}
+}
+
+@media(max-width:768px){
+  /* Navigation kompakter */
+  nav { padding:4px 8px !important; gap:4px !important; min-height:44px !important; }
+  nav .nav-logo { display:none !important; }
+  nav button { 
+    min-width:40px !important; min-height:40px !important; 
+    font-size:18px !important; padding:4px !important; 
+    border-radius:8px !important;
+  }
+  /* KV-Briefkopf auf Mobile verstecken */
+  .kv-hdr { display:none !important; }
+  /* Seitentitel stattdessen */
+  .pg-title { 
+    font-size:15px !important; font-weight:700 !important; 
+    color:#1A2B45 !important; margin-bottom:10px !important;
+    padding:8px 0 6px !important; border-bottom:2px solid #2563EB !important;
+  }
 }
 </style>
 
@@ -16345,15 +16374,30 @@ async function _kiSupabaseDirectSearch(query){
     var s=0,t=text.toLowerCase(),fl=(t.split('\n')[0]||'');
     phrases.forEach(function(ph){
       var esc=ph.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-      s+=(t.match(new RegExp(esc,'g'))||[]).length*5;
-      if(fl.includes(ph))s+=100; // Phrase im Titel = dominanter Treffer
+      var exactPat=new RegExp('(?<![a-z\u00e4\u00f6\u00fc\u00df])'+esc+'(?![a-z\u00e4\u00f6\u00fc\u00df])','g');
+      var exactCnt=(t.match(exactPat)||[]).length;
+      var allCnt=(t.match(new RegExp(esc,'g'))||[]).length;
+      s+=exactCnt*10+(allCnt-exactCnt)*2;
+      if((fl.match(exactPat)||[]).length>0)s+=100;
+      else if(fl.includes(ph))s+=30;
     });
     keywords.forEach(function(w){
+      if(w.length<3)return;
       var esc=w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-      var pat=w.length<=3?new RegExp('\\b'+esc+'\\b','g'):new RegExp(esc,'g');
-      var cnt=(t.match(pat)||[]).length;
-      s+=cnt*2;
-      if((fl.match(pat)||[]).length>0)s+=10;
+      // Exakt: weder davor noch danach ein Buchstabe
+      var exactPat=new RegExp('(?<![a-z\u00e4\u00f6\u00fc\u00df])'+esc+'(?![a-z\u00e4\u00f6\u00fc\u00df])','g');
+      // Präfix: Begriff am Wortanfang (z.B. "kehrtarif" in "Kehrtarife")
+      var prefixPat=new RegExp('(?<![a-z\u00e4\u00f6\u00fc\u00df])'+esc+'[a-z\u00e4\u00f6\u00fc\u00df]{1,4}(?![a-z\u00e4\u00f6\u00fc\u00df])','g');
+      // Kompositum: Begriff mittendrin (z.B. "gas" in "Abgasanlage")
+      var partPat=new RegExp(esc,'g');
+      var exactCnt=(t.match(exactPat)||[]).length;
+      var prefixCnt=(t.match(prefixPat)||[]).length;
+      var partCnt=(t.match(partPat)||[]).length;
+      s+=exactCnt*5+prefixCnt*3+(partCnt-exactCnt-prefixCnt)*1;
+      // Titel-Bonus
+      if((fl.match(exactPat)||[]).length>0)s+=20;
+      else if((fl.match(prefixPat)||[]).length>0)s+=10;
+      else if(fl.includes(w))s+=3;
     });
     return s;
   }
