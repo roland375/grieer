@@ -10364,6 +10364,7 @@ function pinWordSubmit(){
     var adminUser = {id:'admin',name:'Admin (Roland)',code:['roland','grieer'],role:'admin',pages:'*'};
     _currentUser = adminUser;
     try { sessionStorage.setItem('grieer-current-user', JSON.stringify(adminUser)); } catch(e){}
+    setTimeout(function(){try{if(typeof syncFromCloud==='function')syncFromCloud();}catch(e){}},2000);
     
     var ov = document.getElementById('pin-overlay');
     if(ov) ov.style.display = 'none';
@@ -16075,68 +16076,75 @@ async function _kiSearchAndAsk(query,apiKey){
 
 async function _kiSupabaseDirectSearch(query){
   var modus=typeof _kiAntwortModus!=='undefined'?_kiAntwortModus:'intensiv';
-  var html='';
-  var q=query.toLowerCase().trim();
   var qSafe=query.replace(/[<>&]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[c];});
 
-  /* ── Stoppwörter entfernen + Phrasen erkennen ── */
-  // Entferne Fragewörter und Stoppwörter – nur Fachbegriffe suchen
-  var STOPW=['der','die','das','ein','eine','einen','einer','eines','dem','den','des',
-    'ich','du','er','sie','es','wir','ihr','sie','mich','dich','sich','uns','euch',
-    'und','oder','aber','denn','weil','wenn','ob','dass','damit',
-    'ist','sind','war','waren','bin','hat','haben','hatte','hatten','wird','werden','kann','darf',
-    'muss','soll','will','kann','darf','sollte','würde','könnte','müsste','dürfte',
-    'in','an','auf','bei','mit','von','zu','aus','nach','vor','über','unter','durch',
-    'für','gegen','ohne','um','bis','seit','ab','als','wie','was','wo','wer','warum',
-    'wie','welche','welcher','welches','machen','mache','machen','gemacht','tun','mach',
-    'gibt','geben','haben','bitte','also','noch','schon','jetzt','hier','dort',
-    'nicht','kein','nein','ja','ok','bitte','danke','mal','einfach','nur'];
-  function isStop(w){return STOPW.indexOf(w.toLowerCase())>=0;}
-  var phrases=[],single=[];
-  var pPat=[/oib[-\s]?rl\s*\d+/gi,/trvb\s*[a-z0-9\-\s]{0,8}\d+/gi,/önorm\s+[a-z]?\s*\d+[\d\-]*/gi,
-    /hk[gvo]+\s*\d*/gi,/§\s*\d+[a-z]?(?:\s*abs\.?\s*\d+)?/gi,/lgbl\.?\s*[\d\/]+/gi,
-    /ovgw\s*[gk]?\s*[\w\d]*/gi,/mb\s*\d+/gi];
+  /* ── Intelligente Schlüsselwort-Extraktion ─────────────────────────
+     Ziel: Aus "darf ich eine Gasaußenwand heizung machen?"
+     werden NUR die Fachbegriffe: ["gasaußenwand","heizung"] extrahiert.
+  ────────────────────────────────────────────────────────────────────*/
+  var STOP=['der','die','das','ein','eine','einen','einer','eines','dem','den','des',
+    'ich','du','er','sie','es','wir','ihr','mich','dich','sich','uns','euch',
+    'und','oder','aber','denn','weil','wenn','ob','dass','damit','sondern',
+    'ist','sind','war','waren','bin','hat','haben','hatte','wird','werden',
+    'kann','darf','muss','soll','will','sollte','würde','könnte','müsste','dürfte',
+    'in','an','auf','bei','mit','von','zu','aus','nach','vor','über','unter',
+    'für','gegen','ohne','um','bis','seit','ab','als','wie','was','wo','wer',
+    'warum','welche','welcher','welches','machen','mache','gemacht','tun','mach',
+    'gibt','geben','bitte','also','noch','schon','jetzt','hier','dort','dann',
+    'nicht','kein','nein','ja','ok','mal','einfach','nur','sehr','noch',
+    'dieser','diese','dieses','diesem','diesen','jedes','jede','jeder',
+    'bei','vom','beim','zur','zum','ins','ans','am','im'];
+  
+  var q=query.toLowerCase().trim();
+  var phrases=[], keywords=[];
+  
+  // Phrasen (Normen/§§ als Einheit)
+  var pPat=[/oib[-\s]?rl\s*\d+/gi,/trvb\s*[a-z0-9\-\s]{0,8}\d+/gi,
+    /önorm\s+[a-z]?\s*\d+[\d\-]*/gi,/hk[gvo]+\s*\d*/gi,
+    /§\s*\d+[a-z]?(?:\s*abs\.?\s*\d+)?/gi,/lgbl\.?\s*[\d\/]+/gi,/mb\s*\d+/gi];
   pPat.forEach(function(p){var m;p.lastIndex=0;while((m=p.exec(query))!==null){
     var ph=m[0].toLowerCase().trim();
     var phN=ph.replace(/\s+(\d)/g,'$1');
     if(phrases.indexOf(ph)<0)phrases.push(ph);
     if(phN!==ph&&phrases.indexOf(phN)<0)phrases.push(phN);
   }});
-  q.split(/\s+/).forEach(function(w){
-    if(w.length>=2&&!isStop(w)&&!phrases.some(function(p){return p.includes(w);})){
-      single.push(w);
-      // Stammform: bei langen Wörtern (>7 Zeichen) auch Wortstamm (6 Buchstaben) suchen
-      if(w.length>7){var stem=w.slice(0,6);if(single.indexOf(stem)<0)single.push(stem);}
+  
+  // Nur Fachbegriffe (keine Stoppwörter, mind. 4 Zeichen)
+  q.split(/[\s,;.?!]+/).forEach(function(w){
+    if(w.length>=3&&STOP.indexOf(w)<0&&!phrases.some(function(p){return p.includes(w);})){
+      keywords.push(w);
+      // Wortstamm für lange Wörter
+      if(w.length>8&&keywords.indexOf(w.slice(0,6))<0)keywords.push(w.slice(0,6));
     }
   });
-  // Wenn nach Filterung nichts übrig: Original ohne Stoppwörter nochmal versuchen
-  if(phrases.length===0&&single.length===0){
-    q.split(/\s+/).forEach(function(w){if(w.length>4&&!phrases.some(function(p){return p.includes(w);}))single.push(w);});
+  
+  var searchTerms=phrases.length>0?phrases:keywords;
+  if(searchTerms.length===0){
+    kiHideLoading();
+    kiAddMessage('bot','<div style="padding:12px;background:#FFF7ED;border-left:3px solid #F59E0B;border-radius:8px;font-size:12px">Bitte einen Fachbegriff eingeben – z.B. <b>Kehrtarif Gas</b>, <b>TRVB H105</b>, <b>OIB-RL 3</b>, <b>CO Grenzwert</b></div>');
+    return;
   }
-  var allTerms=phrases.concat(single);
+  
+  var allTerms=phrases.concat(keywords);
 
   function scoreText(text){
-    var s=0,t=text.toLowerCase();
-    // Erste Zeile = Titel → doppelte Gewichtung
-    var firstLine=(t.split('\n')[0]||'');
+    var s=0,t=text.toLowerCase(),fl=(t.split('\n')[0]||'');
     phrases.forEach(function(ph){
       var esc=ph.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-      var cnt=(t.match(new RegExp(esc,'g'))||[]).length;
-      s+=cnt*5;
-      if(firstLine.includes(ph))s+=50; // Phrasen-Titel-Bonus
+      s+=(t.match(new RegExp(esc,'g'))||[]).length*5;
+      if(fl.includes(ph))s+=100; // Phrase im Titel = dominanter Treffer
     });
-    single.forEach(function(w){
+    keywords.forEach(function(w){
       var esc=w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-      // Kurze Wörter (≤3 Zeichen) brauchen Wortgrenze → vermeidet "gas" in "Abgas"
       var pat=w.length<=3?new RegExp('\\b'+esc+'\\b','g'):new RegExp(esc,'g');
       var cnt=(t.match(pat)||[]).length;
       s+=cnt*2;
-      if(firstLine.match(pat))s+=10; // Titel-Bonus
+      if((fl.match(pat)||[]).length>0)s+=10;
     });
     return s;
   }
 
-  function highlight(txt){
+  function hi(txt){
     allTerms.forEach(function(w){try{txt=txt.replace(new RegExp('('+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark style="background:#FEF08A;padding:0 2px;border-radius:2px;font-weight:700">$1</mark>');}catch(e){}});
     txt=txt.replace(/(§\s*\d+[a-z]?[^\n<]{0,60}(?:KehrG|HKG|GewO|OIB|RL))/gi,'<b style="color:#92400E">$1</b>');
     txt=txt.replace(/(ÖNORM\s+[A-Z]?\s*\d+[\d\-]*|TRVB\s+[A-Z0-9 \-]+\d|OIB-RL\s*\d+|LGBl\.?\s*[\d\/]+)/gi,'<b style="color:#1D4ED8">$1</b>');
@@ -16146,124 +16154,119 @@ async function _kiSupabaseDirectSearch(query){
     return txt;
   }
 
-  /* ══ 1. LOKALES KI_SYSTEM ══ */
+  function extractContext(text,maxLines){
+    var lines=text.split('\n'),ext=[],li=0;
+    while(li<lines.length){
+      if(scoreText(lines[li])>0){
+        var isTitle=li<=2,to=isTitle?Math.min(lines.length-1,li+(maxLines||30)):Math.min(lines.length-1,li+8);
+        for(var k=Math.max(0,li-2);k<=to;k++)if(ext.indexOf(k)<0)ext.push(k);
+      }li++;
+    }
+    if(ext.length===0)return text.trim();
+    var parts=[],last=-1;
+    ext.sort(function(a,b){return a-b;}).forEach(function(i){
+      if(last>=0&&i>last+1)parts.push('  […]');
+      parts.push(lines[i]);last=i;
+    });
+    var result=parts.join('\n');
+    return result.trim().length<100?text.trim():result;
+  }
+
+  /* ── Sammle alle Treffer ───────────────────────────────────────── */
+  var localResults=[], cloudResults=[];
+
+  // 1. Eingebautes Wissen
   try{
     var ks=typeof KI_SYSTEM==='string'?KI_SYSTEM:'';
     if(ks){
-      var mainSecs=ks.split(/\n[═─]{15,}\n/);
-      var scoredSecs=[];
-      mainSecs.forEach(function(sec){var s=scoreText(sec);if(s>0)scoredSecs.push({sec:sec,score:s});});
-      scoredSecs.sort(function(a,b){return b.score-a.score;});
-
-      if(scoredSecs.length>0){
-        var topSec=scoredSecs[0];
-
-        /* Sub-Split: spezifischeren Block innerhalb der Sektion finden */
-        var subBlocks=topSec.sec.split(/\n(?=(?:OIB-RL\s*\d|TRVB\s|ÖNORM\s|§\s*\d|\d+\.\d+\s))/);
-        var bestSub=topSec.sec,bestSubScore=0;
-        subBlocks.forEach(function(b){var s=scoreText(b);if(s>bestSubScore){bestSubScore=s;bestSub=b;}});
-        var displayText=bestSub;
-
-        /* Kontextzeilen extrahieren */
-        var lines=displayText.split('\n');
-        var extracted=[],li=0;
-        while(li<lines.length){
-          if(scoreText(lines[li])>0){
-            // Titel-Treffer: mehr nachfolgende Zeilen (ganzen Block)
-            var isTitle=(li<=2&&scoreText(lines[li])>=topSec.score*0.8);
-            var ctxAfter=isTitle?Math.min(lines.length-1,li+50):Math.min(lines.length-1,li+8);
-            var from=Math.max(0,li-2),to=ctxAfter;
-            for(var k=from;k<=to;k++)if(extracted.indexOf(k)<0)extracted.push(k);
-          }li++;
-        }
-
-        var finalText;
-        if(extracted.length>0){
-          // Wenn extrahierter Text sehr kurz (nur Titel): ganzen Block zeigen
-          var extractedContent=extracted.map(function(i){return lines[i];}).join('\n');
-          if(extractedContent.trim().length<150){
-            finalText=displayText.trim(); // Ganzer Block
-          } else {
-            var parts=[],last=-1;
-            extracted.sort(function(a,b){return a-b;}).forEach(function(idx){
-              if(last>=0&&idx>last+1)parts.push('  […]');
-              parts.push(lines[idx]);last=idx;
-            });
-            finalText=parts.join('\n');
-          }
-        } else {
-          finalText=displayText.trim();
-        }
-
-        var titleLine=displayText.split('\n').find(function(l){return l.trim().length>5&&!/^[═─\s]/.test(l);})||qSafe;
-        html+='<div style="background:#F0FDF4;border-left:4px solid #16A34A;border-radius:0 10px 10px 0;padding:12px;margin-bottom:12px">';
-        html+='<div style="font-size:10px;font-weight:700;color:#166534;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px">📖 Eingebautes Fachwissen</div>';
-        html+='<div style="font-size:12px;font-weight:700;color:#1A2B45;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid #D1FAE5">'+titleLine.trim().slice(0,100)+'</div>';
-        html+='<div style="font-size:12px;line-height:1.9;color:#1A2B45;white-space:pre-wrap">'+highlight(finalText)+'</div>';
-        // Weitere Treffer (Intensiv)
-        if(scoredSecs.length>1&&modus==='intensiv'){
-          scoredSecs.slice(1,3).forEach(function(e){
-            var tl=e.sec.split('\n').find(function(l){return l.trim().length>5&&!/^[═─\s]/.test(l);})||'';
-            var eLines=e.sec.split('\n'),eExt=[],eli=0;
-            while(eli<eLines.length){if(scoreText(eLines[eli])>0){var isT=(eli<=2&&scoreText(eLines[eli])>=e.score*0.8);var et=isT?Math.min(eLines.length-1,eli+40):Math.min(eLines.length-1,eli+6);for(var ek=Math.max(0,eli-1);ek<=et;ek++)if(eExt.indexOf(ek)<0)eExt.push(ek);}eli++;}
-            var eTxt='';if(eExt.length>0){var ep=[],el=-1;eExt.sort(function(a,b){return a-b;}).forEach(function(idx){if(el>=0&&idx>el+1)ep.push('  […]');ep.push(eLines[idx]);el=idx;});eTxt=ep.join('\n');}else eTxt=e.sec.slice(0,400);
-            var ec=eTxt.trim().length<100?e.sec.trim():eTxt;
-            html+='<div style="margin-top:10px;padding-top:8px;border-top:1px solid #D1FAE5"><div style="font-size:10px;font-weight:700;color:#166534;margin-bottom:4px">↳ Weiterer Treffer: '+tl.slice(0,60)+'</div><div style="font-size:12px;line-height:1.9;white-space:pre-wrap">'+highlight(ec)+'</div></div>';
-          });
-        }
-        html+='</div>';
-      }
+      var secs=ks.split(/\n[═─]{15,}\n/);
+      secs.forEach(function(sec,idx){
+        if(idx===0)return; // Systemtext/Intro überspringen
+        var s=scoreText(sec);if(s>0)localResults.push({score:s,text:sec,source:'lokal'});
+      });
+      localResults.sort(function(a,b){return b.score-a.score;});
     }
-  }catch(ex){console.error('local:',ex);}
+  }catch(e){}
 
-  /* ══ 2. SUPABASE ══ */
+  // 2. Supabase
   if(sbCheckOnline()){
     try{
-      var allRows=[],seen={};
-      var terms=phrases.concat(single).slice(0,6);
-      for(var ti=0;ti<terms.length;ti++){
-        var url=_SB_URL+'/rest/v1/grieer_ki_wissen?or=(inhalt.ilike.*'+encodeURIComponent(terms[ti])+'*,titel.ilike.*'+encodeURIComponent(terms[ti])+'*,kategorie.ilike.*'+encodeURIComponent(terms[ti])+'*)&limit=50';
-        try{var resp=await fetch(url,{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});if(resp.ok){var rows=await resp.json();rows.forEach(function(r){if(r.id&&!seen[r.id]){seen[r.id]=true;allRows.push(r);}});}}catch(e){}
+      var seen={};
+      for(var ti=0;ti<Math.min(searchTerms.length,5);ti++){
+        var t2=searchTerms[ti];
+        var url=_SB_URL+'/rest/v1/grieer_ki_wissen?or=(inhalt.ilike.*'+encodeURIComponent(t2)+'*,titel.ilike.*'+encodeURIComponent(t2)+'*,kategorie.ilike.*'+encodeURIComponent(t2)+'*)&limit=30';
+        try{var resp=await fetch(url,{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+          if(resp.ok){(await resp.json()).forEach(function(r){if(r.id&&!seen[r.id]){seen[r.id]=true;r._score=scoreText((r.titel||'')+(r.kategorie||''))*3+scoreText(r.inhalt||'');if(r._score>0)cloudResults.push(r);}});}}catch(e){}
       }
-      if(allRows.length>0){
-        allRows.forEach(function(r){r._score=scoreText((r.titel||'')+(r.kategorie||''))*3+scoreText(r.inhalt||'');});
-        allRows.sort(function(a,b){return b._score-a._score;});
-        var maxShow=modus==='einfach'?2:modus==='mittel'?5:15;
-        var relevant=allRows.filter(function(r){return r._score>0;}).slice(0,maxShow);
-        if(relevant.length>0){
-          html+='<div style="margin-top:4px"><div style="font-size:10px;font-weight:700;color:#1565C0;margin-bottom:8px">☁ '+relevant.length+' Einträge aus Wissensdatenbank:</div>';
-          relevant.forEach(function(r,idx){
-            var raw=r.inhalt||'';
-            var iLines=raw.split('\n'),iExt=[],j=0;
-            while(j<iLines.length){
-              if(scoreText(iLines[j])>0){
-                var isT=(j<=2&&scoreText(iLines[j])>=r._score*0.5);
-                var to=isT?Math.min(iLines.length-1,j+40):Math.min(iLines.length-1,j+8);
-                for(var k=Math.max(0,j-2);k<=to;k++)if(iExt.indexOf(k)<0)iExt.push(k);
-              }j++;
-            }
-            var inhalt='';
-            if(iExt.length>0){var ip=[],il=-1;iExt.sort(function(a,b){return a-b;}).forEach(function(idx){if(il>=0&&idx>il+1)ip.push('  […]');ip.push(iLines[idx]);il=idx;});inhalt=ip.join('\n');
-              if(inhalt.trim().length<100)inhalt=raw;
-            } else inhalt=raw;
-            var maxLen=modus==='einfach'?600:modus==='mittel'?1500:99999;
-            var cut=inhalt.length>maxLen;
-            if(cut)inhalt=inhalt.slice(0,maxLen);
-            html+='<div style="border:'+(idx===0?'2px solid #2563EB':'1px solid #E2E8F0')+';background:'+(idx===0?'#EFF6FF':'#F8FAFC')+';border-radius:10px;padding:10px;margin-bottom:8px">';
-            html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px"><div><span style="font-size:9px;font-weight:700;color:#1E40AF;background:#DBEAFE;padding:2px 7px;border-radius:10px">'+(r.kategorie||'?')+'</span> <span style="font-size:11px;font-weight:700;color:#1A2B45">'+(r.titel||'')+'</span></div><span style="font-size:9px;color:#94A3B8">▲'+r._score+'</span></div>';
-            html+='<div style="font-size:12px;line-height:1.9;color:#374151;white-space:pre-wrap">'+highlight(inhalt)+'</div>';
-            if(cut){html+='<button onclick="this.previousElementSibling.textContent='+JSON.stringify(raw)+';this.remove();" style="margin-top:6px;font-size:10px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:4px 10px;cursor:pointer;color:#1E40AF;min-height:32px">+ Ganzen Text anzeigen</button>';}
-            html+='</div>';
-          });
-          html+='</div>';
-        }
-      }
-    }catch(ex){console.error('cloud:',ex);}
+      cloudResults.sort(function(a,b){return b._score-a._score;});
+    }catch(e){}
   }
 
   kiHideLoading();
-  if(!html){kiAddMessage('bot','<div style="padding:12px;background:#FFF7ED;border-left:3px solid #F59E0B;border-radius:8px;font-size:12px;line-height:1.7"><b>Keine Antwort für: '+qSafe+'</b><br><br>Tipps:<br>• ⚙ → <b>Eingebautes Wissen hochladen</b><br>• ⚙ → <b>PDF hochladen</b><br>• Andere Suchbegriffe probieren</div>');return;}
-  if(modus!=='intensiv'){html+='<div style="text-align:center;margin-top:8px"><button onclick="kiSetModus(\'intensiv\');document.getElementById(\'ki-input\').value='+JSON.stringify(query)+';kiSend();" style="font-size:11px;color:#7C3AED;background:#EDE9FE;border:none;border-radius:20px;padding:6px 16px;cursor:pointer;font-weight:600">▶ Vollständig anzeigen (Intensiv)</button></div>';}
+
+  if(localResults.length===0&&cloudResults.length===0){
+    kiAddMessage('bot','<div style="padding:12px;background:#FFF7ED;border-left:3px solid #F59E0B;border-radius:8px;font-size:12px;line-height:1.7">Kein Treffer für: <b>'+qSafe+'</b><br><br>Tipps: Fachbegriff direkt eingeben – z.B. <b>Kehrtarif Gas</b>, <b>CO Grenzwert</b>, <b>TRVB H 105</b><br>Oder PDFs hochladen: ⚙ → PDF hochladen</div>');
+    return;
+  }
+
+  /* ── Aufbau der Antwort: Beste Treffer zuerst ─────────────────── */
+  var html='';
+
+  // BESTE ANTWORT (grün hervorgehoben)
+  var bestLocal=localResults[0], bestCloud=cloudResults[0];
+  var bestSource=(!bestCloud||bestLocal&&bestLocal.score>=bestCloud._score*0.6)?bestLocal:null;
+  
+  if(bestLocal){
+    var bestSec=bestLocal.text;
+    var subs=bestSec.split(/\n(?=(?:OIB-RL\s*\d|TRVB\s|ÖNORM\s|§\s*\d|\d+\.\d+))/);
+    var bestSub=subs[0],bss=0;subs.forEach(function(b){var s=scoreText(b);if(s>bss){bss=s;bestSub=b;}});
+    var display=extractContext(bestSub,40);
+    var titleLine=bestSub.split('\n').find(function(l){return l.trim().length>5&&!/^[═─]/.test(l);})||'Fachwissen';
+    html+='<div style="background:#F0FDF4;border-left:4px solid #16A34A;border-radius:0 10px 10px 0;padding:12px;margin-bottom:8px">';
+    html+='<div style="font-size:10px;font-weight:700;color:#166534;margin-bottom:4px;text-transform:uppercase">📖 Beste Antwort – Eingebautes Fachwissen</div>';
+    html+='<div style="font-size:12px;font-weight:700;color:#1A2B45;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid #D1FAE5">'+hi(titleLine.slice(0,90))+'</div>';
+    html+='<div style="font-size:12px;line-height:1.9;color:#1A2B45;white-space:pre-wrap">'+hi(display)+'</div>';
+    html+='</div>';
+  }
+
+  if(bestCloud){
+    var raw=bestCloud.inhalt||'';
+    var ctx=extractContext(raw,30);
+    var disp=modus==='einfach'?ctx.slice(0,600):modus==='mittel'?ctx.slice(0,1500):ctx;
+    var cut=disp.length<raw.length;
+    html+='<div style="border:2px solid #2563EB;background:#EFF6FF;border-radius:10px;padding:10px;margin-bottom:8px">';
+    html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">';
+    html+='<div><span style="font-size:9px;font-weight:700;color:#1E40AF;background:#DBEAFE;padding:2px 7px;border-radius:10px">'+(bestCloud.kategorie||'?')+'</span> ';
+    html+='<span style="font-size:11px;font-weight:700;color:#1A2B45">☁ '+(bestCloud.titel||'')+'</span></div>';
+    html+='<span style="font-size:9px;color:#94A3B8">▲'+bestCloud._score+'</span></div>';
+    html+='<div style="font-size:12px;line-height:1.9;color:#374151;white-space:pre-wrap">'+hi(disp)+'</div>';
+    if(cut){html+='<button onclick="this.previousElementSibling.textContent='+JSON.stringify(raw)+';this.remove();" style="margin-top:6px;font-size:10px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:4px 10px;cursor:pointer;color:#1E40AF">+ Ganzen Text anzeigen</button>';}
+    html+='</div>';
+  }
+
+  // WEITERE TREFFER (zusammengeklappt)
+  var extraLocal=localResults.slice(1,3), extraCloud=cloudResults.slice(1, modus==='einfach'?2:modus==='mittel'?4:8);
+  if(extraLocal.length+extraCloud.length>0){
+    html+='<details style="margin-top:6px"><summary style="cursor:pointer;font-size:11px;font-weight:700;color:#475569;padding:8px;background:#F1F5F9;border-radius:8px;list-style:none">▼ '+(extraLocal.length+extraCloud.length)+' weitere Treffer anzeigen</summary><div style="margin-top:6px">';
+    extraLocal.forEach(function(r){
+      var tl=r.text.split('\n').find(function(l){return l.trim().length>5&&!/^[═─]/.test(l);})||'Lokal';
+      var ctx=extractContext(r.text,20);
+      html+='<div style="border:1px solid #D1FAE5;background:#F0FDF4;border-radius:8px;padding:10px;margin-bottom:6px">';
+      html+='<div style="font-size:10px;font-weight:700;color:#166534;margin-bottom:4px">📖 '+tl.slice(0,60)+'</div>';
+      html+='<div style="font-size:11px;line-height:1.8;white-space:pre-wrap">'+hi(ctx.slice(0,800))+'</div></div>';
+    });
+    extraCloud.forEach(function(r){
+      var raw=r.inhalt||'';var ctx=extractContext(raw,15);
+      html+='<div style="border:1px solid #BFDBFE;background:#F8FAFC;border-radius:8px;padding:10px;margin-bottom:6px">';
+      html+='<div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:9px;font-weight:700;color:#1E40AF;background:#DBEAFE;padding:1px 6px;border-radius:8px">'+(r.kategorie||'?')+'</span><span style="font-size:10px;font-weight:600;color:#1A2B45">'+( r.titel||'')+'</span></div>';
+      var dsp=ctx.slice(0,600);var c=ctx.length>600;
+      html+='<div style="font-size:11px;line-height:1.8;white-space:pre-wrap">'+hi(dsp)+'</div>';
+      if(c)html+='<button onclick="this.previousElementSibling.textContent='+JSON.stringify(raw)+';this.remove();" style="font-size:10px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:3px 8px;cursor:pointer;color:#1E40AF;margin-top:4px">+ mehr</button>';
+      html+='</div>';
+    });
+    html+='</div></details>';
+  }
+
   kiAddMessage('bot',html);
 }
 
