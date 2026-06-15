@@ -935,6 +935,220 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
   #page-auftrag label{font-size:12px;}
   #page-auftrag input.fin,#page-auftrag textarea{font-size:16px;padding:10px;}
 }
+
+/* ═══════════════════════════════════════════════════
+   GRIEER APP – GLOBALE MOBILE-OPTIMIERUNG
+   Ziel: Touch-freundlich auf jedem Smartphone
+═══════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* ── Basisschrift ── */
+  body { font-size: 14px !important; }
+  
+  /* ── Alle Eingabefelder ── */
+  input[type="text"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="email"],
+  input[type="date"],
+  input[type="password"],
+  input[type="search"],
+  textarea,
+  select {
+    min-height: 44px !important;
+    font-size: 16px !important;     /* Verhindert iOS-Zoom */
+    padding: 10px 12px !important;
+    box-sizing: border-box !important;
+    border-radius: 8px !important;
+    -webkit-appearance: none !important;
+  }
+
+  /* ── Alle Buttons ── */
+  button, .btn {
+    min-height: 44px !important;
+    font-size: 14px !important;
+    padding: 10px 14px !important;
+    cursor: pointer !important;
+    touch-action: manipulation !important;
+  }
+  
+  /* ── Checkboxen & Radio ── */
+  input[type="checkbox"],
+  input[type="radio"] {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    min-height: 22px !important;
+    accent-color: #2563EB !important;
+    cursor: pointer !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* ── Label neben Checkbox ── */
+  label {
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    min-height: 36px !important;
+  }
+  
+  /* ── Seiten-Container ── */
+  .pg {
+    padding: 8px !important;
+    padding-top: 12px !important;
+    overflow-x: hidden !important;
+  }
+
+  /* ── Karten & Boxen ── */
+  .ibox, .card {
+    padding: 10px !important;
+    border-radius: 10px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  /* ── Tabellen → Stacked Layout ── */
+  table.mob-stack td,
+  table.mob-stack th {
+    display: block !important;
+    width: 100% !important;
+    border-bottom: 1px solid #F1F5F9 !important;
+  }
+  
+  /* ── Formulartitel ── */
+  h2, .form-title {
+    font-size: 15px !important;
+    margin-bottom: 10px !important;
+  }
+  
+  /* ── 2-Spalten → 1-Spalte ── */
+  .grid-2 {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* ── KV-Checkboxen (Kostenvoranschlag) ── */
+  #page-gesamt label,
+  #page-gas label,
+  #page-auftrag label {
+    font-size: 13px !important;
+    padding: 6px 4px !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+  
+  /* ── Unterschriften-Canvas ── */
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
+    touch-action: none !important;
+  }
+
+  /* ── Navigation ── */
+  nav button {
+    min-width: 44px !important;
+    min-height: 44px !important;
+    font-size: 20px !important;
+    padding: 6px !important;
+  }
+  
+  /* ── KI Eingabe ── */
+  #ki-input {
+    font-size: 16px !important;
+    min-height: 50px !important;
+    padding: 12px !important;
+  }
+  
+  #ki-send-btn, button[onclick="kiSend()"] {
+    min-height: 50px !important;
+    min-width: 50px !important;
+    font-size: 18px !important;
+  }
+  
+  /* ── KI Antworten ── */
+  .ki-msg {
+    font-size: 13px !important;
+    line-height: 1.7 !important;
+    padding: 10px !important;
+  }
+  
+  /* ── Kleine Hilfstexte bleiben lesbar ── */
+  small, .hint, [style*="font-size:9px"],
+  [style*="font-size:10px"] {
+    font-size: 11px !important;
+    line-height: 1.5 !important;
+  }
+  
+  /* ── Formulare: volle Breite ── */
+  .frow input, .frow select, .frow textarea {
+    width: 100% !important;
+  }
+  
+  /* ── PV Rechner: Bundesland-Select ── */
+  #pvc-bundesland {
+    font-size: 15px !important;
+    min-height: 44px !important;
+  }
+  
+  /* ── Settings Inputs ── */
+  #page-settings input[type="password"],
+  #page-settings input[type="text"],
+  #page-settings input[type="email"] {
+    font-size: 14px !important;
+    min-height: 44px !important;
+  }
+  
+  /* ── Overflow verhindern ── */
+  * { max-width: 100% !important; box-sizing: border-box !important; }
+  img, svg { max-width: 100% !important; height: auto !important; }
+  
+  /* ── KV Tabelle ── */
+  #gkv-body td, #gkv-body th { 
+    font-size: 11px !important;
+    padding: 4px 3px !important;
+  }
+  #gkv-body input {
+    min-height: 36px !important;
+    font-size: 13px !important;
+  }
+}
+
+/* iOS Safari: Input-Zoom verhindern */
+@media screen and (-webkit-min-device-pixel-ratio: 1) {
+  input, select, textarea {
+    font-size: max(16px, 1em) !important;
+  }
+}
+
+/* ═══ GRIEER MOBILE CSS ═══════════════════════════════ */
+@media(max-width:768px){
+body{font-size:14px!important}
+input[type=text],input[type=number],input[type=tel],input[type=email],input[type=date],input[type=password],textarea,select{min-height:44px!important;font-size:16px!important;padding:10px 12px!important;box-sizing:border-box!important;border-radius:8px!important;-webkit-appearance:none!important}
+button{min-height:44px!important;font-size:14px!important;padding:10px 14px!important;touch-action:manipulation!important}
+input[type=checkbox],input[type=radio]{width:22px!important;height:22px!important;min-width:22px!important;min-height:22px!important;accent-color:#2563EB!important;cursor:pointer!important;flex-shrink:0!important}
+label{font-size:13px!important;line-height:1.5!important;min-height:36px!important;display:flex!important;align-items:center!important;gap:8px!important}
+.pg{padding:8px!important;padding-top:12px!important;overflow-x:hidden!important}
+.ibox,.card{padding:10px!important;border-radius:10px!important;margin-bottom:8px!important}
+#page-gas,#page-gas *{max-width:100%!important}
+#page-gas table{table-layout:fixed!important;width:100%!important;overflow:hidden!important}
+#page-gas td,#page-gas th{word-break:break-word!important;overflow:hidden!important;padding:3px!important}
+#page-gas input{width:100%!important;max-width:100%!important}
+#ki-input{font-size:16px!important;min-height:50px!important;padding:12px!important}
+.ki-msg{font-size:13px!important;line-height:1.7!important;padding:10px!important}
+canvas{max-width:100%!important;touch-action:none!important}
+*{box-sizing:border-box!important}
+img,svg{max-width:100%!important;height:auto!important}
+}
+
+/* Gas Formular: Card Overflow Fix */
+#page-gas .card { overflow-x: hidden !important; max-width: 100% !important; }
+#page-gas .card * { max-width: 100% !important; }
+
+@media screen and (-webkit-min-device-pixel-ratio:1){
+input,select,textarea{font-size:max(16px,1em)!important}
+}
 </style>
 
 
@@ -1193,7 +1407,7 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
 </div>
 <div class="ig"><div class="ibox">
   <div class="btl">Kundendaten</div>
-  <div class="frow"><label>Kd.-Nr.</label><input type="text" id="verr-kdnr" class="fin kd-nr" placeholder="z.B. 2025-0001" style="max-width:130px"></div>
+  <div class="frow"><label>Kd.-Nr.</label><input type="text" id="verr-kdnr" class="fin kd-nr" placeholder="z.B. 2025-0001" style="max-width:100%"></div>
   <div class="frow"><label>Name / Firma</label><input type="text" class="fin kd-name"></div>
   <div class="frow"><label>Adresse</label><input type="text" class="fin kd-str"></div>
   <div class="frow"><label>PLZ / Ort</label><input type="text" class="fin kd-plz"></div>
@@ -1205,11 +1419,11 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
   <div class="frow"><label>Gebäudeart</label>
     <select class="fin-sel"><option>EFH</option><option>MFH</option><option>Gewerbe</option><option>Landwirtschaft</option></select>
   </div>
-  <div class="frow"><label>Baujahr Anlage</label><input type="text" class="fin" style="width:90px" placeholder="z.B. 2010"></div>
+  <div class="frow"><label>Baujahr Anlage</label><input type="text" class="fin" style="width:100%" placeholder="z.B. 2010"></div>
   <div class="frow"><label>Bearbeiter/in</label><input type="text" class="fin"></div>
 </div></div>
 <div class="tbl-wrap">
-<table id="t-gas">
+<table style="table-layout:fixed;width:100%"  id="t-gas">
 <thead><tr>
   <th style="width:28px">Pos.</th><th>Leistung / Gerät</th><th class="c" style="width:50px">opt.</th>
   <th class="r" style="width:80px">EP netto</th><th class="c" style="width:52px">Menge</th><th class="r" style="width:90px">GP netto</th>
@@ -1280,7 +1494,7 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
   <td class="ep-c"><input type="number" class="ep" min="0" step="0.01" id="ep-gas-13" data-gp="gp-gas-13" oninput="ct('gas')"></td>
   <td class="c"><input type="number" class="qty" min="1" value="1" oninput="ct('gas')"></td>
   <td class="gp-c"><span class="gp" id="gp-gas-13"></span></td></tr>
-<tr><td class="pos">13</td><td class="bez">Notizen: <input type="text" style="border:none;border-bottom:1px solid #ccc;width:200px;font-size:11px;background:transparent;outline:none"></td>
+<tr><td class="pos">13</td><td class="bez">Notizen: <input type="text" style="border:none;border-bottom:1px solid #ccc;width:100%;font-size:11px;background:transparent;outline:none"></td>
   <td class="c"></td>
   <td class="ep-c"><input type="number" class="ep" min="0" step="0.01" id="ep-gas-14" data-gp="gp-gas-14" oninput="ct('gas')"></td>
   <td class="c"><input type="number" class="qty" min="1" value="1" oninput="ct('gas')"></td>
@@ -1291,7 +1505,7 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:11px" class="no-print">
   <span style="font-weight:600;color:#555">Preisanpassung&nbsp;%:</span>
   <input type="number" id="pct-gas" min="-50" max="200" step="0.5" placeholder="z.B. 5"
-    style="width:70px;border:1.5px solid #F9A825;border-radius:3px;padding:2px 6px;font-size:13px;font-weight:700;text-align:center;outline:none"
+    style="width:100%;border:1.5px solid #F9A825;border-radius:3px;padding:2px 6px;font-size:13px;font-weight:700;text-align:center;outline:none"
     oninput="ct('gas')">
   <select id="ptype-gas" onchange="ct('gas')" style="font-size:11px;border:1px solid #ccc;border-radius:3px;padding:3px;outline:none">
     <option value="sur">+ Zuschlag</option><option value="rab">− Rabatt</option>
@@ -14309,7 +14523,7 @@ function ablagePrint(){
     '.ablage-bar{display:none!important;}',
     'button{display:none!important;}',
     '@media print{body{margin:0;} .no-print{display:none;}}',
-    '</style></head><body>',
+    '',
     '<div class="pg" style="display:block!important">',
     formContent,
     '</div>',
@@ -17178,3 +17392,5 @@ function grieerSyncAll(btn){
 </script>
 </body>
 </html>
+
+
