@@ -1232,67 +1232,71 @@ function jFilter(f){jFilterAkt=f;['alle','offen','bezahlt'].forEach(x=>document.
 
 function preisUndBezahlt(id,kunde){
   const a=DB.auftraege.find(x=>x.id===id);
-  const kvOpt=DB.kunden.map(k=>`<option value="${esc(k.nachname+(k.vorname?' '+k.vorname:'')+(k.ort?', '+k.ort:''))}">`).join('');
-  modalOffen('💰 Abrechnung: '+esc(kunde),`
-    <div style="background:var(--grn2);border-radius:var(--r2);padding:14px;margin-bottom:16px;border-left:4px solid var(--grn3)">
-      <div style="font-weight:700;font-size:.9rem;color:var(--grn)">Auftrag abschließen & abrechnen</div>
-      <div style="font-size:.83rem;color:var(--grn);opacity:.8;margin-top:2px">${esc(kunde)}</div>
-    </div>
-    <div class="fRow"><label>Leistungsart</label>
-      <select id="pbTyp">${Object.entries(TYPEN).map(([k,v])=>'<option value="'+k+'" '+(a&&a.typ===k?'selected':'')+'>'+v.l+'</option>').join('')}</select>
-    </div>
-    <div class="fRow"><label>Beschreibung der durchgeführten Arbeit</label>
-      <textarea id="pbArbeit" placeholder="Was wurde genau gemacht?">${esc(a?.arbeit&&!a.arbeit.includes('offen')?a.arbeit:'')}</textarea>
-    </div>
-    <div class="fGrid fg2">
-      <div class="fRow"><label>Dauer (Stunden)</label>
-        <input type="number" id="pbDauer" step=".5" min="0" placeholder="z.B. 2.5" value="${a?.dauer||''}">
-      </div>
-      <div class="fRow"><label>Datum der Durchführung</label>
-        <input type="date" id="pbDatum" value="${new Date().toISOString().split('T')[0]}">
-      </div>
-    </div>
-    ${isAdmin()?`
-    <div class="fRow">
-      <label>💰 Preis (€) *</label>
-      <input type="number" id="pbPreis" step=".01" min="0" placeholder="z.B. 120.00"
-        style="font-size:1.3rem;font-weight:800;border-color:var(--p3);text-align:center"
-        value="${a?.preis||''}">
-    </div>`:'<input type="hidden" id="pbPreis">'}
-    <div class="fRow"><label>Notiz / Bemerkung</label>
-      <input id="pbNotiz" placeholder="Optional: Besonderheiten, Material…" value="${esc(a?.notiz&&!a.notiz.includes('Erstellt von')?a.notiz:'')}">
-    </div>
-    <div style="display:flex;gap:10px;margin-top:18px">
-      <button class="btn btnGrn" style="flex:1;font-size:.95rem" onclick="preisUndBezahltSpeichern('${id}')">
-        ✅ Speichern & Abschließen
-      </button>
-      <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
-    </div>`);
+  modalOffen('💰 Abrechnung: '+esc(sauber(kunde||'')),
+    '<div style="background:#d1fae5;border-left:4px solid var(--grn);border-radius:0 8px 8px 0;padding:12px;margin-bottom:14px">'+
+      '<div style="font-weight:700;font-size:.9rem;color:var(--grn)">Auftrag abschließen & abrechnen</div>'+
+      '<div style="font-size:.83rem;color:var(--grn);opacity:.8;margin-top:2px">'+esc(sauber(kunde||''))+'</div>'+
+    '</div>'+
+    '<div class="fRow"><label>Leistungsart</label>'+
+      '<select id="pbTyp">'+Object.entries(TYPEN).map(([k,v])=>'<option value="'+k+'" '+(a&&a.typ===k?'selected':'')+'>'+v.l+'</option>').join('')+'</select>'+
+    '</div>'+
+    '<div class="fRow"><label>Beschreibung der Arbeit</label>'+
+      '<textarea id="pbArbeit" placeholder="Was wurde gemacht?">'+esc(a&&a.arbeit&&!a.arbeit.includes('offen')?a.arbeit:'')+'</textarea>'+
+    '</div>'+
+    '<div class="fGrid fg2">'+
+      '<div class="fRow"><label>Dauer (h)</label><input type="number" id="pbDauer" step=".5" min="0" placeholder="z.B. 2" value="'+(a&&a.dauer||'')+'"></div>'+
+      '<div class="fRow"><label>Datum</label><input type="date" id="pbDatum" value="'+(a&&a.datum||new Date().toISOString().split('T')[0])+'"></div>'+
+    '</div>'+
+    (isAdmin()?
+      '<div class="fRow"><label>💰 Preis (€) *</label>'+
+        '<input type="number" id="pbPreis" step=".01" min="0" placeholder="z.B. 120.00"'+
+        ' style="font-size:1.2rem;font-weight:800;border-color:var(--p3);text-align:center"'+
+        ' value="'+(a&&a.preis||'')+'">'+
+      '</div>'
+    :'<input type="hidden" id="pbPreis" value="">')+
+    '<div class="fRow"><label>Status</label>'+
+      '<select id="pbBezahlt">'+
+        '<option value="true">✅ Bezahlt</option>'+
+        '<option value="false">⏳ Offen (noch nicht bezahlt)</option>'+
+      '</select>'+
+    '</div>'+
+    '<div class="fRow"><label>Notiz (optional)</label>'+
+      '<input id="pbNotiz" placeholder="Besonderheiten, Material…" value="'+esc(a&&a.notiz&&!a.notiz.includes('Erstellt')?a.notiz:'')+'">'+
+    '</div>'+
+    '<div style="display:flex;gap:8px;margin-top:16px">'+
+      '<button class="btn btnGrn" style="flex:1;font-size:.95rem" onclick="preisUndBezahltSpeichern(\''+id+'\')">✅ Speichern & Abschließen</button>'+
+      '<button class="btn btnOut" onclick="modalZu()">Abbrechen</button>'+
+    '</div>'
+  );
   if(isAdmin())setTimeout(()=>document.getElementById('pbPreis')?.focus(),200);
 }
 async function preisUndBezahltSpeichern(id){
-  const arbeit=document.getElementById('pbArbeit')?.value?.trim();
+  const arbeit=document.getElementById('pbArbeit')?.value?.trim()||null;
   const dauer=parseFloat(document.getElementById('pbDauer')?.value)||null;
   const preis=isAdmin()?parseFloat(document.getElementById('pbPreis')?.value)||null:null;
-  if(isAdmin()&&(!preis||preis<=0)){toast('Bitte Preis eingeben','err');document.getElementById('pbPreis')?.focus();return;}
-  const daten={
-    bezahlt:isAdmin()?true:false,
-    typ:document.getElementById('pbTyp')?.value||null,
-    arbeit:arbeit||null,
-    dauer:dauer,
-    datum:document.getElementById('pbDatum')?.value||new Date().toISOString().split('T')[0],
-    notiz:document.getElementById('pbNotiz')?.value||null,
+  const bezahlt=document.getElementById('pbBezahlt')?.value==='true';
+  const datum=document.getElementById('pbDatum')?.value||new Date().toISOString().split('T')[0];
+  const notiz=document.getElementById('pbNotiz')?.value||null;
+  const typ=document.getElementById('pbTyp')?.value||null;
+
+  const d={
+    bezahlt,typ,arbeit,dauer,datum,notiz,
     geaendert_am:new Date().toISOString()
   };
-  if(preis)daten.preis=preis;
+  if(preis)d.preis=preis;
+  Object.keys(d).forEach(k=>{if(d[k]===null||d[k]===undefined||d[k]==='')delete d[k];});
+
   try{
-    await api('/auftraege?id=eq.'+id,{method:'PATCH',body:JSON.stringify(daten)});
-    toast(isAdmin()?'✓ Abgerechnet & bezahlt markiert!':'✓ Arbeit eingetragen!');
-    modalZu();detailZu();await laden();
+    await api('/auftraege?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});
+    toast(bezahlt?'✅ Abgerechnet & bezahlt!':'✅ Gespeichert!');
+    modalZu();
+    await laden();
+    zeigeTab('journal');
   }catch(e){
     const msg=e.message||String(e);
-    if(msg.includes('PGRST204')||msg.includes('No Content')||msg.includes('204')){
-      toast('✅ Abgerechnet!');modalZu();detailZu();await laden();
+    if(msg.includes('204')||msg.includes('PGRST204')){
+      toast(bezahlt?'✅ Abgerechnet!':'✅ Gespeichert!');
+      modalZu();await laden();zeigeTab('journal');
     } else {
       toast('Fehler: '+msg,'err');
     }
@@ -1346,7 +1350,7 @@ async function auftragSpeichern(id,nurSpeichern=false){
   };
   Object.keys(d).forEach(k=>{if(d[k]===null||d[k]===undefined||d[k]==='')delete d[k];});
   try{
-    if(id){
+    if(id&&id!==''){
       await api('/auftraege?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});
       toast('✅ Gespeichert!');
     } else {
