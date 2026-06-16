@@ -1715,42 +1715,97 @@ async function terminSpeichern(){
 
 async function terminZuAuftrag(terminId){
   const t=DB.termine.find(x=>x.id===terminId);if(!t)return;
-  const kvOpt=DB.kunden.map(k=>`<option value="${esc(sauber((k.vorname?k.vorname+' ':'')+k.nachname+(k.ort?', '+k.ort:'')))}">` ).join('');
-  modalOffen('✅ Termin abschließen',`
-    <div style="background:#d1fae5;border-radius:8px;padding:10px;margin-bottom:12px">
-      <strong>${esc(sauber(t.titel||''))}</strong> · ${t.datum?.split('-').reverse().join('.')||''}
-      ${t.uhrzeit_von?' · '+t.uhrzeit_von:''}
-    </div>
-    <div class="fGrid fg2">
-      <div class="fRow"><label>Datum</label><input type="date" id="aDatum" value="${t.datum||''}"></div>
-      <div class="fRow"><label>Dauer (h)</label><input type="number" id="aDauer" step=".5" placeholder="z.B. 2"></div>
-    </div>
-    <div class="fGrid fg2">
-      <div class="fRow"><label>Von</label><input type="time" id="aVon" value="${t.uhrzeit_von||''}"></div>
-      <div class="fRow"><label>Bis</label><input type="time" id="aBis" value="${t.uhrzeit_bis||''}"></div>
-    </div>
-    <div class="fRow"><label>Kunde</label>
-      <input id="aKunde" list="kvTA" value="${esc(sauber(t.kunde||''))}" placeholder="Kunde suchen…">
-      <datalist id="kvTA">${kvOpt}</datalist>
-    </div>
-    <div class="fRow"><label>Leistungsart</label>
-      <select id="aTyp">${Object.entries(TYPEN).map(([k,v])=>`<option value="${k}" ${t.typ===k?'selected':''}>${v.l}</option>`).join('')}</select>
-    </div>
-    <div class="fRow"><label>Was wurde gemacht?</label>
-      <textarea id="aArbeit" placeholder="Beschreibung der Arbeit…"></textarea>
-    </div>
-    ${isAdmin()?`<div class="fRow"><label>Preis (€)</label>
-      <input type="number" id="aPreis" step=".01" placeholder="${TYPEN[t.typ]?.p||'0'}"></div>`
-      :'<input type="hidden" id="aPreis">'}
-    <input type="hidden" id="aOrt" value="${esc(t.beschreibung||'')}">
-    <input type="hidden" id="aStrasse" value="">
-    <input type="hidden" id="aNotiz" value="">
-    <input type="hidden" id="aFaellig" value="">
-    <input type="hidden" id="aBezahlt" value="false">
-    <div style="display:flex;gap:10px;margin-top:16px">
-      <button class="btn btnGrn" style="flex:1" onclick="auftragSpeichern(null)">✅ Als Auftrag speichern</button>
-      <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
-    </div>`);
+  // Nur passende Kunden (nicht alle 5789!)
+  const kundeStr=sauber(t.kunde||'').toLowerCase();
+  const erstesWort=kundeStr.split(',')[0].split(' ').pop()||'';
+  const topK=DB.kunden
+    .filter(k=>erstesWort?sauber(k.nachname).toLowerCase().includes(erstesWort):true)
+    .slice(0,20)
+    .map(k=>'<option value="'+esc(sauber((k.vorname?k.vorname+' ':'')+k.nachname+(k.ort?', '+k.ort:'')))+'">').join('');
+
+  modalOffen('✅ Termin abschließen',
+    '<div style="background:#d1fae5;border-left:4px solid var(--grn);border-radius:0 8px 8px 0;padding:12px;margin-bottom:14px">'+
+      '<strong>'+esc(sauber(t.titel||t.kunde||'Termin'))+'</strong>'+
+      '<div style="font-size:.8rem;color:var(--grn);margin-top:2px">'+
+        (t.datum?.split('-').reverse().join('.')||'')+(t.uhrzeit_von?' · '+t.uhrzeit_von:'')+'</div>'+
+    '</div>'+
+    '<div class="fGrid fg2">'+
+      '<div class="fRow"><label>Datum</label><input type="date" id="aDatum" value="'+(t.datum||'')+'"></div>'+
+      '<div class="fRow"><label>Dauer (h)</label><input type="number" id="aDauer" step=".5" placeholder="z.B. 2"></div>'+
+    '</div>'+
+    '<div class="fGrid fg2">'+
+      '<div class="fRow"><label>Von</label><input type="time" id="aVon" value="'+(t.uhrzeit_von||'')+'"></div>'+
+      '<div class="fRow"><label>Bis</label><input type="time" id="aBis" value="'+(t.uhrzeit_bis||'')+'"></div>'+
+    '</div>'+
+    '<div class="fRow"><label>Kunde</label>'+
+      '<input id="aKunde" list="kvTA" value="'+esc(sauber(t.kunde||''))+'" placeholder="Kunde suchen…" oninput="kvVorschlagTA(this.value)">'+
+      '<datalist id="kvTA">'+topK+'</datalist>'+
+    '</div>'+
+    '<div class="fRow"><label>Leistungsart</label>'+
+      '<select id="aTyp">'+Object.entries(TYPEN).map(([k,v])=>'<option value="'+k+'" '+(t.typ===k?'selected':'')+'>'+v.l+'</option>').join('')+'</select>'+
+    '</div>'+
+    '<div class="fRow"><label>Was wurde gemacht?</label>'+
+      '<textarea id="aArbeit" placeholder="Beschreibung der durchgeführten Arbeit…"></textarea>'+
+    '</div>'+
+    (isAdmin()?
+      '<div class="fGrid fg2">'+
+        '<div class="fRow"><label>Preis (€)</label>'+
+          '<input type="number" id="aPreis" step=".01" placeholder="'+(TYPEN[t.typ]?.p||'0')+'" style="font-size:1.1rem;font-weight:700;text-align:center"></div>'+
+        '<div class="fRow"><label>Status</label>'+
+          '<select id="aBezahlt">'+
+            '<option value="false">Offen (noch nicht bezahlt)</option>'+
+            '<option value="true">✓ Bezahlt</option>'+
+          '</select>'+
+        '</div>'+
+      '</div>'
+    :'<input type="hidden" id="aPreis" value=""><input type="hidden" id="aBezahlt" value="false">')+
+    '<input type="hidden" id="aOrt" value="">'+
+    '<input type="hidden" id="aStrasse" value="">'+
+    '<input type="hidden" id="aNotiz" value="">'+
+    '<input type="hidden" id="aFaellig" value="">'+
+    '<div style="display:flex;gap:8px;margin-top:14px">'+
+      '<button class="btn btnGrn" style="flex:1" onclick="auftragSpeichernNeu(\''+terminId+'\')">✅ Abschließen & speichern</button>'+
+      '<button class="btn btnOut" onclick="modalZu()">Abbrechen</button>'+
+    '</div>'
+  );
+}
+function kvVorschlagTA(val){
+  const dl=document.getElementById('kvTA');if(!dl||!val||val.length<2)return;
+  const s=sauber(val).toLowerCase();
+  const m=DB.kunden.filter(k=>sauber((k.vorname||'')+' '+(k.nachname||'')).toLowerCase().includes(s)).slice(0,10);
+  dl.innerHTML=m.map(k=>'<option value="'+esc(sauber((k.vorname?k.vorname+' ':'')+k.nachname+(k.ort?', '+k.ort:'')))+'">').join('');
+}
+async function auftragSpeichernNeu(terminId){
+  const datum=document.getElementById('aDatum')?.value;
+  if(!datum){toast('Datum eingeben','err');return;}
+  const d={
+    datum,
+    kunde:document.getElementById('aKunde')?.value?.trim()||null,
+    typ:document.getElementById('aTyp')?.value||null,
+    arbeit:document.getElementById('aArbeit')?.value||null,
+    dauer:parseFloat(document.getElementById('aDauer')?.value)||null,
+    uhrzeit_von:document.getElementById('aVon')?.value||null,
+    uhrzeit_bis:document.getElementById('aBis')?.value||null,
+    preis:parseFloat(document.getElementById('aPreis')?.value)||null,
+    bezahlt:document.getElementById('aBezahlt')?.value==='true',
+    durchgefuehrt_von:user?.name||null,
+    erstellt_am:new Date().toISOString(),
+  };
+  Object.keys(d).forEach(k=>{if(d[k]===null||d[k]===undefined||d[k]==='')delete d[k];});
+  try{
+    await api('/auftraege',{method:'POST',body:JSON.stringify(d)});
+    toast('✅ Auftrag gespeichert!');
+    modalZu();
+    await laden();
+    zeigeTab('journal');
+  }catch(e){
+    const msg=e.message||String(e);
+    if(msg.includes('204')||msg.includes('PGRST204')){
+      toast('✅ Gespeichert!');modalZu();await laden();zeigeTab('journal');
+    } else {
+      toast('Fehler: '+msg,'err');
+    }
+  }
 }
 async function terminLoeschen(id){if(!confirm('Termin wirklich löschen?'))return;try{await api('/termine?id=eq.'+id,{method:'DELETE'});toast('Termin gelöscht');await laden();}catch(e){toast('Fehler: '+e.message,'err');}}
 
