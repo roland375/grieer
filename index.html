@@ -14289,7 +14289,7 @@ function kAddKehrung(typ, isGas){
 
 
 // ── EINSTELLUNGEN ──────────────────────────────────────────
-function showSettings(){ show('settings'); }
+function showSettings(){ show('settings'); setTimeout(_updateKeyStatus,300); }
 function savePasswords(){
   var code1='';
   try{code1=(document.getElementById('set-pw1')&&document.getElementById('set-pw1').value||'').trim();}catch(e){}
@@ -15548,16 +15548,22 @@ var _kiSupabaseWissen = '';
 })();
 
 function sbCheckOnline(){return typeof _SB_URL!=='undefined' && _SB_URL && navigator.onLine;}
-function sbKey(){return _SB_SERVICE_KEY || _SB_KEY;}
+function sbKey(){
+  if(!_SB_SERVICE_KEY){try{_SB_SERVICE_KEY=localStorage.getItem('grieer_sb_service_key')||'';}catch(e){}}
+  return _SB_SERVICE_KEY||_SB_KEY;
+}
 
 function saveServiceKey(){
   var v=(document.getElementById('sb-service-key-input')?.value||'').trim();
   if(!v){try{_grieerToast('Bitte Key eingeben','#F59E0B',2000);}catch(e){}return;}
   _SB_SERVICE_KEY=v;
   try{localStorage.setItem('grieer_sb_service_key',v);}catch(e){}
-  // Service Key bleibt NUR lokal – wird nicht in Cloud synchronisiert (Sicherheit)
-  try{_grieerToast('✅ Service Key lokal gespeichert!','#16A34A',2000);}catch(e){}
-  var inp=document.getElementById('sb-service-key-input');if(inp)inp.value=v.slice(0,15)+'...';
+  // In Cloud speichern damit alle Geräte den Key bekommen
+  settingsSaveToCloud('sb_service_key',v);
+  try{_grieerToast('\u2705 Service Key gespeichert & synchronisiert!','#16A34A',2500);}catch(e){}
+  var inp=document.getElementById('sb-service-key-input');
+  if(inp)inp.value=v.slice(0,12)+'...';
+  _updateKeyStatus();
 }
 function ablageSaveEntry(entry){
   var all = ablageGetAll();
@@ -15765,6 +15771,7 @@ async function supabaseDiagnostik(){
 
 /* Auto-load beim Start */
 window.addEventListener('load',function(){
+  setTimeout(_updateKeyStatus,500);
   setTimeout(function(){
     if(typeof kiLadeWissenAusSupabase==='function') kiLadeWissenAusSupabase();
   },2000);
@@ -15967,16 +15974,21 @@ async function settingsSaveToCloud(key,value){
 async function settingsLoadFromCloud(){
   if(!sbCheckOnline())return;
   try{
-    var r=await fetch(_SB_URL+'/rest/v1/grieer_einstellungen?firma_id=eq.grieer',{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+    var r=await fetch(_SB_URL+'/rest/v1/grieer_einstellungen?firma_id=eq.grieer',{
+      headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
     if(!r.ok)return;
     var rows=await r.json();
     if(!Array.isArray(rows))return;
-    rows.forEach(function(r){if(!r.key_name||!r.value_data)return;try{localStorage.setItem('grieer_'+r.key_name,r.value_data);}catch(e){}});
-    // Service Key wird nicht aus Cloud geladen (nur lokal)
-    _claudeApiKey=localStorage.getItem('grieer_claude_key')||'';
+    rows.forEach(function(row){
+      if(!row.key_name||!row.value_data)return;
+      try{localStorage.setItem('grieer_'+row.key_name,row.value_data);}catch(e){}
+      // Direkt in Variable laden
+      if(row.key_name==='sb_service_key'){_SB_SERVICE_KEY=row.value_data;}
+      if(row.key_name==='claude_key'){_claudeApiKey=row.value_data;}
+    });
+    setTimeout(_updateKeyStatus,200);
   }catch(e){}
 }
-
 async function syncUsersToCloud(){
   if(!sbCheckOnline())return;
   var users=typeof _loadUsers==='function'?_loadUsers():[];
@@ -16809,6 +16821,22 @@ function grieerSyncAll(btn){
 }
 /* === END SYNC === */
 
+function _updateKeyStatus(){
+  try{
+    // Direkt aus localStorage lesen (zuverlässiger)
+    var sk=localStorage.getItem('grieer_sb_service_key')||_SB_SERVICE_KEY||'';
+    var ck=localStorage.getItem('grieer_claude_key')||_claudeApiKey||'';
+    var skEl=document.getElementById('sk-status');
+    var ckEl=document.getElementById('ck-status');
+    if(skEl)skEl.innerHTML=sk?'<span style="color:#16A34A;font-weight:700">✅ Key gespeichert ('+sk.slice(0,8)+'...)</span>':'<span style="color:#DC2626">❌ Kein Key</span>';
+    if(ckEl)ckEl.innerHTML=ck?'<span style="color:#16A34A;font-weight:700">✅ Key gespeichert</span>':'<span style="color:#6B7280">Nicht gesetzt (optional)</span>';
+    // Inputs befüllen falls vorhanden (zeige Anfang)
+    var skI=document.getElementById('sb-service-key-input');
+    var ckI=document.getElementById('claude-api-key-input');
+    if(skI&&sk&&(skI.value===''||skI.value.endsWith('...')))skI.value=sk.slice(0,12)+'...';
+    if(ckI&&ck&&(ckI.value===''||ckI.value.endsWith('...')))ckI.value=ck.slice(0,12)+'...';
+  }catch(e){}
+}
 </script>
 
 
@@ -16928,6 +16956,7 @@ function grieerSyncAll(btn){
   <div style="font-size:12px;font-weight:700;color:#5B21B6;margin-bottom:4px">&#129504; Claude API Key <span style="font-size:10px;font-weight:400;color:#7C3AED">(optional &ndash; f&uuml;r noch bessere Antworten)</span></div>
   <div style="font-size:10px;color:#374151;line-height:1.5;margin-bottom:6px">anthropic.com &#8594; API Keys &#8594; Key erstellen<br><b>Wird automatisch auf alle Ger&#228;te synchronisiert!</b></div>
   <input type="password" id="claude-api-key-input" placeholder="sk-ant-api03-..." style="width:100%;padding:9px;border:1.5px solid #C4B5FD;border-radius:8px;font-size:12px;box-sizing:border-box;margin-bottom:6px;font-family:monospace">
+  <div id="ck-status" style="font-size:11px;margin-bottom:6px;padding:4px;background:#F8FAFC;border-radius:6px;text-align:center">Wird geprüft...</div>
   <button onclick="saveClaudeKey()" style="width:100%;padding:10px;background:#7C3AED;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;min-height:40px">&#129504; Key speichern &amp; sync</button>
 </div>
 
@@ -16935,6 +16964,7 @@ function grieerSyncAll(btn){
   <div style="font-size:12px;font-weight:700;color:#C2410C;margin-bottom:4px">&#128273; Service Role Key (f&#252;r Storage-Zugriff)</div>
   <div style="font-size:10px;color:#374151;line-height:1.5;margin-bottom:6px">Supabase &#8594; Project Settings &#8594; API &#8594; <b>service_role</b> kopieren</div>
   <input type="password" id="sb-service-key-input" placeholder="eyJhbGciOiJIUzI1NiIs..." style="width:100%;padding:9px;border:1.5px solid #FED7AA;border-radius:8px;font-size:12px;box-sizing:border-box;margin-bottom:6px;font-family:monospace">
+  <div id="sk-status" style="font-size:11px;margin-bottom:6px;padding:4px;background:#F8FAFC;border-radius:6px;text-align:center">Wird geprüft...</div>
   <button onclick="saveServiceKey()" style="width:100%;padding:10px;background:#EA580C;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;min-height:40px">&#128273; Key speichern</button>
 </div>
 
