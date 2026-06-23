@@ -7823,6 +7823,8 @@ function buildA4Html(pid){
     html = buildWartHtml(); title = 'Wartungserinnerung';
   } else if(clean === 'kehr'){
     html = buildKehrHtml(); title = 'Kehrtarif KV';
+  } else if(clean === 'gesamt'){
+    html = buildGkvHtml(); title = 'Kostenvoranschlag';
   } else if(clean === 'b8201'){
     html = buildB8201Html(); title = 'Fang-Prüfbericht B 8201';
   } else if(clean === 'luft2'){
@@ -16836,6 +16838,119 @@ function _updateKeyStatus(){
     if(skI&&sk&&(skI.value===''||skI.value.endsWith('...')))skI.value=sk.slice(0,12)+'...';
     if(ckI&&ck&&(ckI.value===''||ckI.value.endsWith('...')))ckI.value=ck.slice(0,12)+'...';
   }catch(e){}
+}
+
+function buildGkvHtml(){
+  /* ── Meta-Felder ── */
+  function g(id){return(document.getElementById(id)||{}).value||'';}
+  var kvNr=g('gkv-nr')||g('kv-nr')||'—';
+  var datum=g('gkv-datum')||g('kv-datum')||_today();
+  var gueltig=g('gkv-gueltig')||'';
+  var bearb=g('gkv-bearb')||g('kv-bearb')||'Grieer';
+  var kdName=g('kd-name')||window._gKunde||'';
+  var kdStr=g('kd-str')||window._gAdresse||'';
+  var kdPlz=g('kd-plz')||window._gPlz||'';
+
+  var body=_hdrHtml('Kostenvoranschlag – Rauchfangkehrerleistungen',
+    'KV-Nr.\u00a0'+kvNr, datum);
+  body+='<div style="display:flex;justify-content:space-between;margin-bottom:12px;font-size:10px;color:#546E7A">';
+  body+='<span>Bearbeiter/in: <b>'+bearb+'</b></span>';
+  if(gueltig)body+='<span>G\u00fcltig bis: <b>'+gueltig+'</b></span>';
+  body+='</div>';
+
+  /* ── Kundendaten ── */
+  if(kdName||kdStr){
+    body+='<div style="background:#EFF6FF;border-left:3px solid #2563EB;padding:8px 10px;margin-bottom:12px;font-size:10px">';
+    body+='<b>Auftraggeber/in:</b><br>';
+    if(kdName)body+=kdName+'<br>';
+    if(kdStr)body+=kdStr+'<br>';
+    if(kdPlz)body+=kdPlz;
+    body+='</div>';
+  }
+
+  /* ── Positionen: NUR ausgefüllte Zeilen ── */
+  var tableRows='';
+  var i=1, anyRow=false, currentSection='';
+  while(true){
+    var qEl=document.getElementById('gkv-q-'+i);
+    var epEl=document.getElementById('gkv-ep-'+i);
+    var gpEl=document.getElementById('gkv-gp-'+i);
+    if(!qEl&&!epEl) break;
+    var menge=parseFloat((qEl||{}).value)||0;
+    var ep=parseFloat((epEl||{}).value)||0;
+    /* Nur drucken wenn Menge > 0 */
+    if(menge>0){
+      var trEl=document.getElementById('gkv-r-'+i);
+      /* Sektionsüberschrift finden (vorherige Header-Row) */
+      if(trEl){
+        var prev=trEl.previousElementSibling;
+        while(prev){
+          if(prev.children.length===1&&prev.children[0].getAttribute('colspan')==='6'){
+            var newSec=prev.children[0].textContent.trim();
+            if(newSec!==currentSection){
+              currentSection=newSec;
+              tableRows+='<tr><td colspan="5" style="background:#2C3E50;color:#fff;font-weight:700;font-size:10px;padding:4px 8px">'+newSec+'</td></tr>';
+            }
+            break;
+          }
+          prev=prev.previousElementSibling;
+        }
+      }
+      /* Bezeichnung */
+      var bezEl=trEl?trEl.querySelector('.bez,.bez2'):null;
+      var bez=bezEl?bezEl.textContent.trim():'Position '+i;
+      /* Einheit */
+      var einh='';
+      var einhEl=trEl?trEl.querySelector('.einh'):null;
+      if(einhEl)einh=einhEl.textContent.trim();
+      var gp=menge*ep;
+      tableRows+='<tr style="font-size:10px;border-bottom:0.5px solid #E2E8F0">';
+      tableRows+='<td style="padding:4px 6px;width:40%">'+bez+'</td>';
+      tableRows+='<td style="text-align:right;padding:4px 4px;width:12%">'+ep.toFixed(2)+'\u00a0\u20ac</td>';
+      tableRows+='<td style="text-align:center;padding:4px 4px;width:10%">'+menge+'</td>';
+      tableRows+='<td style="text-align:center;padding:4px 4px;width:10%">'+(einh||'Stk')+'</td>';
+      tableRows+='<td style="text-align:right;padding:4px 6px;width:14%;font-weight:600">'+gp.toFixed(2)+'\u00a0\u20ac</td>';
+      tableRows+='</tr>';
+      anyRow=true;
+    }
+    i++;
+  }
+
+  if(!anyRow){
+    body+='<div style="padding:20px;text-align:center;color:#90A4AE;font-size:11px">Keine Positionen ausgef\u00fcllt.</div>';
+  } else {
+    body+='<table style="width:100%;border-collapse:collapse;margin-bottom:16px">';
+    body+='<thead><tr style="background:#1A2B45;color:#fff;font-size:10px">';
+    body+='<th style="text-align:left;padding:5px 6px">Bezeichnung</th>';
+    body+='<th style="text-align:right;padding:5px 4px">EP netto</th>';
+    body+='<th style="text-align:center;padding:5px 4px">Menge</th>';
+    body+='<th style="text-align:center;padding:5px 4px">Einheit</th>';
+    body+='<th style="text-align:right;padding:5px 6px">GP netto</th>';
+    body+='</tr></thead>';
+    body+='<tbody>'+tableRows+'</tbody>';
+    body+='</table>';
+
+    /* ── Summen ── */
+    var netEl=document.getElementById('gkv-net');
+    var ustEl=document.getElementById('gkv-ust');
+    var brutEl=document.getElementById('gkv-brutto');
+    var net=netEl?netEl.textContent:'';
+    var ust=ustEl?ustEl.textContent:'';
+    var brut=brutEl?brutEl.textContent:'';
+    body+='<div style="display:flex;justify-content:flex-end;margin-bottom:20px">';
+    body+='<div style="min-width:220px;font-size:11px">';
+    if(net)body+='<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:0.5px solid #E2E8F0"><span>Nettobetrag</span><b>'+net+'</b></div>';
+    if(ust)body+='<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:0.5px solid #E2E8F0"><span>+ 20\u00a0% USt.</span><b>'+ust+'</b></div>';
+    if(brut)body+='<div style="display:flex;justify-content:space-between;padding:5px 0;background:#1A2B45;color:#fff;border-radius:4px;padding:6px 8px;margin-top:4px"><b>GESAMT brutto</b><b style="font-size:14px">'+brut+'</b></div>';
+    body+='</div></div>';
+  }
+
+  /* ── Hinweis + Unterschriften ── */
+  body+='<div style="font-size:9px;color:#90A4AE;margin-bottom:16px">Unverbindlicher Kostenvoranschlag \u2014 Preise netto exkl. 20\u00a0% USt. \u2014 gem. Preisliste '+new Date().getFullYear()+'</div>';
+  body+='<div class="sig-grid"><div><div class="sig-box"></div><div class="sig-lbl">Grieer Energietechnik OG \u00b7 '+datum+'</div></div>';
+  body+='<div><div class="sig-box"></div><div class="sig-lbl">Auftraggeber/in \u00b7 Datum: ________________</div></div></div>';
+
+  return _wrapHtml('Kostenvoranschlag \u2013 KV-Nr. '+kvNr, body);
 }
 </script>
 
