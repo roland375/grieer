@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#8B0000">
+<title>RASA OG — Team App</title>
+<style>
+:root{
+  --rot:#8B0000;--rot2:#C0392B;--rot3:#FDEDED;
+  --navy:#1A3A5C;--navy2:#EBF5FB;
+  --gruen:#1A5E2A;--gruen2:#E8F5E9;
+  --orange:#E67E22;--oran2:#FEF5E7;
+  --lila:#7D3C98;
+  --dunkel:#1A1A1A;--grau1:#F8F8F8;--grau2:#EFEFEF;
+  --grau3:#CCCCCC;--grau4:#888888;
+  --shadow:0 2px 12px rgba(0,0,0,.10);
+  --radius:12px;--radius2:8px;
+  --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:var(--font);background:var(--grau1);color:var(--dunkel);min-height:100vh;overscroll-behavior:none}
+
+/* ── LOADING ── */
+#loadingOverlay{position:fixed;inset:0;background:linear-gradient(160deg,#8B0000,#1A3A5C);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
+.spinner{width:44px;height:44px;border:4px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── SETUP (Supabase Konfiguration) ── */
+#setupScreen{display:none;min-height:100vh;background:linear-gradient(160deg,#8B0000,#1A3A5C);padding:24px;align-items:center;justify-content:center;flex-direction:column}
+.setup-card{background:#fff;border-radius:20px;padding:28px 24px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.setup-card h2{font-size:18px;font-weight:800;margin-bottom:6px;color:var(--dunkel)}
+.setup-card p{font-size:13px;color:var(--grau4);margin-bottom:20px;line-height:1.6}
+.setup-step{background:var(--grau1);border-radius:10px;padding:12px 14px;margin-bottom:12px;font-size:13px;line-height:1.7;border-left:4px solid var(--rot)}
+.setup-step a{color:var(--rot);font-weight:700}
+
+/* ── LOGIN ── */
+#loginScreen{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#8B0000 0%,#C0392B 45%,#1A3A5C 100%);padding:24px}
+.login-logo{width:90px;height:90px;background:rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:12px;border:3px solid rgba(255,255,255,.3);font-size:40px}
+.login-title{font-size:30px;font-weight:800;color:#fff;letter-spacing:3px;margin-bottom:2px}
+.login-sub{font-size:12px;color:rgba(255,255,255,.65);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:36px}
+.login-card{background:#fff;border-radius:20px;padding:28px 24px;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.login-card h2{font-size:17px;font-weight:700;margin-bottom:20px;text-align:center}
+.user-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:18px}
+.user-btn{background:var(--grau1);border:2px solid var(--grau2);border-radius:10px;padding:12px 6px;cursor:pointer;text-align:center;transition:all .18s;font-family:var(--font)}
+.user-btn:active,.user-btn.active{border-color:var(--rot);background:var(--rot3)}
+.user-btn .av{width:42px;height:42px;border-radius:50%;margin:0 auto 7px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff}
+.user-btn .un{font-size:12px;font-weight:700}
+.user-btn .ur{font-size:10px;color:var(--grau4);margin-top:1px}
+.pw-wrap{position:relative;margin-bottom:12px}
+.pw-field{width:100%;border:2px solid var(--grau2);border-radius:10px;padding:12px 44px 12px 14px;font-size:16px;font-family:var(--font);outline:none;transition:border-color .18s}
+.pw-field:focus{border-color:var(--rot)}
+.pw-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:18px;cursor:pointer;color:var(--grau4)}
+.login-btn{width:100%;background:var(--rot);color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font)}
+.login-err{color:var(--rot2);font-size:13px;text-align:center;margin-top:8px;min-height:18px}
+
+/* ── APP ── */
+#app{display:none}
+.topbar{position:sticky;top:0;z-index:100;background:var(--rot);color:#fff;padding:0 14px;height:54px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.topbar-logo{font-size:18px;font-weight:800;letter-spacing:2px}
+.topbar-right{display:flex;align-items:center;gap:7px}
+.sync-dot{width:8px;height:8px;border-radius:50%;transition:background .3s}
+.sync-dot.online{background:#4CAF50}
+.sync-dot.syncing{background:var(--orange);animation:pulse 1s infinite}
+.sync-dot.offline{background:var(--grau3)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.top-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid rgba(255,255,255,.35)}
+.logout-btn{background:rgba(255,255,255,.15);border:none;border-radius:6px;color:#fff;font-size:11px;padding:4px 9px;cursor:pointer;font-family:var(--font)}
+.sync-banner{font-size:12px;text-align:center;padding:6px 16px;display:none}
+.sync-banner.show{display:block}
+.sync-banner.offline{background:#FFF3E0;color:#E65100}
+.sync-banner.syncing{background:var(--navy2);color:var(--navy)}
+.sync-banner.ok{background:var(--gruen2);color:var(--gruen)}
+
+/* ── NAV ── */
+.nav-bar{position:fixed;bottom:0;left:0;right:0;z-index:100;background:#fff;border-top:1px solid var(--grau2);display:flex;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -2px 12px rgba(0,0,0,.07)}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 4px 5px;cursor:pointer;border:none;background:none;font-family:var(--font);gap:2px}
+.nav-btn .ni{font-size:22px;transition:transform .15s}
+.nav-btn .nl{font-size:10px;color:var(--grau4);font-weight:500}
+.nav-btn.active .nl{color:var(--rot);font-weight:700}
+.nav-btn.active .ni{transform:scale(1.18)}
+
+/* ── MAIN ── */
+.main{padding:14px 14px 84px;max-width:700px;margin:0 auto}
+.screen{display:none}
+.screen.active{display:block}
+.card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:12px}
+.card-title{font-size:14px;font-weight:700;margin-bottom:11px;display:flex;align-items:center;gap:7px}
+
+/* ── WELCOME ── */
+.welcome-card{background:linear-gradient(135deg,var(--rot),var(--navy));color:#fff;border-radius:var(--radius);padding:20px 18px;margin-bottom:12px}
+.welcome-card h2{font-size:20px;font-weight:800;margin-bottom:3px}
+.welcome-card p{font-size:12px;opacity:.8}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+.stat-card{background:#fff;border-radius:var(--radius);padding:14px;text-align:center;box-shadow:var(--shadow)}
+.stat-num{font-size:26px;font-weight:800}
+.stat-lbl{font-size:11px;color:var(--grau4);margin-top:1px}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+.quick-btn{background:#fff;border:2px solid var(--grau2);border-radius:var(--radius);padding:14px 10px;cursor:pointer;text-align:center;font-family:var(--font);transition:all .15s}
+.quick-btn:active{border-color:var(--rot);background:var(--rot3)}
+.quick-btn .qi{font-size:26px;margin-bottom:5px}
+.quick-btn .ql{font-size:12px;font-weight:600}
+
+/* ── REZEPTE ── */
+.search-bar{display:flex;gap:8px;margin-bottom:12px}
+.search-input{flex:1;border:2px solid var(--grau2);border-radius:10px;padding:10px 13px;font-size:14px;font-family:var(--font);outline:none}
+.search-input:focus{border-color:var(--rot)}
+.btn-add-big{background:var(--rot);color:#fff;border:none;border-radius:10px;padding:10px 15px;font-size:20px;cursor:pointer;font-weight:700}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:3px;margin-bottom:12px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{white-space:nowrap;background:var(--grau2);border:none;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)}
+.chip.active{background:var(--rot);color:#fff}
+.rz-item{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:9px;overflow:hidden}
+.rz-header{padding:13px 14px;display:flex;align-items:center;gap:11px;cursor:pointer}
+.rz-img{width:52px;height:52px;border-radius:8px;background:var(--grau2);display:flex;align-items:center;justify-content:center;font-size:25px;flex-shrink:0;overflow:hidden}
+.rz-img img{width:100%;height:100%;object-fit:cover}
+.rz-info{flex:1;min-width:0}
+.rz-name{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rz-meta{font-size:11px;color:var(--grau4);display:flex;gap:8px;margin-top:2px;flex-wrap:wrap}
+.rz-kalk{text-align:right;flex-shrink:0}
+.vk-p{font-size:15px;font-weight:800;color:var(--gruen)}
+.ek-p{font-size:11px;color:var(--grau4)}
+.db-b{font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;display:inline-block;margin-top:1px}
+.db-gut{background:var(--gruen2);color:var(--gruen)}
+.db-ok{background:var(--oran2);color:var(--orange)}
+.db-low{background:var(--rot3);color:var(--rot2)}
+.rz-detail{display:none;padding:0 14px 14px;border-top:1px solid var(--grau2)}
+.rz-detail.open{display:block;padding-top:11px}
+.zt-title{font-size:12px;font-weight:700;margin:7px 0 5px;color:var(--navy)}
+.zt-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px dashed var(--grau2)}
+.kalk-box{background:var(--grau1);border-radius:8px;padding:10px 11px;margin-top:9px}
+.kb-row{display:flex;justify-content:space-between;font-size:12px;padding:2px 0}
+.kb-row.total{border-top:1px solid var(--grau3);margin-top:3px;padding-top:5px;font-weight:700;font-size:13px;color:var(--gruen)}
+.action-row{display:flex;gap:7px;margin-top:11px}
+.btn-s{flex:1;padding:8px;border-radius:8px;border:2px solid var(--grau2);background:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:4px}
+.btn-s.red{border-color:var(--rot3);color:var(--rot2)}
+.btn-s.blue{background:var(--rot);border-color:var(--rot);color:#fff}
+
+/* ── MODAL ── */
+.modal-bg{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.52);display:none;align-items:flex-end;backdrop-filter:blur(3px)}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:700px;margin:0 auto;max-height:93vh;overflow-y:auto;padding:20px 18px calc(20px + env(safe-area-inset-bottom))}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.modal-title{font-size:17px;font-weight:800}
+.modal-x{width:30px;height:30px;background:var(--grau2);border:none;border-radius:50%;font-size:17px;cursor:pointer}
+.fg{margin-bottom:13px}
+.fl{display:block;font-size:11px;font-weight:700;color:var(--grau4);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px}
+.fi,.fs,.fta{width:100%;border:2px solid var(--grau2);border-radius:10px;padding:10px 11px;font-size:14px;font-family:var(--font);outline:none;transition:border-color .15s}
+.fi:focus,.fs:focus,.fta:focus{border-color:var(--rot)}
+.fta{min-height:76px;resize:vertical}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.btn-save{width:100%;background:var(--rot);color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);margin-top:4px}
+.kp{background:var(--grau1);border-radius:10px;padding:11px;margin-top:5px}
+.kp-row{display:flex;justify-content:space-between;font-size:13px;padding:3px 0}
+.kp-row.hi{font-weight:700;border-top:1px solid var(--grau3);margin-top:3px;padding-top:5px;font-size:14px}
+.photo-area{border:2px dashed var(--grau3);border-radius:10px;padding:18px;text-align:center;cursor:pointer;position:relative;transition:all .15s}
+.photo-area:active{border-color:var(--rot);background:var(--rot3)}
+.photo-area input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.photo-preview{width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-top:9px;display:none}
+.zt-input{display:grid;grid-template-columns:1fr 78px 68px 30px;gap:5px;margin-bottom:5px;align-items:center}
+.del-zt{width:30px;height:30px;background:var(--rot3);border:none;border-radius:6px;color:var(--rot2);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center}
+.add-zt{background:none;border:2px dashed var(--grau3);border-radius:10px;padding:7px;font-size:12px;color:var(--grau4);cursor:pointer;width:100%;font-family:var(--font)}
+
+/* ── KALKULATION ── */
+.kalk-preview-row{display:flex;justify-content:space-between;font-size:13px;padding:3px 0}
+.kalk-preview-row.highlight{font-weight:700;border-top:1px solid var(--grau3);margin-top:3px;padding-top:5px;font-size:14px}
+
+/* ── SYNC SCREEN ── */
+.sync-hero{background:var(--navy);color:#fff;border-radius:var(--radius);padding:18px;margin-bottom:12px}
+.sync-hero h3{font-size:15px;font-weight:700;margin-bottom:10px}
+.sh-row{display:flex;align-items:center;gap:9px;font-size:13px;opacity:.9;margin-bottom:6px}
+.sh-dot{width:11px;height:11px;border-radius:50%}
+.sh-btn{background:rgba(255,255,255,.15);border:none;color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;font-family:var(--font);margin-top:10px}
+.team-tile{background:var(--grau1);border-radius:10px;padding:11px 13px;display:flex;align-items:center;gap:11px;margin-bottom:7px}
+.tt-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff}
+.tt-info{flex:1}
+.tt-name{font-size:13px;font-weight:700}
+.tt-role{font-size:11px;color:var(--grau4)}
+.admin-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--grau4);margin:14px 0 7px}
+.how-box{background:var(--gruen2);border:2px solid var(--gruen);border-radius:var(--radius);padding:14px;margin-bottom:12px}
+.how-box h4{font-size:13px;font-weight:700;color:var(--gruen);margin-bottom:8px}
+.how-box p{font-size:13px;line-height:1.7}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--dunkel);color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:400;opacity:0;transition:all .28s;pointer-events:none;white-space:nowrap;max-width:90vw}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- LOADING -->
+<div id="loadingOverlay" style="position:fixed;inset:0;background:linear-gradient(160deg,#8B0000,#1A3A5C);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px">
+  <div style="font-size:56px">🌭</div>
+  <div class="spinner"></div>
+  <div style="color:rgba(255,255,255,.8);font-size:14px;letter-spacing:1px">RASA OG lädt …</div>
+</div>
+
+<!-- SETUP (nur beim ersten Start) -->
+<div id="setupScreen">
+  <div class="setup-card">
+    <h2>⚙️ Einmalige Einrichtung</h2>
+    <p>Damit alle 4 Personen dieselben Daten sehen, braucht die App eine <b>kostenlose Supabase-Datenbank</b>. Das dauert ca. 5 Minuten.</p>
+    <div class="setup-step">
+      <b>Schritt 1:</b> Öffne <a href="https://supabase.com" target="_blank">supabase.com</a> → Kostenlos registrieren → Neues Projekt erstellen<br>
+      <small>Name: <b>rasa-og</b> | Region: <b>EU (Frankfurt)</b></small>
+    </div>
+    <div class="setup-step">
+      <b>Schritt 2:</b> Im Supabase-Projekt → <b>SQL Editor</b> → Neues SQL ausführen:<br>
+      <small style="font-family:monospace;display:block;margin-top:4px;background:var(--grau2);padding:6px;border-radius:4px">
+        CREATE TABLE rezepte (id text PRIMARY KEY, daten jsonb, geaendert bigint);<br>
+        ALTER TABLE rezepte DISABLE ROW LEVEL SECURITY;
+      </small>
+    </div>
+    <div class="setup-step">
+      <b>Schritt 3:</b> Im Supabase-Projekt → <b>Settings → API</b><br>
+      → <b>Project URL</b> und <b>anon public key</b> kopieren
+    </div>
+    <div class="fg" style="margin-top:16px">
+      <label class="fl">Supabase Project URL</label>
+      <input type="text" class="fi" id="sbUrl" placeholder="https://xxxx.supabase.co">
+    </div>
+    <div class="fg">
+      <label class="fl">Supabase Anon Key</label>
+      <input type="text" class="fi" id="sbKey" placeholder="eyJh...">
+    </div>
+    <button class="btn-save" onclick="setupSave()">Verbindung testen & speichern →</button>
+    <div id="setupErr" style="color:var(--rot2);font-size:13px;text-align:center;margin-top:8px"></div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-logo">🌭</div>
+  <div class="login-title">RASA OG</div>
+  <div class="login-sub">Team App · Würstelwagen</div>
+  <div class="login-card">
+    <h2>Wer bist du?</h2>
+    <div class="user-grid" id="userGrid"></div>
+    <div class="pw-wrap">
+      <input type="password" class="pw-field" id="pwInput" placeholder="Passwort …" autocomplete="current-password">
+      <button class="pw-eye" onclick="document.getElementById('pwInput').type=document.getElementById('pwInput').type==='password'?'text':'password'">👁</button>
+    </div>
+    <button class="login-btn" onclick="doLogin()">Anmelden →</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="sync-banner" id="syncBanner"></div>
+  <div class="topbar">
+    <div class="topbar-logo">🌭 RASA OG</div>
+    <div class="topbar-right">
+      <div class="sync-dot online" id="syncDot"></div>
+      <div class="top-av" id="topAv"></div>
+      <button class="logout-btn" onclick="doLogout()">Abmelden</button>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- DASHBOARD -->
+    <div class="screen active" id="screen-home">
+      <div class="welcome-card">
+        <h2 id="wMsg">Hallo! 👋</h2>
+        <p id="wDate"></p>
+      </div>
+      <div class="stats-grid" id="statsGrid"></div>
+      <div class="quick-grid">
+        <button class="quick-btn" onclick="openModal()"><div class="qi">➕</div><div class="ql">Neues Rezept</div></button>
+        <button class="quick-btn" onclick="goNav('rezepte')"><div class="qi">🍽️</div><div class="ql">Alle Rezepte</div></button>
+        <button class="quick-btn" onclick="goNav('kalk')"><div class="qi">📊</div><div class="ql">Kalkulation</div></button>
+        <button class="quick-btn" onclick="syncNow()"><div class="qi">🔄</div><div class="ql">Synchronisieren</div></button>
+      </div>
+      <div class="card">
+        <div class="card-title">📋 Zuletzt geändert</div>
+        <div id="recentList"></div>
+      </div>
+    </div>
+
+    <!-- REZEPTE -->
+    <div class="screen" id="screen-rezepte">
+      <div class="search-bar">
+        <input type="search" class="search-input" id="rzSearch" placeholder="Suchen …" oninput="renderRz()">
+        <button class="btn-add-big" onclick="openModal()">＋</button>
+      </div>
+      <div class="chips">
+        <button class="chip active" onclick="setF('alle',this)">Alle</button>
+        <button class="chip" onclick="setF('würstel',this)">🌭 Würstel</button>
+        <button class="chip" onclick="setF('getränke',this)">🍺 Getränke</button>
+        <button class="chip" onclick="setF('beilagen',this)">🥗 Beilagen</button>
+        <button class="chip" onclick="setF('süßes',this)">🍩 Süßes</button>
+      </div>
+      <div id="rzListe"></div>
+    </div>
+
+    <!-- KALKULATION -->
+    <div class="screen" id="screen-kalk">
+      <div class="card">
+        <div class="card-title">📊 Alle Artikel — Deckungsbeiträge</div>
+        <div id="kalkTabelle"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">💰 Schnell-Kalkulation</div>
+        <div class="fg"><label class="fl">Einkaufspreis (€)</label>
+          <input type="number" class="fi" id="qEK" step="0.01" placeholder="0.00" oninput="quickK()"></div>
+        <div class="fg"><label class="fl">Aufschlag (%)</label>
+          <input type="number" class="fi" id="qAuf" value="200" oninput="quickK()"></div>
+        <div class="kp" id="qResult"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">📈 Monats-Hochrechnung</div>
+        <div class="f2">
+          <div class="fg"><label class="fl">Betriebstage/Monat</label>
+            <input type="number" class="fi" id="moT" value="12" oninput="moK()"></div>
+          <div class="fg"><label class="fl">Ø Umsatz/Tag (€)</label>
+            <input type="number" class="fi" id="moU" value="550" oninput="moK()"></div>
+        </div>
+        <div class="kp" id="moResult"></div>
+      </div>
+    </div>
+
+    <!-- SYNC -->
+    <div class="screen" id="screen-sync">
+      <div class="sync-hero">
+        <h3>☁️ Supabase Cloud-Sync</h3>
+        <div class="sh-row">
+          <div class="sh-dot" id="shDot" style="background:#4CAF50"></div>
+          <span id="shStatus">Verbunden</span>
+        </div>
+        <div style="font-size:12px;opacity:.65;margin-top:2px" id="shTime"></div>
+        <button class="sh-btn" onclick="syncNow()">🔄 Jetzt synchronisieren</button>
+      </div>
+
+      <div class="how-box">
+        <h4>✅ Echtzeit-Sync für alle 4 Personen</h4>
+        <p>
+          <b>1.</b> Alle 4 öffnen <b>roland375.github.io/rasa/</b> auf dem Handy<br>
+          <b>2.</b> Jede Änderung wird sofort in die Cloud (Supabase) hochgeladen<br>
+          <b>3.</b> Alle anderen sehen es beim nächsten Öffnen oder nach „Synchronisieren"<br>
+          <b>4.</b> Offline: lokal gespeichert → automatisch hochgeladen wenn wieder online
+        </p>
+      </div>
+
+      <div class="admin-lbl">👥 Team-Mitglieder</div>
+      <div id="teamList"></div>
+      <div id="adminPanel"></div>
+
+      <div class="card">
+        <div class="card-title">⚙️ Datenbankverbindung</div>
+        <div style="font-size:13px;line-height:1.8;color:var(--grau4)">
+          <div id="dbInfo"></div>
+        </div>
+        <button class="btn-s" style="width:100%;margin-top:10px" onclick="resetSetup()">🔄 Verbindung neu einrichten</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📤 Backup</div>
+        <button class="btn-s blue" style="width:100%;margin-bottom:8px" onclick="exportD()">📤 Backup exportieren</button>
+        <button class="btn-s" style="width:100%;position:relative">
+          📥 Backup importieren
+          <input type="file" accept=".json" onchange="importD(this)" style="position:absolute;inset:0;opacity:0;cursor:pointer">
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="nav-bar">
+    <button class="nav-btn active" onclick="goNav('home')" data-s="home">
+      <span class="ni">🏠</span><span class="nl">Start</span>
+    </button>
+    <button class="nav-btn" onclick="goNav('rezepte')" data-s="rezepte">
+      <span class="ni">🍽️</span><span class="nl">Rezepte</span>
+    </button>
+    <button class="nav-btn" onclick="goNav('kalk')" data-s="kalk">
+      <span class="ni">📊</span><span class="nl">Kalkulation</span>
+    </button>
+    <button class="nav-btn" onclick="goNav('sync')" data-s="sync">
+      <span class="ni">🔄</span><span class="nl">Sync</span>
+    </button>
+  </nav>
+</div>
+
+<!-- MODAL REZEPT -->
+<div class="modal-bg" id="modalBg" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title" id="mTitle">➕ Neues Rezept</div>
+      <button class="modal-x" onclick="closeModal()">✕</button>
+    </div>
+    <div class="fg">
+      <label class="fl">📷 Foto (Kamera oder Galerie)</label>
+      <div class="photo-area">
+        <input type="file" accept="image/*" capture="environment" onchange="handlePh(this)">
+        <div style="font-size:30px;margin-bottom:5px">📷</div>
+        <div style="font-size:12px;color:var(--grau4)" id="phText">Tippen zum Fotografieren oder Auswählen</div>
+      </div>
+      <img class="photo-preview" id="phPreview">
+    </div>
+    <div class="fg"><label class="fl">Name</label>
+      <input type="text" class="fi" id="mName" placeholder="z.B. Käsekrainer mit Semmel"></div>
+    <div class="f2">
+      <div class="fg"><label class="fl">Kategorie</label>
+        <select class="fs" id="mKat">
+          <option value="würstel">🌭 Würstel</option>
+          <option value="getränke">🍺 Getränke</option>
+          <option value="beilagen">🥗 Beilagen</option>
+          <option value="süßes">🍩 Süßes</option>
+          <option value="sonstiges">📦 Sonstiges</option>
+        </select></div>
+      <div class="fg"><label class="fl">Verkaufspreis (€)</label>
+        <input type="number" class="fi" id="mVK" step="0.10" placeholder="0.00" oninput="updPrev()"></div>
+    </div>
+    <div class="fg">
+      <label class="fl">Zutaten & Einkaufspreise</label>
+      <div id="ztListe"></div>
+      <button class="add-zt" onclick="addZt()">＋ Zutat hinzufügen</button>
+    </div>
+    <div class="fg">
+      <label class="fl">Kalkulations-Vorschau</label>
+      <div class="kp">
+        <div class="kp-row"><span>Gesamter EK</span><span id="pEK">—</span></div>
+        <div class="kp-row"><span>Verkaufspreis</span><span id="pVK">—</span></div>
+        <div class="kp-row hi"><span>Deckungsbeitrag</span><span id="pDB">—</span></div>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">Rezept / Hinweise</label>
+      <textarea class="fta" id="mBeschr" placeholder="Zubereitung, Allergeninfo …"></textarea></div>
+    <input type="hidden" id="mEditId">
+    <button class="btn-save" onclick="saveRz()">💾 Speichern & synchronisieren</button>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════
+// SUPABASE KONFIGURATION
+// ════════════════════════════════════════════════════
+const CFG_KEY = 'rasa_sb_cfg';
+const LOC_KEY = 'rasa_local_data';
+
+let SB_URL = '';
+let SB_KEY = '';
+
+const USERS = [
+  { id:'roland',  name:'Roland',  full:'Roland Grieer',     role:'Admin 👑',        color:'#8B0000', pw:'roland2026',  em:'👨‍🍳' },
+  { id:'andrea',  name:'Andrea',  full:'Andrea Grieer',     role:'Gesellschafterin', color:'#1A3A5C', pw:'andrea2026',  em:'👩‍🍳' },
+  { id:'andreas', name:'Andreas', full:'Andreas Schebesta', role:'Gesellschafter',   color:'#1A5E2A', pw:'andreas2026', em:'👨‍🍳' },
+  { id:'sandra',  name:'Sandra',  full:'Sandra Pils',       role:'Gesellschafterin', color:'#7D3C98', pw:'sandra2026',  em:'👩‍🍳' },
+];
+
+let DATA   = { rezepte:[], lastSync:null };
+let ME     = null;
+let FILTER = 'alle';
+let PHOTO  = null;
+let SYNCING = false;
+
+// ════════════════════════════════════════════════════
+// SUPABASE API — gleicher Ansatz wie energie.html
+// ════════════════════════════════════════════════════
+function sbFetch(method, path, body) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open(method, SB_URL + '/rest/v1/' + path);
+    xhr.setRequestHeader('apikey', SB_KEY);
+    xhr.setRequestHeader('Authorization', 'Bearer ' + SB_KEY);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('Prefer', 'return=representation');
+    xhr.withCredentials = false;
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try { resolve(JSON.parse(xhr.responseText || 'null')); }
+        catch(e) { resolve(null); }
+      } else if (xhr.status === 204) {
+        resolve(null);
+      } else {
+        reject(new Error('HTTP ' + xhr.status + ': ' + xhr.responseText));
+      }
+    };
+    xhr.onerror = () => reject(new Error('Netzwerkfehler'));
+    xhr.send(body ? JSON.stringify(body) : null);
+  });
+}
+
+async function sbLoad() {
+  const rows = await sbFetch('GET', 'rezepte?select=id,daten,geaendert&order=geaendert.desc');
+  if (!Array.isArray(rows)) return [];
+  return rows.map(r => r.daten ? {...r.daten, id:r.id, geaendert:r.geaendert} : null).filter(Boolean);
+}
+
+async function sbUpsert(rezept) {
+  await sbFetch('POST', 'rezepte?on_conflict=id', {
+    id: rezept.id,
+    daten: rezept,
+    geaendert: rezept.geaendert,
+  });
+}
+
+async function sbDelete(id) {
+  await sbFetch('DELETE', `rezepte?id=eq.${id}`);
+}
+
+async function sbTest() {
+  // Einfacher Test: Tabellenstruktur abfragen
+  const rows = await sbFetch('GET', 'rezepte?limit=1');
+  return Array.isArray(rows);
+}
+
+// ════════════════════════════════════════════════════
+// SETUP
+// ════════════════════════════════════════════════════
+async function setupSave() {
+  const url = document.getElementById('sbUrl').value.trim().replace(/\/$/, '');
+  const key = document.getElementById('sbKey').value.trim();
+  const err = document.getElementById('setupErr');
+  if (!url || !key) { err.textContent = 'Bitte beide Felder ausfüllen.'; return; }
+  if (!url.includes('supabase.co')) { err.textContent = 'Ungültige Supabase URL.'; return; }
+  err.textContent = '🔄 Teste Verbindung …';
+  SB_URL = url; SB_KEY = key;
+  try {
+    const ok = await sbTest();
+    if (ok) {
+      localStorage.setItem(CFG_KEY, JSON.stringify({url, key}));
+      showApp();
+    } else {
+      err.textContent = '⚠️ Verbindung fehlgeschlagen. Tabelle "rezepte" vorhanden?';
+    }
+  } catch(e) {
+    err.textContent = '❌ Fehler: ' + e.message;
+  }
+}
+
+function resetSetup() {
+  localStorage.removeItem(CFG_KEY);
+  location.reload();
+}
+
+// ════════════════════════════════════════════════════
+// APP START
+// ════════════════════════════════════════════════════
+async function start() {
+  await new Promise(r => setTimeout(r, 800));
+  document.getElementById('loadingOverlay').style.display = 'none';
+
+  const cfg = localStorage.getItem(CFG_KEY);
+  if (cfg) {
+    try {
+      const {url, key} = JSON.parse(cfg);
+      SB_URL = url; SB_KEY = key;
+      showLogin();
+    } catch(e) {
+      showSetup();
+    }
+  } else {
+    showSetup();
+  }
+}
+
+function showSetup() {
+  document.getElementById('setupScreen').style.display = 'flex';
+}
+
+function showLogin() {
+  document.getElementById('setupScreen').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  initLogin();
+}
+
+function showApp() {
+  document.getElementById('setupScreen').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  initLogin();
+}
+
+// ════════════════════════════════════════════════════
+// LOGIN
+// ════════════════════════════════════════════════════
+function initLogin() {
+  document.getElementById('userGrid').innerHTML = USERS.map(u =>
+    `<button class="user-btn" onclick="selUser('${u.id}',this)">
+      <div class="av" style="background:${u.color}">${u.em}</div>
+      <div class="un">${u.name}</div>
+      <div class="ur">${u.role}</div>
+    </button>`).join('');
+  document.getElementById('pwInput').onkeydown = e => { if(e.key==='Enter') doLogin(); };
+}
+
+let SEL = null;
+function selUser(id,el) {
+  SEL=id;
+  document.querySelectorAll('.user-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('pwInput').focus();
+  document.getElementById('loginErr').textContent='';
+}
+
+function doLogin() {
+  if(!SEL){ document.getElementById('loginErr').textContent='Bitte eine Person auswählen.'; return; }
+  const pw=document.getElementById('pwInput').value;
+  const u=USERS.find(x=>x.id===SEL);
+  if(!u||pw!==u.pw){ document.getElementById('loginErr').textContent='Falsches Passwort. Bitte nochmal versuchen.'; return; }
+  ME=u;
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('app').style.display='block';
+  initApp();
+}
+
+function doLogout() {
+  ME=null; SEL=null;
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('app').style.display='none';
+  document.getElementById('pwInput').value='';
+  document.querySelectorAll('.user-btn').forEach(b=>b.classList.remove('active'));
+}
+
+// ════════════════════════════════════════════════════
+// APP INIT
+// ════════════════════════════════════════════════════
+async function initApp() {
+  const av=document.getElementById('topAv');
+  av.textContent=ME.em; av.style.background=ME.color;
+  document.getElementById('wMsg').textContent=`Hallo, ${ME.name}! 👋`;
+  document.getElementById('wDate').textContent=
+    new Date().toLocaleDateString('de-AT',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+
+  await loadFromCloud();
+  renderAll();
+
+  // Auto-Refresh alle 30 Sek
+  setInterval(loadFromCloud, 30000);
+
+  window.addEventListener('online', async () => {
+    await syncPending();
+    await loadFromCloud();
+    renderAll();
+    setSyncUI('online');
+  });
+  window.addEventListener('offline', () => setSyncUI('offline'));
+}
+
+async function loadFromCloud() {
+  if(SYNCING) return;
+  setSyncUI('syncing');
+  try {
+    const rows = await sbLoad();
+    // Merge mit lokalen pending
+    const pending = getLocalPending();
+    let mergedMap = {};
+    rows.forEach(r => { mergedMap[r.id] = r; });
+    pending.forEach(p => {
+      if (p._del) { delete mergedMap[p.id]; }
+      else if (!mergedMap[p.id] || p.geaendert > mergedMap[p.id].geaendert) {
+        mergedMap[p.id] = p;
+      }
+    });
+    DATA.rezepte = Object.values(mergedMap);
+    DATA.lastSync = Date.now();
+    saveLocal();
+    // Pending hochladen
+    if(pending.length) await syncPending();
+    setSyncUI('online');
+  } catch(e) {
+    // Offline: lokale Daten laden
+    const loc = localStorage.getItem(LOC_KEY);
+    if(loc) { const d=JSON.parse(loc); DATA.rezepte=d.rezepte||[]; }
+    setSyncUI('offline');
+  }
+}
+
+function getLocalPending() {
+  try { return JSON.parse(localStorage.getItem('rasa_pending')||'[]'); } catch{return[];}
+}
+
+function addPending(item) {
+  const list = getLocalPending();
+  const idx = list.findIndex(x=>x.id===item.id);
+  if(idx>=0) list[idx]=item; else list.push(item);
+  localStorage.setItem('rasa_pending', JSON.stringify(list));
+}
+
+async function syncPending() {
+  const pending = getLocalPending();
+  if(!pending.length) return;
+  let ok=true;
+  for(const p of pending) {
+    try {
+      if(p._del) { await sbDelete(p.id); }
+      else { await sbUpsert(p); }
+    } catch(e) { ok=false; }
+  }
+  if(ok) localStorage.removeItem('rasa_pending');
+}
+
+function saveLocal() {
+  localStorage.setItem(LOC_KEY, JSON.stringify(DATA));
+}
+
+// ════════════════════════════════════════════════════
+// SYNC UI
+// ════════════════════════════════════════════════════
+function setSyncUI(status) {
+  const dot=document.getElementById('syncDot');
+  const banner=document.getElementById('syncBanner');
+  const shDot=document.getElementById('shDot');
+  const shSt=document.getElementById('shStatus');
+  const shTime=document.getElementById('shTime');
+  const dbInfo=document.getElementById('dbInfo');
+
+  const cfg={
+    online:{dc:'online',bc:'',bt:'',shC:'#4CAF50',shT:'Verbunden — Supabase aktiv'},
+    syncing:{dc:'syncing',bc:'syncing show',bt:'🔄 Synchronisiere …',shC:'#E67E22',shT:'Synchronisiere …'},
+    offline:{dc:'offline',bc:'offline show',bt:'📶 Offline — lokal gespeichert',shC:'#CCCCCC',shT:'Offline — lokaler Modus'},
+  };
+  const c=cfg[status]||cfg.online;
+  if(dot) dot.className='sync-dot '+c.dc;
+  if(banner){ banner.className='sync-banner '+c.bc; banner.textContent=c.bt; }
+  if(shDot) shDot.style.background=c.shC;
+  if(shSt) shSt.textContent=c.shT;
+  if(shTime&&DATA.lastSync) shTime.textContent='Letzter Sync: '+new Date(DATA.lastSync).toLocaleString('de-AT');
+  if(dbInfo) dbInfo.innerHTML=`<b>Supabase URL:</b> ${SB_URL||'—'}<br><b>Status:</b> ${c.shT}`;
+  SYNCING = status==='syncing';
+}
+
+// ════════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════════
+function goNav(s) {
+  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
+  document.getElementById('screen-'+s).classList.add('active');
+  document.querySelector(`[data-s="${s}"]`).classList.add('active');
+}
+
+// ════════════════════════════════════════════════════
+// RENDER
+// ════════════════════════════════════════════════════
+function renderAll(){renderStats();renderRecent();renderRz();renderKalkTable();renderSyncScreen();moK();}
+
+function renderStats(){
+  const rz=DATA.rezepte;
+  const avg=rz.length?rz.reduce((s,r)=>s+dbCalc(r).p,0)/rz.length:0;
+  document.getElementById('statsGrid').innerHTML=`
+    <div class="stat-card"><div class="stat-num" style="color:var(--rot)">${rz.length}</div><div class="stat-lbl">Artikel gesamt</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--gruen)">${avg.toFixed(0)}%</div><div class="stat-lbl">Ø Deckungsbeitrag</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--navy)">${rz.filter(r=>r.kat==='würstel').length}</div><div class="stat-lbl">Würstel-Artikel</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--orange)">${rz.filter(r=>r.kat==='getränke').length}</div><div class="stat-lbl">Getränke</div></div>`;
+}
+
+function renderRecent(){
+  const list=[...DATA.rezepte].sort((a,b)=>b.geaendert-a.geaendert).slice(0,5);
+  const el=document.getElementById('recentList');
+  if(!list.length){el.innerHTML='<div style="color:var(--grau4);font-size:13px;padding:6px 0">Noch leer — tippe ➕ um zu starten!</div>';return;}
+  el.innerHTML=list.map(r=>{
+    const u=USERS.find(x=>x.id===r.vonUser)||USERS[0];
+    const d=new Date(r.geaendert).toLocaleDateString('de-AT');
+    const {p}=dbCalc(r);
+    return `<div style="display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--grau2)">
+      <span style="font-size:19px">${kem(r.kat)}</span>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">${r.name}</div>
+      <div style="font-size:11px;color:var(--grau4)">${d} · ${u.em} ${u.name}</div></div>
+      <div style="text-align:right">
+        <div style="font-weight:700;color:var(--gruen);font-size:13px">€ ${r.vk.toFixed(2)}</div>
+        <span class="db-b ${dbc(p)}">${p.toFixed(0)}%</span>
+      </div></div>`;
+  }).join('');
+}
+
+const kem=k=>({würstel:'🌭',getränke:'🍺',beilagen:'🥗',süßes:'🍩',sonstiges:'📦'}[k]||'🍽️');
+const dbCalc=r=>{const ek=(r.zutaten||[]).reduce((s,z)=>s+(+z.ek||0),0);const d=r.vk-ek;const p=r.vk>0?d/r.vk*100:0;return{ek,d,p};};
+const dbc=p=>p>=65?'db-gut':p>=40?'db-ok':'db-low';
+
+function setF(f,el){FILTER=f;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');renderRz();}
+
+function renderRz(){
+  const q=(document.getElementById('rzSearch')?.value||'').toLowerCase();
+  let list=DATA.rezepte.filter(r=>FILTER==='alle'||r.kat===FILTER);
+  if(q) list=list.filter(r=>r.name.toLowerCase().includes(q));
+  list=list.sort((a,b)=>b.geaendert-a.geaendert);
+  const el=document.getElementById('rzListe');
+  if(!list.length){el.innerHTML='<div class="card" style="text-align:center;color:var(--grau4);padding:28px 14px">Keine Artikel gefunden.<br><small>Tippe auf ＋ um einen hinzuzufügen.</small></div>';return;}
+  el.innerHTML=list.map(r=>{
+    const{ek,d,p}=dbCalc(r);
+    const u=USERS.find(x=>x.id===r.vonUser)||USERS[0];
+    const canEdit=ME?.id===r.vonUser||ME?.id==='roland';
+    const img=r.foto?`<div class="rz-img"><img src="${r.foto}" loading="lazy"></div>`:`<div class="rz-img">${kem(r.kat)}</div>`;
+    return `<div class="rz-item" id="ri-${r.id}">
+      <div class="rz-header" onclick="togR('${r.id}')">
+        ${img}
+        <div class="rz-info">
+          <div class="rz-name">${r.name}</div>
+          <div class="rz-meta"><span>${kem(r.kat)} ${r.kat}</span><span>${u.em} ${u.name}</span></div>
+        </div>
+        <div class="rz-kalk">
+          <div class="vk-p">€ ${r.vk.toFixed(2)}</div>
+          <div class="ek-p">EK: € ${ek.toFixed(2)}</div>
+          <span class="db-b ${dbc(p)}">${p.toFixed(0)}% DB</span>
+        </div>
+      </div>
+      <div class="rz-detail" id="rd-${r.id}">
+        ${r.foto?`<img src="${r.foto}" style="width:100%;max-height:170px;object-fit:cover;border-radius:8px;margin-bottom:9px">`:''}
+        <div class="zt-title">🛒 Zutaten & Einkaufspreise</div>
+        ${(r.zutaten||[]).map(z=>`<div class="zt-row"><span>${z.name} <span style="color:var(--grau4)">(${z.menge})</span></span><span style="font-weight:600">€ ${(+z.ek).toFixed(2)}</span></div>`).join('')}
+        <div class="kalk-box">
+          <div class="kb-row"><span>EK gesamt</span><span>€ ${ek.toFixed(2)}</span></div>
+          <div class="kb-row"><span>Verkaufspreis</span><span>€ ${r.vk.toFixed(2)}</span></div>
+          <div class="kb-row total"><span>Deckungsbeitrag</span><span>€ ${d.toFixed(2)} (${p.toFixed(1)}%)</span></div>
+        </div>
+        ${r.beschreibung?`<div style="margin-top:9px;font-size:13px;line-height:1.7;background:var(--grau1);border-radius:8px;padding:9px"><b>📝 Rezept</b><br>${r.beschreibung.replace(/\n/g,'<br>')}</div>`:''}
+        <div class="action-row">
+          ${canEdit?`<button class="btn-s blue" onclick="editRz('${r.id}')">✏️ Bearbeiten</button>
+          <button class="btn-s red" onclick="delRz('${r.id}')">🗑️ Löschen</button>`:
+          `<div style="font-size:11px;color:var(--grau4)">Erstellt von ${u.em} ${u.name}</div>`}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function togR(id){document.getElementById('rd-'+id)?.classList.toggle('open');}
+
+function editRz(id){
+  const r=DATA.rezepte.find(x=>x.id===id);if(!r)return;
+  openModal();
+  document.getElementById('mTitle').textContent='✏️ Bearbeiten';
+  document.getElementById('mName').value=r.name;
+  document.getElementById('mKat').value=r.kat;
+  document.getElementById('mVK').value=r.vk;
+  document.getElementById('mBeschr').value=r.beschreibung||'';
+  document.getElementById('mEditId').value=id;
+  if(r.foto){PHOTO=r.foto;const p=document.getElementById('phPreview');p.src=r.foto;p.style.display='block';document.getElementById('phText').textContent='Foto ändern ✓';}
+  document.getElementById('ztListe').innerHTML='';
+  (r.zutaten||[]).forEach(z=>addZt(z.name,z.menge,z.ek));
+  updPrev();
+}
+
+async function delRz(id){
+  if(!confirm('Wirklich löschen?\nAlle Teammitglieder verlieren diesen Eintrag.'))return;
+  DATA.rezepte=DATA.rezepte.filter(r=>r.id!==id);
+  saveLocal();
+  addPending({id,_del:true,geaendert:Date.now()});
+  try{await sbDelete(id);}catch(e){showToast('📱 Lokal gelöscht — Sync wenn online');}
+  renderAll();
+  showToast('🗑️ Gelöscht — alle werden synchronisiert');
+}
+
+// MODAL
+function openModal(){
+  document.getElementById('mTitle').textContent='➕ Neues Rezept';
+  ['mName','mVK','mBeschr','mEditId'].forEach(i=>document.getElementById(i).value='');
+  const p=document.getElementById('phPreview');p.style.display='none';p.src='';
+  document.getElementById('phText').textContent='Tippen zum Fotografieren oder Auswählen';
+  PHOTO=null;
+  document.getElementById('ztListe').innerHTML='';
+  addZt();updPrev();
+  document.getElementById('modalBg').classList.add('open');
+  setTimeout(()=>document.getElementById('mName').focus(),200);
+}
+function closeModal(){document.getElementById('modalBg').classList.remove('open');}
+function closeModalOutside(e){if(e.target===document.getElementById('modalBg'))closeModal();}
+
+function addZt(n='',m='',e=''){
+  const row=document.createElement('div');row.className='zt-input';
+  row.innerHTML=`<input type="text" class="fi z-n" placeholder="Zutat" value="${n}" oninput="updPrev()">
+    <input type="text" class="fi z-m" placeholder="Menge" value="${m}">
+    <input type="number" class="fi z-e" placeholder="€" value="${e}" step="0.01" oninput="updPrev()">
+    <button class="del-zt" onclick="this.parentElement.remove();updPrev()">✕</button>`;
+  document.getElementById('ztListe').appendChild(row);
+}
+
+function getZt(){return[...document.querySelectorAll('.zt-input')].map(r=>({name:r.querySelector('.z-n').value.trim(),menge:r.querySelector('.z-m').value.trim(),ek:parseFloat(r.querySelector('.z-e').value)||0})).filter(z=>z.name);}
+
+function updPrev(){
+  const vk=parseFloat(document.getElementById('mVK').value)||0;
+  const ek=getZt().reduce((s,z)=>s+z.ek,0);
+  const d=vk-ek;const p=vk>0?d/vk*100:0;
+  document.getElementById('pEK').textContent=`€ ${ek.toFixed(2)}`;
+  document.getElementById('pVK').textContent=`€ ${vk.toFixed(2)}`;
+  document.getElementById('pDB').textContent=`€ ${d.toFixed(2)} (${p.toFixed(1)}%)`;
+  document.getElementById('pDB').style.color=p>=65?'var(--gruen)':p>=40?'var(--orange)':'var(--rot2)';
+}
+
+function handlePh(input){
+  const file=input.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      const c=document.createElement('canvas');const M=800;let w=img.width,h=img.height;
+      if(w>M){h=h*M/w;w=M;}if(h>M){w=w*M/h;h=M;}
+      c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+      PHOTO=c.toDataURL('image/jpeg',.78);
+      const p=document.getElementById('phPreview');p.src=PHOTO;p.style.display='block';
+      document.getElementById('phText').textContent='Foto gespeichert ✓';
+    };
+    img.src=e.target.result;
+  };
+  r.readAsDataURL(file);
+}
+
+async function saveRz(){
+  const name=document.getElementById('mName').value.trim();
+  if(!name){showToast('⚠️ Bitte einen Namen eingeben');return;}
+  const vk=parseFloat(document.getElementById('mVK').value);
+  if(!vk||vk<=0){showToast('⚠️ Bitte einen Verkaufspreis eingeben');return;}
+  const editId=document.getElementById('mEditId').value;
+  const now=Date.now();
+  const rz={
+    id:editId||'rz_'+now,
+    name,kat:document.getElementById('mKat').value,vk,
+    zutaten:getZt(),
+    beschreibung:document.getElementById('mBeschr').value,
+    erstellt:editId?(DATA.rezepte.find(r=>r.id===editId)?.erstellt||now):now,
+    geaendert:now,vonUser:ME.id,
+    foto:PHOTO||(editId?DATA.rezepte.find(r=>r.id===editId)?.foto:null),
+  };
+  if(editId){const i=DATA.rezepte.findIndex(r=>r.id===editId);if(i>=0)DATA.rezepte[i]=rz;}
+  else DATA.rezepte.unshift(rz);
+  PHOTO=null;
+  closeModal();
+  saveLocal();
+  addPending(rz);
+  setSyncUI('syncing');
+  try{
+    await sbUpsert(rz);
+    localStorage.removeItem('rasa_pending');
+    setSyncUI('online');
+    showToast('✅ Gespeichert — alle sehen es sofort');
+  }catch(e){
+    setSyncUI('offline');
+    showToast('📱 Lokal gespeichert — Sync wenn online');
+  }
+  renderAll();
+}
+
+// KALKULATION
+function renderKalkTable(){
+  const el=document.getElementById('kalkTabelle');
+  const list=[...DATA.rezepte].sort((a,b)=>dbCalc(b).p-dbCalc(a).p);
+  if(!list.length){el.innerHTML='<div style="color:var(--grau4);font-size:13px">Noch keine Artikel.</div>';return;}
+  el.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:12px">
+    <tr style="background:var(--grau1);font-weight:700">
+      <th style="padding:7px 5px;text-align:left">Artikel</th>
+      <th style="padding:7px 5px;text-align:right">EK</th>
+      <th style="padding:7px 5px;text-align:right">VK</th>
+      <th style="padding:7px 5px;text-align:right">DB%</th>
+    </tr>
+    ${list.map((r,i)=>{const{ek,p}=dbCalc(r);return`<tr style="border-top:1px solid var(--grau2);background:${i%2?'var(--grau1)':'#fff'}">
+      <td style="padding:6px 5px">${kem(r.kat)} ${r.name}</td>
+      <td style="padding:6px 5px;text-align:right">€ ${ek.toFixed(2)}</td>
+      <td style="padding:6px 5px;text-align:right;font-weight:700">€ ${r.vk.toFixed(2)}</td>
+      <td style="padding:6px 5px;text-align:right"><span class="db-b ${dbc(p)}">${p.toFixed(0)}%</span></td>
+    </tr>`;}).join('')}
+  </table>`;
+}
+
+function quickK(){
+  const ek=parseFloat(document.getElementById('qEK').value)||0;
+  const auf=parseFloat(document.getElementById('qAuf').value)||200;
+  const vk=ek*(1+auf/100);const d=vk-ek;const p=vk>0?d/vk*100:0;
+  document.getElementById('qResult').innerHTML=`
+    <div class="kalk-preview-row"><span>Einkaufspreis</span><span>€ ${ek.toFixed(2)}</span></div>
+    <div class="kalk-preview-row"><span>Aufschlag ${auf.toFixed(0)}% → VK</span><span><b>€ ${vk.toFixed(2)}</b></span></div>
+    <div class="kalk-preview-row highlight" style="color:${p>=65?'var(--gruen)':p>=40?'var(--orange)':'var(--rot2)'}">
+      <span>Deckungsbeitrag</span><span>€ ${d.toFixed(2)} (${p.toFixed(1)}%)</span>
+    </div>`;
+}
+
+function moK(){
+  const tage=parseFloat(document.getElementById('moT')?.value)||12;
+  const umsatz=parseFloat(document.getElementById('moU')?.value)||550;
+  const rate=50000*(0.055/12)*Math.pow(1+0.055/12,36)/(Math.pow(1+0.055/12,36)-1);
+  const moU=umsatz*tage;const ebit=moU-moU*0.30-tage*100-300-(50000/8/12)-rate;
+  const netto=ebit>0?ebit*0.75:ebit;
+  const el=document.getElementById('moResult');if(!el)return;
+  el.innerHTML=`
+    <div class="kalk-preview-row"><span>Monatsumsatz (${tage} × € ${umsatz})</span><span>€ ${moU.toFixed(0)}</span></div>
+    <div class="kalk-preview-row"><span>– Wareneinsatz 30%</span><span>€ ${(moU*.30).toFixed(0)}</span></div>
+    <div class="kalk-preview-row"><span>– Standgebühren</span><span>€ ${(tage*100).toFixed(0)}</span></div>
+    <div class="kalk-preview-row"><span>– Fixkosten + AfA</span><span>€ ${(300+50000/8/12).toFixed(0)}</span></div>
+    <div class="kalk-preview-row"><span>– Kreditrate</span><span>€ ${rate.toFixed(0)}</span></div>
+    <div class="kalk-preview-row highlight" style="color:${netto>=0?'var(--gruen)':'var(--rot2)'}">
+      <span>Netto-Monatsgewinn</span><span>€ ${netto.toFixed(0)}</span>
+    </div>
+    <div class="kalk-preview-row" style="font-size:11px;color:var(--grau4)">
+      <span>Je Gesellschafter / Monat</span><span>€ ${(netto/4).toFixed(0)}</span>
+    </div>`;
+}
+
+// SYNC SCREEN
+function renderSyncScreen(){
+  const isAdmin=ME?.id==='roland';
+  document.getElementById('teamList').innerHTML=USERS.map(u=>`
+    <div class="team-tile">
+      <div class="tt-av" style="background:${u.color}">${u.em}</div>
+      <div class="tt-info"><div class="tt-name">${u.full}</div><div class="tt-role">${u.role}</div></div>
+      <div style="font-size:18px">${u.id===ME?.id?'← Du':''}</div>
+    </div>`).join('');
+  const ap=document.getElementById('adminPanel');
+  if(isAdmin){
+    ap.innerHTML=`<div class="card">
+      <div class="card-title">🔑 Passwörter verwalten (Admin)</div>
+      ${USERS.map(u=>`<div style="margin-bottom:13px">
+        <div style="font-size:12px;font-weight:700;color:var(--grau4);margin-bottom:4px">${u.em} ${u.full}</div>
+        <div style="display:flex;gap:7px">
+          <input type="text" class="fi" value="${u.pw}" id="upw-${u.id}" style="font-family:monospace;font-size:13px">
+          <button class="btn-s blue" style="white-space:nowrap" onclick="changePw('${u.id}')">💾 OK</button>
+        </div></div>`).join('')}
+    </div>`;
+  }else{ap.innerHTML='';}
+}
+
+function changePw(uid){
+  const newPw=document.getElementById('upw-'+uid).value.trim();
+  if(!newPw||newPw.length<4){showToast('⚠️ Mindestens 4 Zeichen');return;}
+  const u=USERS.find(x=>x.id===uid);
+  if(u){u.pw=newPw;showToast(`✅ Passwort von ${u.name} geändert`);}
+}
+
+async function syncNow(){
+  showToast('🔄 Synchronisiere …');
+  await loadFromCloud();
+  renderAll();
+  showToast('✅ Alle Daten aktuell');
+}
+
+function exportD(){
+  const b=new Blob([JSON.stringify(DATA,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);
+  a.download=`rasa-backup-${new Date().toISOString().split('T')[0]}.json`;
+  a.click();showToast('📤 Backup exportiert');
+}
+
+function importD(input){
+  const file=input.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=async e=>{
+    try{
+      const imp=JSON.parse(e.target.result);if(!imp.rezepte)throw 0;
+      let add=0,up=0;
+      for(const rz of imp.rezepte){
+        const i=DATA.rezepte.findIndex(x=>x.id===rz.id);
+        if(i>=0){if(rz.geaendert>DATA.rezepte[i].geaendert){DATA.rezepte[i]=rz;up++;}}
+        else{DATA.rezepte.push(rz);add++;}
+        try{await sbUpsert(rz);}catch(e){addPending(rz);}
+      }
+      saveLocal();renderAll();
+      showToast(`✅ ${add} neu, ${up} aktualisiert`);
+    }catch{showToast('⚠️ Ungültiges Backup-Format');}
+  };
+  r.readAsText(file);
+}
+
+// UTILS
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+start();
+</script>
+</body>
+</html>
