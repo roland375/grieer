@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grieer Inventar</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0f1117;font-family:Segoe UI,system-ui,sans-serif;min-height:100vh}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#1a1d27}
+::-webkit-scrollbar-thumb{background:#2e3350;border-radius:3px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useCallback } = React;
+
+
+
+const SK = "ginv4";
+
+const defaultData = {
+  users: [
+    { id: "u1", username: "admin", password: "admin123", display: "Administrator", role: "admin" },
+    { id: "u2", username: "lager", password: "lager123", display: "Lager Mitarbeiter", role: "user" },
+    { id: "u3", username: "gast",  password: "gast123",  display: "Gast",             role: "viewer" },
+  ],
+  cats: [
+    { id: "c1", name: "Werkzeug",          icon: "🔧" },
+    { id: "c2", name: "Verbrauchsmaterial", icon: "📦" },
+    { id: "c3", name: "Chemikalien",        icon: "🧪" },
+    { id: "c4", name: "Schutzausrüstung",   icon: "🦺" },
+    { id: "c5", name: "Büro",               icon: "📝" },
+  ],
+  items: [
+    { id: "i1", name: "Schrauben M8 x 30",  cid: "c2", qty: 50,  unit: "Stk",     min: 100, loc: "Regal A1", sku: "SCR-M8-30", note: "" },
+    { id: "i2", name: "Kehrset komplett",    cid: "c1", qty: 3,   unit: "Stk",     min: 2,   loc: "Lager 1",  sku: "",          note: "Außeneinsatz" },
+    { id: "i3", name: "Schutzhandschuhe L",  cid: "c4", qty: 0,   unit: "Paar",    min: 10,  loc: "Regal B2", sku: "HND-L",     note: "" },
+    { id: "i4", name: "Schreibpapier A4",    cid: "c5", qty: 5,   unit: "Pack",    min: 3,   loc: "Büro",     sku: "",          note: "" },
+    { id: "i5", name: "Reinigungsmittel 1L", cid: "c3", qty: 12,  unit: "Liter",   min: 5,   loc: "Keller",   sku: "REIN-1L",   note: "" },
+  ],
+  log: [],
+};
+
+function loadData() {
+  try {
+    const d = JSON.parse(localStorage.getItem(SK));
+    if (d && d.users && d.users.length > 0) return d;
+  } catch (e) {}
+  return JSON.parse(JSON.stringify(defaultData));
+}
+
+function saveData(d) {
+  try { localStorage.setItem(SK, JSON.stringify(d)); } catch (e) {}
+}
+
+const s = {
+  bg: "#0f1117", sf: "#1a1d27", cd: "#21253a", br: "#2e3350",
+  ac: "#f97316", ok: "#22c55e", wn: "#eab308", dg: "#ef4444",
+  tx: "#e8eaf0", mt: "#7c82a0",
+};
+
+const inp = { width: "100%", padding: "10px 13px", background: s.cd, border: `1px solid ${s.br}`, borderRadius: 7, color: s.tx, fontSize: 15, outline: "none", fontFamily: "inherit" };
+const btn = { padding: "10px 20px", borderRadius: 7, border: "none", cursor: "pointer", fontSize: 14, fontWeight: 600, fontFamily: "inherit" };
+
+function Toast({ msg }) {
+  return msg ? (
+    <div style={{ position: "fixed", bottom: 20, left: "50%", transform: "translateX(-50%)", background: s.cd, border: `1px solid ${s.br}`, borderRadius: 8, padding: "10px 20px", fontSize: 14, zIndex: 300, whiteSpace: "nowrap", color: s.tx }}>
+      {msg}
+    </div>
+  ) : null;
+}
+
+function Modal({ open, onClose, title, children }) {
+  if (!open) return null;
+  return (
+    <div onClick={(e) => e.target === e.currentTarget && onClose()} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.65)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+      <div style={{ background: s.sf, border: `1px solid ${s.br}`, borderRadius: 10, padding: 24, width: "100%", maxWidth: 460, maxHeight: "90vh", overflowY: "auto" }}>
+        <div style={{ fontSize: 17, fontWeight: 700, marginBottom: 16, color: s.tx }}>{title}</div>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function Field({ label, children }) {
+  return <div style={{ marginBottom: 13 }}>
+    <div style={{ fontSize: 12, color: s.mt, marginBottom: 5, letterSpacing: ".4px" }}>{label}</div>
+    {children}
+  </div>;
+}
+
+function Row2({ children }) {
+  return <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>{children}</div>;
+}
+
+function StatusBadge({ qty, min }) {
+  const st = qty <= 0 ? "out" : qty <= min ? "low" : "ok";
+  const cfg = { ok: [s.ok, "rgba(34,197,94,.15)", "OK"], low: [s.wn, "rgba(234,179,8,.15)", "Niedrig"], out: [s.dg, "rgba(239,68,68,.15)", "Leer"] }[st];
+  return <span style={{ display: "inline-block", padding: "3px 8px", borderRadius: 20, fontSize: 11, fontWeight: 600, color: cfg[0], background: cfg[1] }}>{cfg[2]}</span>;
+}
+
+function App() {
+  const [data, setData] = useState(() => loadData());
+  const [me, setMe] = useState(null);
+  const [page, setPage] = useState(0);
+  const [toast, setToast] = useState("");
+  const [search, setSearch] = useState("");
+  const [catFilter, setCatFilter] = useState("");
+  const [stFilter, setStFilter] = useState("");
+
+  // Modals
+  const [itemModal, setItemModal] = useState(false);
+  const [editItem, setEditItem] = useState(null);
+  const [adjModal, setAdjModal] = useState(null);
+  const [catModal, setCatModal] = useState(false);
+  const [userModal, setUserModal] = useState(false);
+  const [delModal, setDelModal] = useState(null);
+
+  // Login
+  const [loginUser, setLoginUser] = useState("");
+  const [loginPass, setLoginPass] = useState("");
+  const [loginErr, setLoginErr] = useState(false);
+
+  // Item form
+  const [iForm, setIF] = useState({ name: "", cid: "", loc: "", qty: "", unit: "", min: "", sku: "", note: "" });
+  // Adj form
+  const [aForm, setAF] = useState({ type: "add", qty: "", reason: "" });
+  // Cat form
+  const [cForm, setCF] = useState({ name: "", icon: "" });
+  // User form
+  const [uForm, setUF] = useState({ username: "", password: "", display: "", role: "user" });
+
+  const showToast = useCallback((msg, dur = 2500) => {
+    setToast(msg);
+    setTimeout(() => setToast(""), dur);
+  }, []);
+
+  const upd = (newData) => { setData(newData); saveData(newData); };
+
+  const addLog = (d, item, action) => {
+    const log = [...d.log, { ts: Date.now(), item, action, user: me?.display || me?.username || "" }];
+    return { ...d, log: log.slice(-200) };
+  };
+
+  const alertItems = data.items.filter(i => i.qty <= i.min);
+
+  // LOGIN
+  if (!me) {
+    return (
+      <div style={{ background: s.bg, minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: 20, fontFamily: "Segoe UI, sans-serif" }}>
+        <div style={{ background: s.sf, border: `1px solid ${s.br}`, borderRadius: 10, padding: 36, width: "100%", maxWidth: 380, color: s.tx }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 28 }}>
+            <div style={{ width: 44, height: 44, background: s.ac, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>📦</div>
+            <div><div style={{ fontSize: 19, fontWeight: 700 }}>Grieer Inventar</div><div style={{ fontSize: 12, color: s.mt }}>Lagerverwaltung</div></div>
+          </div>
+          <Field label="BENUTZER">
+            <input style={inp} type="text" placeholder="Benutzername" value={loginUser} onChange={e => setLoginUser(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && document.getElementById("lpass").focus()} autoComplete="username" />
+          </Field>
+          <Field label="PASSWORT">
+            <input id="lpass" style={inp} type="password" placeholder="Passwort" value={loginPass} onChange={e => setLoginPass(e.target.value)}
+              onKeyDown={e => { if (e.key === "Enter") {
+                const f = data.users.find(u => u.username === loginUser.trim() && u.password === loginPass);
+                if (f) { setMe(f); setLoginErr(false); }
+                else setLoginErr(true);
+              }}} autoComplete="current-password" />
+          </Field>
+          {loginErr && <div style={{ color: s.dg, fontSize: 13, marginBottom: 10 }}>❌ Benutzername oder Passwort falsch.</div>}
+          <button style={{ ...btn, background: s.ac, color: "#fff", width: "100%" }} onClick={() => {
+            const f = data.users.find(u => u.username === loginUser.trim() && u.password === loginPass);
+            if (f) { setMe(f); setLoginErr(false); }
+            else setLoginErr(true);
+          }}>Anmelden</button>
+          <div style={{ marginTop: 16, padding: 12, background: s.cd, borderRadius: 8, fontSize: 13, color: s.mt }}>
+            <div style={{ fontWeight: 600, color: s.tx, marginBottom: 6 }}>Demo-Zugänge:</div>
+            <div>admin / admin123 (Admin)</div>
+            <div>lager / lager123 (Mitarbeiter)</div>
+            <div>gast / gast123 (Betrachter)</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const canEdit = me.role !== "viewer";
+  const isAdmin = me.role === "admin";
+  const tabs = ["📊 Dashboard", "📦 Lager", `🔔 Alarme${alertItems.length > 0 ? ` (${alertItems.length})` : ""}`, ...(isAdmin ? ["🗂 Kategorien", "👥 Benutzer"] : [])];
+
+  // ITEM MODAL OPEN
+  const openItemModal = (item) => {
+    setEditItem(item || null);
+    setIF(item ? { name: item.name, cid: item.cid || "", loc: item.loc || "", qty: String(item.qty), unit: item.unit || "", min: String(item.min), sku: item.sku || "", note: item.note || "" }
+                : { name: "", cid: data.cats[0]?.id || "", loc: "", qty: "", unit: "", min: "", sku: "", note: "" });
+    setItemModal(true);
+  };
+
+  const saveItem = () => {
+    if (!iForm.name.trim()) { showToast("Name erforderlich"); return; }
+    let d = { ...data };
+    const row = { name: iForm.name.trim(), cid: iForm.cid, loc: iForm.loc, qty: parseFloat(iForm.qty) || 0, unit: iForm.unit, min: parseFloat(iForm.min) || 0, sku: iForm.sku, note: iForm.note };
+    if (editItem) {
+      d.items = d.items.map(i => i.id === editItem.id ? { ...i, ...row } : i);
+      d = addLog(d, row.name, "Bearbeitet");
+      showToast("Gespeichert");
+    } else {
+      row.id = "i" + Date.now();
+      d.items = [...d.items, row];
+      d = addLog(d, row.name, "Neu angelegt");
+      showToast("Hinzugefügt");
+    }
+    upd(d); setItemModal(false);
+  };
+
+  const saveAdj = () => {
+    const qty = parseFloat(aForm.qty);
+    if (isNaN(qty) || qty < 0) { showToast("Menge eingeben"); return; }
+    let d = { ...data };
+    d.items = d.items.map(i => {
+      if (i.id !== adjModal.id) return i;
+      let nq = i.qty;
+      if (aForm.type === "add") nq += qty;
+      else if (aForm.type === "sub") nq = Math.max(0, nq - qty);
+      else nq = qty;
+      return { ...i, qty: nq };
+    });
+    const item = d.items.find(i => i.id === adjModal.id);
+    const act = (aForm.type === "add" ? "+" : aForm.type === "sub" ? "-" : "=") + qty + (aForm.reason ? ` (${aForm.reason})` : "");
+    d = addLog(d, adjModal.name, act);
+    upd(d); setAdjModal(null); showToast("Gebucht");
+    if (item && item.qty <= item.min) {
+      setTimeout(() => showToast(item.qty <= 0 ? `⚠️ "${item.name}" ist LEER!` : `⚠️ "${item.name}" Bestand niedrig`, 4000), 600);
+    }
+  };
+
+  const saveCat = () => {
+    if (!cForm.name.trim()) { showToast("Name erforderlich"); return; }
+    const d = { ...data, cats: [...data.cats, { id: "c" + Date.now(), name: cForm.name.trim(), icon: cForm.icon.trim() || "📦" }] };
+    upd(d); setCatModal(false); showToast("Kategorie gespeichert");
+  };
+
+  const saveUser = () => {
+    if (!uForm.username.trim() || !uForm.password) { showToast("Benutzername + Passwort erforderlich"); return; }
+    if (data.users.find(u => u.username === uForm.username.trim())) { showToast("Benutzername vergeben"); return; }
+    const d = { ...data, users: [...data.users, { id: "u" + Date.now(), username: uForm.username.trim(), password: uForm.password, display: uForm.display.trim() || uForm.username.trim(), role: uForm.role }] };
+    upd(d); setUserModal(false); showToast("Benutzer angelegt");
+  };
+
+  const doDelete = () => {
+    if (!delModal) return;
+    let d = { ...data };
+    if (delModal.type === "item") d.items = d.items.filter(i => i.id !== delModal.id);
+    if (delModal.type === "cat")  d.cats  = d.cats.filter(c => c.id !== delModal.id);
+    if (delModal.type === "user") d.users = d.users.filter(u => u.id !== delModal.id);
+    upd(d); setDelModal(null); showToast("Gelöscht");
+  };
+
+  // Filtered items
+  const filteredItems = data.items.filter(i => {
+    const ms = i.name.toLowerCase().includes(search.toLowerCase()) || (i.sku || "").toLowerCase().includes(search.toLowerCase());
+    const mc = !catFilter || i.cid === catFilter;
+    const st = i.qty <= 0 ? "out" : i.qty <= i.min ? "low" : "ok";
+    return ms && mc && (!stFilter || st === stFilter);
+  });
+
+  return (
+    <div style={{ background: s.bg, minHeight: "100vh", display: "flex", flexDirection: "column", fontFamily: "Segoe UI, sans-serif", color: s.tx }}>
+      {/* HEADER */}
+      <div style={{ background: s.sf, borderBottom: `1px solid ${s.br}`, padding: "0 16px", display: "flex", alignItems: "center", height: 56, position: "sticky", top: 0, zIndex: 100, gap: 10 }}>
+        <div style={{ fontWeight: 700, fontSize: 16 }}>📦 <span style={{ color: s.ac }}>Grieer</span> Inventar</div>
+        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8 }}>
+          <div onClick={() => setPage(2)} style={{ position: "relative", cursor: "pointer", background: s.cd, border: `1px solid ${s.br}`, borderRadius: 6, padding: "5px 10px", fontSize: 17 }}>
+            🔔{alertItems.length > 0 && <span style={{ position: "absolute", top: -5, right: -5, background: s.dg, color: "#fff", fontSize: 10, fontWeight: 700, borderRadius: 10, minWidth: 16, padding: "0 3px", textAlign: "center", lineHeight: "16px" }}>{alertItems.length}</span>}
+          </div>
+          <div style={{ background: s.cd, border: `1px solid ${s.br}`, borderRadius: 6, padding: "5px 11px", fontSize: 13, display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ width: 8, height: 8, borderRadius: "50%", background: { admin: s.ac, user: "#3b82f6", viewer: s.mt }[me.role] }}></div>
+            {me.display || me.username}
+          </div>
+          <button onClick={() => { setMe(null); setLoginUser(""); setLoginPass(""); }} style={{ ...btn, background: s.br, color: s.tx, padding: "6px 12px", fontSize: 13 }}>Abmelden</button>
+        </div>
+      </div>
+
+      {/* TABS */}
+      <div style={{ background: s.sf, borderBottom: `1px solid ${s.br}`, display: "flex", padding: "0 16px", overflowX: "auto" }}>
+        {tabs.map((t, i) => (
+          <div key={i} onClick={() => setPage(i)} style={{ padding: "11px 15px", fontSize: 13, fontWeight: 600, cursor: "pointer", borderBottom: page === i ? `2px solid ${s.ac}` : "2px solid transparent", color: page === i ? s.ac : s.mt, whiteSpace: "nowrap" }}>{t}</div>
+        ))}
+      </div>
+
+      <div style={{ padding: "18px 16px", maxWidth: 1100, margin: "0 auto", width: "100%" }}>
+
+        {/* DASHBOARD */}
+        {page === 0 && (() => {
+          const low = data.items.filter(i => i.qty > 0 && i.qty <= i.min);
+          const out = data.items.filter(i => i.qty <= 0);
+          const ok  = data.items.filter(i => i.qty > i.min);
+          const logs = [...data.log].reverse().slice(0, 8);
+          return (
+            <div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 12, marginBottom: 18 }}>
+                {[["Gesamt", data.items.length, s.tx], ["OK", ok.length, s.ok], ["Niedrig", low.length, s.wn], ["Leer", out.length, s.dg]].map(([l, v, c]) => (
+                  <div key={l} style={{ background: s.sf, border: `1px solid ${s.br}`, borderRadius: 10, padding: 18 }}>
+                    <div style={{ fontSize: 13, color: c === s.tx ? s.mt : c, marginBottom: 3 }}>{l}</div>
+                    <div style={{ fontSize: 26, fontWeight: 700, color: c }}>{v}</div>
+                  </div>
+                ))}
+              </div>
+              {alertItems.length > 0 && (
+                <div style={{ background: "#1f1008", border: "1px solid #7c3100", borderRadius: 10, padding: "14px 18px", marginBottom: 16 }}>
+                  <div style={{ color: s.ac, fontWeight: 700, fontSize: 14, marginBottom: 8 }}>⚠️ Nachbestellungen erforderlich</div>
+                  {alertItems.map(i => {
+                    const cat = data.cats.find(c => c.id === i.cid);
+                    return (
+                      <div key={i.id} style={{ fontSize: 13, padding: "6px 0", borderBottom: "1px solid #3a1a00", display: "flex", justifyContent: "space-between" }}>
+                        <div><strong>{cat ? cat.icon + " " : ""}{i.name}</strong> — {i.qty} {i.unit || ""} (Min: {i.min})</div>
+                        <span style={{ color: i.qty <= 0 ? s.dg : s.wn }}>{i.qty <= 0 ? "LEER" : "Niedrig"}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+              <div style={{ background: s.sf, border: `1px solid ${s.br}`, borderRadius: 10, padding: 18 }}>
+                <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 13 }}>Letzte Buchungen</div>
+                {logs.length === 0 ? <div style={{ color: s.mt, fontSize: 14 }}>Noch keine Buchungen.</div> : (
+                  <div style={{ overflowX: "auto" }}>
+                    <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+                      <thead><tr>{["Zeit", "Artikel", "Aktion", "Benutzer"].map(h => <th key={h} style={{ textAlign: "left", padding: "4px 6px", color: s.mt, fontWeight: 600 }}>{h}</th>)}</tr></thead>
+                      <tbody>{logs.map((l, i) => <tr key={i}><td style={{ padding: "4px 6px", color: s.mt }}>{new Date(l.ts).toLocaleString("de-AT")}</td><td style={{ padding: "4px 6px" }}>{l.item}</td><td style={{ padding: "4px 6px" }}>{l.action}</td><td style={{ padding: "4px 6px", color: s.mt }}>{l.user}</td></tr>)}</tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* LAGER */}
+        {page === 1 && (
+          <div>
+            <div style={{ display: "flex", gap: 8, marginBottom: 13, flexWrap: "wrap", alignItems: "center" }}>
+              <div style={{ flex: 1, minWidth: 160, position: "relative" }}>
+                <span style={{ position: "absolute", left: 9, top: "50%", transform: "translateY(-50%)", color: s.mt }}>🔍</span>
+                <input style={{ ...inp, paddingLeft: 32 }} placeholder="Suchen..." value={search} onChange={e => setSearch(e.target.value)} />
+              </div>
+              <select style={{ ...inp, width: "auto", cursor: "pointer" }} value={catFilter} onChange={e => setCatFilter(e.target.value)}>
+                <option value="">Alle Kategorien</option>
+                {data.cats.map(c => <option key={c.id} value={c.id}>{c.icon} {c.name}</option>)}
+              </select>
+              <select style={{ ...inp, width: "auto", cursor: "pointer" }} value={stFilter} onChange={e => setStFilter(e.target.value)}>
+                <option value="">Alle Status</option>
+                <option value="ok">✅ OK</option>
+                <option value="low">⚠️ Niedrig</option>
+                <option value="out">❌ Leer</option>
+              </select>
+              {canEdit && <button onClick={() => openItemModal(null)} style={{ ...btn, background: s.ac, color: "#fff", padding: "10px 16px", whiteSpace: "nowrap" }}>+ Artikel</button>}
+            </div>
+            <div style={{ overflowX: "auto", borderRadius: 10, border: `1px solid ${s.br}` }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+                <thead>
+                  <tr>{["Artikel", "Kategorie", "Bestand", "Einheit", "Min.", "Status", "Standort", ...(canEdit ? ["Aktionen"] : [])].map(h => (
+                    <th key={h} style={{ background: s.cd, color: s.mt, fontSize: 11, textTransform: "uppercase", padding: "10px 12px", textAlign: "left", fontWeight: 600, borderBottom: `1px solid ${s.br}` }}>{h}</th>
+                  ))}</tr>
+                </thead>
+                <tbody>
+                  {filteredItems.length === 0 ? (
+                    <tr><td colSpan={8} style={{ textAlign: "center", padding: 32, color: s.mt }}>Keine Artikel gefunden.</td></tr>
+                  ) : filteredItems.map(i => {
+                    const cat = data.cats.find(c => c.id === i.cid);
+                    const st = i.qty <= 0 ? "out" : i.qty <= i.min ? "low" : "ok";
+                    const qColor = { ok: s.ok, low: s.wn, out: s.dg }[st];
+                    return (
+                      <tr key={i.id}>
+                        <td style={{ padding: "10px 12px", borderBottom: `1px solid ${s.br}` }}><strong>{i.name}</strong>{i.sku && <><br /><small style={{ color: s.mt }}>{i.sku}</small></>}</td>
+                        <td style={{ padding: "10px 12px", borderBottom: `1px solid ${s.br}` }}>{cat ? cat.icon + " " + cat.name : "—"}</td>
+                        <td style={{ padding: "10px 12px", borderBottom: `1px solid ${s.br}`, color: qColor, fontWeight: 700 }}>{i.qty}</td>
+                        <td style={{ padding: "10px 12px", borderBottom: `1px solid ${s.br}` }}>{i.unit || "—"}</td>
+                        <td style={{ padding: "10px 12px", borderBottom: `1px solid ${s.br}` }}>{i.min}</td>
+                        <td style={{ padding: "10px 12px", borderBottom: `1px solid ${s.br}` }}><StatusBadge qty={i.qty} min={i.min} /></td>
+                        <td style={{ padding: "10px 12px", borderBottom: `1px solid ${s.br}` }}>{i.loc || "—"}</td>
+                        {canEdit && (
+                          <td style={{ padding: "10px 12px", borderBottom: `1px solid ${s.br}` }}>
+                            <div style={{ display: "flex", gap: 5 }}>
+                              <button onClick={() => { setAdjModal(i); setAF({ type: "add", qty: "", reason: "" }); }} style={{ ...btn, background: s.br, color: s.tx, padding: "5px 10px", fontSize: 13 }}>±</button>
+                              <button onClick={() => openItemModal(i)} style={{ ...btn, background: s.br, color: s.tx, padding: "5px 10px", fontSize: 13 }}>✏️</button>
+                              {isAdmin && <button onClick={() => setDelModal({ type: "item", id: i.id, label: i.name })} style={{ ...btn, background: s.dg, color: "#fff", padding: "5px 10px", fontSize: 13 }}>🗑</button>}
+                            </div>
+                          </td>
+                        )}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* ALARME */}
+        {page === 2 && (
+          <div>
+            <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 13 }}>🔔 Lageralarme</div>
+            {alertItems.length === 0 ? (
+              <div style={{ textAlign: "center", padding: 40, color: s.mt }}><div style={{ fontSize: 40, marginBottom: 8 }}>✅</div><div>Alle Bestände sind ausreichend.</div></div>
+            ) : (
+              <>
+                <div style={{ color: s.mt, fontSize: 13, marginBottom: 13 }}>{alertItems.length} Artikel benötigen Nachbestellung.</div>
+                {alertItems.map(i => {
+                  const cat = data.cats.find(c => c.id === i.cid);
+                  const out = i.qty <= 0;
+                  return (
+                    <div key={i.id} style={{ background: s.sf, border: `1px solid ${out ? s.dg : s.wn}`, borderRadius: 10, padding: 18, marginBottom: 10 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
+                        <div>
+                          <div style={{ fontSize: 15, fontWeight: 700 }}>{cat ? cat.icon + " " : ""}{i.name}</div>
+                          <div style={{ color: s.mt, fontSize: 12, marginTop: 3 }}>{cat ? cat.name : ""}{i.loc ? " · " + i.loc : ""}{i.sku ? " · " + i.sku : ""}</div>
+                        </div>
+                        <StatusBadge qty={i.qty} min={i.min} />
+                      </div>
+                      <div style={{ marginTop: 10, display: "flex", gap: 16, fontSize: 13, flexWrap: "wrap" }}>
+                        <div>Bestand: <strong style={{ color: out ? s.dg : s.wn }}>{i.qty} {i.unit || ""}</strong></div>
+                        <div>Mindest: <strong>{i.min} {i.unit || ""}</strong></div>
+                        <div>Fehlt: <strong>{Math.max(0, i.min - i.qty)} {i.unit || ""}</strong></div>
+                      </div>
+                      {canEdit && (
+                        <div style={{ marginTop: 10 }}>
+                          <button onClick={() => { setAdjModal(i); setAF({ type: "add", qty: "", reason: "" }); }} style={{ ...btn, background: s.ac, color: "#fff", padding: "7px 14px", fontSize: 13 }}>± Bestand anpassen</button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </>
+            )}
+          </div>
+        )}
+
+        {/* KATEGORIEN */}
+        {page === 3 && isAdmin && (
+          <div>
+            <div style={{ display: "flex", alignItems: "center", marginBottom: 13 }}>
+              <div style={{ fontSize: 16, fontWeight: 700, flex: 1 }}>🗂 Kategorien</div>
+              <button onClick={() => { setCF({ name: "", icon: "" }); setCatModal(true); }} style={{ ...btn, background: s.ac, color: "#fff", padding: "7px 14px", fontSize: 13 }}>+ Kategorie</button>
+            </div>
+            {data.cats.map(c => (
+              <div key={c.id} style={{ background: s.cd, border: `1px solid ${s.br}`, borderRadius: 8, padding: "12px 15px", display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                <div style={{ width: 36, height: 36, borderRadius: "50%", background: s.sf, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>{c.icon}</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 600, fontSize: 14 }}>{c.name}</div>
+                  <div style={{ fontSize: 12, color: s.mt }}>{data.items.filter(i => i.cid === c.id).length} Artikel</div>
+                </div>
+                <button onClick={() => setDelModal({ type: "cat", id: c.id, label: c.name })} style={{ ...btn, background: s.dg, color: "#fff", padding: "5px 10px", fontSize: 13 }}>🗑</button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* BENUTZER */}
+        {page === 4 && isAdmin && (
+          <div>
+            <div style={{ display: "flex", alignItems: "center", marginBottom: 13 }}>
+              <div style={{ fontSize: 16, fontWeight: 700, flex: 1 }}>👥 Benutzer</div>
+              <button onClick={() => { setUF({ username: "", password: "", display: "", role: "user" }); setUserModal(true); }} style={{ ...btn, background: s.ac, color: "#fff", padding: "7px 14px", fontSize: 13 }}>+ Benutzer</button>
+            </div>
+            {data.users.map(u => {
+              const cls = { admin: [s.ac, "rgba(249,115,22,.2)"], user: ["#3b82f6", "rgba(59,130,246,.2)"], viewer: [s.mt, "rgba(124,130,160,.2)"] }[u.role];
+              const rl = { admin: "Admin", user: "Mitarbeiter", viewer: "Betrachter" }[u.role];
+              return (
+                <div key={u.id} style={{ background: s.cd, border: `1px solid ${s.br}`, borderRadius: 8, padding: "12px 15px", display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: cls[1], display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 14, color: cls[0] }}>{(u.display || u.username).charAt(0).toUpperCase()}</div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 600, fontSize: 14 }}>{u.display || u.username}</div>
+                    <div style={{ fontSize: 12, color: s.mt }}>{u.username} · {rl}</div>
+                  </div>
+                  {u.id !== me.id ? <button onClick={() => setDelModal({ type: "user", id: u.id, label: u.username })} style={{ ...btn, background: s.dg, color: "#fff", padding: "5px 10px", fontSize: 13 }}>🗑</button>
+                    : <span style={{ color: s.mt, fontSize: 12 }}>Eigenes Konto</span>}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* MODAL: ARTIKEL */}
+      <Modal open={itemModal} onClose={() => setItemModal(false)} title={editItem ? "Artikel bearbeiten" : "Artikel hinzufügen"}>
+        <Field label="NAME"><input style={inp} value={iForm.name} onChange={e => setIF({ ...iForm, name: e.target.value })} placeholder="z.B. Schrauben M8" /></Field>
+        <Row2>
+          <Field label="KATEGORIE">
+            <select style={inp} value={iForm.cid} onChange={e => setIF({ ...iForm, cid: e.target.value })}>
+              {data.cats.map(c => <option key={c.id} value={c.id}>{c.icon} {c.name}</option>)}
+            </select>
+          </Field>
+          <Field label="STANDORT"><input style={inp} value={iForm.loc} onChange={e => setIF({ ...iForm, loc: e.target.value })} placeholder="Regal A1" /></Field>
+        </Row2>
+        <Row2>
+          <Field label="BESTAND"><input style={inp} type="number" min="0" value={iForm.qty} onChange={e => setIF({ ...iForm, qty: e.target.value })} placeholder="0" /></Field>
+          <Field label="EINHEIT"><input style={inp} value={iForm.unit} onChange={e => setIF({ ...iForm, unit: e.target.value })} placeholder="Stk / kg / m" /></Field>
+        </Row2>
+        <Row2>
+          <Field label="MIN. BESTAND (Alarm ab)"><input style={inp} type="number" min="0" value={iForm.min} onChange={e => setIF({ ...iForm, min: e.target.value })} placeholder="0" /></Field>
+          <Field label="ARTIKEL-NR."><input style={inp} value={iForm.sku} onChange={e => setIF({ ...iForm, sku: e.target.value })} placeholder="optional" /></Field>
+        </Row2>
+        <Field label="NOTIZ"><input style={inp} value={iForm.note} onChange={e => setIF({ ...iForm, note: e.target.value })} placeholder="optional" /></Field>
+        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 16 }}>
+          <button onClick={() => setItemModal(false)} style={{ ...btn, background: s.br, color: s.tx }}>Abbrechen</button>
+          <button onClick={saveItem} style={{ ...btn, background: s.ac, color: "#fff" }}>Speichern</button>
+        </div>
+      </Modal>
+
+      {/* MODAL: BESTAND */}
+      <Modal open={!!adjModal} onClose={() => setAdjModal(null)} title={adjModal?.name || ""}>
+        <div style={{ color: s.mt, fontSize: 13, marginBottom: 13 }}>Bestand: {adjModal?.qty} {adjModal?.unit || ""}</div>
+        <Row2>
+          <Field label="ART">
+            <select style={inp} value={aForm.type} onChange={e => setAF({ ...aForm, type: e.target.value })}>
+              <option value="add">+ Zugang</option>
+              <option value="sub">- Abgang</option>
+              <option value="set">= Setzen auf</option>
+            </select>
+          </Field>
+          <Field label="MENGE"><input style={inp} type="number" min="0" value={aForm.qty} onChange={e => setAF({ ...aForm, qty: e.target.value })} placeholder="0" /></Field>
+        </Row2>
+        <Field label="GRUND (optional)"><input style={inp} value={aForm.reason} onChange={e => setAF({ ...aForm, reason: e.target.value })} placeholder="z.B. Lieferung, Verbrauch" /></Field>
+        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 16 }}>
+          <button onClick={() => setAdjModal(null)} style={{ ...btn, background: s.br, color: s.tx }}>Abbrechen</button>
+          <button onClick={saveAdj} style={{ ...btn, background: s.ac, color: "#fff" }}>Buchen</button>
+        </div>
+      </Modal>
+
+      {/* MODAL: KATEGORIE */}
+      <Modal open={catModal} onClose={() => setCatModal(false)} title="Kategorie">
+        <Field label="NAME"><input style={inp} value={cForm.name} onChange={e => setCF({ ...cForm, name: e.target.value })} placeholder="z.B. Werkzeug" /></Field>
+        <Field label="ICON (Emoji)"><input style={inp} value={cForm.icon} onChange={e => setCF({ ...cForm, icon: e.target.value })} placeholder="🔧" maxLength={4} /></Field>
+        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 16 }}>
+          <button onClick={() => setCatModal(false)} style={{ ...btn, background: s.br, color: s.tx }}>Abbrechen</button>
+          <button onClick={saveCat} style={{ ...btn, background: s.ac, color: "#fff" }}>Speichern</button>
+        </div>
+      </Modal>
+
+      {/* MODAL: BENUTZER */}
+      <Modal open={userModal} onClose={() => setUserModal(false)} title="Benutzer anlegen">
+        <Field label="BENUTZERNAME"><input style={inp} value={uForm.username} onChange={e => setUF({ ...uForm, username: e.target.value })} placeholder="max.muster" /></Field>
+        <Field label="PASSWORT"><input style={inp} type="password" value={uForm.password} onChange={e => setUF({ ...uForm, password: e.target.value })} placeholder="Passwort" /></Field>
+        <Field label="ANZEIGENAME"><input style={inp} value={uForm.display} onChange={e => setUF({ ...uForm, display: e.target.value })} placeholder="Max Muster" /></Field>
+        <Field label="ROLLE">
+          <select style={inp} value={uForm.role} onChange={e => setUF({ ...uForm, role: e.target.value })}>
+            <option value="viewer">Betrachter – nur lesen</option>
+            <option value="user">Mitarbeiter – buchen</option>
+            <option value="admin">Admin – voller Zugriff</option>
+          </select>
+        </Field>
+        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 16 }}>
+          <button onClick={() => setUserModal(false)} style={{ ...btn, background: s.br, color: s.tx }}>Abbrechen</button>
+          <button onClick={saveUser} style={{ ...btn, background: s.ac, color: "#fff" }}>Speichern</button>
+        </div>
+      </Modal>
+
+      {/* MODAL: LÖSCHEN */}
+      <Modal open={!!delModal} onClose={() => setDelModal(null)} title="Löschen?">
+        <p style={{ color: s.mt, fontSize: 14, marginBottom: 16 }}>„{delModal?.label}" wirklich löschen?</p>
+        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+          <button onClick={() => setDelModal(null)} style={{ ...btn, background: s.br, color: s.tx }}>Abbrechen</button>
+          <button onClick={doDelete} style={{ ...btn, background: s.dg, color: "#fff" }}>Löschen</button>
+        </div>
+      </Modal>
+
+      <Toast msg={toast} />
+    </div>
+  );
+}
+
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(React.createElement(App));
+
+</script>
+</body>
+</html>
