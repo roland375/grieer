@@ -2,25 +2,27 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f1117">
 <title>Grieer Inventar</title>
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:#0f1117;font-family:Segoe UI,system-ui,sans-serif;min-height:100vh}
-::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-track{background:#1a1d27}
-::-webkit-scrollbar-thumb{background:#2e3350;border-radius:3px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow-x:hidden}
+body{background:#0f1117;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;min-height:100vh;min-height:-webkit-fill-available}
+input,select,button{font-size:16px !important;font-family:inherit} /* prevents iOS zoom */
+::-webkit-scrollbar{width:0;height:0}
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const {useState,useEffect,useCallback}=React;
+const {useState,useEffect,useCallback,useRef}=React;
 
-// ── SUPABASE ──────────────────────────────────────────────────────
 const SB_URL="https://bvodhzacatfuduwtlwut.supabase.co";
 const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2b2RoemFjYXRmdWR1d3Rsd3V0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxODUwMjcsImV4cCI6MjA5NTc2MTAyN30.kX03LLhpIm-iD1VQqreIpCCwAHzsT0pmYdIsl8uSeuY";
 
@@ -66,26 +68,71 @@ const SK='ginv5';
 function loadLocal(){try{const d=JSON.parse(localStorage.getItem(SK));if(d&&d.users&&d.users.length>0)return d;}catch(e){}return null;}
 function saveLocal(d){try{localStorage.setItem(SK,JSON.stringify(d));}catch(e){}}
 
-// ── DESIGN TOKENS ─────────────────────────────────────────────────
 const C={bg:'#0f1117',sf:'#1a1d27',cd:'#21253a',br:'#2e3350',ac:'#f97316',ok:'#22c55e',wn:'#eab308',dg:'#ef4444',tx:'#e8eaf0',mt:'#7c82a0'};
-const INP={width:'100%',padding:'10px 13px',background:C.cd,border:'1px solid '+C.br,borderRadius:7,color:C.tx,fontSize:15,outline:'none',fontFamily:'inherit'};
-const BTN={padding:'10px 20px',borderRadius:7,border:'none',cursor:'pointer',fontSize:14,fontWeight:600,fontFamily:'inherit'};
 
-// ── COMPONENTS ────────────────────────────────────────────────────
+const INP={
+  width:'100%',padding:'13px 15px',background:C.cd,
+  border:'1px solid '+C.br,borderRadius:10,color:C.tx,
+  fontSize:16,outline:'none',fontFamily:'inherit',
+  WebkitAppearance:'none',appearance:'none',
+};
+
+const BTN={
+  padding:'14px 20px',borderRadius:10,border:'none',
+  cursor:'pointer',fontSize:16,fontWeight:600,
+  fontFamily:'inherit',WebkitAppearance:'none',
+  touchAction:'manipulation',
+};
+
 function Badge({qty,min}){
   const st=qty<=0?'out':qty<=min?'low':'ok';
   const m={ok:[C.ok,'rgba(34,197,94,.15)','✅ OK'],low:[C.wn,'rgba(234,179,8,.15)','⚠️ Niedrig'],out:[C.dg,'rgba(239,68,68,.15)','❌ Leer']}[st];
-  return React.createElement('span',{style:{display:'inline-block',padding:'3px 8px',borderRadius:20,fontSize:11,fontWeight:600,color:m[0],background:m[1]}},m[2]);
-}
-function Toast({msg}){
-  return msg?React.createElement('div',{style:{position:'fixed',bottom:20,left:'50%',transform:'translateX(-50%)',background:C.cd,border:'1px solid '+C.br,borderRadius:8,padding:'10px 20px',fontSize:14,zIndex:300,whiteSpace:'nowrap',color:C.tx,pointerEvents:'none'}},msg):null;
-}
-function Spin(){
-  return React.createElement('div',{style:{display:'flex',alignItems:'center',justifyContent:'center',minHeight:'100vh',background:C.bg}},
-    React.createElement('div',{style:{color:C.mt,fontSize:16}}, '⏳ Verbinde mit Cloud…'));
+  return React.createElement('span',{style:{display:'inline-block',padding:'4px 10px',borderRadius:20,fontSize:12,fontWeight:600,color:m[0],background:m[1]}},m[2]);
 }
 
-// ── APP ───────────────────────────────────────────────────────────
+function Toast({msg}){
+  if(!msg)return null;
+  return React.createElement('div',{style:{
+    position:'fixed',bottom:30,left:'50%',transform:'translateX(-50%)',
+    background:C.cd,border:'1px solid '+C.br,borderRadius:12,
+    padding:'12px 22px',fontSize:15,zIndex:999,
+    whiteSpace:'nowrap',color:C.tx,pointerEvents:'none',
+    boxShadow:'0 4px 20px rgba(0,0,0,.4)',
+  }},msg);
+}
+
+function Modal({open,onClose,title,children}){
+  if(!open)return null;
+  return React.createElement('div',{
+    onClick:e=>{if(e.target===e.currentTarget)onClose();},
+    style:{position:'fixed',inset:0,background:'rgba(0,0,0,.75)',zIndex:500,
+      display:'flex',alignItems:'flex-end',justifyContent:'center',
+      padding:'0',
+    }
+  },
+    React.createElement('div',{style:{
+      background:C.sf,borderRadius:'20px 20px 0 0',
+      padding:'20px 20px 40px',width:'100%',maxWidth:600,
+      maxHeight:'90vh',overflowY:'auto',
+      border:'1px solid '+C.br,borderBottom:'none',
+    }},
+      React.createElement('div',{style:{
+        width:40,height:4,background:C.br,borderRadius:2,
+        margin:'0 auto 20px',
+      }}),
+      React.createElement('div',{style:{fontSize:18,fontWeight:700,marginBottom:18,color:C.tx}},title),
+      children
+    )
+  );
+}
+
+function Fld({label,children}){
+  return React.createElement('div',{style:{marginBottom:14}},
+    React.createElement('div',{style:{fontSize:13,color:C.mt,marginBottom:6,fontWeight:600,letterSpacing:'.4px'}},label),
+    children
+  );
+}
+
 function App(){
   const [data,setData]=useState(()=>loadLocal());
   const [loading,setLoading]=useState(true);
@@ -94,30 +141,34 @@ function App(){
   const [pg,setPg]=useState(0);
   const [toast,setToast]=useState('');
   const [srch,setSrch]=useState('');
-  const [cf,setCF2]=useState('');
-  const [sf,setSF2]=useState('');
+  const [catF,setCatF]=useState('');
+  const [stF,setStF]=useState('');
   const [liu,setLiu]=useState('');
   const [lip,setLip]=useState('');
   const [lerr,setLerr]=useState(false);
-  const [iM,setIM]=useState(false);
-  const [eI,setEI]=useState(null);
-  const [aM,setAM]=useState(null);
+  const [iMod,setIMod]=useState(false);
+  const [eItem,setEItem]=useState(null);
+  const [adjItem,setAdjItem]=useState(null);
   const [cMod,setCMod]=useState(false);
   const [uMod,setUMod]=useState(false);
-  const [dM,setDM]=useState(null);
+  const [delM,setDelM]=useState(null);
   const [iF,setIF]=useState({name:'',cid:'',loc:'',qty:'',unit:'',min:'',sku:'',note:''});
   const [aF,setAF]=useState({type:'add',qty:'',reason:''});
-  const [cF,setCF3]=useState({name:'',icon:''});
+  const [cF,setCF]=useState({name:'',icon:''});
   const [uF,setUF]=useState({username:'',password:'',display:'',role:'user'});
 
-  // Initial Supabase load
+  const shT=useCallback((msg,dur=2500)=>{setToast(msg);setTimeout(()=>setToast(''),dur);},[]);
+  const upd=(nd)=>{setData(nd);saveLocal(nd);};
+  const addLog=(d,item,action)=>{
+    sb.post('inv_log',{item_name:item,action,username:me?.display||me?.username||''}).catch(()=>{});
+    return{...d,log:[...d.log,{ts:Date.now(),item,action,user:me?.display||me?.username||''}].slice(-200)};
+  };
+
   useEffect(()=>{
-    sbLoad()
-      .then(d=>{setData(d);saveLocal(d);setCloud(true);setLoading(false);setLerr(false);setLiu('');setLip('');setMe(null);})
-      .catch(()=>{setCloud(false);setLoading(false);});
+    sbLoad().then(d=>{setData(d);saveLocal(d);setCloud(true);setLoading(false);})
+            .catch(()=>{setCloud(false);setLoading(false);});
   },[]);
 
-  // Auto-sync every 60s
   useEffect(()=>{
     if(!me)return;
     const iv=setInterval(()=>{
@@ -126,93 +177,97 @@ function App(){
     return()=>clearInterval(iv);
   },[me]);
 
-  const shT=useCallback((msg,dur=2500)=>{setToast(msg);setTimeout(()=>setToast(''),dur);},[]);
-  const upd=(nd)=>{setData(nd);saveLocal(nd);};
-  const addLog=(d,item,action)=>{
-    const entry={ts:Date.now(),item,action,user:me?.display||me?.username||''};
-    sb.post('inv_log',{item_name:item,action,username:me?.display||me?.username||''}).catch(()=>{});
-    return{...d,log:[...d.log,entry].slice(-200)};
-  };
-
   const alts=data?data.items.filter(i=>i.qty<=i.min):[];
 
-  if(loading)return React.createElement(Spin);
+  if(loading)return React.createElement('div',{style:{
+    background:C.bg,minHeight:'100vh',display:'flex',
+    flexDirection:'column',alignItems:'center',justifyContent:'center',gap:16,
+  }},
+    React.createElement('div',{style:{fontSize:40}},'📦'),
+    React.createElement('div',{style:{color:C.mt,fontSize:16}},'Verbinde mit Cloud…')
+  );
 
   // LOGIN
   if(!me){
     const doLogin=()=>{
-      if(!data){shT('Keine Verbindung zur Datenbank');return;}
+      if(!data){shT('Keine Verbindung');return;}
       const f=data.users.find(u=>u.username===liu.trim()&&u.password===lip);
       if(f){setMe(f);setLerr(false);}else setLerr(true);
     };
     return React.createElement('div',{style:{background:C.bg,minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:20}},
-      React.createElement('div',{style:{background:C.sf,border:'1px solid '+C.br,borderRadius:10,padding:36,width:'100%',maxWidth:380}},
-        React.createElement('div',{style:{display:'flex',alignItems:'center',gap:12,marginBottom:28}},
-          React.createElement('div',{style:{width:44,height:44,background:C.ac,borderRadius:8,display:'flex',alignItems:'center',justifyContent:'center',fontSize:22}},'📦'),
+      React.createElement('div',{style:{background:C.sf,border:'1px solid '+C.br,borderRadius:16,padding:28,width:'100%',maxWidth:380}},
+        React.createElement('div',{style:{display:'flex',alignItems:'center',gap:14,marginBottom:28}},
+          React.createElement('div',{style:{width:50,height:50,background:C.ac,borderRadius:12,display:'flex',alignItems:'center',justifyContent:'center',fontSize:24}},'📦'),
           React.createElement('div',null,
-            React.createElement('div',{style:{fontSize:19,fontWeight:700}},'Grieer Inventar'),
-            React.createElement('div',{style:{fontSize:12,color:C.mt}},'Lagerverwaltung')
+            React.createElement('div',{style:{fontSize:20,fontWeight:700,color:C.tx}},'Grieer Inventar'),
+            React.createElement('div',{style:{fontSize:13,color:C.mt}},'Lagerverwaltung')
           )
         ),
-        cloud===false&&React.createElement('div',{style:{background:'#1f1008',border:'1px solid #7c3100',borderRadius:7,padding:'10px 13px',fontSize:13,color:C.wn,marginBottom:14}},'⚠️ Cloud nicht erreichbar — lokale Daten werden verwendet.'),
-        cloud===true&&React.createElement('div',{style:{background:'rgba(34,197,94,.1)',border:'1px solid rgba(34,197,94,.3)',borderRadius:7,padding:'10px 13px',fontSize:13,color:C.ok,marginBottom:14}},'☁️ Cloud verbunden ✓'),
-        React.createElement('div',{style:{marginBottom:13}},
-          React.createElement('div',{style:{fontSize:12,color:C.mt,marginBottom:5}},'BENUTZER'),
-          React.createElement('input',{style:INP,type:'text',placeholder:'Benutzername',value:liu,onChange:e=>setLiu(e.target.value),onKeyDown:e=>{if(e.key==='Enter')document.getElementById('lp').focus();},autoComplete:'username'})
+        cloud===true&&React.createElement('div',{style:{background:'rgba(34,197,94,.1)',border:'1px solid rgba(34,197,94,.3)',borderRadius:10,padding:'10px 14px',fontSize:13,color:C.ok,marginBottom:16}},'☁️ Cloud verbunden'),
+        cloud===false&&React.createElement('div',{style:{background:'#1f1008',border:'1px solid #7c3100',borderRadius:10,padding:'10px 14px',fontSize:13,color:C.wn,marginBottom:16}},'⚠️ Offline – lokale Daten'),
+        React.createElement(Fld,{label:'BENUTZER'},
+          React.createElement('input',{style:INP,type:'text',placeholder:'Benutzername',value:liu,
+            onChange:e=>setLiu(e.target.value),
+            onKeyDown:e=>e.key==='Enter'&&document.getElementById('lp').focus(),
+            autoComplete:'username',autoCapitalize:'none',autoCorrect:'off',
+          })
         ),
-        React.createElement('div',{style:{marginBottom:13}},
-          React.createElement('div',{style:{fontSize:12,color:C.mt,marginBottom:5}},'PASSWORT'),
-          React.createElement('input',{id:'lp',style:INP,type:'password',placeholder:'Passwort',value:lip,onChange:e=>setLip(e.target.value),onKeyDown:e=>{if(e.key==='Enter')doLogin();},autoComplete:'current-password'})
+        React.createElement(Fld,{label:'PASSWORT'},
+          React.createElement('input',{id:'lp',style:INP,type:'password',placeholder:'Passwort',value:lip,
+            onChange:e=>setLip(e.target.value),
+            onKeyDown:e=>e.key==='Enter'&&doLogin(),
+            autoComplete:'current-password',
+          })
         ),
-        lerr&&React.createElement('div',{style:{color:C.dg,fontSize:13,marginBottom:10}},'❌ Benutzername oder Passwort falsch.'),
-        React.createElement('button',{style:{...BTN,background:C.ac,color:'#fff',width:'100%'},onClick:doLogin},'Anmelden')
+        lerr&&React.createElement('div',{style:{color:C.dg,fontSize:14,marginBottom:12}},'❌ Benutzername oder Passwort falsch.'),
+        React.createElement('button',{style:{...BTN,background:C.ac,color:'#fff',width:'100%',marginTop:4},onClick:doLogin},'Anmelden')
       )
     );
   }
 
   const canEdit=me.role!=='viewer',isAdm=me.role==='admin';
-  const tabs=['📊 Dashboard','📦 Lager','🔔 Alarme'+(alts.length>0?' ('+alts.length+')':''),'🗂 Kat.','👥 User'];
-  const visT=isAdm?tabs:tabs.slice(0,3);
 
   const openIM=(item)=>{
-    setEI(item||null);
-    setIF(item?{name:item.name,cid:item.cid||'',loc:item.loc||'',qty:String(item.qty),unit:item.unit||'',min:String(item.min),sku:item.sku||'',note:item.note||''}:{name:'',cid:data.cats[0]?.id||'',loc:'',qty:'',unit:'',min:'',sku:'',note:''});
-    setIM(true);
+    setEItem(item||null);
+    setIF(item
+      ?{name:item.name,cid:item.cid||'',loc:item.loc||'',qty:String(item.qty),unit:item.unit||'',min:String(item.min),sku:item.sku||'',note:item.note||''}
+      :{name:'',cid:data.cats[0]?.id||'',loc:'',qty:'',unit:'Stk',min:'',sku:'',note:''});
+    setIMod(true);
   };
 
   const saveI=async()=>{
     if(!iF.name.trim()){shT('Name erforderlich');return;}
     const row={name:iF.name.trim(),cid:iF.cid,loc:iF.loc,qty:parseFloat(iF.qty)||0,unit:iF.unit,min:parseFloat(iF.min)||0,sku:iF.sku,note:iF.note};
-    let d={...data};
     try{
-      if(eI){
-        await sb.patch('inv_items',{name:row.name,cat_id:row.cid,loc:row.loc,qty:row.qty,unit:row.unit,min_qty:row.min,sku:row.sku,note:row.note,updated_at:new Date().toISOString()},'id=eq.'+eI.id);
-        d.items=d.items.map(i=>i.id===eI.id?{...i,...row}:i);
-        d=addLog(d,row.name,'Bearbeitet');shT('Gespeichert');
+      let d={...data};
+      if(eItem){
+        await sb.patch('inv_items',{name:row.name,cat_id:row.cid,loc:row.loc,qty:row.qty,unit:row.unit,min_qty:row.min,sku:row.sku,note:row.note,updated_at:new Date().toISOString()},'id=eq.'+eItem.id);
+        d.items=d.items.map(i=>i.id===eItem.id?{...i,...row}:i);
+        d=addLog(d,row.name,'Bearbeitet');shT('✅ Gespeichert');
       }else{
         const id='i'+Date.now();
         await sb.upsert('inv_items',[{id,name:row.name,cat_id:row.cid,loc:row.loc,qty:row.qty,unit:row.unit,min_qty:row.min,sku:row.sku,note:row.note,updated_at:new Date().toISOString()}]);
-        row.id=id;d.items=[...d.items,row];
-        d=addLog(d,row.name,'Neu angelegt');shT('Hinzugefügt');
+        d.items=[...d.items,{...row,id}];
+        d=addLog(d,row.name,'Neu angelegt');shT('✅ Hinzugefügt');
       }
-      upd(d);setIM(false);
-    }catch(e){shT('Fehler: '+e.message,4000);}
+      upd(d);setIMod(false);
+    }catch(e){shT('❌ Fehler: '+e.message,4000);}
   };
 
   const saveA=async()=>{
     const qty=parseFloat(aF.qty);
     if(isNaN(qty)||qty<0){shT('Menge eingeben');return;}
-    let nq=aM.qty;
+    let nq=adjItem.qty;
     if(aF.type==='add')nq+=qty;else if(aF.type==='sub')nq=Math.max(0,nq-qty);else nq=qty;
     try{
-      await sb.patch('inv_items',{qty:nq,updated_at:new Date().toISOString()},'id=eq.'+aM.id);
+      await sb.patch('inv_items',{qty:nq,updated_at:new Date().toISOString()},'id=eq.'+adjItem.id);
       let d={...data};
-      d.items=d.items.map(i=>i.id===aM.id?{...i,qty:nq}:i);
+      d.items=d.items.map(i=>i.id===adjItem.id?{...i,qty:nq}:i);
       const act=(aF.type==='add'?'+':aF.type==='sub'?'-':'=')+qty+(aF.reason?' ('+aF.reason+')':'');
-      d=addLog(d,aM.name,act);
-      upd(d);setAM(null);shT('Gebucht');
-      if(nq<=aM.min)setTimeout(()=>shT(nq<=0?'⚠️ "'+aM.name+'" ist LEER!':'⚠️ "'+aM.name+'" Bestand niedrig',4000),700);
-    }catch(e){shT('Fehler: '+e.message,4000);}
+      d=addLog(d,adjItem.name,act);
+      upd(d);setAdjItem(null);shT('✅ Gebucht');
+      if(nq<=adjItem.min)setTimeout(()=>shT(nq<=0?'🚨 "'+adjItem.name+'" ist LEER!':'⚠️ "'+adjItem.name+'" Bestand niedrig',4000),700);
+    }catch(e){shT('❌ Fehler: '+e.message,4000);}
   };
 
   const saveC=async()=>{
@@ -221,8 +276,8 @@ function App(){
     try{
       await sb.upsert('inv_categories',[{id,name:cF.name.trim(),icon:cF.icon.trim()||'📦'}]);
       upd({...data,cats:[...data.cats,{id,name:cF.name.trim(),icon:cF.icon.trim()||'📦'}]});
-      setCMod(false);shT('Kategorie gespeichert');
-    }catch(e){shT('Fehler: '+e.message,4000);}
+      setCMod(false);shT('✅ Kategorie gespeichert');
+    }catch(e){shT('❌ '+e.message,4000);}
   };
 
   const saveU=async()=>{
@@ -232,282 +287,314 @@ function App(){
     try{
       await sb.upsert('inv_users',[{id,username:uF.username.trim(),password:uF.password,display:dn,role:uF.role}]);
       upd({...data,users:[...data.users,{id,username:uF.username.trim(),password:uF.password,display:dn,role:uF.role}]});
-      setUMod(false);shT('Benutzer angelegt');
-    }catch(e){shT('Fehler: '+e.message,4000);}
+      setUMod(false);shT('✅ Benutzer angelegt');
+    }catch(e){shT('❌ '+e.message,4000);}
   };
 
   const doDel=async()=>{
-    if(!dM)return;
+    if(!delM)return;
     try{
-      if(dM.type==='item'){await sb.del('inv_items','id=eq.'+dM.id);upd({...data,items:data.items.filter(i=>i.id!==dM.id)});}
-      if(dM.type==='cat'){await sb.del('inv_categories','id=eq.'+dM.id);upd({...data,cats:data.cats.filter(c=>c.id!==dM.id)});}
-      if(dM.type==='user'){await sb.del('inv_users','id=eq.'+dM.id);upd({...data,users:data.users.filter(u=>u.id!==dM.id)});}
-      setDM(null);shT('Gelöscht');
-    }catch(e){shT('Fehler: '+e.message,4000);}
+      if(delM.type==='item'){await sb.del('inv_items','id=eq.'+delM.id);upd({...data,items:data.items.filter(i=>i.id!==delM.id)});}
+      if(delM.type==='cat'){await sb.del('inv_categories','id=eq.'+delM.id);upd({...data,cats:data.cats.filter(c=>c.id!==delM.id)});}
+      if(delM.type==='user'){await sb.del('inv_users','id=eq.'+delM.id);upd({...data,users:data.users.filter(u=>u.id!==delM.id)});}
+      setDelM(null);shT('🗑 Gelöscht');
+    }catch(e){shT('❌ '+e.message,4000);}
   };
 
   const fitems=data.items.filter(i=>{
     const ms=i.name.toLowerCase().includes(srch.toLowerCase())||(i.sku||'').toLowerCase().includes(srch.toLowerCase());
-    const mc=!cf||i.cid===cf;
+    const mc=!catF||i.cid===catF;
     const st=i.qty<=0?'out':i.qty<=i.min?'low':'ok';
-    return ms&&mc&&(!sf||st===sf);
+    return ms&&mc&&(!stF||st===stF);
   });
 
-  const Modal=({open,onClose,title,ch})=>{
-    if(!open)return null;
-    return React.createElement('div',{onClick:e=>{if(e.target===e.currentTarget)onClose();},style:{position:'fixed',inset:0,background:'rgba(0,0,0,.7)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',padding:16}},
-      React.createElement('div',{style:{background:C.sf,border:'1px solid '+C.br,borderRadius:10,padding:24,width:'100%',maxWidth:460,maxHeight:'90vh',overflowY:'auto'}},
-        React.createElement('div',{style:{fontSize:17,fontWeight:700,marginBottom:16}},title),
-        ch
-      )
-    );
-  };
-  const Fld=({label,ch})=>React.createElement('div',{style:{marginBottom:13}},React.createElement('div',{style:{fontSize:12,color:C.mt,marginBottom:5}},label),ch);
-  const R2=({ch})=>React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}},ch);
-  const Btn=({label,onClick,style})=>React.createElement('button',{onClick,style:{...BTN,...style}},label);
+  // NAV items with icons
+  const navItems=[
+    {icon:'📊',label:'Dashboard'},
+    {icon:'📦',label:'Lager'},
+    {icon:'🔔',label:'Alarme',badge:alts.length},
+    ...(isAdm?[{icon:'🗂',label:'Kat.'},{icon:'👥',label:'User'}]:[]),
+  ];
 
-  return React.createElement('div',{style:{background:C.bg,minHeight:'100vh',display:'flex',flexDirection:'column'}},
+  return React.createElement('div',{style:{background:C.bg,minHeight:'100vh',display:'flex',flexDirection:'column',paddingBottom:70}},
+
     // HEADER
-    React.createElement('div',{style:{background:C.sf,borderBottom:'1px solid '+C.br,padding:'0 16px',display:'flex',alignItems:'center',height:56,position:'sticky',top:0,zIndex:100,gap:10}},
-      React.createElement('div',{style:{fontWeight:700,fontSize:16}},'📦 ',React.createElement('span',{style:{color:C.ac}},'Grieer'),' Inventar'),
-      React.createElement('div',{style:{marginLeft:'auto',display:'flex',alignItems:'center',gap:8}},
-        React.createElement('div',{style:{background:C.cd,border:'1px solid '+C.br,borderRadius:6,padding:'4px 9px',fontSize:11,display:'flex',alignItems:'center',gap:5,color:C.mt}},
-          React.createElement('div',{style:{width:7,height:7,borderRadius:'50%',background:cloud?C.ok:C.dg}}),
-          'Cloud'
-        ),
-        React.createElement('div',{onClick:()=>setPg(2),style:{position:'relative',cursor:'pointer',background:C.cd,border:'1px solid '+C.br,borderRadius:6,padding:'5px 10px',fontSize:17}},
-          '🔔',alts.length>0&&React.createElement('span',{style:{position:'absolute',top:-5,right:-5,background:C.dg,color:'#fff',fontSize:10,fontWeight:700,borderRadius:10,minWidth:16,padding:'0 3px',textAlign:'center',lineHeight:'16px'}},alts.length)
-        ),
-        React.createElement('div',{style:{background:C.cd,border:'1px solid '+C.br,borderRadius:6,padding:'5px 11px',fontSize:13,display:'flex',alignItems:'center',gap:6}},
-          React.createElement('div',{style:{width:8,height:8,borderRadius:'50%',background:{admin:C.ac,user:'#3b82f6',viewer:C.mt}[me.role]}}),
+    React.createElement('div',{style:{background:C.sf,borderBottom:'1px solid '+C.br,padding:'12px 16px',display:'flex',alignItems:'center',gap:10,position:'sticky',top:0,zIndex:100}},
+      React.createElement('div',{style:{fontWeight:700,fontSize:17,flex:1}},'📦 ',React.createElement('span',{style:{color:C.ac}},'Grieer')),
+      React.createElement('div',{style:{display:'flex',alignItems:'center',gap:6}},
+        React.createElement('div',{style:{width:8,height:8,borderRadius:'50%',background:cloud?C.ok:C.dg}}),
+        React.createElement('div',{style:{background:C.cd,border:'1px solid '+C.br,borderRadius:8,padding:'5px 11px',fontSize:13,display:'flex',alignItems:'center',gap:6}},
+          React.createElement('div',{style:{width:8,height:8,borderRadius:'50%',background:{admin:C.ac,user:'#3b82f6',viewer:C.mt}[me.role]}}),' ',
           me.display||me.username
         ),
-        React.createElement('button',{onClick:()=>{setMe(null);setLiu('');setLip('');sbLoad().then(d=>{setData(d);saveLocal(d);setCloud(true);}).catch(()=>setCloud(false));},style:{...BTN,background:C.br,color:C.tx,padding:'6px 12px',fontSize:13}},'Abmelden')
+        React.createElement('button',{
+          onClick:()=>{setMe(null);setLiu('');setLip('');sbLoad().then(d=>{setData(d);saveLocal(d);setCloud(true);}).catch(()=>setCloud(false));},
+          style:{...BTN,background:C.br,color:C.tx,padding:'7px 13px',fontSize:13},
+        },'↩')
       )
     ),
-    // TABS
-    React.createElement('div',{style:{background:C.sf,borderBottom:'1px solid '+C.br,display:'flex',padding:'0 16px',overflowX:'auto'}},
-      visT.map((t,i)=>React.createElement('div',{key:i,onClick:()=>setPg(i),style:{padding:'11px 15px',fontSize:13,fontWeight:600,cursor:'pointer',borderBottom:pg===i?'2px solid '+C.ac:'2px solid transparent',color:pg===i?C.ac:C.mt,whiteSpace:'nowrap'}},t))
-    ),
-    // MAIN
-    React.createElement('div',{style:{padding:'18px 16px',maxWidth:1100,margin:'0 auto',width:'100%'}},
+
+    // MAIN CONTENT
+    React.createElement('div',{style:{flex:1,padding:'16px 14px',maxWidth:700,margin:'0 auto',width:'100%'}},
 
       // DASHBOARD
       pg===0&&React.createElement('div',null,
-        React.createElement('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(130px,1fr))',gap:12,marginBottom:18}},
-          [['Gesamt',data.items.length,C.tx],['OK',data.items.filter(i=>i.qty>i.min).length,C.ok],['Niedrig',data.items.filter(i=>i.qty>0&&i.qty<=i.min).length,C.wn],['Leer',data.items.filter(i=>i.qty<=0).length,C.dg]].map(([l,v,col])=>
-            React.createElement('div',{key:l,style:{background:C.sf,border:'1px solid '+C.br,borderRadius:10,padding:18}},
-              React.createElement('div',{style:{fontSize:13,color:col===C.tx?C.mt:col,marginBottom:3}},l),
-              React.createElement('div',{style:{fontSize:26,fontWeight:700,color:col}},v)
-            )
-          )
+        React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:16}},
+          [['Gesamt',data.items.length,C.tx],['OK',data.items.filter(i=>i.qty>i.min).length,C.ok],
+           ['Niedrig',data.items.filter(i=>i.qty>0&&i.qty<=i.min).length,C.wn],['Leer',data.items.filter(i=>i.qty<=0).length,C.dg]
+          ].map(([l,v,col])=>React.createElement('div',{key:l,style:{background:C.sf,border:'1px solid '+C.br,borderRadius:12,padding:'14px 16px'}},
+            React.createElement('div',{style:{fontSize:13,color:col===C.tx?C.mt:col,marginBottom:4}},l),
+            React.createElement('div',{style:{fontSize:28,fontWeight:700,color:col}},v)
+          ))
         ),
-        alts.length>0&&React.createElement('div',{style:{background:'#1f1008',border:'1px solid #7c3100',borderRadius:10,padding:'14px 18px',marginBottom:16}},
-          React.createElement('div',{style:{color:C.ac,fontWeight:700,fontSize:14,marginBottom:8}},'⚠️ Nachbestellungen erforderlich'),
-          alts.map(i=>{const cat=data.cats.find(c=>c.id===i.cid);return React.createElement('div',{key:i.id,style:{fontSize:13,padding:'6px 0',borderBottom:'1px solid #3a1a00',display:'flex',justifyContent:'space-between'}},
-            React.createElement('div',null,React.createElement('strong',null,(cat?cat.icon+' ':'')+i.name),' — '+i.qty+' '+(i.unit||'')+' (Min: '+i.min+')'),
-            React.createElement('span',{style:{color:i.qty<=0?C.dg:C.wn}},i.qty<=0?'LEER':'Niedrig')
+        alts.length>0&&React.createElement('div',{style:{background:'#1f1008',border:'1px solid #7c3100',borderRadius:12,padding:'14px 16px',marginBottom:14}},
+          React.createElement('div',{style:{color:C.ac,fontWeight:700,fontSize:14,marginBottom:10}},'⚠️ Nachbestellungen erforderlich'),
+          alts.map(i=>{const cat=data.cats.find(c=>c.id===i.cid);return React.createElement('div',{key:i.id,style:{fontSize:14,padding:'8px 0',borderBottom:'1px solid #3a1a00',display:'flex',justifyContent:'space-between',alignItems:'center'}},
+            React.createElement('div',null,React.createElement('div',{style:{fontWeight:600}},( cat?cat.icon+' ':'')+i.name),React.createElement('div',{style:{fontSize:12,color:C.mt,marginTop:2}},'Bestand: '+i.qty+' '+(i.unit||'')+' · Min: '+i.min)),
+            React.createElement('span',{style:{color:i.qty<=0?C.dg:C.wn,fontWeight:700,fontSize:13}},i.qty<=0?'LEER':'Niedrig')
           );})
         ),
-        React.createElement('div',{style:{background:C.sf,border:'1px solid '+C.br,borderRadius:10,padding:18}},
-          React.createElement('div',{style:{fontSize:16,fontWeight:700,marginBottom:13}},'Letzte Buchungen'),
-          [...data.log].reverse().slice(0,8).length===0
+        React.createElement('div',{style:{background:C.sf,border:'1px solid '+C.br,borderRadius:12,padding:'14px 16px'}},
+          React.createElement('div',{style:{fontSize:15,fontWeight:700,marginBottom:12}},'Letzte Buchungen'),
+          [...data.log].reverse().slice(0,6).length===0
             ?React.createElement('div',{style:{color:C.mt,fontSize:14}},'Noch keine Buchungen.')
-            :React.createElement('div',{style:{overflowX:'auto'}},
-              React.createElement('table',{style:{width:'100%',borderCollapse:'collapse',fontSize:13}},
-                React.createElement('thead',null,React.createElement('tr',null,['Zeit','Artikel','Aktion','Benutzer'].map(h=>React.createElement('th',{key:h,style:{textAlign:'left',padding:'4px 6px',color:C.mt,fontWeight:600}},h)))),
-                React.createElement('tbody',null,[...data.log].reverse().slice(0,8).map((l,i)=>React.createElement('tr',{key:i},
-                  React.createElement('td',{style:{padding:'4px 6px',color:C.mt}},new Date(l.ts).toLocaleString('de-AT')),
-                  React.createElement('td',{style:{padding:'4px 6px'}},l.item),
-                  React.createElement('td',{style:{padding:'4px 6px'}},l.action),
-                  React.createElement('td',{style:{padding:'4px 6px',color:C.mt}},l.user)
-                )))
-              )
-            )
+            :[...data.log].reverse().slice(0,6).map((l,i)=>React.createElement('div',{key:i,style:{padding:'8px 0',borderBottom:'1px solid '+C.br,fontSize:13}},
+                React.createElement('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center'}},
+                  React.createElement('div',{style:{fontWeight:600}},l.item),
+                  React.createElement('div',{style:{color:C.mt,fontSize:12}},l.user)
+                ),
+                React.createElement('div',{style:{color:C.mt,fontSize:12,marginTop:2}},l.action+' · '+new Date(l.ts).toLocaleString('de-AT'))
+              ))
         )
       ),
 
       // LAGER
       pg===1&&React.createElement('div',null,
-        React.createElement('div',{style:{display:'flex',gap:8,marginBottom:13,flexWrap:'wrap',alignItems:'center'}},
-          React.createElement('div',{style:{flex:1,minWidth:160,position:'relative'}},
-            React.createElement('span',{style:{position:'absolute',left:9,top:'50%',transform:'translateY(-50%)',color:C.mt}},'🔍'),
-            React.createElement('input',{style:{...INP,paddingLeft:32},placeholder:'Suchen…',value:srch,onChange:e=>setSrch(e.target.value)})
+        React.createElement('div',{style:{marginBottom:12}},
+          React.createElement('div',{style:{position:'relative',marginBottom:8}},
+            React.createElement('span',{style:{position:'absolute',left:12,top:'50%',transform:'translateY(-50%)',color:C.mt,fontSize:16}},'🔍'),
+            React.createElement('input',{style:{...INP,paddingLeft:40},placeholder:'Artikel suchen…',value:srch,onChange:e=>setSrch(e.target.value)})
           ),
-          React.createElement('select',{style:{...INP,width:'auto',cursor:'pointer'},value:cf,onChange:e=>setCF2(e.target.value)},
-            React.createElement('option',{value:''},'Alle Kategorien'),
-            data.cats.map(c=>React.createElement('option',{key:c.id,value:c.id},c.icon+' '+c.name))
-          ),
-          React.createElement('select',{style:{...INP,width:'auto',cursor:'pointer'},value:sf,onChange:e=>setSF2(e.target.value)},
-            React.createElement('option',{value:''},'Alle Status'),
-            React.createElement('option',{value:'ok'},'✅ OK'),
-            React.createElement('option',{value:'low'},'⚠️ Niedrig'),
-            React.createElement('option',{value:'out'},'❌ Leer')
-          ),
-          canEdit&&React.createElement('button',{onClick:()=>openIM(null),style:{...BTN,background:C.ac,color:'#fff',padding:'10px 16px',whiteSpace:'nowrap'}},'+ Artikel')
-        ),
-        React.createElement('div',{style:{overflowX:'auto',borderRadius:10,border:'1px solid '+C.br}},
-          React.createElement('table',{style:{width:'100%',borderCollapse:'collapse',fontSize:14}},
-            React.createElement('thead',null,React.createElement('tr',null,
-              ['Artikel','Kategorie','Bestand','Einheit','Min.','Status','Standort',...(canEdit?['Aktionen']:[])].map(h=>
-                React.createElement('th',{key:h,style:{background:C.cd,color:C.mt,fontSize:11,textTransform:'uppercase',padding:'10px 12px',textAlign:'left',fontWeight:600,borderBottom:'1px solid '+C.br}},h)
-              )
-            )),
-            React.createElement('tbody',null,
-              fitems.length===0
-                ?React.createElement('tr',null,React.createElement('td',{colSpan:8,style:{textAlign:'center',padding:32,color:C.mt}},'Keine Artikel gefunden.'))
-                :fitems.map(i=>{
-                  const cat=data.cats.find(c=>c.id===i.cid),st=i.qty<=0?'out':i.qty<=i.min?'low':'ok',qC={ok:C.ok,low:C.wn,out:C.dg}[st];
-                  return React.createElement('tr',{key:i.id},
-                    React.createElement('td',{style:{padding:'10px 12px',borderBottom:'1px solid '+C.br}},React.createElement('strong',null,i.name),i.sku&&React.createElement('span',null,React.createElement('br'),React.createElement('small',{style:{color:C.mt}},i.sku))),
-                    React.createElement('td',{style:{padding:'10px 12px',borderBottom:'1px solid '+C.br}},cat?cat.icon+' '+cat.name:'—'),
-                    React.createElement('td',{style:{padding:'10px 12px',borderBottom:'1px solid '+C.br,color:qC,fontWeight:700}},i.qty),
-                    React.createElement('td',{style:{padding:'10px 12px',borderBottom:'1px solid '+C.br}},i.unit||'—'),
-                    React.createElement('td',{style:{padding:'10px 12px',borderBottom:'1px solid '+C.br}},i.min),
-                    React.createElement('td',{style:{padding:'10px 12px',borderBottom:'1px solid '+C.br}},React.createElement(Badge,{qty:i.qty,min:i.min})),
-                    React.createElement('td',{style:{padding:'10px 12px',borderBottom:'1px solid '+C.br}},i.loc||'—'),
-                    canEdit&&React.createElement('td',{style:{padding:'10px 12px',borderBottom:'1px solid '+C.br}},
-                      React.createElement('div',{style:{display:'flex',gap:5}},
-                        React.createElement('button',{onClick:()=>{setAM(i);setAF({type:'add',qty:'',reason:''});},style:{...BTN,background:C.br,color:C.tx,padding:'5px 10px',fontSize:13}},'±'),
-                        React.createElement('button',{onClick:()=>openIM(i),style:{...BTN,background:C.br,color:C.tx,padding:'5px 10px',fontSize:13}},'✏️'),
-                        isAdm&&React.createElement('button',{onClick:()=>setDM({type:'item',id:i.id,label:i.name}),style:{...BTN,background:C.dg,color:'#fff',padding:'5px 10px',fontSize:13}},'🗑')
-                      )
-                    )
-                  );
-                })
+          React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}},
+            React.createElement('select',{style:{...INP,cursor:'pointer'},value:catF,onChange:e=>setCatF(e.target.value)},
+              React.createElement('option',{value:''},'Alle Kategorien'),
+              data.cats.map(c=>React.createElement('option',{key:c.id,value:c.id},c.icon+' '+c.name))
+            ),
+            React.createElement('select',{style:{...INP,cursor:'pointer'},value:stF,onChange:e=>setStF(e.target.value)},
+              React.createElement('option',{value:''},'Alle Status'),
+              React.createElement('option',{value:'ok'},'✅ OK'),
+              React.createElement('option',{value:'low'},'⚠️ Niedrig'),
+              React.createElement('option',{value:'out'},'❌ Leer')
             )
           )
-        )
+        ),
+        canEdit&&React.createElement('button',{
+          onClick:()=>openIM(null),
+          style:{...BTN,background:C.ac,color:'#fff',width:'100%',marginBottom:12},
+        },'+ Neuer Artikel'),
+        fitems.length===0
+          ?React.createElement('div',{style:{textAlign:'center',padding:40,color:C.mt}},'Keine Artikel gefunden.')
+          :fitems.map(i=>{
+            const cat=data.cats.find(c=>c.id===i.cid),st=i.qty<=0?'out':i.qty<=i.min?'low':'ok',qC={ok:C.ok,low:C.wn,out:C.dg}[st];
+            return React.createElement('div',{key:i.id,style:{background:C.sf,border:'1px solid '+(st!=='ok'?qC:C.br),borderRadius:12,padding:'14px 16px',marginBottom:10}},
+              React.createElement('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:8}},
+                React.createElement('div',{style:{flex:1}},
+                  React.createElement('div',{style:{fontWeight:700,fontSize:15}},i.name),
+                  React.createElement('div',{style:{fontSize:13,color:C.mt,marginTop:2}},
+                    (cat?cat.icon+' '+cat.name:'')+(i.loc?' · '+i.loc:'')+(i.sku?' · '+i.sku:'')
+                  )
+                ),
+                React.createElement(Badge,{qty:i.qty,min:i.min})
+              ),
+              React.createElement('div',{style:{display:'flex',alignItems:'center',gap:12,marginBottom:canEdit?10:0}},
+                React.createElement('div',{style:{fontSize:22,fontWeight:700,color:qC}},i.qty),
+                React.createElement('div',{style:{fontSize:14,color:C.mt}},i.unit||''),
+                React.createElement('div',{style:{fontSize:13,color:C.mt,marginLeft:'auto'}},'Min: '+i.min)
+              ),
+              canEdit&&React.createElement('div',{style:{display:'flex',gap:8}},
+                React.createElement('button',{
+                  onClick:()=>{setAdjItem(i);setAF({type:'add',qty:'',reason:''});},
+                  style:{...BTN,background:C.ac,color:'#fff',flex:2,padding:'10px',fontSize:15},
+                },'± Buchen'),
+                React.createElement('button',{
+                  onClick:()=>openIM(i),
+                  style:{...BTN,background:C.cd,color:C.tx,flex:1,padding:'10px',fontSize:15},
+                },'✏️'),
+                isAdm&&React.createElement('button',{
+                  onClick:()=>setDelM({type:'item',id:i.id,label:i.name}),
+                  style:{...BTN,background:C.cd,color:C.dg,flex:1,padding:'10px',fontSize:15},
+                },'🗑')
+              )
+            );
+          })
       ),
 
       // ALARME
       pg===2&&React.createElement('div',null,
-        React.createElement('div',{style:{fontSize:16,fontWeight:700,marginBottom:13}},'🔔 Lageralarme'),
+        React.createElement('div',{style:{fontSize:16,fontWeight:700,marginBottom:14}},'🔔 Lageralarme'),
         alts.length===0
-          ?React.createElement('div',{style:{textAlign:'center',padding:40,color:C.mt}},React.createElement('div',{style:{fontSize:40,marginBottom:8}},'✅'),React.createElement('div',null,'Alle Bestände ausreichend.'))
+          ?React.createElement('div',{style:{textAlign:'center',padding:48,color:C.mt}},React.createElement('div',{style:{fontSize:48,marginBottom:12}},'✅'),React.createElement('div',{style:{fontSize:16}},'Alle Bestände ausreichend.'))
           :alts.map(i=>{
             const cat=data.cats.find(c=>c.id===i.cid),out=i.qty<=0;
-            return React.createElement('div',{key:i.id,style:{background:C.sf,border:'1px solid '+(out?C.dg:C.wn),borderRadius:10,padding:18,marginBottom:10}},
-              React.createElement('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:10}},
+            return React.createElement('div',{key:i.id,style:{background:C.sf,border:'1px solid '+(out?C.dg:C.wn),borderRadius:12,padding:'14px 16px',marginBottom:10}},
+              React.createElement('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:8}},
                 React.createElement('div',null,
                   React.createElement('div',{style:{fontSize:15,fontWeight:700}},( cat?cat.icon+' ':'')+i.name),
-                  React.createElement('div',{style:{color:C.mt,fontSize:12,marginTop:3}},(cat?cat.name:'')+(i.loc?' · '+i.loc:''))
+                  React.createElement('div',{style:{fontSize:13,color:C.mt,marginTop:2}},( cat?cat.name:'')+(i.loc?' · '+i.loc:''))
                 ),
                 React.createElement(Badge,{qty:i.qty,min:i.min})
               ),
-              React.createElement('div',{style:{marginTop:10,display:'flex',gap:16,fontSize:13,flexWrap:'wrap'}},
-                React.createElement('div',null,'Bestand: ',React.createElement('strong',{style:{color:out?C.dg:C.wn}},i.qty+' '+(i.unit||''))),
-                React.createElement('div',null,'Mindest: ',React.createElement('strong',null,i.min+' '+(i.unit||''))),
-                React.createElement('div',null,'Fehlt: ',React.createElement('strong',null,Math.max(0,i.min-i.qty)+' '+(i.unit||'')))
+              React.createElement('div',{style:{display:'flex',gap:16,fontSize:14,marginBottom:canEdit?12:0}},
+                React.createElement('div',null,'Ist: ',React.createElement('strong',{style:{color:out?C.dg:C.wn}},i.qty+' '+(i.unit||''))),
+                React.createElement('div',null,'Min: ',React.createElement('strong',null,i.min+' '+(i.unit||''))),
+                React.createElement('div',null,'Fehlt: ',React.createElement('strong',{style:{color:C.dg}},Math.max(0,i.min-i.qty)+' '+(i.unit||'')))
               ),
-              canEdit&&React.createElement('div',{style:{marginTop:10}},
-                React.createElement('button',{onClick:()=>{setAM(i);setAF({type:'add',qty:'',reason:''});},style:{...BTN,background:C.ac,color:'#fff',padding:'7px 14px',fontSize:13}},'± Bestand anpassen')
-              )
+              canEdit&&React.createElement('button',{
+                onClick:()=>{setAdjItem(i);setAF({type:'add',qty:'',reason:''});},
+                style:{...BTN,background:C.ac,color:'#fff',width:'100%',padding:'11px'},
+              },'± Bestand anpassen')
             );
           })
       ),
 
       // KATEGORIEN
       pg===3&&isAdm&&React.createElement('div',null,
-        React.createElement('div',{style:{display:'flex',alignItems:'center',marginBottom:13}},
-          React.createElement('div',{style:{fontSize:16,fontWeight:700,flex:1}},'🗂 Kategorien'),
-          React.createElement('button',{onClick:()=>{setCF3({name:'',icon:''});setCMod(true);},style:{...BTN,background:C.ac,color:'#fff',padding:'7px 14px',fontSize:13}},'+ Kategorie')
-        ),
-        data.cats.map(c=>React.createElement('div',{key:c.id,style:{background:C.cd,border:'1px solid '+C.br,borderRadius:8,padding:'12px 15px',display:'flex',alignItems:'center',gap:10,marginBottom:8}},
-          React.createElement('div',{style:{width:36,height:36,borderRadius:'50%',background:C.sf,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18}},c.icon),
+        React.createElement('button',{onClick:()=>{setCF({name:'',icon:''});setCMod(true);},style:{...BTN,background:C.ac,color:'#fff',width:'100%',marginBottom:14}},'+ Neue Kategorie'),
+        data.cats.map(c=>React.createElement('div',{key:c.id,style:{background:C.sf,border:'1px solid '+C.br,borderRadius:12,padding:'14px 16px',display:'flex',alignItems:'center',gap:12,marginBottom:10}},
+          React.createElement('div',{style:{fontSize:28}},c.icon),
           React.createElement('div',{style:{flex:1}},
-            React.createElement('div',{style:{fontWeight:600,fontSize:14}},c.name),
-            React.createElement('div',{style:{fontSize:12,color:C.mt}},data.items.filter(i=>i.cid===c.id).length+' Artikel')
+            React.createElement('div',{style:{fontWeight:600,fontSize:15}},c.name),
+            React.createElement('div',{style:{fontSize:13,color:C.mt}},data.items.filter(i=>i.cid===c.id).length+' Artikel')
           ),
-          React.createElement('button',{onClick:()=>setDM({type:'cat',id:c.id,label:c.name}),style:{...BTN,background:C.dg,color:'#fff',padding:'5px 10px',fontSize:13}},'🗑')
+          React.createElement('button',{onClick:()=>setDelM({type:'cat',id:c.id,label:c.name}),style:{...BTN,background:C.cd,color:C.dg,padding:'8px 14px',fontSize:20}},'🗑')
         ))
       ),
 
       // BENUTZER
       pg===4&&isAdm&&React.createElement('div',null,
-        React.createElement('div',{style:{display:'flex',alignItems:'center',marginBottom:13}},
-          React.createElement('div',{style:{fontSize:16,fontWeight:700,flex:1}},'👥 Benutzer'),
-          React.createElement('button',{onClick:()=>{setUF({username:'',password:'',display:'',role:'user'});setUMod(true);},style:{...BTN,background:C.ac,color:'#fff',padding:'7px 14px',fontSize:13}},'+ Benutzer')
-        ),
+        React.createElement('button',{onClick:()=>{setUF({username:'',password:'',display:'',role:'user'});setUMod(true);},style:{...BTN,background:C.ac,color:'#fff',width:'100%',marginBottom:14}},'+ Neuer Benutzer'),
         data.users.map(u=>{
           const cls={admin:[C.ac,'rgba(249,115,22,.2)'],user:['#3b82f6','rgba(59,130,246,.2)'],viewer:[C.mt,'rgba(124,130,160,.2)']}[u.role];
           const rl={admin:'Admin',user:'Mitarbeiter',viewer:'Betrachter'}[u.role];
-          return React.createElement('div',{key:u.id,style:{background:C.cd,border:'1px solid '+C.br,borderRadius:8,padding:'12px 15px',display:'flex',alignItems:'center',gap:10,marginBottom:8}},
-            React.createElement('div',{style:{width:36,height:36,borderRadius:'50%',background:cls[1],display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,fontSize:14,color:cls[0]}},( u.display||u.username).charAt(0).toUpperCase()),
+          return React.createElement('div',{key:u.id,style:{background:C.sf,border:'1px solid '+C.br,borderRadius:12,padding:'14px 16px',display:'flex',alignItems:'center',gap:12,marginBottom:10}},
+            React.createElement('div',{style:{width:42,height:42,borderRadius:'50%',background:cls[1],display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,fontSize:16,color:cls[0]}},( u.display||u.username).charAt(0).toUpperCase()),
             React.createElement('div',{style:{flex:1}},
-              React.createElement('div',{style:{fontWeight:600,fontSize:14}},u.display||u.username),
-              React.createElement('div',{style:{fontSize:12,color:C.mt}},u.username+' · '+rl)
+              React.createElement('div',{style:{fontWeight:600,fontSize:15}},u.display||u.username),
+              React.createElement('div',{style:{fontSize:13,color:C.mt}},u.username+' · '+rl)
             ),
             u.id!==me.id
-              ?React.createElement('button',{onClick:()=>setDM({type:'user',id:u.id,label:u.username}),style:{...BTN,background:C.dg,color:'#fff',padding:'5px 10px',fontSize:13}},'🗑')
-              :React.createElement('span',{style:{color:C.mt,fontSize:12}},'Eigenes Konto')
+              ?React.createElement('button',{onClick:()=>setDelM({type:'user',id:u.id,label:u.username}),style:{...BTN,background:C.cd,color:C.dg,padding:'8px 14px',fontSize:20}},'🗑')
+              :React.createElement('span',{style:{color:C.mt,fontSize:12}},'Ich')
           );
         })
       )
     ),
 
-    // MODALS
-    React.createElement(Modal,{open:iM,onClose:()=>setIM(false),title:eI?'Artikel bearbeiten':'Artikel hinzufügen',ch:React.createElement('div',null,
-      React.createElement(Fld,{label:'NAME',ch:React.createElement('input',{style:INP,value:iF.name,onChange:e=>setIF({...iF,name:e.target.value}),placeholder:'z.B. Schrauben M8'})}),
-      React.createElement(R2,{ch:[
-        React.createElement(Fld,{key:'cat',label:'KATEGORIE',ch:React.createElement('select',{style:INP,value:iF.cid,onChange:e=>setIF({...iF,cid:e.target.value})},data.cats.map(c=>React.createElement('option',{key:c.id,value:c.id},c.icon+' '+c.name)))}),
-        React.createElement(Fld,{key:'loc',label:'STANDORT',ch:React.createElement('input',{style:INP,value:iF.loc,onChange:e=>setIF({...iF,loc:e.target.value}),placeholder:'Regal A1'})})
-      ]}),
-      React.createElement(R2,{ch:[
-        React.createElement(Fld,{key:'qty',label:'BESTAND',ch:React.createElement('input',{style:INP,type:'number',min:'0',value:iF.qty,onChange:e=>setIF({...iF,qty:e.target.value}),placeholder:'0'})})  ,
-        React.createElement(Fld,{key:'unit',label:'EINHEIT',ch:React.createElement('input',{style:INP,value:iF.unit,onChange:e=>setIF({...iF,unit:e.target.value}),placeholder:'Stk / kg / m'})})
-      ]}),
-      React.createElement(R2,{ch:[
-        React.createElement(Fld,{key:'min',label:'MIN. BESTAND',ch:React.createElement('input',{style:INP,type:'number',min:'0',value:iF.min,onChange:e=>setIF({...iF,min:e.target.value}),placeholder:'0'})})  ,
-        React.createElement(Fld,{key:'sku',label:'ARTIKEL-NR.',ch:React.createElement('input',{style:INP,value:iF.sku,onChange:e=>setIF({...iF,sku:e.target.value}),placeholder:'optional'})})
-      ]}),
-      React.createElement(Fld,{label:'NOTIZ',ch:React.createElement('input',{style:INP,value:iF.note,onChange:e=>setIF({...iF,note:e.target.value}),placeholder:'optional'})}),
-      React.createElement('div',{style:{display:'flex',gap:8,justifyContent:'flex-end',marginTop:16}},
-        React.createElement('button',{onClick:()=>setIM(false),style:{...BTN,background:C.br,color:C.tx}},'Abbrechen'),
-        React.createElement('button',{onClick:saveI,style:{...BTN,background:C.ac,color:'#fff'}},'Speichern')
-      )
-    )}),
+    // BOTTOM NAV
+    React.createElement('div',{style:{
+      position:'fixed',bottom:0,left:0,right:0,
+      background:C.sf,borderTop:'1px solid '+C.br,
+      display:'flex',zIndex:100,
+      paddingBottom:'env(safe-area-inset-bottom)',
+    }},
+      navItems.map((n,i)=>React.createElement('div',{
+        key:i,
+        onClick:()=>setPg(i),
+        style:{
+          flex:1,display:'flex',flexDirection:'column',alignItems:'center',
+          justifyContent:'center',padding:'10px 4px',
+          color:pg===i?C.ac:C.mt,cursor:'pointer',
+          position:'relative',fontSize:13,gap:3,
+          borderTop:pg===i?'2px solid '+C.ac:'2px solid transparent',
+        },
+      },
+        React.createElement('div',{style:{fontSize:22,lineHeight:1,position:'relative'}},
+          n.icon,
+          n.badge>0&&React.createElement('span',{style:{
+            position:'absolute',top:-4,right:-8,
+            background:C.dg,color:'#fff',fontSize:10,fontWeight:700,
+            borderRadius:10,minWidth:16,padding:'0 3px',
+            textAlign:'center',lineHeight:'16px',
+          }},n.badge)
+        ),
+        React.createElement('div',{style:{fontSize:11,fontWeight:pg===i?700:400}},n.label)
+      ))
+    ),
 
-    React.createElement(Modal,{open:!!aM,onClose:()=>setAM(null),title:aM?.name||'',ch:React.createElement('div',null,
-      React.createElement('div',{style:{color:C.mt,fontSize:13,marginBottom:13}},'Bestand: '+(aM?.qty||0)+' '+(aM?.unit||'')),
-      React.createElement(R2,{ch:[
-        React.createElement(Fld,{key:'t',label:'ART',ch:React.createElement('select',{style:INP,value:aF.type,onChange:e=>setAF({...aF,type:e.target.value})},React.createElement('option',{value:'add'},'+ Zugang'),React.createElement('option',{value:'sub'},'- Abgang'),React.createElement('option',{value:'set'},'= Setzen auf'))})  ,
-        React.createElement(Fld,{key:'q',label:'MENGE',ch:React.createElement('input',{style:INP,type:'number',min:'0',value:aF.qty,onChange:e=>setAF({...aF,qty:e.target.value}),placeholder:'0'})})
-      ]}),
-      React.createElement(Fld,{label:'GRUND',ch:React.createElement('input',{style:INP,value:aF.reason,onChange:e=>setAF({...aF,reason:e.target.value}),placeholder:'z.B. Lieferung, Verbrauch'})})  ,
-      React.createElement('div',{style:{display:'flex',gap:8,justifyContent:'flex-end',marginTop:16}},
-        React.createElement('button',{onClick:()=>setAM(null),style:{...BTN,background:C.br,color:C.tx}},'Abbrechen'),
-        React.createElement('button',{onClick:saveA,style:{...BTN,background:C.ac,color:'#fff'}},'Buchen')
+    // ARTIKEL MODAL
+    React.createElement(Modal,{open:iMod,onClose:()=>setIMod(false),title:eItem?'Artikel bearbeiten':'Neuer Artikel'},
+      React.createElement(Fld,{label:'NAME'},React.createElement('input',{style:INP,value:iF.name,onChange:e=>setIF({...iF,name:e.target.value}),placeholder:'z.B. Schrauben M8'})),
+      React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}},
+        React.createElement(Fld,{label:'KATEGORIE'},React.createElement('select',{style:INP,value:iF.cid,onChange:e=>setIF({...iF,cid:e.target.value})},data.cats.map(c=>React.createElement('option',{key:c.id,value:c.id},c.icon+' '+c.name)))),
+        React.createElement(Fld,{label:'STANDORT'},React.createElement('input',{style:INP,value:iF.loc,onChange:e=>setIF({...iF,loc:e.target.value}),placeholder:'Regal A1'}))
+      ),
+      React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}},
+        React.createElement(Fld,{label:'BESTAND'},React.createElement('input',{style:INP,type:'number',min:'0',value:iF.qty,onChange:e=>setIF({...iF,qty:e.target.value}),placeholder:'0'})),
+        React.createElement(Fld,{label:'EINHEIT'},React.createElement('input',{style:INP,value:iF.unit,onChange:e=>setIF({...iF,unit:e.target.value}),placeholder:'Stk / kg / m'}))
+      ),
+      React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}},
+        React.createElement(Fld,{label:'MIN. BESTAND'},React.createElement('input',{style:INP,type:'number',min:'0',value:iF.min,onChange:e=>setIF({...iF,min:e.target.value}),placeholder:'0'})),
+        React.createElement(Fld,{label:'ARTIKEL-NR.'},React.createElement('input',{style:INP,value:iF.sku,onChange:e=>setIF({...iF,sku:e.target.value}),placeholder:'optional'}))
+      ),
+      React.createElement(Fld,{label:'NOTIZ'},React.createElement('input',{style:INP,value:iF.note,onChange:e=>setIF({...iF,note:e.target.value}),placeholder:'optional'})),
+      React.createElement('div',{style:{display:'flex',gap:10,marginTop:8}},
+        React.createElement('button',{onClick:()=>setIMod(false),style:{...BTN,background:C.cd,color:C.tx,flex:1}},'Abbrechen'),
+        React.createElement('button',{onClick:saveI,style:{...BTN,background:C.ac,color:'#fff',flex:2}},'Speichern')
       )
-    )}),
+    ),
 
-    React.createElement(Modal,{open:cMod,onClose:()=>setCMod(false),title:'Kategorie',ch:React.createElement('div',null,
-      React.createElement(Fld,{label:'NAME',ch:React.createElement('input',{style:INP,value:cF.name,onChange:e=>setCF3({...cF,name:e.target.value}),placeholder:'z.B. Werkzeug'})}),
-      React.createElement(Fld,{label:'ICON (Emoji)',ch:React.createElement('input',{style:INP,value:cF.icon,onChange:e=>setCF3({...cF,icon:e.target.value}),placeholder:'🔧',maxLength:4})}),
-      React.createElement('div',{style:{display:'flex',gap:8,justifyContent:'flex-end',marginTop:16}},
-        React.createElement('button',{onClick:()=>setCMod(false),style:{...BTN,background:C.br,color:C.tx}},'Abbrechen'),
-        React.createElement('button',{onClick:saveC,style:{...BTN,background:C.ac,color:'#fff'}},'Speichern')
+    // BUCHEN MODAL
+    React.createElement(Modal,{open:!!adjItem,onClose:()=>setAdjItem(null),title:adjItem?.name||''},
+      React.createElement('div',{style:{background:C.cd,borderRadius:10,padding:'12px 14px',marginBottom:14,fontSize:14,color:C.mt}},'Aktueller Bestand: ',React.createElement('strong',{style:{color:C.tx,fontSize:18}},adjItem?.qty||0),' ',(adjItem?.unit||'')),
+      React.createElement(Fld,{label:'ART'},
+        React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:8}},
+          [['add','➕ Zugang'],['sub','➖ Abgang'],['set','🔄 Setzen']].map(([v,l])=>
+            React.createElement('button',{key:v,onClick:()=>setAF({...aF,type:v}),style:{...BTN,padding:'11px 8px',fontSize:13,background:aF.type===v?C.ac:C.cd,color:aF.type===v?'#fff':C.tx}},l)
+          )
+        )
+      ),
+      React.createElement(Fld,{label:'MENGE'},React.createElement('input',{style:{...INP,fontSize:24,fontWeight:700,textAlign:'center',padding:'14px'},type:'number',min:'0',value:aF.qty,onChange:e=>setAF({...aF,qty:e.target.value}),placeholder:'0'})),
+      React.createElement(Fld,{label:'GRUND (optional)'},React.createElement('input',{style:INP,value:aF.reason,onChange:e=>setAF({...aF,reason:e.target.value}),placeholder:'z.B. Lieferung, Verbrauch'})),
+      React.createElement('div',{style:{display:'flex',gap:10,marginTop:8}},
+        React.createElement('button',{onClick:()=>setAdjItem(null),style:{...BTN,background:C.cd,color:C.tx,flex:1}},'Abbrechen'),
+        React.createElement('button',{onClick:saveA,style:{...BTN,background:C.ac,color:'#fff',flex:2}},'✅ Buchen')
       )
-    )}),
+    ),
 
-    React.createElement(Modal,{open:uMod,onClose:()=>setUMod(false),title:'Benutzer anlegen',ch:React.createElement('div',null,
-      React.createElement(Fld,{label:'BENUTZERNAME',ch:React.createElement('input',{style:INP,value:uF.username,onChange:e=>setUF({...uF,username:e.target.value}),placeholder:'max.muster'})}),
-      React.createElement(Fld,{label:'PASSWORT',ch:React.createElement('input',{style:INP,type:'password',value:uF.password,onChange:e=>setUF({...uF,password:e.target.value}),placeholder:'Passwort'})}),
-      React.createElement(Fld,{label:'ANZEIGENAME',ch:React.createElement('input',{style:INP,value:uF.display,onChange:e=>setUF({...uF,display:e.target.value}),placeholder:'Max Muster'})}),
-      React.createElement(Fld,{label:'ROLLE',ch:React.createElement('select',{style:INP,value:uF.role,onChange:e=>setUF({...uF,role:e.target.value})},React.createElement('option',{value:'viewer'},'Betrachter – nur lesen'),React.createElement('option',{value:'user'},'Mitarbeiter – buchen'),React.createElement('option',{value:'admin'},'Admin – voller Zugriff'))}),
-      React.createElement('div',{style:{display:'flex',gap:8,justifyContent:'flex-end',marginTop:16}},
-        React.createElement('button',{onClick:()=>setUMod(false),style:{...BTN,background:C.br,color:C.tx}},'Abbrechen'),
-        React.createElement('button',{onClick:saveU,style:{...BTN,background:C.ac,color:'#fff'}},'Speichern')
+    // KATEGORIE MODAL
+    React.createElement(Modal,{open:cMod,onClose:()=>setCMod(false),title:'Neue Kategorie'},
+      React.createElement(Fld,{label:'NAME'},React.createElement('input',{style:INP,value:cF.name,onChange:e=>setCF({...cF,name:e.target.value}),placeholder:'z.B. Werkzeug'})),
+      React.createElement(Fld,{label:'ICON (Emoji)'},React.createElement('input',{style:INP,value:cF.icon,onChange:e=>setCF({...cF,icon:e.target.value}),placeholder:'🔧',maxLength:4})),
+      React.createElement('div',{style:{display:'flex',gap:10,marginTop:8}},
+        React.createElement('button',{onClick:()=>setCMod(false),style:{...BTN,background:C.cd,color:C.tx,flex:1}},'Abbrechen'),
+        React.createElement('button',{onClick:saveC,style:{...BTN,background:C.ac,color:'#fff',flex:2}},'Speichern')
       )
-    )}),
+    ),
 
-    React.createElement(Modal,{open:!!dM,onClose:()=>setDM(null),title:'Löschen?',ch:React.createElement('div',null,
-      React.createElement('p',{style:{color:C.mt,fontSize:14,marginBottom:16}},'„'+(dM?.label||'')+'" wirklich löschen?'),
-      React.createElement('div',{style:{display:'flex',gap:8,justifyContent:'flex-end'}},
-        React.createElement('button',{onClick:()=>setDM(null),style:{...BTN,background:C.br,color:C.tx}},'Abbrechen'),
-        React.createElement('button',{onClick:doDel,style:{...BTN,background:C.dg,color:'#fff'}},'Löschen')
+    // BENUTZER MODAL
+    React.createElement(Modal,{open:uMod,onClose:()=>setUMod(false),title:'Neuer Benutzer'},
+      React.createElement(Fld,{label:'BENUTZERNAME'},React.createElement('input',{style:INP,value:uF.username,onChange:e=>setUF({...uF,username:e.target.value}),placeholder:'max.muster',autoCapitalize:'none',autoCorrect:'off'})),
+      React.createElement(Fld,{label:'PASSWORT'},React.createElement('input',{style:INP,type:'password',value:uF.password,onChange:e=>setUF({...uF,password:e.target.value}),placeholder:'Passwort'})),
+      React.createElement(Fld,{label:'ANZEIGENAME'},React.createElement('input',{style:INP,value:uF.display,onChange:e=>setUF({...uF,display:e.target.value}),placeholder:'Max Muster'})),
+      React.createElement(Fld,{label:'ROLLE'},React.createElement('select',{style:INP,value:uF.role,onChange:e=>setUF({...uF,role:e.target.value})},
+        React.createElement('option',{value:'viewer'},'👁 Betrachter – nur lesen'),
+        React.createElement('option',{value:'user'},'✏️ Mitarbeiter – buchen'),
+        React.createElement('option',{value:'admin'},'⚙️ Admin – voller Zugriff')
+      )),
+      React.createElement('div',{style:{display:'flex',gap:10,marginTop:8}},
+        React.createElement('button',{onClick:()=>setUMod(false),style:{...BTN,background:C.cd,color:C.tx,flex:1}},'Abbrechen'),
+        React.createElement('button',{onClick:saveU,style:{...BTN,background:C.ac,color:'#fff',flex:2}},'Speichern')
       )
-    )}),
+    ),
+
+    // LÖSCHEN MODAL
+    React.createElement(Modal,{open:!!delM,onClose:()=>setDelM(null),title:'Löschen?'},
+      React.createElement('div',{style:{fontSize:16,color:C.mt,marginBottom:20,textAlign:'center'}},'„'+(delM?.label||'')+'" wirklich löschen?'),
+      React.createElement('div',{style:{display:'flex',gap:10}},
+        React.createElement('button',{onClick:()=>setDelM(null),style:{...BTN,background:C.cd,color:C.tx,flex:1}},'Abbrechen'),
+        React.createElement('button',{onClick:doDel,style:{...BTN,background:C.dg,color:'#fff',flex:1}},'🗑 Löschen')
+      )
+    ),
 
     React.createElement(Toast,{msg:toast})
   );
