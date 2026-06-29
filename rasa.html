@@ -2,1098 +2,1231 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#8B0000">
-<title>RASA OG — Team App</title>
+<meta name="apple-mobile-web-app-title" content="RASA OG">
+<meta name="theme-color" content="#141410">
+<title>RASA OG – Team Portal</title>
 <style>
+*{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --rot:#8B0000;--rot2:#C0392B;--rot3:#FDEDED;
-  --navy:#1A3A5C;--navy2:#EBF5FB;
-  --gruen:#1A5E2A;--gruen2:#E8F5E9;
-  --orange:#E67E22;--oran2:#FEF5E7;
-  --lila:#7D3C98;
-  --dunkel:#1A1A1A;--grau1:#F8F8F8;--grau2:#EFEFEF;
-  --grau3:#CCCCCC;--grau4:#888888;
-  --shadow:0 2px 12px rgba(0,0,0,.10);
-  --radius:12px;--radius2:8px;
-  --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+  --bg:#141410;
+  --surface:#1e1e1a;
+  --card:#272722;
+  --border:#38382e;
+  --gold:#c9a84c;
+  --gold2:#e8c876;
+  --red:#8B0000;
+  --red2:#b22222;
+  --text:#f0ebe0;
+  --muted:#9a9070;
+  --green:#3d7a52;
+  --green2:#5aab6f;
+  --blue:#3a6a9a;
+  --radius:10px;
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:var(--font);background:var(--grau1);color:var(--dunkel);min-height:100vh;overscroll-behavior:none}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;font-size:15px;-webkit-tap-highlight-color:transparent}
+button{cursor:pointer;font-family:inherit;border:none;outline:none}
+button:active{opacity:.75}
+input,textarea,select{font-family:inherit;outline:none;font-size:16px !important}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 
-/* ── LOADING ── */
-#loadingOverlay{position:fixed;inset:0;background:linear-gradient(160deg,#8B0000,#1A3A5C);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
-.spinner{width:44px;height:44px;border:4px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
+/* ── SCREENS: alle versteckt, active macht sichtbar ── */
+#setup-screen{ display:none }
+#pin-screen{   display:none }
+#app-screen{   display:none }
 
-/* ── SETUP (Supabase Konfiguration) ── */
-#setupScreen{display:none;min-height:100vh;background:linear-gradient(160deg,#8B0000,#1A3A5C);padding:24px;align-items:center;justify-content:center;flex-direction:column}
-.setup-card{background:#fff;border-radius:20px;padding:28px 24px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.4)}
-.setup-card h2{font-size:18px;font-weight:800;margin-bottom:6px;color:var(--dunkel)}
-.setup-card p{font-size:13px;color:var(--grau4);margin-bottom:20px;line-height:1.6}
-.setup-step{background:var(--grau1);border-radius:10px;padding:12px 14px;margin-bottom:12px;font-size:13px;line-height:1.7;border-left:4px solid var(--rot)}
-.setup-step a{color:var(--rot);font-weight:700}
+#setup-screen.active{ display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px }
+#pin-screen.active{   display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px }
+#app-screen.active{   display:flex; flex-direction:column; min-height:100vh }
 
-/* ── LOGIN ── */
-#loginScreen{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#8B0000 0%,#C0392B 45%,#1A3A5C 100%);padding:24px}
-.login-logo{width:90px;height:90px;background:rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:12px;border:3px solid rgba(255,255,255,.3);font-size:40px}
-.login-title{font-size:30px;font-weight:800;color:#fff;letter-spacing:3px;margin-bottom:2px}
-.login-sub{font-size:12px;color:rgba(255,255,255,.65);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:36px}
-.login-card{background:#fff;border-radius:20px;padding:28px 24px;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
-.login-card h2{font-size:17px;font-weight:700;margin-bottom:20px;text-align:center}
-.user-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:18px}
-.user-btn{background:var(--grau1);border:2px solid var(--grau2);border-radius:10px;padding:12px 6px;cursor:pointer;text-align:center;transition:all .18s;font-family:var(--font)}
-.user-btn:active,.user-btn.active{border-color:var(--rot);background:var(--rot3)}
-.user-btn .av{width:42px;height:42px;border-radius:50%;margin:0 auto 7px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff}
-.user-btn .un{font-size:12px;font-weight:700}
-.user-btn .ur{font-size:10px;color:var(--grau4);margin-top:1px}
-.pw-wrap{position:relative;margin-bottom:12px}
-.pw-field{width:100%;border:2px solid var(--grau2);border-radius:10px;padding:12px 44px 12px 14px;font-size:16px;font-family:var(--font);outline:none;transition:border-color .18s}
-.pw-field:focus{border-color:var(--rot)}
-.pw-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:18px;cursor:pointer;color:var(--grau4)}
-.login-btn{width:100%;background:var(--rot);color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font)}
-.login-err{color:var(--rot2);font-size:13px;text-align:center;margin-top:8px;min-height:18px}
+/* ── LOGIN BOX ── */
+.login-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 22px;width:100%;max-width:400px}
+.logo-row{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+.logo-icon{width:48px;height:48px;background:var(--red);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:#fff;flex-shrink:0}
+.logo-text{font-size:20px;font-weight:900;color:var(--gold2);letter-spacing:.04em}
+.logo-sub{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.field-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--gold);display:block;margin-bottom:5px}
+.field-input{background:var(--bg);border:1px solid var(--border);border-radius:7px;color:var(--text);padding:12px 13px;width:100%;margin-bottom:12px;display:block}
+.field-input:focus{border-color:var(--gold)}
+.btn-primary{background:var(--gold);color:#111;border-radius:8px;padding:13px 22px;font-weight:800;font-size:15px;width:100%;display:block;margin-bottom:8px}
+.btn-secondary{background:var(--surface);color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:11px 18px;font-size:13px;font-weight:600;width:100%;display:block;text-align:center}
+.partner-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.partner-btn{background:var(--card);border:2px solid var(--border);border-radius:10px;padding:16px 10px;text-align:center;font-weight:700;font-size:14px;color:var(--text);width:100%}
+.partner-btn:active{border-color:var(--gold);color:var(--gold)}
 
-/* ── APP ── */
-#app{display:none}
-.topbar{position:sticky;top:0;z-index:100;background:var(--rot);color:#fff;padding:0 14px;height:54px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.2)}
-.topbar-logo{font-size:18px;font-weight:800;letter-spacing:2px}
-.topbar-right{display:flex;align-items:center;gap:7px}
-.sync-dot{width:8px;height:8px;border-radius:50%;transition:background .3s}
-.sync-dot.online{background:#4CAF50}
-.sync-dot.syncing{background:var(--orange);animation:pulse 1s infinite}
-.sync-dot.offline{background:var(--grau3)}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.top-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid rgba(255,255,255,.35)}
-.logout-btn{background:rgba(255,255,255,.15);border:none;border-radius:6px;color:#fff;font-size:11px;padding:4px 9px;cursor:pointer;font-family:var(--font)}
-.sync-banner{font-size:12px;text-align:center;padding:6px 16px;display:none}
-.sync-banner.show{display:block}
-.sync-banner.offline{background:#FFF3E0;color:#E65100}
-.sync-banner.syncing{background:var(--navy2);color:var(--navy)}
-.sync-banner.ok{background:var(--gruen2);color:var(--gruen)}
+/* ── TOPBAR ── */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 14px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:200;flex-shrink:0}
+.topbar-logo{font-weight:900;font-size:15px;color:var(--gold2);letter-spacing:.04em;padding:13px 0}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:6px}
+.sync-btn{background:none;border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--muted);font-size:12px;font-weight:600}
+.sync-btn.syncing{color:var(--gold);border-color:var(--gold)}
+.sync-btn.ok{color:var(--green2);border-color:var(--green2)}
+.sync-btn.err{color:var(--red2);border-color:var(--red2)}
+.logout-btn{background:none;color:var(--muted);font-size:12px;padding:6px 8px}
+.user-badge{font-size:12px;color:var(--gold);font-weight:700}
 
-/* ── NAV ── */
-.nav-bar{position:fixed;bottom:0;left:0;right:0;z-index:100;background:#fff;border-top:1px solid var(--grau2);display:flex;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -2px 12px rgba(0,0,0,.07)}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 4px 5px;cursor:pointer;border:none;background:none;font-family:var(--font);gap:2px}
-.nav-btn .ni{font-size:22px;transition:transform .15s}
-.nav-btn .nl{font-size:10px;color:var(--grau4);font-weight:500}
-.nav-btn.active .nl{color:var(--rot);font-weight:700}
-.nav-btn.active .ni{transform:scale(1.18)}
+/* ── NAV TABS ── */
+.nav-tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex-shrink:0}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{background:none;border:none;border-bottom:2px solid transparent;padding:11px 15px;font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
+.nav-tab.active{border-bottom-color:var(--gold);color:var(--gold)}
 
-/* ── MAIN ── */
-.main{padding:14px 14px 84px;max-width:700px;margin:0 auto}
-.screen{display:none}
-.screen.active{display:block}
-.card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:12px}
-.card-title{font-size:14px;font-weight:700;margin-bottom:11px;display:flex;align-items:center;gap:7px}
+/* ── CONTENT ── */
+.content{flex:1;padding:14px;max-width:900px;width:100%;margin:0 auto;overflow-x:hidden}
+@media(max-width:600px){.content{padding-bottom:80px}}
 
-/* ── WELCOME ── */
-.welcome-card{background:linear-gradient(135deg,var(--rot),var(--navy));color:#fff;border-radius:var(--radius);padding:20px 18px;margin-bottom:12px}
-.welcome-card h2{font-size:20px;font-weight:800;margin-bottom:3px}
-.welcome-card p{font-size:12px;opacity:.8}
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
-.stat-card{background:#fff;border-radius:var(--radius);padding:14px;text-align:center;box-shadow:var(--shadow)}
-.stat-num{font-size:26px;font-weight:800}
-.stat-lbl{font-size:11px;color:var(--grau4);margin-top:1px}
-.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
-.quick-btn{background:#fff;border:2px solid var(--grau2);border-radius:var(--radius);padding:14px 10px;cursor:pointer;text-align:center;font-family:var(--font);transition:all .15s}
-.quick-btn:active{border-color:var(--rot);background:var(--rot3)}
-.quick-btn .qi{font-size:26px;margin-bottom:5px}
-.quick-btn .ql{font-size:12px;font-weight:600}
+/* ── NAV BOTTOM ON MOBILE ── */
+@media(max-width:600px){
+  .nav-tabs{position:fixed;bottom:0;left:0;right:0;z-index:150;border-top:1px solid var(--border);border-bottom:none}
+}
 
-/* ── REZEPTE ── */
-.search-bar{display:flex;gap:8px;margin-bottom:12px}
-.search-input{flex:1;border:2px solid var(--grau2);border-radius:10px;padding:10px 13px;font-size:14px;font-family:var(--font);outline:none}
-.search-input:focus{border-color:var(--rot)}
-.btn-add-big{background:var(--rot);color:#fff;border:none;border-radius:10px;padding:10px 15px;font-size:20px;cursor:pointer;font-weight:700}
-.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:3px;margin-bottom:12px;scrollbar-width:none}
-.chips::-webkit-scrollbar{display:none}
-.chip{white-space:nowrap;background:var(--grau2);border:none;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)}
-.chip.active{background:var(--rot);color:#fff}
-.rz-item{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:9px;overflow:hidden}
-.rz-header{padding:13px 14px;display:flex;align-items:center;gap:11px;cursor:pointer}
-.rz-img{width:52px;height:52px;border-radius:8px;background:var(--grau2);display:flex;align-items:center;justify-content:center;font-size:25px;flex-shrink:0;overflow:hidden}
-.rz-img img{width:100%;height:100%;object-fit:cover}
-.rz-info{flex:1;min-width:0}
-.rz-name{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rz-meta{font-size:11px;color:var(--grau4);display:flex;gap:8px;margin-top:2px;flex-wrap:wrap}
-.rz-kalk{text-align:right;flex-shrink:0}
-.vk-p{font-size:15px;font-weight:800;color:var(--gruen)}
-.ek-p{font-size:11px;color:var(--grau4)}
-.db-b{font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;display:inline-block;margin-top:1px}
-.db-gut{background:var(--gruen2);color:var(--gruen)}
-.db-ok{background:var(--oran2);color:var(--orange)}
-.db-low{background:var(--rot3);color:var(--rot2)}
-.rz-detail{display:none;padding:0 14px 14px;border-top:1px solid var(--grau2)}
-.rz-detail.open{display:block;padding-top:11px}
-.zt-title{font-size:12px;font-weight:700;margin:7px 0 5px;color:var(--navy)}
-.zt-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px dashed var(--grau2)}
-.kalk-box{background:var(--grau1);border-radius:8px;padding:10px 11px;margin-top:9px}
-.kb-row{display:flex;justify-content:space-between;font-size:12px;padding:2px 0}
-.kb-row.total{border-top:1px solid var(--grau3);margin-top:3px;padding-top:5px;font-weight:700;font-size:13px;color:var(--gruen)}
-.action-row{display:flex;gap:7px;margin-top:11px}
-.btn-s{flex:1;padding:8px;border-radius:8px;border:2px solid var(--grau2);background:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:4px}
-.btn-s.red{border-color:var(--rot3);color:var(--rot2)}
-.btn-s.blue{background:var(--rot);border-color:var(--rot);color:#fff}
+/* ── CARDS ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.card-accent-gold{border-left:3px solid var(--gold)}
+.card-accent-red{border-left:3px solid var(--red2)}
+.card-accent-green{border-left:3px solid var(--green2)}
 
-/* ── MODAL ── */
-.modal-bg{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.52);display:none;align-items:flex-end;backdrop-filter:blur(3px)}
-.modal-bg.open{display:flex}
-.modal{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:700px;margin:0 auto;max-height:93vh;overflow-y:auto;padding:20px 18px calc(20px + env(safe-area-inset-bottom))}
-.modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.modal-title{font-size:17px;font-weight:800}
-.modal-x{width:30px;height:30px;background:var(--grau2);border:none;border-radius:50%;font-size:17px;cursor:pointer}
-.fg{margin-bottom:13px}
-.fl{display:block;font-size:11px;font-weight:700;color:var(--grau4);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px}
-.fi,.fs,.fta{width:100%;border:2px solid var(--grau2);border-radius:10px;padding:10px 11px;font-size:14px;font-family:var(--font);outline:none;transition:border-color .15s}
-.fi:focus,.fs:focus,.fta:focus{border-color:var(--rot)}
-.fta{min-height:76px;resize:vertical}
-.f2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.btn-save{width:100%;background:var(--rot);color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);margin-top:4px}
-.kp{background:var(--grau1);border-radius:10px;padding:11px;margin-top:5px}
-.kp-row{display:flex;justify-content:space-between;font-size:13px;padding:3px 0}
-.kp-row.hi{font-weight:700;border-top:1px solid var(--grau3);margin-top:3px;padding-top:5px;font-size:14px}
-.photo-area{border:2px dashed var(--grau3);border-radius:10px;padding:18px;text-align:center;cursor:pointer;position:relative;transition:all .15s}
-.photo-area:active{border-color:var(--rot);background:var(--rot3)}
-.photo-area input{position:absolute;inset:0;opacity:0;cursor:pointer}
-.photo-preview{width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-top:9px;display:none}
-.zt-input{display:grid;grid-template-columns:1fr 78px 68px 30px;gap:5px;margin-bottom:5px;align-items:center}
-.del-zt{width:30px;height:30px;background:var(--rot3);border:none;border-radius:6px;color:var(--rot2);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center}
-.add-zt{background:none;border:2px dashed var(--grau3);border-radius:10px;padding:7px;font-size:12px;color:var(--grau4);cursor:pointer;width:100%;font-family:var(--font)}
+/* ── STATS ── */
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+@media(min-width:500px){.stats-row{grid-template-columns:repeat(4,1fr)}}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px;text-align:center}
+.stat-val{font-size:26px;font-weight:900}
+.stat-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
 
-/* ── KALKULATION ── */
-.kalk-preview-row{display:flex;justify-content:space-between;font-size:13px;padding:3px 0}
-.kalk-preview-row.highlight{font-weight:700;border-top:1px solid var(--grau3);margin-top:3px;padding-top:5px;font-size:14px}
+/* ── FORM ── */
+.fi{margin-bottom:10px}
+.fi label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--gold);display:block;margin-bottom:4px}
+.fi input,.fi select,.fi textarea{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:10px 11px;width:100%}
+.fi input:focus,.fi select:focus,.fi textarea:focus{border-color:var(--gold)}
+.fi textarea{resize:vertical;min-height:70px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+@media(max-width:500px){.g2{grid-template-columns:1fr}.g3{grid-template-columns:1fr 1fr}}
+.btn-gold{background:var(--gold);color:#111;border-radius:7px;padding:10px 18px;font-weight:800;font-size:13px}
+.btn-sm{background:var(--surface);color:var(--muted);border:1px solid var(--border);border-radius:6px;padding:7px 11px;font-size:13px}
+.btn-danger{background:rgba(178,34,34,.12);color:var(--red2);border:1px solid rgba(178,34,34,.25);border-radius:6px;padding:7px 11px;font-size:13px;font-weight:700}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 
-/* ── SYNC SCREEN ── */
-.sync-hero{background:var(--navy);color:#fff;border-radius:var(--radius);padding:18px;margin-bottom:12px}
-.sync-hero h3{font-size:15px;font-weight:700;margin-bottom:10px}
-.sh-row{display:flex;align-items:center;gap:9px;font-size:13px;opacity:.9;margin-bottom:6px}
-.sh-dot{width:11px;height:11px;border-radius:50%}
-.sh-btn{background:rgba(255,255,255,.15);border:none;color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;font-family:var(--font);margin-top:10px}
-.team-tile{background:var(--grau1);border-radius:10px;padding:11px 13px;display:flex;align-items:center;gap:11px;margin-bottom:7px}
-.tt-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff}
-.tt-info{flex:1}
-.tt-name{font-size:13px;font-weight:700}
-.tt-role{font-size:11px;color:var(--grau4)}
-.admin-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--grau4);margin:14px 0 7px}
-.how-box{background:var(--gruen2);border:2px solid var(--gruen);border-radius:var(--radius);padding:14px;margin-bottom:12px}
-.how-box h4{font-size:13px;font-weight:700;color:var(--gruen);margin-bottom:8px}
-.how-box p{font-size:13px;line-height:1.7}
+/* ── TAGS ── */
+.tag{display:inline-block;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700}
+.tag-gold{background:rgba(201,168,76,.15);color:var(--gold);border:1px solid rgba(201,168,76,.3)}
+.tag-muted{background:rgba(154,144,112,.1);color:var(--muted);border:1px solid rgba(154,144,112,.2)}
+.tag-green{background:rgba(90,171,111,.15);color:var(--green2);border:1px solid rgba(90,171,111,.3)}
+.tag-red{background:rgba(178,34,34,.15);color:var(--red2);border:1px solid rgba(178,34,34,.3)}
+.tag-blue{background:rgba(58,106,154,.15);color:#6aade8;border:1px solid rgba(58,106,154,.3)}
+
+/* ── KOMMENTARE ── */
+.komm-section{margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.komm-item{background:var(--bg);border-left:2px solid rgba(201,168,76,.4);border-radius:5px;padding:7px 11px;margin-bottom:6px}
+.komm-meta{font-size:11px;color:var(--muted);margin-bottom:3px}
+.komm-text{font-size:13px;color:var(--text)}
+.komm-input-row{display:grid;grid-template-columns:95px 1fr 44px;gap:6px;margin-top:8px;align-items:center}
+.komm-toggle{background:none;border:1px solid var(--border);border-radius:5px;padding:6px 12px;font-size:12px;color:var(--muted);font-weight:600}
+.expandable{display:none}
+.expandable.open{display:block}
+
+/* ── ZUTATEN REIHE ── */
+.zrow{display:grid;grid-template-columns:2fr 1fr 65px 85px 36px;gap:5px;margin-bottom:6px;align-items:center}
+.zrow input,.zrow select{background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:8px 8px;width:100%}
+@media(max-width:540px){.zrow{grid-template-columns:1fr 70px 36px}.zrow .z-menge,.zrow .z-einh{display:none}}
+.rzrow{display:grid;grid-template-columns:2fr 1fr 36px;gap:6px;margin-bottom:6px;align-items:center}
+.rzrow input{background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:8px 8px;width:100%}
+
+/* ── KF RESULT ── */
+.kf-result{background:var(--bg);border-radius:7px;padding:12px;margin-bottom:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(min-width:500px){.kf-result{grid-template-columns:repeat(4,1fr)}}
+.kf-result-item{text-align:center}
+.kf-result-label{font-size:10px;color:var(--muted);text-transform:uppercase}
+.kf-result-val{font-size:17px;font-weight:800}
 
 /* ── TOAST ── */
-.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--dunkel);color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:400;opacity:0;transition:all .28s;pointer-events:none;white-space:nowrap;max-width:90vw}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 22px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 4px 24px rgba(0,0,0,.5);pointer-events:none;white-space:nowrap}
+.toast.ok{border-color:var(--green2);color:var(--green2)}
+.toast.err{border-color:var(--red2);color:var(--red2)}
+.toast.info{border-color:var(--gold);color:var(--gold)}
+
+/* ── MODAL ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;display:flex;align-items:flex-end;justify-content:center;padding:0}
+@media(min-width:500px){.modal-bg{align-items:center;padding:20px}}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px 16px 0 0;padding:24px 20px;width:100%;max-width:480px;max-height:92vh;overflow-y:auto}
+@media(min-width:500px){.modal-box{border-radius:14px}}
+.modal-title{font-weight:800;font-size:17px;color:var(--gold2);margin-bottom:16px}
+
+.empty{text-align:center;color:var(--muted);padding:40px 16px;font-size:13px;line-height:1.6}
+.section-title{font-weight:800;font-size:18px;color:var(--gold2);margin-bottom:3px}
+.section-sub{font-size:12px;color:var(--muted);margin-bottom:14px}
 </style>
 </head>
 <body>
 
-<div class="toast" id="toast"></div>
-
-<!-- LOADING -->
-<div id="loadingOverlay" style="position:fixed;inset:0;background:linear-gradient(160deg,#8B0000,#1A3A5C);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px">
-  <div style="font-size:56px">🌭</div>
-  <div class="spinner"></div>
-  <div style="color:rgba(255,255,255,.8);font-size:14px;letter-spacing:1px">RASA OG lädt …</div>
+<!-- SETUP SCREEN -->
+<div id="setup-screen">
+<div class="login-box">
+  <div class="logo-row">
+    <div class="logo-icon">R</div>
+    <div><div class="logo-text">RASA OG</div><div class="logo-sub">Ersteinrichtung</div></div>
+  </div>
+  <p style="color:var(--muted);font-size:13px;margin-bottom:18px;line-height:1.6">Einmalig die Supabase-Verbindung einrichten.</p>
+  <label class="field-label">Supabase Project URL</label>
+  <input class="field-input" id="setup-url" value="https://bvodhzacatfuduwtlwut.supabase.co">
+  <label class="field-label">Supabase Anon Key</label>
+  <input class="field-input" id="setup-key" value="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2b2RoemFjYXRmdWR1d3Rsd3V0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxODUwMjcsImV4cCI6MjA5NTc2MTAyN30.kX03LLhpIm-iD1VQqreIpCCwAHzsT0pmYdIsl8uSeuY">
+  <button class="btn-primary" onclick="saveSetup()">Verbinden & Starten</button>
+  <button class="btn-secondary" onclick="resetSetup()" style="margin-top:10px;font-size:11px;padding:8px">⚙ Verbindung zurücksetzen</button>
+</div>
 </div>
 
-<!-- SETUP (nur beim ersten Start) -->
-<div id="setupScreen" style="display:none">
-  <div class="setup-card">
-    <h2>⚙️ Einmalige Einrichtung</h2>
-    <p>Damit alle 4 Personen dieselben Daten sehen, braucht die App eine <b>kostenlose Supabase-Datenbank</b>. Das dauert ca. 5 Minuten.</p>
-    <div class="setup-step">
-      <b>Schritt 1:</b> Öffne <a href="https://supabase.com" target="_blank">supabase.com</a> → Kostenlos registrieren → Neues Projekt erstellen<br>
-      <small>Name: <b>rasa-og</b> | Region: <b>EU (Frankfurt)</b></small>
-    </div>
-    <div class="setup-step">
-      <b>Schritt 2:</b> Im Supabase-Projekt → <b>SQL Editor</b> → Neues SQL ausführen:<br>
-      <small style="font-family:monospace;display:block;margin-top:4px;background:var(--grau2);padding:6px;border-radius:4px">
-        CREATE TABLE rezepte (id text PRIMARY KEY, daten jsonb, geaendert bigint);<br>
-        ALTER TABLE rezepte DISABLE ROW LEVEL SECURITY;
-      </small>
-    </div>
-    <div class="setup-step">
-      <b>Schritt 3:</b> Im Supabase-Projekt → <b>Settings → API</b><br>
-      → <b>Project URL</b> und <b>anon public key</b> kopieren
-    </div>
-    <div class="fg" style="margin-top:16px">
-      <label class="fl">Supabase Project URL</label>
-      <input type="text" class="fi" id="sbUrl" placeholder="https://xxxx.supabase.co">
-    </div>
-    <div class="fg">
-      <label class="fl">Supabase Anon Key</label>
-      <input type="text" class="fi" id="sbKey" placeholder="eyJh...">
-    </div>
-    <button class="btn-save" onclick="setupSave()">Verbindung testen & speichern →</button>
-    <div id="setupErr" style="color:var(--rot2);font-size:13px;text-align:center;margin-top:8px"></div>
+<!-- PIN / LOGIN SCREEN -->
+<div id="pin-screen">
+<div class="login-box">
+  <div class="logo-row">
+    <div class="logo-icon">R</div>
+    <div><div class="logo-text">RASA OG</div><div class="logo-sub">Team Portal</div></div>
+  </div>
+  <div id="partner-select-area">
+    <div style="font-size:13px;color:var(--muted);margin-bottom:12px;font-weight:600">Wer bist du?</div>
+    <div class="partner-grid" id="partner-btns"></div>
+  </div>
+  <div id="pw-entry-area" style="display:none">
+    <div style="font-size:13px;color:var(--muted);margin-bottom:8px;font-weight:600">Passwort für <span id="pw-name-label" style="color:var(--gold)"></span></div>
+    <input class="field-input" id="pw-input" type="password" placeholder="Passwort eingeben" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn-primary" onclick="doLogin()">Anmelden</button>
+    <button class="btn-secondary" style="margin-top:8px" onclick="backToPartnerSelect()">← Zurück</button>
+  </div>
+  <div style="text-align:center;margin-top:16px;display:flex;flex-direction:column;gap:8px;align-items:center">
+    <button onclick="shareApp()" style="background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);border-radius:8px;color:var(--gold);font-size:13px;font-weight:700;padding:10px 20px;width:100%">🔗 App-Link teilen</button>
+    <button onclick="resetSetup()" style="background:none;border:none;color:var(--muted);font-size:11px;padding:5px">⚙ Verbindung zurücksetzen</button>
   </div>
 </div>
-
-<!-- LOGIN -->
-<div id="loginScreen">
-  <div class="login-logo">🌭</div>
-  <div class="login-title">RASA OG</div>
-  <div class="login-sub">Team App · Würstelwagen</div>
-  <div class="login-card">
-    <h2>Wer bist du?</h2>
-    <div class="user-grid" id="userGrid"></div>
-    <div class="pw-wrap">
-      <input type="password" class="pw-field" id="pwInput" placeholder="Passwort …" autocomplete="current-password">
-      <button class="pw-eye" onclick="document.getElementById('pwInput').type=document.getElementById('pwInput').type==='password'?'text':'password'">👁</button>
-    </div>
-    <button class="login-btn" onclick="doLogin()">Anmelden →</button>
-    <div class="login-err" id="loginErr"></div>
-  </div>
 </div>
 
-<!-- APP -->
-<div id="app">
-  <div class="sync-banner" id="syncBanner"></div>
+<!-- APP SCREEN -->
+<div id="app-screen">
   <div class="topbar">
-    <div class="topbar-logo">🌭 RASA OG</div>
+    <div class="logo-icon" style="width:32px;height:32px;font-size:16px;border-radius:8px">R</div>
+    <div class="topbar-logo">RASA OG</div>
     <div class="topbar-right">
-      <div class="sync-dot online" id="syncDot"></div>
-      <div class="top-av" id="topAv"></div>
-      <button class="logout-btn" onclick="doLogout()">Abmelden</button>
+      <span class="user-badge" id="user-label"></span>
+      <span id="live-dot" style="width:7px;height:7px;border-radius:50%;background:var(--green2);display:inline-block;opacity:.6"></span>
+      <button class="sync-btn" id="sync-btn" onclick="syncAll()">↻ Sync</button>
+      <button class="logout-btn" onclick="openPwChange()" title="Passwort ändern">🔑</button>
+      <button class="logout-btn" onclick="logout()">↩</button>
     </div>
   </div>
-
-  <div class="main">
-
-    <!-- DASHBOARD -->
-    <div class="screen active" id="screen-home">
-      <div class="welcome-card">
-        <h2 id="wMsg">Hallo! 👋</h2>
-        <p id="wDate"></p>
-      </div>
-      <div class="stats-grid" id="statsGrid"></div>
-      <div class="quick-grid">
-        <button class="quick-btn" onclick="openModal()"><div class="qi">➕</div><div class="ql">Neues Rezept</div></button>
-        <button class="quick-btn" onclick="goNav('rezepte')"><div class="qi">🍽️</div><div class="ql">Alle Rezepte</div></button>
-        <button class="quick-btn" onclick="goNav('kalk')"><div class="qi">📊</div><div class="ql">Kalkulation</div></button>
-        <button class="quick-btn" onclick="syncNow()"><div class="qi">🔄</div><div class="ql">Synchronisieren</div></button>
-      </div>
-      <div class="card">
-        <div class="card-title">📋 Zuletzt geändert</div>
-        <div id="recentList"></div>
-      </div>
-    </div>
-
-    <!-- REZEPTE -->
-    <div class="screen" id="screen-rezepte">
-      <div class="search-bar">
-        <input type="search" class="search-input" id="rzSearch" placeholder="Suchen …" oninput="renderRz()">
-        <button class="btn-add-big" onclick="openModal()">＋</button>
-      </div>
-      <div class="chips">
-        <button class="chip active" onclick="setF('alle',this)">Alle</button>
-        <button class="chip" onclick="setF('würstel',this)">🌭 Würstel</button>
-        <button class="chip" onclick="setF('getränke',this)">🍺 Getränke</button>
-        <button class="chip" onclick="setF('beilagen',this)">🥗 Beilagen</button>
-        <button class="chip" onclick="setF('süßes',this)">🍩 Süßes</button>
-      </div>
-      <div id="rzListe"></div>
-    </div>
-
-    <!-- KALKULATION -->
-    <div class="screen" id="screen-kalk">
-      <div class="card">
-        <div class="card-title">📊 Alle Artikel — Deckungsbeiträge</div>
-        <div id="kalkTabelle"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">💰 Schnell-Kalkulation</div>
-        <div class="fg"><label class="fl">Einkaufspreis (€)</label>
-          <input type="number" class="fi" id="qEK" step="0.01" placeholder="0.00" oninput="quickK()"></div>
-        <div class="fg"><label class="fl">Aufschlag (%)</label>
-          <input type="number" class="fi" id="qAuf" value="200" oninput="quickK()"></div>
-        <div class="kp" id="qResult"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">📈 Monats-Hochrechnung</div>
-        <div class="f2">
-          <div class="fg"><label class="fl">Betriebstage/Monat</label>
-            <input type="number" class="fi" id="moT" value="12" oninput="moK()"></div>
-          <div class="fg"><label class="fl">Ø Umsatz/Tag (€)</label>
-            <input type="number" class="fi" id="moU" value="550" oninput="moK()"></div>
-        </div>
-        <div class="kp" id="moResult"></div>
-      </div>
-    </div>
-
-    <!-- SYNC -->
-    <div class="screen" id="screen-sync">
-      <div class="sync-hero">
-        <h3>☁️ Supabase Cloud-Sync</h3>
-        <div class="sh-row">
-          <div class="sh-dot" id="shDot" style="background:#4CAF50"></div>
-          <span id="shStatus">Verbunden</span>
-        </div>
-        <div style="font-size:12px;opacity:.65;margin-top:2px" id="shTime"></div>
-        <button class="sh-btn" onclick="syncNow()">🔄 Jetzt synchronisieren</button>
-      </div>
-
-      <div class="how-box">
-        <h4>✅ Echtzeit-Sync für alle 4 Personen</h4>
-        <p>
-          <b>1.</b> Alle 4 öffnen <b>roland375.github.io/rasa/</b> auf dem Handy<br>
-          <b>2.</b> Jede Änderung wird sofort in die Cloud (Supabase) hochgeladen<br>
-          <b>3.</b> Alle anderen sehen es beim nächsten Öffnen oder nach „Synchronisieren"<br>
-          <b>4.</b> Offline: lokal gespeichert → automatisch hochgeladen wenn wieder online
-        </p>
-      </div>
-
-      <div class="admin-lbl">👥 Team-Mitglieder</div>
-      <div id="teamList"></div>
-      <div id="adminPanel"></div>
-
-      <div class="card">
-        <div class="card-title">⚙️ Datenbankverbindung</div>
-        <div style="font-size:13px;line-height:1.8;color:var(--grau4)">
-          <div id="dbInfo"></div>
-        </div>
-        <button class="btn-s" style="width:100%;margin-top:10px" onclick="resetSetup()">🔄 Verbindung neu einrichten</button>
-      </div>
-
-      <div class="card">
-        <div class="card-title">📤 Backup</div>
-        <button class="btn-s blue" style="width:100%;margin-bottom:8px" onclick="exportD()">📤 Backup exportieren</button>
-        <button class="btn-s" style="width:100%;position:relative">
-          📥 Backup importieren
-          <input type="file" accept=".json" onchange="importD(this)" style="position:absolute;inset:0;opacity:0;cursor:pointer">
-        </button>
-      </div>
-    </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showTab('home')">🏠 Übersicht</button>
+    <button class="nav-tab" onclick="showTab('kalk')">📊 Kalkulation</button>
+    <button class="nav-tab" onclick="showTab('rezepte')">📖 Rezepte</button>
+    <button class="nav-tab" onclick="showTab('austausch')">💬 Austausch</button>
   </div>
-
-  <nav class="nav-bar">
-    <button class="nav-btn active" onclick="goNav('home')" data-s="home">
-      <span class="ni">🏠</span><span class="nl">Start</span>
-    </button>
-    <button class="nav-btn" onclick="goNav('rezepte')" data-s="rezepte">
-      <span class="ni">🍽️</span><span class="nl">Rezepte</span>
-    </button>
-    <button class="nav-btn" onclick="goNav('kalk')" data-s="kalk">
-      <span class="ni">📊</span><span class="nl">Kalkulation</span>
-    </button>
-    <button class="nav-btn" onclick="goNav('sync')" data-s="sync">
-      <span class="ni">🔄</span><span class="nl">Sync</span>
-    </button>
-  </nav>
-</div>
-
-<!-- MODAL REZEPT -->
-<div class="modal-bg" id="modalBg" onclick="closeModalOutside(event)">
-  <div class="modal">
-    <div class="modal-hdr">
-      <div class="modal-title" id="mTitle">➕ Neues Rezept</div>
-      <button class="modal-x" onclick="closeModal()">✕</button>
-    </div>
-    <div class="fg">
-      <label class="fl">📷 Foto (Kamera oder Galerie)</label>
-      <div class="photo-area">
-        <input type="file" accept="image/*" capture="environment" onchange="handlePh(this)">
-        <div style="font-size:30px;margin-bottom:5px">📷</div>
-        <div style="font-size:12px;color:var(--grau4)" id="phText">Tippen zum Fotografieren oder Auswählen</div>
-      </div>
-      <img class="photo-preview" id="phPreview">
-    </div>
-    <div class="fg"><label class="fl">Name</label>
-      <input type="text" class="fi" id="mName" placeholder="z.B. Käsekrainer mit Semmel"></div>
-    <div class="f2">
-      <div class="fg"><label class="fl">Kategorie</label>
-        <select class="fs" id="mKat">
-          <option value="würstel">🌭 Würstel</option>
-          <option value="getränke">🍺 Getränke</option>
-          <option value="beilagen">🥗 Beilagen</option>
-          <option value="süßes">🍩 Süßes</option>
-          <option value="sonstiges">📦 Sonstiges</option>
-        </select></div>
-      <div class="fg"><label class="fl">Verkaufspreis (€)</label>
-        <input type="number" class="fi" id="mVK" step="0.10" placeholder="0.00" oninput="updPrev()"></div>
-    </div>
-    <div class="fg">
-      <label class="fl">Zutaten & Einkaufspreise</label>
-      <div id="ztListe"></div>
-      <button class="add-zt" onclick="addZt()">＋ Zutat hinzufügen</button>
-    </div>
-    <div class="fg">
-      <label class="fl">Kalkulations-Vorschau</label>
-      <div class="kp">
-        <div class="kp-row"><span>Gesamter EK</span><span id="pEK">—</span></div>
-        <div class="kp-row"><span>Verkaufspreis</span><span id="pVK">—</span></div>
-        <div class="kp-row hi"><span>Deckungsbeitrag</span><span id="pDB">—</span></div>
-      </div>
-    </div>
-    <div class="fg"><label class="fl">Rezept / Hinweise</label>
-      <textarea class="fta" id="mBeschr" placeholder="Zubereitung, Allergeninfo …"></textarea></div>
-    <input type="hidden" id="mEditId">
-    <button class="btn-save" onclick="saveRz()">💾 Speichern & synchronisieren</button>
+  <div class="content">
+    <div id="tab-home"></div>
+    <div id="tab-kalk" style="display:none"></div>
+    <div id="tab-rezepte" style="display:none"></div>
+    <div id="tab-austausch" style="display:none"></div>
   </div>
 </div>
+
+<!-- PW CHANGE MODAL -->
+<div class="modal-bg" id="pw-modal" style="display:none" onclick="if(event.target===this)document.getElementById('pw-modal').style.display='none'">
+  <div class="modal-box" id="pw-modal-inner"></div>
+</div>
+
+<div id="toast" class="toast" style="display:none"></div>
 
 <script>
-// ════════════════════════════════════════════════════
-// SUPABASE KONFIGURATION
-// ════════════════════════════════════════════════════
-const CFG_KEY = 'rasa_sb_cfg';
-const LOC_KEY = 'rasa_local_data';
-
-let SB_URL = '';
-let SB_KEY = '';
-
-const USERS = [
-  { id:'roland',  name:'Roland',  full:'Roland Grieer',     role:'Admin 👑',        color:'#8B0000', pw:'roland2026',  em:'👨‍🍳' },
-  { id:'andrea',  name:'Andrea',  full:'Andrea Grieer',     role:'Gesellschafterin', color:'#1A3A5C', pw:'andrea2026',  em:'👩‍🍳' },
-  { id:'andreas', name:'Andreas', full:'Andreas Schebesta', role:'Gesellschafter',   color:'#1A5E2A', pw:'andreas2026', em:'👨‍🍳' },
-  { id:'sandra',  name:'Sandra',  full:'Sandra Pils',       role:'Gesellschafterin', color:'#7D3C98', pw:'sandra2026',  em:'👩‍🍳' },
+// ═══════════════════════════════════════════
+//  CONFIG & STATE
+// ═══════════════════════════════════════════
+// Default passwords — stored in Supabase rasa_users, changeable by each user
+const DEFAULT_USERS = [
+  {id:'u_roland',  name:'Roland',  password:'rasa1', color:'var(--gold)'},
+  {id:'u_andrea',  name:'Andrea',  password:'rasa2', color:'#6aade8'},
+  {id:'u_andreas', name:'Andreas', password:'rasa3', color:'#5aab6f'},
+  {id:'u_sandra',  name:'Sandra',  password:'rasa4', color:'#e07a5f'},
 ];
+let USERS = [...DEFAULT_USERS]; // will be overwritten from Supabase
 
-let DATA   = { rezepte:[], lastSync:null };
-let ME     = null;
-let FILTER = 'alle';
-let PHOTO  = null;
-let SYNCING = false;
+let SB_URL = '', SB_KEY = '';
+let currentUser = null;
+let currentTab = 'home';
 
-// ════════════════════════════════════════════════════
-// SUPABASE API — gleicher Ansatz wie energie.html
-// ════════════════════════════════════════════════════
-function sbFetch(method, path, body) {
-  return new Promise((resolve, reject) => {
-    // Timeout nach 8 Sekunden — verhindert endloses Hängen auf iOS
-    const timer = setTimeout(() => reject(new Error('Timeout')), 8000);
-    const xhr = new XMLHttpRequest();
-    xhr.open(method, SB_URL + '/rest/v1/' + path, true);
-    xhr.setRequestHeader('apikey', SB_KEY);
-    xhr.setRequestHeader('Authorization', 'Bearer ' + SB_KEY);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('Prefer', 'return=representation');
-    xhr.withCredentials = false;
-    xhr.timeout = 8000;
-    xhr.onload = () => {
-      clearTimeout(timer);
-      if (xhr.status >= 200 && xhr.status < 300) {
-        try { resolve(JSON.parse(xhr.responseText || 'null')); }
-        catch(e) { resolve(null); }
-      } else if (xhr.status === 204) {
-        resolve(null);
-      } else {
-        reject(new Error('HTTP ' + xhr.status + ': ' + xhr.responseText));
-      }
-    };
-    xhr.onerror = () => { clearTimeout(timer); reject(new Error('Netzwerkfehler')); };
-    xhr.ontimeout = () => { clearTimeout(timer); reject(new Error('Timeout')); };
-    xhr.send(body ? JSON.stringify(body) : null);
-  });
+// Local data cache
+let DB = { kalkulationen: [], rezepte: [], beitraege: [] };
+
+// ═══════════════════════════════════════════
+//  SUPABASE XHR HELPER (same as energie.html)
+// ═══════════════════════════════════════════
+function sbReq(method, table, body, query, cb) {
+  const url = SB_URL + '/rest/v1/' + table + (query ? '?' + query : '');
+  const xhr = new XMLHttpRequest();
+  xhr.open(method, url, true);
+  xhr.setRequestHeader('apikey', SB_KEY);
+  xhr.setRequestHeader('Authorization', 'Bearer ' + SB_KEY);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.setRequestHeader('Prefer', 'return=representation');
+  xhr.withCredentials = false;
+  xhr.timeout = 15000;
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState !== 4) return;
+    const ok = xhr.status >= 200 && xhr.status < 300;
+    let data = null;
+    try { data = JSON.parse(xhr.responseText); } catch(e) { data = xhr.responseText; }
+    cb(ok, data, xhr.status);
+  };
+  xhr.ontimeout = function() { cb(false, 'Timeout', 0); };
+  xhr.onerror = function() { cb(false, 'Netzwerkfehler', 0); };
+  xhr.send(body ? JSON.stringify(body) : null);
 }
 
-async function sbLoad() {
-  const rows = await sbFetch('GET', 'rezepte?select=id,daten,geaendert&order=geaendert.desc');
-  if (!Array.isArray(rows)) return [];
-  return rows.map(r => r.daten ? {...r.daten, id:r.id, geaendert:r.geaendert} : null).filter(Boolean);
-}
+function sbGet(table, query, cb) { sbReq('GET', table, null, query, cb); }
+function sbPost(table, body, cb) { sbReq('POST', table, body, null, cb); }
+function sbPatch(table, id, body, cb) { sbReq('PATCH', table, body, 'id=eq.' + id, cb); }
+function sbDelete(table, id, cb) { sbReq('DELETE', table, null, 'id=eq.' + id, cb); }
 
-async function sbUpsert(rezept) {
-  await sbFetch('POST', 'rezepte?on_conflict=id', {
-    id: rezept.id,
-    daten: rezept,
-    geaendert: rezept.geaendert,
-  });
-}
-
-async function sbDelete(id) {
-  await sbFetch('DELETE', `rezepte?id=eq.${id}`);
-}
-
-async function sbTest() {
-  // Einfacher Test: Tabellenstruktur abfragen
-  const rows = await sbFetch('GET', 'rezepte?limit=1');
-  return Array.isArray(rows);
-}
-
-// ════════════════════════════════════════════════════
-// SETUP
-// ════════════════════════════════════════════════════
-async function setupSave() {
-  const url = document.getElementById('sbUrl').value.trim().replace(/\/$/, '');
-  const key = document.getElementById('sbKey').value.trim();
-  const err = document.getElementById('setupErr');
-  if (!url || !key) { err.textContent = 'Bitte beide Felder ausfüllen.'; return; }
-  if (!url.includes('supabase.co')) { err.textContent = 'Ungültige Supabase URL.'; return; }
-  err.textContent = '🔄 Teste Verbindung …';
-  SB_URL = url; SB_KEY = key;
-  try {
-    const ok = await Promise.race([
-      sbTest(),
-      new Promise((_, rej) => setTimeout(() => rej(new Error('Timeout — Verbindung zu langsam')), 10000))
-    ]);
-    if (ok) {
-      localStorage.setItem(CFG_KEY, JSON.stringify({url, key}));
-      err.textContent = '';
-      showApp();
-    } else {
-      err.textContent = '⚠️ Verbindung fehlgeschlagen. Tabelle "rezepte" vorhanden? (SQL ausführen!)';
-    }
-  } catch(e) {
-    if (e.message.includes('404')) {
-      err.textContent = '⚠️ Tabelle nicht gefunden — bitte Schritt 2 (SQL) ausführen!';
-    } else if (e.message.includes('Timeout')) {
-      err.textContent = '⏱ Timeout — bitte nochmal versuchen oder WLAN prüfen';
-    } else {
-      err.textContent = '❌ Fehler: ' + e.message;
-    }
+// Table: rasa_daten | columns: id (text PK), typ (text), daten (jsonb), geaendert (bigint)
+function sbSave(typ, id, obj, cb) {
+  if (typ === 'rasa_users') {
+    // Save directly to rasa_users table
+    sbPost('rasa_users', obj, function(ok, data, status) {
+      if (ok) { cb && cb(true); return; }
+      sbPatch('rasa_users', id, obj, function(ok2) { cb && cb(ok2); });
+    });
+    return;
   }
+  const row = { id: id, typ: typ, daten: obj, geaendert: Date.now() };
+  sbPost('rasa_daten', row, function(ok, data, status) {
+    if (ok) { cb && cb(true); return; }
+    // Conflict → PATCH
+    sbPatch('rasa_daten', id, { daten: obj, geaendert: Date.now() }, function(ok2) { cb && cb(ok2); });
+  });
+}
+
+function sbLoadAll(cb) {
+  sbGet('rasa_daten', 'order=geaendert.desc', function(ok, data) {
+    if (!ok || !Array.isArray(data)) { cb(false); return; }
+    DB.kalkulationen = [];
+    DB.rezepte = [];
+    DB.beitraege = [];
+    data.forEach(row => {
+      if (row.typ === 'kalkulation') DB.kalkulationen.push(row.daten);
+      else if (row.typ === 'rezept') DB.rezepte.push(row.daten);
+      else if (row.typ === 'beitrag') DB.beitraege.push(row.daten);
+    });
+    cb(true);
+  });
+}
+
+function sbDeleteEntry(id, cb) { sbDelete('rasa_daten', id, cb); }
+
+// ═══════════════════════════════════════════
+//  SETUP
+// ═══════════════════════════════════════════
+function saveSetup() {
+  const url = document.getElementById('setup-url').value.trim().replace(/\/$/, '');
+  const key = document.getElementById('setup-key').value.trim();
+  if (!url || !key) { showToast('URL und Key eingeben!', 'err'); return; }
+  localStorage.setItem('rasa_sb_url', url);
+  localStorage.setItem('rasa_sb_key', key);
+  SB_URL = url; SB_KEY = key;
+  showPinScreen();
 }
 
 function resetSetup() {
-  localStorage.removeItem(CFG_KEY);
+  if (!confirm('Verbindung zurücksetzen?')) return;
+  localStorage.removeItem('rasa_sb_url');
+  localStorage.removeItem('rasa_sb_key');
   location.reload();
 }
 
-// ════════════════════════════════════════════════════
-// APP START
-// ════════════════════════════════════════════════════
-async function start() {
-  // Loading-Overlay nach 1 Sek. weg — KEIN Warten auf Netzwerk
-  await new Promise(r => setTimeout(r, 800));
-  document.getElementById('loadingOverlay').style.display = 'none';
-  // Sofort Login/Setup zeigen
-  const cfg = localStorage.getItem(CFG_KEY);
-  if (cfg) {
-    try {
-      const {url, key} = JSON.parse(cfg);
-      SB_URL = url; SB_KEY = key;
-      showLogin();
-    } catch(e) {
-      showSetup();
+// ═══════════════════════════════════════════
+//  PIN SCREEN
+// ═══════════════════════════════════════════
+let selectedUser = null;
+
+function showPinScreen() {
+  document.getElementById('setup-screen').classList.remove('active');
+  document.getElementById('pin-screen').classList.add('active');
+  renderPartnerBtns();
+  // Load users from Supabase in background
+  sbGet('rasa_users', 'order=name.asc', function(ok, data) {
+    if (ok && Array.isArray(data) && data.length) {
+      USERS = data;
+      renderPartnerBtns();
     }
-  } else {
-    showSetup();
-  }
+  });
 }
 
-function showSetup() {
-  document.getElementById('setupScreen').style.display = 'flex';
+function renderPartnerBtns() {
+  const el = document.getElementById('partner-btns');
+  el.innerHTML = USERS.map((u,i) =>
+    `<button class="partner-btn" onclick="selectUser(${i})">
+      <div style="font-size:22px;margin-bottom:4px;color:${u.color||'var(--gold)'}">👤</div>
+      <div style="font-weight:700">${u.name}</div>
+    </button>`
+  ).join('');
 }
 
-function showLogin() {
-  document.getElementById('setupScreen').style.display = 'none';
-  document.getElementById('loginScreen').style.display = 'flex';
-  initLogin();
+function selectUser(i) {
+  selectedUser = USERS[i];
+  document.getElementById('partner-select-area').style.display = 'none';
+  document.getElementById('pw-entry-area').style.display = 'block';
+  document.getElementById('pw-name-label').textContent = selectedUser.name;
+  document.getElementById('pw-input').value = '';
+  setTimeout(() => document.getElementById('pw-input').focus(), 100);
 }
 
-function showApp() {
-  document.getElementById('setupScreen').style.display = 'none';
-  document.getElementById('loginScreen').style.display = 'flex';
-  initLogin();
-}
-
-// ════════════════════════════════════════════════════
-// LOGIN
-// ════════════════════════════════════════════════════
-function initLogin() {
-  document.getElementById('userGrid').innerHTML = USERS.map(u =>
-    `<button class="user-btn" onclick="selUser('${u.id}',this)">
-      <div class="av" style="background:${u.color}">${u.em}</div>
-      <div class="un">${u.name}</div>
-      <div class="ur">${u.role}</div>
-    </button>`).join('');
-  document.getElementById('pwInput').onkeydown = e => { if(e.key==='Enter') doLogin(); };
-}
-
-let SEL = null;
-function selUser(id,el) {
-  SEL=id;
-  document.querySelectorAll('.user-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('pwInput').focus();
-  document.getElementById('loginErr').textContent='';
+function backToPartnerSelect() {
+  document.getElementById('partner-select-area').style.display = 'block';
+  document.getElementById('pw-entry-area').style.display = 'none';
+  selectedUser = null;
 }
 
 function doLogin() {
-  if(!SEL){ document.getElementById('loginErr').textContent='Bitte eine Person auswählen.'; return; }
-  const pw=document.getElementById('pwInput').value;
-  const u=USERS.find(x=>x.id===SEL);
-  if(!u||pw!==u.pw){ document.getElementById('loginErr').textContent='Falsches Passwort. Bitte nochmal versuchen.'; return; }
-  ME=u;
-  document.getElementById('loginScreen').style.display='none';
-  document.getElementById('app').style.display='block';
-  initApp();
-}
-
-function doLogout() {
-  ME=null; SEL=null;
-  document.getElementById('loginScreen').style.display='flex';
-  document.getElementById('app').style.display='none';
-  document.getElementById('pwInput').value='';
-  document.querySelectorAll('.user-btn').forEach(b=>b.classList.remove('active'));
-}
-
-// ════════════════════════════════════════════════════
-// APP INIT
-// ════════════════════════════════════════════════════
-async function initApp() {
-  const av=document.getElementById('topAv');
-  av.textContent=ME.em; av.style.background=ME.color;
-  document.getElementById('wMsg').textContent=`Hallo, ${ME.name}! 👋`;
-  document.getElementById('wDate').textContent=
-    new Date().toLocaleDateString('de-AT',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
-
-  // Supabase laden — bei Fehler trotzdem weitermachen
-  try {
-    await Promise.race([
-      loadFromCloud(),
-      new Promise((_, rej) => setTimeout(() => rej(new Error('Init Timeout')), 10000))
-    ]);
-  } catch(e) {
-    setSyncUI('offline');
-    const loc = localStorage.getItem(LOC_KEY);
-    if(loc) { try { DATA = JSON.parse(loc); } catch(e2) {} }
+  if (!selectedUser) return;
+  const pw = document.getElementById('pw-input').value;
+  if (pw !== selectedUser.password) {
+    showToast('Falsches Passwort!', 'err');
+    document.getElementById('pw-input').value = '';
+    return;
   }
-  renderAll();
+  currentUser = selectedUser;
+  enterApp();
+}
 
-  // Auto-Refresh alle 30 Sek
-  setInterval(() => { try { loadFromCloud(); } catch(e) {} }, 30000);
+function logout() {
+  clearInterval(autoSyncTimer);
+  autoSyncTimer = null;
+  currentUser = null;
+  document.getElementById('app-screen').classList.remove('active');
+  backToPartnerSelect();
+  document.getElementById('pin-screen').classList.add('active');
+}
 
-  window.addEventListener('online', async () => {
-    await syncPending();
-    await loadFromCloud();
-    renderAll();
-    setSyncUI('online');
+// ═══════════════════════════════════════════
+//  APP ENTRY
+// ═══════════════════════════════════════════
+let autoSyncTimer = null;
+
+function enterApp() {
+  document.getElementById('pin-screen').classList.remove('active');
+  document.getElementById('app-screen').classList.add('active');
+  document.getElementById('user-label').textContent = currentUser.name;
+  showTab('home');
+  syncAll();
+  // Auto-Sync alle 30 Sekunden
+  clearInterval(autoSyncTimer);
+  autoSyncTimer = setInterval(function() {
+    silentSync();
+  }, 30000);
+}
+
+function silentSync() {
+  // Sync im Hintergrund ohne Toast/Spinner
+  const dot = document.getElementById('live-dot');
+  if (dot) { dot.style.opacity = '1'; dot.style.background = 'var(--gold)'; }
+  sbLoadAll(function(ok) {
+    if (ok) {
+      renderTab(currentTab);
+      if (dot) { dot.style.background = 'var(--green)'; dot.style.opacity = '0.7'; }
+    } else {
+      if (dot) { dot.style.background = 'var(--red2)'; dot.style.opacity = '1'; }
+    }
   });
-  window.addEventListener('offline', () => setSyncUI('offline'));
 }
 
-async function loadFromCloud() {
-  if(SYNCING) return;
-  setSyncUI('syncing');
-  // iOS: nach 10 Sek. automatisch auf offline-Modus umschalten
-  const loadTimer = setTimeout(() => {
-    SYNCING = false;
-    setSyncUI('offline');
-    showToast('📱 Offline-Modus — lokale Daten aktiv');
-  }, 10000);
-  try {
-    const rows = await sbLoad();
-    clearTimeout(loadTimer);
-    // Merge mit lokalen pending
-    const pending = getLocalPending();
-    let mergedMap = {};
-    rows.forEach(r => { mergedMap[r.id] = r; });
-    pending.forEach(p => {
-      if (p._del) { delete mergedMap[p.id]; }
-      else if (!mergedMap[p.id] || p.geaendert > mergedMap[p.id].geaendert) {
-        mergedMap[p.id] = p;
-      }
+function openPwChange() {
+  const html = `
+    <div style="font-weight:800;font-size:16px;color:var(--gold2);margin-bottom:16px">🔑 Passwort ändern</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:14px">Passwort für <strong style="color:var(--gold)">${currentUser.name}</strong></div>
+    <div class="fi"><label>Aktuelles Passwort</label><input id="cpw-old" type="password" class="field-input" placeholder="Aktuelles Passwort"></div>
+    <div class="fi"><label>Neues Passwort</label><input id="cpw-new" type="password" class="field-input" placeholder="Neues Passwort" onkeydown="if(event.key==='Enter')savePwChange()"></div>
+    <div style="display:flex;gap:10px;margin-top:4px">
+      <button class="btn-primary" style="flex:1" onclick="savePwChange()">Speichern</button>
+      <button class="btn-secondary" style="flex:1" onclick="document.getElementById('pw-modal').style.display='none'">Abbrechen</button>
+    </div>`;
+  document.getElementById('pw-modal-inner').innerHTML = html;
+  document.getElementById('pw-modal').style.display = 'flex';
+}
+
+function savePwChange() {
+  const oldPw = document.getElementById('cpw-old').value;
+  const newPw = document.getElementById('cpw-new').value.trim();
+  if (oldPw !== currentUser.password) { showToast('Aktuelles Passwort falsch!', 'err'); return; }
+  if (!newPw || newPw.length < 3) { showToast('Neues Passwort zu kurz (min. 3 Zeichen)', 'err'); return; }
+  currentUser.password = newPw;
+  // Update in USERS array
+  const idx = USERS.findIndex(u => u.id === currentUser.id);
+  if (idx >= 0) USERS[idx].password = newPw;
+  // Save to Supabase
+  const obj = {...currentUser};
+  sbSave('rasa_users', currentUser.id, obj, function(ok) {
+    if (ok) {
+      showToast('Passwort gespeichert ✓', 'ok');
+      document.getElementById('pw-modal').style.display = 'none';
+    } else {
+      showToast('Fehler beim Speichern', 'err');
+    }
+  });
+}
+
+function showTab(name) {
+  currentTab = name;
+  ['home','kalk','rezepte','austausch'].forEach(t => {
+    document.getElementById('tab-' + t).style.display = t === name ? 'block' : 'none';
+  });
+  document.querySelectorAll('.nav-tab').forEach((btn, i) => {
+    const tabs = ['home','kalk','rezepte','austausch'];
+    btn.classList.toggle('active', tabs[i] === name);
+  });
+  renderTab(name);
+}
+
+function renderTab(name) {
+  if (name === 'home') renderHome();
+  else if (name === 'kalk') renderKalk();
+  else if (name === 'rezepte') renderRezepte();
+  else if (name === 'austausch') renderAustausch();
+}
+
+// ═══════════════════════════════════════════
+//  SYNC
+// ═══════════════════════════════════════════
+function syncAll() {
+  const btn = document.getElementById('sync-btn');
+  btn.textContent = '↻ Lädt…';
+  btn.className = 'sync-btn syncing';
+  sbLoadAll(function(ok) {
+    if (ok) {
+      btn.textContent = '✓ Sync';
+      btn.className = 'sync-btn ok';
+      showToast('Synchronisiert ✓', 'ok');
+      renderTab(currentTab);
+    } else {
+      btn.textContent = '✗ Fehler';
+      btn.className = 'sync-btn err';
+      showToast('Sync-Fehler – Verbindung prüfen', 'err');
+    }
+    setTimeout(() => { btn.textContent = '↻ Sync'; btn.className = 'sync-btn'; }, 2500);
+  });
+}
+
+// ═══════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function fmt(n) { return (parseFloat(n)||0).toFixed(2).replace('.',',') + ' €'; }
+function nowStr() {
+  return new Date().toLocaleDateString('de-AT',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+
+let toastTimer = null;
+function showToast(msg, type) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast ' + (type||'info');
+  el.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.style.display = 'none'; }, 3000);
+}
+
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ═══════════════════════════════════════════
+//  HOME TAB
+// ═══════════════════════════════════════════
+function renderHome() {
+  const kalks = DB.kalkulationen;
+  const rezepte = DB.rezepte;
+  const beitraege = DB.beitraege;
+  const avgDB = kalks.length ? kalks.reduce((s,k)=>s+(k.deckungsbeitrag||0),0)/kalks.length : 0;
+  const dringend = beitraege.filter(b=>b.typ==='dringend');
+
+  let html = `
+  <div class="section-title">Guten Tag, ${escHtml(currentUser.name)}!</div>
+  <div class="section-sub">RASA OG · Neudörfl · Alle Daten geteilt mit allen Partnern</div>
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-val" style="color:var(--gold)">${kalks.length}</div><div class="stat-lbl">Kalkulationen</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--green)">${rezepte.length}</div><div class="stat-lbl">Rezepte</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--blue)">${beitraege.length}</div><div class="stat-lbl">Beiträge</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--red2)">${dringend.length}</div><div class="stat-lbl">Dringend</div></div>
+  </div>`;
+
+  if (avgDB > 0) html += `
+  <div class="card card-accent-green" style="margin-bottom:12px">
+    <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Ø Deckungsbeitrag</div>
+    <div style="font-size:22px;font-weight:900;color:#5aab6f">${fmt(avgDB)}</div>
+  </div>`;
+
+  if (dringend.length) {
+    html += `<div class="card card-accent-red"><div style="font-weight:700;color:var(--red2);margin-bottom:8px">🔴 Dringend</div>`;
+    dringend.forEach(b => {
+      html += `<div style="font-size:13px;margin-bottom:4px"><strong style="color:var(--gold)">${escHtml(b.autor)}</strong>: ${escHtml(b.titel)}</div>`;
     });
-    DATA.rezepte = Object.values(mergedMap);
-    DATA.lastSync = Date.now();
-    saveLocal();
-    // Pending hochladen
-    if(pending.length) await syncPending();
-    setSyncUI('online');
-  } catch(e) {
-    // Offline: lokale Daten laden
-    const loc = localStorage.getItem(LOC_KEY);
-    if(loc) { const d=JSON.parse(loc); DATA.rezepte=d.rezepte||[]; }
-    setSyncUI('offline');
+    html += `</div>`;
   }
-}
 
-function getLocalPending() {
-  try { return JSON.parse(localStorage.getItem('rasa_pending')||'[]'); } catch{return[];}
-}
+  const recent = [
+    ...kalks.map(k=>({txt:`📊 ${k.name}`,d:k.datum})),
+    ...rezepte.map(r=>({txt:`📖 ${r.titel}`,d:r.datum})),
+    ...beitraege.map(b=>({txt:`💬 ${b.autor}: ${b.titel}`,d:b.datum})),
+  ].slice(-8).reverse();
 
-function addPending(item) {
-  const list = getLocalPending();
-  const idx = list.findIndex(x=>x.id===item.id);
-  if(idx>=0) list[idx]=item; else list.push(item);
-  localStorage.setItem('rasa_pending', JSON.stringify(list));
-}
-
-async function syncPending() {
-  const pending = getLocalPending();
-  if(!pending.length) return;
-  let ok=true;
-  for(const p of pending) {
-    try {
-      if(p._del) { await sbDelete(p.id); }
-      else { await sbUpsert(p); }
-    } catch(e) { ok=false; }
+  if (recent.length) {
+    html += `<div class="card"><div style="font-size:11px;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">Letzte Aktivitäten</div>`;
+    recent.forEach(a => {
+      html += `<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);padding:5px 0;border-bottom:1px solid var(--border)"><span>${escHtml(a.txt)}</span><span>${escHtml(a.d||'')}</span></div>`;
+    });
+    html += `</div>`;
   }
-  if(ok) localStorage.removeItem('rasa_pending');
-}
 
-function saveLocal() {
-  localStorage.setItem(LOC_KEY, JSON.stringify(DATA));
-}
-
-// ════════════════════════════════════════════════════
-// SYNC UI
-// ════════════════════════════════════════════════════
-function setSyncUI(status) {
-  const dot=document.getElementById('syncDot');
-  const banner=document.getElementById('syncBanner');
-  const shDot=document.getElementById('shDot');
-  const shSt=document.getElementById('shStatus');
-  const shTime=document.getElementById('shTime');
-  const dbInfo=document.getElementById('dbInfo');
-
-  const cfg={
-    online:{dc:'online',bc:'',bt:'',shC:'#4CAF50',shT:'Verbunden — Supabase aktiv'},
-    syncing:{dc:'syncing',bc:'syncing show',bt:'🔄 Synchronisiere …',shC:'#E67E22',shT:'Synchronisiere …'},
-    offline:{dc:'offline',bc:'offline show',bt:'📶 Offline — lokal gespeichert',shC:'#CCCCCC',shT:'Offline — lokaler Modus'},
-  };
-  const c=cfg[status]||cfg.online;
-  if(dot) dot.className='sync-dot '+c.dc;
-  if(banner){ banner.className='sync-banner '+c.bc; banner.textContent=c.bt; }
-  if(shDot) shDot.style.background=c.shC;
-  if(shSt) shSt.textContent=c.shT;
-  if(shTime&&DATA.lastSync) shTime.textContent='Letzter Sync: '+new Date(DATA.lastSync).toLocaleString('de-AT');
-  if(dbInfo) dbInfo.innerHTML=`<b>Supabase URL:</b> ${SB_URL||'—'}<br><b>Status:</b> ${c.shT}`;
-  SYNCING = status==='syncing';
-}
-
-// ════════════════════════════════════════════════════
-// NAVIGATION
-// ════════════════════════════════════════════════════
-function goNav(s) {
-  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
-  document.getElementById('screen-'+s).classList.add('active');
-  document.querySelector(`[data-s="${s}"]`).classList.add('active');
-}
-
-// ════════════════════════════════════════════════════
-// RENDER
-// ════════════════════════════════════════════════════
-function renderAll(){renderStats();renderRecent();renderRz();renderKalkTable();renderSyncScreen();moK();}
-
-function renderStats(){
-  const rz=DATA.rezepte;
-  const avg=rz.length?rz.reduce((s,r)=>s+dbCalc(r).p,0)/rz.length:0;
-  document.getElementById('statsGrid').innerHTML=`
-    <div class="stat-card"><div class="stat-num" style="color:var(--rot)">${rz.length}</div><div class="stat-lbl">Artikel gesamt</div></div>
-    <div class="stat-card"><div class="stat-num" style="color:var(--gruen)">${avg.toFixed(0)}%</div><div class="stat-lbl">Ø Deckungsbeitrag</div></div>
-    <div class="stat-card"><div class="stat-num" style="color:var(--navy)">${rz.filter(r=>r.kat==='würstel').length}</div><div class="stat-lbl">Würstel-Artikel</div></div>
-    <div class="stat-card"><div class="stat-num" style="color:var(--orange)">${rz.filter(r=>r.kat==='getränke').length}</div><div class="stat-lbl">Getränke</div></div>`;
-}
-
-function renderRecent(){
-  const list=[...DATA.rezepte].sort((a,b)=>b.geaendert-a.geaendert).slice(0,5);
-  const el=document.getElementById('recentList');
-  if(!list.length){el.innerHTML='<div style="color:var(--grau4);font-size:13px;padding:6px 0">Noch leer — tippe ➕ um zu starten!</div>';return;}
-  el.innerHTML=list.map(r=>{
-    const u=USERS.find(x=>x.id===r.vonUser)||USERS[0];
-    const d=new Date(r.geaendert).toLocaleDateString('de-AT');
-    const {p}=dbCalc(r);
-    return `<div style="display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--grau2)">
-      <span style="font-size:19px">${kem(r.kat)}</span>
-      <div style="flex:1"><div style="font-size:13px;font-weight:600">${r.name}</div>
-      <div style="font-size:11px;color:var(--grau4)">${d} · ${u.em} ${u.name}</div></div>
-      <div style="text-align:right">
-        <div style="font-weight:700;color:var(--gruen);font-size:13px">€ ${r.vk.toFixed(2)}</div>
-        <span class="db-b ${dbc(p)}">${p.toFixed(0)}%</span>
-      </div></div>`;
-  }).join('');
-}
-
-const kem=k=>({würstel:'🌭',getränke:'🍺',beilagen:'🥗',süßes:'🍩',sonstiges:'📦'}[k]||'🍽️');
-const dbCalc=r=>{const ek=(r.zutaten||[]).reduce((s,z)=>s+(+z.ek||0),0);const d=r.vk-ek;const p=r.vk>0?d/r.vk*100:0;return{ek,d,p};};
-const dbc=p=>p>=65?'db-gut':p>=40?'db-ok':'db-low';
-
-function setF(f,el){FILTER=f;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');renderRz();}
-
-function renderRz(){
-  const q=(document.getElementById('rzSearch')?.value||'').toLowerCase();
-  let list=DATA.rezepte.filter(r=>FILTER==='alle'||r.kat===FILTER);
-  if(q) list=list.filter(r=>r.name.toLowerCase().includes(q));
-  list=list.sort((a,b)=>b.geaendert-a.geaendert);
-  const el=document.getElementById('rzListe');
-  if(!list.length){el.innerHTML='<div class="card" style="text-align:center;color:var(--grau4);padding:28px 14px">Keine Artikel gefunden.<br><small>Tippe auf ＋ um einen hinzuzufügen.</small></div>';return;}
-  el.innerHTML=list.map(r=>{
-    const{ek,d,p}=dbCalc(r);
-    const u=USERS.find(x=>x.id===r.vonUser)||USERS[0];
-    const canEdit=ME?.id===r.vonUser||ME?.id==='roland';
-    const img=r.foto?`<div class="rz-img"><img src="${r.foto}" loading="lazy"></div>`:`<div class="rz-img">${kem(r.kat)}</div>`;
-    return `<div class="rz-item" id="ri-${r.id}">
-      <div class="rz-header" onclick="togR('${r.id}')">
-        ${img}
-        <div class="rz-info">
-          <div class="rz-name">${r.name}</div>
-          <div class="rz-meta"><span>${kem(r.kat)} ${r.kat}</span><span>${u.em} ${u.name}</span></div>
-        </div>
-        <div class="rz-kalk">
-          <div class="vk-p">€ ${r.vk.toFixed(2)}</div>
-          <div class="ek-p">EK: € ${ek.toFixed(2)}</div>
-          <span class="db-b ${dbc(p)}">${p.toFixed(0)}% DB</span>
-        </div>
-      </div>
-      <div class="rz-detail" id="rd-${r.id}">
-        ${r.foto?`<img src="${r.foto}" style="width:100%;max-height:170px;object-fit:cover;border-radius:8px;margin-bottom:9px">`:''}
-        <div class="zt-title">🛒 Zutaten & Einkaufspreise</div>
-        ${(r.zutaten||[]).map(z=>`<div class="zt-row"><span>${z.name} <span style="color:var(--grau4)">(${z.menge})</span></span><span style="font-weight:600">€ ${(+z.ek).toFixed(2)}</span></div>`).join('')}
-        <div class="kalk-box">
-          <div class="kb-row"><span>EK gesamt</span><span>€ ${ek.toFixed(2)}</span></div>
-          <div class="kb-row"><span>Verkaufspreis</span><span>€ ${r.vk.toFixed(2)}</span></div>
-          <div class="kb-row total"><span>Deckungsbeitrag</span><span>€ ${d.toFixed(2)} (${p.toFixed(1)}%)</span></div>
-        </div>
-        ${r.beschreibung?`<div style="margin-top:9px;font-size:13px;line-height:1.7;background:var(--grau1);border-radius:8px;padding:9px"><b>📝 Rezept</b><br>${r.beschreibung.replace(/\n/g,'<br>')}</div>`:''}
-        <div class="action-row">
-          ${canEdit?`<button class="btn-s blue" onclick="editRz('${r.id}')">✏️ Bearbeiten</button>
-          <button class="btn-s red" onclick="delRz('${r.id}')">🗑️ Löschen</button>`:
-          `<div style="font-size:11px;color:var(--grau4)">Erstellt von ${u.em} ${u.name}</div>`}
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function togR(id){document.getElementById('rd-'+id)?.classList.toggle('open');}
-
-function editRz(id){
-  const r=DATA.rezepte.find(x=>x.id===id);if(!r)return;
-  openModal();
-  document.getElementById('mTitle').textContent='✏️ Bearbeiten';
-  document.getElementById('mName').value=r.name;
-  document.getElementById('mKat').value=r.kat;
-  document.getElementById('mVK').value=r.vk;
-  document.getElementById('mBeschr').value=r.beschreibung||'';
-  document.getElementById('mEditId').value=id;
-  if(r.foto){PHOTO=r.foto;const p=document.getElementById('phPreview');p.src=r.foto;p.style.display='block';document.getElementById('phText').textContent='Foto ändern ✓';}
-  document.getElementById('ztListe').innerHTML='';
-  (r.zutaten||[]).forEach(z=>addZt(z.name,z.menge,z.ek));
-  updPrev();
-}
-
-async function delRz(id){
-  if(!confirm('Wirklich löschen?\nAlle Teammitglieder verlieren diesen Eintrag.'))return;
-  DATA.rezepte=DATA.rezepte.filter(r=>r.id!==id);
-  saveLocal();
-  addPending({id,_del:true,geaendert:Date.now()});
-  try{await sbDelete(id);}catch(e){showToast('📱 Lokal gelöscht — Sync wenn online');}
-  renderAll();
-  showToast('🗑️ Gelöscht — alle werden synchronisiert');
-}
-
-// MODAL
-function openModal(){
-  document.getElementById('mTitle').textContent='➕ Neues Rezept';
-  ['mName','mVK','mBeschr','mEditId'].forEach(i=>document.getElementById(i).value='');
-  const p=document.getElementById('phPreview');p.style.display='none';p.src='';
-  document.getElementById('phText').textContent='Tippen zum Fotografieren oder Auswählen';
-  PHOTO=null;
-  document.getElementById('ztListe').innerHTML='';
-  addZt();updPrev();
-  document.getElementById('modalBg').classList.add('open');
-  setTimeout(()=>document.getElementById('mName').focus(),200);
-}
-function closeModal(){document.getElementById('modalBg').classList.remove('open');}
-function closeModalOutside(e){if(e.target===document.getElementById('modalBg'))closeModal();}
-
-function addZt(n='',m='',e=''){
-  const row=document.createElement('div');row.className='zt-input';
-  row.innerHTML=`<input type="text" class="fi z-n" placeholder="Zutat" value="${n}" oninput="updPrev()">
-    <input type="text" class="fi z-m" placeholder="Menge" value="${m}">
-    <input type="number" class="fi z-e" placeholder="€" value="${e}" step="0.01" oninput="updPrev()">
-    <button class="del-zt" onclick="this.parentElement.remove();updPrev()">✕</button>`;
-  document.getElementById('ztListe').appendChild(row);
-}
-
-function getZt(){return[...document.querySelectorAll('.zt-input')].map(r=>({name:r.querySelector('.z-n').value.trim(),menge:r.querySelector('.z-m').value.trim(),ek:parseFloat(r.querySelector('.z-e').value)||0})).filter(z=>z.name);}
-
-function updPrev(){
-  const vk=parseFloat(document.getElementById('mVK').value)||0;
-  const ek=getZt().reduce((s,z)=>s+z.ek,0);
-  const d=vk-ek;const p=vk>0?d/vk*100:0;
-  document.getElementById('pEK').textContent=`€ ${ek.toFixed(2)}`;
-  document.getElementById('pVK').textContent=`€ ${vk.toFixed(2)}`;
-  document.getElementById('pDB').textContent=`€ ${d.toFixed(2)} (${p.toFixed(1)}%)`;
-  document.getElementById('pDB').style.color=p>=65?'var(--gruen)':p>=40?'var(--orange)':'var(--rot2)';
-}
-
-function handlePh(input){
-  const file=input.files[0];if(!file)return;
-  const r=new FileReader();
-  r.onload=e=>{
-    const img=new Image();
-    img.onload=()=>{
-      const c=document.createElement('canvas');const M=800;let w=img.width,h=img.height;
-      if(w>M){h=h*M/w;w=M;}if(h>M){w=w*M/h;h=M;}
-      c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
-      PHOTO=c.toDataURL('image/jpeg',.78);
-      const p=document.getElementById('phPreview');p.src=PHOTO;p.style.display='block';
-      document.getElementById('phText').textContent='Foto gespeichert ✓';
-    };
-    img.src=e.target.result;
-  };
-  r.readAsDataURL(file);
-}
-
-async function saveRz(){
-  const name=document.getElementById('mName').value.trim();
-  if(!name){showToast('⚠️ Bitte einen Namen eingeben');return;}
-  const vk=parseFloat(document.getElementById('mVK').value);
-  if(!vk||vk<=0){showToast('⚠️ Bitte einen Verkaufspreis eingeben');return;}
-  const editId=document.getElementById('mEditId').value;
-  const now=Date.now();
-  const rz={
-    id:editId||'rz_'+now,
-    name,kat:document.getElementById('mKat').value,vk,
-    zutaten:getZt(),
-    beschreibung:document.getElementById('mBeschr').value,
-    erstellt:editId?(DATA.rezepte.find(r=>r.id===editId)?.erstellt||now):now,
-    geaendert:now,vonUser:ME.id,
-    foto:PHOTO||(editId?DATA.rezepte.find(r=>r.id===editId)?.foto:null),
-  };
-  if(editId){const i=DATA.rezepte.findIndex(r=>r.id===editId);if(i>=0)DATA.rezepte[i]=rz;}
-  else DATA.rezepte.unshift(rz);
-  PHOTO=null;
-  closeModal();
-  saveLocal();
-  addPending(rz);
-  setSyncUI('syncing');
-  try{
-    await sbUpsert(rz);
-    localStorage.removeItem('rasa_pending');
-    setSyncUI('online');
-    showToast('✅ Gespeichert — alle sehen es sofort');
-  }catch(e){
-    setSyncUI('offline');
-    showToast('📱 Lokal gespeichert — Sync wenn online');
-  }
-  renderAll();
-}
-
-// KALKULATION
-function renderKalkTable(){
-  const el=document.getElementById('kalkTabelle');
-  const list=[...DATA.rezepte].sort((a,b)=>dbCalc(b).p-dbCalc(a).p);
-  if(!list.length){el.innerHTML='<div style="color:var(--grau4);font-size:13px">Noch keine Artikel.</div>';return;}
-  el.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:12px">
-    <tr style="background:var(--grau1);font-weight:700">
-      <th style="padding:7px 5px;text-align:left">Artikel</th>
-      <th style="padding:7px 5px;text-align:right">EK</th>
-      <th style="padding:7px 5px;text-align:right">VK</th>
-      <th style="padding:7px 5px;text-align:right">DB%</th>
-    </tr>
-    ${list.map((r,i)=>{const{ek,p}=dbCalc(r);return`<tr style="border-top:1px solid var(--grau2);background:${i%2?'var(--grau1)':'#fff'}">
-      <td style="padding:6px 5px">${kem(r.kat)} ${r.name}</td>
-      <td style="padding:6px 5px;text-align:right">€ ${ek.toFixed(2)}</td>
-      <td style="padding:6px 5px;text-align:right;font-weight:700">€ ${r.vk.toFixed(2)}</td>
-      <td style="padding:6px 5px;text-align:right"><span class="db-b ${dbc(p)}">${p.toFixed(0)}%</span></td>
-    </tr>`;}).join('')}
-  </table>`;
-}
-
-function quickK(){
-  const ek=parseFloat(document.getElementById('qEK').value)||0;
-  const auf=parseFloat(document.getElementById('qAuf').value)||200;
-  const vk=ek*(1+auf/100);const d=vk-ek;const p=vk>0?d/vk*100:0;
-  document.getElementById('qResult').innerHTML=`
-    <div class="kalk-preview-row"><span>Einkaufspreis</span><span>€ ${ek.toFixed(2)}</span></div>
-    <div class="kalk-preview-row"><span>Aufschlag ${auf.toFixed(0)}% → VK</span><span><b>€ ${vk.toFixed(2)}</b></span></div>
-    <div class="kalk-preview-row highlight" style="color:${p>=65?'var(--gruen)':p>=40?'var(--orange)':'var(--rot2)'}">
-      <span>Deckungsbeitrag</span><span>€ ${d.toFixed(2)} (${p.toFixed(1)}%)</span>
-    </div>`;
-}
-
-function moK(){
-  const tage=parseFloat(document.getElementById('moT')?.value)||12;
-  const umsatz=parseFloat(document.getElementById('moU')?.value)||550;
-  const rate=50000*(0.055/12)*Math.pow(1+0.055/12,36)/(Math.pow(1+0.055/12,36)-1);
-  const moU=umsatz*tage;const ebit=moU-moU*0.30-tage*100-300-(50000/8/12)-rate;
-  const netto=ebit>0?ebit*0.75:ebit;
-  const el=document.getElementById('moResult');if(!el)return;
-  el.innerHTML=`
-    <div class="kalk-preview-row"><span>Monatsumsatz (${tage} × € ${umsatz})</span><span>€ ${moU.toFixed(0)}</span></div>
-    <div class="kalk-preview-row"><span>– Wareneinsatz 30%</span><span>€ ${(moU*.30).toFixed(0)}</span></div>
-    <div class="kalk-preview-row"><span>– Standgebühren</span><span>€ ${(tage*100).toFixed(0)}</span></div>
-    <div class="kalk-preview-row"><span>– Fixkosten + AfA</span><span>€ ${(300+50000/8/12).toFixed(0)}</span></div>
-    <div class="kalk-preview-row"><span>– Kreditrate</span><span>€ ${rate.toFixed(0)}</span></div>
-    <div class="kalk-preview-row highlight" style="color:${netto>=0?'var(--gruen)':'var(--rot2)'}">
-      <span>Netto-Monatsgewinn</span><span>€ ${netto.toFixed(0)}</span>
+  // Share & Install card
+  html += `
+  <div class="card" style="margin-top:16px;border:1px solid rgba(201,168,76,.25);background:rgba(201,168,76,.05)">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:10px">🔗 App teilen & installieren</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6">
+      Diesen Link an alle Partner senden. Auf dem Handy kann die App als Icon am Homescreen gespeichert werden.
     </div>
-    <div class="kalk-preview-row" style="font-size:11px;color:var(--grau4)">
-      <span>Je Gesellschafter / Monat</span><span>€ ${(netto/4).toFixed(0)}</span>
-    </div>`;
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:10px 12px;font-size:12px;color:var(--gold2);font-family:monospace;word-break:break-all;margin-bottom:10px" id="app-url-display"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn-gold" onclick="shareApp()" style="flex:1">📤 Teilen</button>
+      <button class="btn-sm" onclick="copyLink()" style="flex:1">📋 Kopieren</button>
+    </div>
+    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+      <div style="font-size:11px;color:var(--muted);font-weight:700;margin-bottom:6px">📱 ALS APP INSTALLIEREN (iPhone)</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7">1. Link in <strong style="color:var(--text)">Safari</strong> öffnen<br>2. Unten auf <strong style="color:var(--text)">Teilen</strong> tippen (□↑)<br>3. <strong style="color:var(--text)">„Zum Home-Bildschirm"</strong> wählen<br>4. RASA OG erscheint als App-Icon</div>
+    </div>
+  </div>`;
+
+  document.getElementById('tab-home').innerHTML = html;
+  // Fill in current URL
+  const urlEl = document.getElementById('app-url-display');
+  if (urlEl) urlEl.textContent = window.location.href;
 }
 
-// SYNC SCREEN
-function renderSyncScreen(){
-  const isAdmin=ME?.id==='roland';
-  document.getElementById('teamList').innerHTML=USERS.map(u=>`
-    <div class="team-tile">
-      <div class="tt-av" style="background:${u.color}">${u.em}</div>
-      <div class="tt-info"><div class="tt-name">${u.full}</div><div class="tt-role">${u.role}</div></div>
-      <div style="font-size:18px">${u.id===ME?.id?'← Du':''}</div>
-    </div>`).join('');
-  const ap=document.getElementById('adminPanel');
-  if(isAdmin){
-    ap.innerHTML=`<div class="card">
-      <div class="card-title">🔑 Passwörter verwalten (Admin)</div>
-      ${USERS.map(u=>`<div style="margin-bottom:13px">
-        <div style="font-size:12px;font-weight:700;color:var(--grau4);margin-bottom:4px">${u.em} ${u.full}</div>
-        <div style="display:flex;gap:7px">
-          <input type="text" class="fi" value="${u.pw}" id="upw-${u.id}" style="font-family:monospace;font-size:13px">
-          <button class="btn-s blue" style="white-space:nowrap" onclick="changePw('${u.id}')">💾 OK</button>
-        </div></div>`).join('')}
-    </div>`;
-  }else{ap.innerHTML='';}
+// ═══════════════════════════════════════════
+//  KALKULATION TAB
+// ═══════════════════════════════════════════
+const KALK_KATS = ['Würstel / Grill','Getränke','Beilage','Snack','Sonstiges'];
+let kalkFilter = 'Alle';
+let kalkFormId = null; // null = new, else = edit id
+
+function renderKalk() {
+  let html = `
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <div><div class="section-title">Speisekalkulation</div><div class="section-sub">Vollständige Kostenkalkulation aller Produkte</div></div>
+    <button class="btn-gold" onclick="openKalkForm(null)">+ Neu</button>
+  </div>
+
+  <div id="kalk-form-area"></div>
+
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+    ${['Alle',...KALK_KATS].map(k=>`<button class="btn-outline" style="padding:5px 12px;font-size:12px;${kalkFilter===k?'border-color:var(--gold);color:var(--gold)':''}" onclick="setKalkFilter('${k}')">${k}</button>`).join('')}
+  </div>`;
+
+  const list = kalkFilter === 'Alle' ? DB.kalkulationen : DB.kalkulationen.filter(k=>k.kategorie===kalkFilter);
+  if (!list.length) { html += `<div class="empty">Noch keine Kalkulationen vorhanden.<br>Erstelle die erste mit dem + Neu Button.</div>`; }
+  else {
+    list.forEach(k => { html += kalkCardHtml(k); });
+  }
+  document.getElementById('tab-kalk').innerHTML = html;
 }
 
-function changePw(uid){
-  const newPw=document.getElementById('upw-'+uid).value.trim();
-  if(!newPw||newPw.length<4){showToast('⚠️ Mindestens 4 Zeichen');return;}
-  const u=USERS.find(x=>x.id===uid);
-  if(u){u.pw=newPw;showToast(`✅ Passwort von ${u.name} geändert`);}
+function kalkCardHtml(k) {
+  const komms = k.kommentare || [];
+  const db = k.deckungsbeitrag || 0;
+  const auf = k.aufschlag || 0;
+  return `
+  <div class="card card-accent-gold" id="kc-${escHtml(k.id)}">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div class="expand-toggle" onclick="toggleExpand('kce-${escHtml(k.id)}')" style="flex:1">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px">
+          <span style="font-weight:800;font-size:15px">${escHtml(k.name)}</span>
+          <span class="tag tag-gold">${escHtml(k.kategorie||'')}</span>
+          <span class="tag tag-muted">${escHtml(k.autor||'')}</span>
+        </div>
+        <div class="kc-stats" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+          <div><div style="font-size:9px;color:var(--muted);text-transform:uppercase">VK brutto</div><div style="font-weight:700;color:var(--gold2)">${fmt(k.vk||0)}</div></div>
+          <div><div style="font-size:9px;color:var(--muted);text-transform:uppercase">Kosten</div><div style="font-weight:700;color:var(--muted)">${fmt(k.totalKosten||0)}</div></div>
+          <div><div style="font-size:9px;color:var(--muted);text-transform:uppercase">DB</div><div style="font-weight:700;color:${db>=0?'var(--green)':'var(--red2)'}">${fmt(db)}</div></div>
+          <div><div style="font-size:9px;color:var(--muted);text-transform:uppercase">Aufschlag</div><div style="font-weight:700;color:${auf>=60?'var(--green)':'var(--gold)'}">${auf.toFixed(1)} %</div></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;margin-left:10px">
+        <button class="btn-outline" style="padding:6px 11px;font-size:13px" onclick="openKalkForm('${escHtml(k.id)}')">✏️</button>
+        <button class="btn-danger" style="padding:6px 11px;font-size:13px" onclick="deleteKalk('${escHtml(k.id)}')">🗑</button>
+      </div>
+    </div>
+
+    <div class="expandable" id="kce-${escHtml(k.id)}">
+      ${(k.zutaten||[]).length ? `
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:6px">Zutaten</div>
+          ${k.zutaten.map(z=>`<div style="display:flex;gap:12px;font-size:13px;color:var(--muted);margin-bottom:3px"><span style="color:var(--text);min-width:140px">${escHtml(z.name)}</span><span>${escHtml(z.menge)} ${escHtml(z.einheit)}</span><span style="margin-left:auto;color:var(--gold)">${fmt(z.preis||0)}</span></div>`).join('')}
+        </div>` : ''}
+      ${k.notiz ? `<div style="margin-top:8px;font-size:13px;color:var(--muted);font-style:italic">${escHtml(k.notiz)}</div>` : ''}
+      ${k.foto ? `<img src="${k.foto}" class="foto-preview">` : ''}
+      <div style="font-size:11px;color:var(--muted);margin-top:8px">Erstellt: ${escHtml(k.datum||'')}</div>
+    </div>
+
+    <div class="komm-section">
+      <button class="komm-toggle" onclick="toggleKomm('kkomm-${escHtml(k.id)}')">💬 ${komms.length} Kommentar${komms.length!==1?'e':''}</button>
+      <div class="expandable" id="kkomm-${escHtml(k.id)}">
+        <div style="margin-top:8px">
+          ${komms.map(c=>`<div class="komm-item"><div class="komm-meta"><strong style="color:var(--gold2)">${escHtml(c.autor)}</strong> · ${escHtml(c.datum||'')}</div><div class="komm-text">${escHtml(c.text)}</div></div>`).join('')}
+          <div class="komm-input-row">
+            <select id="kkommautor-${escHtml(k.id)}" style="background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:8px 8px;font-size:14px">
+              ${USERS.map(p=>`<option${p.name===currentUser.name?' selected':''}>${p.name}</option>`).join('')}
+            </select>
+            <input id="kkommtext-${escHtml(k.id)}" style="background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:8px 10px;font-size:14px;width:100%" placeholder="Kommentar…" onkeydown="if(event.key==='Enter')addKalkKomm('${escHtml(k.id)}')">
+            <button class="btn-gold" style="padding:7px 14px" onclick="addKalkKomm('${escHtml(k.id)}')">→</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
 }
 
-async function syncNow(){
-  showToast('🔄 Synchronisiere …');
-  await loadFromCloud();
-  renderAll();
-  showToast('✅ Alle Daten aktuell');
+function toggleExpand(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('open');
+}
+function toggleKomm(id) { toggleExpand(id); }
+
+function setKalkFilter(f) { kalkFilter = f; renderKalk(); }
+
+function addKalkKomm(kid) {
+  const textEl = document.getElementById('kkommtext-' + kid);
+  const autorEl = document.getElementById('kkommautor-' + kid);
+  const text = textEl ? textEl.value.trim() : '';
+  if (!text) return;
+  const autor = autorEl ? autorEl.value : currentUser.name;
+  const k = DB.kalkulationen.find(x=>x.id===kid);
+  if (!k) return;
+  if (!k.kommentare) k.kommentare = [];
+  k.kommentare.push({id:uid(), autor, text, datum:nowStr()});
+  sbSave('kalkulation', kid, k, function(ok) {
+    if (ok) { showToast('Kommentar gespeichert', 'ok'); renderKalk(); }
+    else showToast('Fehler beim Speichern', 'err');
+  });
 }
 
-function exportD(){
-  const b=new Blob([JSON.stringify(DATA,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(b);
-  a.download=`rasa-backup-${new Date().toISOString().split('T')[0]}.json`;
-  a.click();showToast('📤 Backup exportiert');
+function deleteKalk(id) {
+  if (!confirm('Kalkulation löschen?')) return;
+  DB.kalkulationen = DB.kalkulationen.filter(k=>k.id!==id);
+  sbDeleteEntry(id, function(ok) {
+    if (ok) { showToast('Gelöscht', 'ok'); renderKalk(); }
+    else showToast('Fehler', 'err');
+  });
 }
 
-function importD(input){
-  const file=input.files[0];if(!file)return;
-  const r=new FileReader();
-  r.onload=async e=>{
-    try{
-      const imp=JSON.parse(e.target.result);if(!imp.rezepte)throw 0;
-      let add=0,up=0;
-      for(const rz of imp.rezepte){
-        const i=DATA.rezepte.findIndex(x=>x.id===rz.id);
-        if(i>=0){if(rz.geaendert>DATA.rezepte[i].geaendert){DATA.rezepte[i]=rz;up++;}}
-        else{DATA.rezepte.push(rz);add++;}
-        try{await sbUpsert(rz);}catch(e){addPending(rz);}
-      }
-      saveLocal();renderAll();
-      showToast(`✅ ${add} neu, ${up} aktualisiert`);
-    }catch{showToast('⚠️ Ungültiges Backup-Format');}
+function openKalkForm(id) {
+  kalkFormId = id;
+  const k = id ? DB.kalkulationen.find(x=>x.id===id) : null;
+  const v = (field, def='') => k ? (k[field]??def) : def;
+  const zutaten = k ? (k.zutaten||[{name:'',menge:'',einheit:'g',preis:''}]) : [{name:'',menge:'',einheit:'g',preis:''}];
+
+  let zHtml = zutaten.map((z,i) => zRow(z,i)).join('');
+
+  const formHtml = `
+  <div class="card" style="border-color:var(--gold);margin-bottom:16px" id="kalk-form-card">
+    <div style="font-weight:800;font-size:15px;color:var(--gold2);margin-bottom:14px">${id ? '✏️ Kalkulation bearbeiten' : '➕ Neue Kalkulation'}</div>
+    <div class="g2">
+      <div class="fi"><label>Produktname *</label><input id="kf-name" value="${escHtml(v('name'))}" placeholder="z.B. Käsekrainer"></div>
+      <div class="fi"><label>Kategorie</label><select id="kf-kat">${KALK_KATS.map(k=>`<option${v('kategorie')===k?' selected':''}>${k}</option>`).join('')}</select></div>
+      <div class="fi"><label>Erstellt von</label><select id="kf-autor">${USERS.map(p=>`<option${v('autor',currentUser.name)===p.name?' selected':''}>${p.name}</option>`).join('')}</select></div>
+    </div>
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:8px">Zutaten / Wareneinsatz</div>
+    <div id="kf-zutaten">${zHtml}</div>
+    <button class="btn-outline" style="font-size:12px;padding:5px 12px;margin-bottom:12px" onclick="addZRow()">+ Zutat</button>
+    <div class="g2">
+      <div class="fi"><label>Verpackung (€)</label><input id="kf-verp" type="number" step="0.01" value="${escHtml(v('verpackung'))}" placeholder="0.00" oninput="recalc()"></div>
+      <div class="fi"><label>Personal / Energie (€)</label><input id="kf-pers" type="number" step="0.01" value="${escHtml(v('personal'))}" placeholder="0.00" oninput="recalc()"></div>
+      <div class="fi"><label>VK brutto (€) *</label><input id="kf-vk" type="number" step="0.01" value="${escHtml(v('vk'))}" placeholder="0.00" oninput="recalc()"></div>
+    </div>
+    <div id="kf-result" style="background:var(--bg);border-radius:7px;padding:12px;margin-bottom:12px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;display:none"></div>
+    <div class="fi"><label>Notiz</label><textarea id="kf-notiz" placeholder="Besonderheiten…">${escHtml(v('notiz'))}</textarea></div>
+    <div class="fi"><label>Foto</label><input type="file" id="kf-foto" accept="image/*" onchange="previewFoto()"><img id="kf-foto-preview" class="foto-preview" style="display:${v('foto')?'block':'none'}" src="${escHtml(v('foto'))}"></div>
+    <div class="btn-row"><button class="btn-gold" onclick="saveKalk()">💾 Speichern</button><button class="btn-outline" onclick="closeKalkForm()">Abbrechen</button></div>
+  </div>`;
+
+  document.getElementById('kalk-form-area').innerHTML = formHtml;
+  recalc();
+  document.getElementById('kalk-form-card').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function zRow(z, i) {
+  const EINH = ['g','kg','ml','l','Stk','Pkg'];
+  return `<div class="zrow" id="zrow-${i}">
+    <input class="kf-zname" placeholder="Zutat" value="${escHtml(z.name||'')}" oninput="recalc()">
+    <input class="kf-zmenge z-menge" placeholder="Menge" value="${escHtml(z.menge||'')}">
+    <select class="kf-zeinh z-einh">${EINH.map(e=>`<option${e===z.einheit?' selected':''}>${e}</option>`).join('')}</select>
+    <input class="kf-zpreis" type="number" step="0.01" placeholder="€" value="${escHtml(z.preis||'')}" oninput="recalc()">
+    <button class="btn-danger" style="padding:8px" onclick="removeZRow(${i})">✕</button>
+  </div>`;
+}
+
+let zRowCount = 0;
+function addZRow() {
+  const container = document.getElementById('kf-zutaten');
+  const idx = container.querySelectorAll('[id^=zrow-]').length + (++zRowCount);
+  const div = document.createElement('div');
+  div.innerHTML = zRow({name:'',menge:'',einheit:'g',preis:''}, idx);
+  container.appendChild(div.firstElementChild);
+}
+
+function removeZRow(i) {
+  const el = document.getElementById('zrow-' + i);
+  if (el) el.remove();
+  recalc();
+}
+
+function recalc() {
+  const prices = [...document.querySelectorAll('.kf-zpreis')].map(i=>parseFloat(i.value)||0);
+  const warenkosten = prices.reduce((a,b)=>a+b, 0);
+  const verp = parseFloat(document.getElementById('kf-verp')?.value)||0;
+  const pers = parseFloat(document.getElementById('kf-pers')?.value)||0;
+  const total = warenkosten + verp + pers;
+  const vk = parseFloat(document.getElementById('kf-vk')?.value)||0;
+  const db = vk - total;
+  const auf = total > 0 ? (db/total*100) : 0;
+  const el = document.getElementById('kf-result');
+  if (!el) return;
+  if (total > 0 || vk > 0) {
+    el.style.display = 'grid';
+    el.innerHTML = [
+      {l:'Warenkosten',v:fmt(warenkosten),c:'var(--muted)'},
+      {l:'Gesamtkosten',v:fmt(total),c:'var(--muted)'},
+      {l:'Deckungsbeitrag',v:fmt(db),c:db>=0?'var(--green)':'var(--red2)'},
+      {l:'Aufschlag',v:auf.toFixed(1)+' %',c:auf>=60?'var(--green)':'var(--gold)'},
+    ].map(x=>`<div style="text-align:center"><div style="font-size:10px;color:var(--muted);text-transform:uppercase">${x.l}</div><div style="font-size:17px;font-weight:800;color:${x.c}">${x.v}</div></div>`).join('');
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+function previewFoto() {
+  const file = document.getElementById('kf-foto')?.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('kf-foto-preview');
+    if (img) { img.src = e.target.result; img.style.display = 'block'; }
   };
-  r.readAsText(file);
+  reader.readAsDataURL(file);
 }
 
-// UTILS
-function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2800);
+function gatherZutaten() {
+  const names = [...document.querySelectorAll('.kf-zname')].map(i=>i.value.trim());
+  const mengen = [...document.querySelectorAll('.kf-zmenge')].map(i=>i.value.trim());
+  const einh = [...document.querySelectorAll('.kf-zeinh')].map(i=>i.value);
+  const preise = [...document.querySelectorAll('.kf-zpreis')].map(i=>parseFloat(i.value)||0);
+  return names.map((n,i)=>({name:n,menge:mengen[i],einheit:einh[i],preis:preise[i]})).filter(z=>z.name);
 }
 
-start();
+function saveKalk() {
+  const name = document.getElementById('kf-name')?.value.trim();
+  if (!name) { showToast('Produktname eingeben!', 'err'); return; }
+  const zutaten = gatherZutaten();
+  const warenkosten = zutaten.reduce((s,z)=>s+(parseFloat(z.preis)||0),0);
+  const verp = parseFloat(document.getElementById('kf-verp')?.value)||0;
+  const pers = parseFloat(document.getElementById('kf-pers')?.value)||0;
+  const totalKosten = warenkosten + verp + pers;
+  const vk = parseFloat(document.getElementById('kf-vk')?.value)||0;
+  const db = vk - totalKosten;
+  const auf = totalKosten > 0 ? (db/totalKosten*100) : 0;
+  const fotoPreview = document.getElementById('kf-foto-preview');
+  const foto = fotoPreview && fotoPreview.style.display !== 'none' ? fotoPreview.src : '';
+
+  const existing = kalkFormId ? DB.kalkulationen.find(x=>x.id===kalkFormId) : null;
+  const obj = {
+    id: kalkFormId || uid(),
+    name,
+    kategorie: document.getElementById('kf-kat')?.value,
+    autor: document.getElementById('kf-autor')?.value,
+    vk, verpackung: verp, personal: pers,
+    warenkosten, totalKosten, deckungsbeitrag: db, aufschlag: auf,
+    zutaten,
+    notiz: document.getElementById('kf-notiz')?.value.trim(),
+    foto,
+    datum: existing?.datum || nowStr(),
+    kommentare: existing?.kommentare || [],
+  };
+
+  if (existing) {
+    DB.kalkulationen = DB.kalkulationen.map(x=>x.id===obj.id?obj:x);
+  } else {
+    DB.kalkulationen.push(obj);
+  }
+
+  sbSave('kalkulation', obj.id, obj, function(ok) {
+    if (ok) { showToast('Gespeichert ✓', 'ok'); closeKalkForm(); renderKalk(); }
+    else showToast('Fehler beim Speichern', 'err');
+  });
+}
+
+function closeKalkForm() {
+  document.getElementById('kalk-form-area').innerHTML = '';
+  kalkFormId = null;
+}
+
+// ═══════════════════════════════════════════
+//  REZEPTE TAB
+// ═══════════════════════════════════════════
+const REZEPT_KATS = ['Frühstück','Vorspeise','Hauptspeise','Beilage','Getränk','Dessert','Snack','Sauce/Dip'];
+let rezeptSuche = '';
+let rezeptFormId = null;
+
+function renderRezepte() {
+  let html = `
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <div><div class="section-title">Rezeptbuch</div><div class="section-sub">Gemeinsame Rezepte und Zubereitungsideen</div></div>
+    <button class="btn-gold" onclick="openRezeptForm(null)">+ Rezept</button>
+  </div>
+  <div id="rezept-form-area"></div>
+  <div class="fi" style="margin-bottom:14px"><input id="rezept-suche" style="background:var(--bg);border:1px solid var(--border);border-radius:7px;color:var(--text);padding:9px 12px;width:100%;font-size:14px" placeholder="🔍 Rezept suchen…" value="${escHtml(rezeptSuche)}" oninput="rezeptSuche=this.value;renderRezepte()"></div>`;
+
+  const list = DB.rezepte.filter(r => !rezeptSuche || r.titel.toLowerCase().includes(rezeptSuche.toLowerCase()) || (r.tags||'').toLowerCase().includes(rezeptSuche.toLowerCase()));
+  if (!list.length) { html += `<div class="empty">Noch keine Rezepte vorhanden.</div>`; }
+  else { list.forEach(r => { html += rezeptCardHtml(r); }); }
+  document.getElementById('tab-rezepte').innerHTML = html;
+}
+
+function rezeptCardHtml(r) {
+  const komms = r.kommentare || [];
+  const tags = (r.tags||'').split(',').map(t=>t.trim()).filter(Boolean);
+  return `
+  <div class="card card-accent-green" id="rc-${escHtml(r.id)}">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div class="expand-toggle" onclick="toggleExpand('rce-${escHtml(r.id)}')" style="flex:1">
+        ${r.foto ? `<img src="${r.foto}" style="width:100%;max-height:130px;object-fit:cover;border-radius:7px;margin-bottom:9px">` : ''}
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px">
+          <span style="font-weight:800;font-size:15px">${escHtml(r.titel)}</span>
+          <span class="tag tag-gold">${escHtml(r.kategorie||'')}</span>
+          <span class="tag tag-muted">${escHtml(r.autor||'')}</span>
+          <span style="font-size:11px;color:var(--muted)">· ${escHtml(String(r.portionen||4))} Port.</span>
+        </div>
+        ${tags.length ? `<div style="display:flex;gap:5px;flex-wrap:wrap">${tags.map(t=>`<span class="tag tag-green">${escHtml(t)}</span>`).join('')}</div>` : ''}
+      </div>
+      <div style="display:flex;gap:6px;margin-left:10px">
+        <button class="btn-outline" style="padding:6px 11px" onclick="openRezeptForm('${escHtml(r.id)}')">✏️</button>
+        <button class="btn-danger" style="padding:6px 11px" onclick="deleteRezept('${escHtml(r.id)}')">🗑</button>
+      </div>
+    </div>
+
+    <div class="expandable" id="rce-${escHtml(r.id)}">
+      ${(r.zutaten||[]).length ? `
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:6px">Zutaten</div>
+          ${r.zutaten.map(z=>`<div style="display:flex;gap:12px;font-size:13px;color:var(--muted);margin-bottom:3px"><span style="min-width:140px;color:var(--text)">${escHtml(z.name)}</span><span>${escHtml(z.menge||'')}</span></div>`).join('')}
+        </div>` : ''}
+      ${r.zubereitung ? `<div style="margin-top:10px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:5px">Zubereitung</div><div style="font-size:13px;color:var(--muted);white-space:pre-line;line-height:1.6">${escHtml(r.zubereitung)}</div></div>` : ''}
+      ${r.tipps ? `<div style="margin-top:8px;font-size:13px;color:var(--gold);font-style:italic">💡 ${escHtml(r.tipps)}</div>` : ''}
+      <div style="font-size:11px;color:var(--muted);margin-top:8px">Eingetragen: ${escHtml(r.datum||'')}</div>
+    </div>
+
+    <div class="komm-section">
+      <button class="komm-toggle" onclick="toggleKomm('rkomm-${escHtml(r.id)}')">💬 ${komms.length} Kommentar${komms.length!==1?'e':''}</button>
+      <div class="expandable" id="rkomm-${escHtml(r.id)}">
+        <div style="margin-top:8px">
+          ${komms.map(c=>`<div class="komm-item"><div class="komm-meta"><strong style="color:var(--gold2)">${escHtml(c.autor)}</strong> · ${escHtml(c.datum||'')}</div><div class="komm-text">${escHtml(c.text)}</div></div>`).join('')}
+          <div class="komm-input-row">
+            <select id="rkommautor-${escHtml(r.id)}" style="background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:8px 8px;font-size:14px">
+              ${USERS.map(p=>`<option${p.name===currentUser.name?' selected':''}>${p.name}</option>`).join('')}
+            </select>
+            <input id="rkommtext-${escHtml(r.id)}" style="background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:8px 10px;font-size:14px;width:100%" placeholder="Kommentar…" onkeydown="if(event.key==='Enter')addRezeptKomm('${escHtml(r.id)}')">
+            <button class="btn-gold" style="padding:7px 14px" onclick="addRezeptKomm('${escHtml(r.id)}')">→</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function addRezeptKomm(rid) {
+  const textEl = document.getElementById('rkommtext-' + rid);
+  const autorEl = document.getElementById('rkommautor-' + rid);
+  const text = textEl ? textEl.value.trim() : '';
+  if (!text) return;
+  const r = DB.rezepte.find(x=>x.id===rid);
+  if (!r) return;
+  if (!r.kommentare) r.kommentare = [];
+  r.kommentare.push({id:uid(), autor: autorEl?autorEl.value:currentUser.name, text, datum:nowStr()});
+  sbSave('rezept', rid, r, function(ok) {
+    if (ok) { showToast('Kommentar gespeichert', 'ok'); renderRezepte(); }
+    else showToast('Fehler', 'err');
+  });
+}
+
+function deleteRezept(id) {
+  if (!confirm('Rezept löschen?')) return;
+  DB.rezepte = DB.rezepte.filter(r=>r.id!==id);
+  sbDeleteEntry(id, function(ok) {
+    if (ok) { showToast('Gelöscht', 'ok'); renderRezepte(); }
+    else showToast('Fehler', 'err');
+  });
+}
+
+function openRezeptForm(id) {
+  rezeptFormId = id;
+  const r = id ? DB.rezepte.find(x=>x.id===id) : null;
+  const v = (field, def='') => r ? (r[field]??def) : def;
+  const zutaten = r ? (r.zutaten||[{name:'',menge:''}]) : [{name:'',menge:''}];
+
+  const html = `
+  <div class="card" style="border-color:var(--gold);margin-bottom:16px" id="rezept-form-card">
+    <div style="font-weight:800;font-size:15px;color:var(--gold2);margin-bottom:14px">${id ? '✏️ Rezept bearbeiten' : '📖 Neues Rezept'}</div>
+    <div class="form-grid-4">
+      <div class="fi" style="grid-column:span 2"><label>Rezepttitel *</label><input id="rf-titel" value="${escHtml(v('titel'))}" placeholder="z.B. Hausgemachte Grillsauce"></div>
+      <div class="fi"><label>Kategorie</label><select id="rf-kat">${REZEPT_KATS.map(k=>`<option${v('kategorie')===k?' selected':''}>${k}</option>`).join('')}</select></div>
+      <div class="fi"><label>Von</label><select id="rf-autor">${USERS.map(p=>`<option${v('autor',currentUser.name)===p.name?' selected':''}>${p.name}</option>`).join('')}</select></div>
+    </div>
+    <div class="g2">
+      <div class="fi"><label>Portionen</label><input id="rf-port" type="number" value="${escHtml(String(v('portionen',4)))}"></div>
+      <div class="fi"><label>Tags (Komma-getrennt)</label><input id="rf-tags" value="${escHtml(v('tags'))}" placeholder="vegetarisch, schnell…"></div>
+    </div>
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:7px">Zutaten</div>
+    <div id="rf-zutaten">${zutaten.map((z,i)=>rzRow(z,i)).join('')}</div>
+    <button class="btn-outline" style="font-size:12px;padding:5px 12px;margin-bottom:12px" onclick="addRzRow()">+ Zutat</button>
+    <div class="fi"><label>Zubereitung</label><textarea id="rf-zub" rows="4" placeholder="Schritt-für-Schritt…">${escHtml(v('zubereitung'))}</textarea></div>
+    <div class="fi"><label>Tipps & Varianten</label><textarea id="rf-tipps" rows="2" placeholder="Geheimtipps…">${escHtml(v('tipps'))}</textarea></div>
+    <div class="fi"><label>Foto</label><input type="file" id="rf-foto" accept="image/*" onchange="previewRFoto()"><img id="rf-foto-preview" class="foto-preview" style="display:${v('foto')?'block':'none'}" src="${escHtml(v('foto'))}"></div>
+    <div class="btn-row"><button class="btn-gold" onclick="saveRezept()">💾 Speichern</button><button class="btn-outline" onclick="closeRezeptForm()">Abbrechen</button></div>
+  </div>`;
+
+  document.getElementById('rezept-form-area').innerHTML = html;
+  document.getElementById('rezept-form-card').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function rzRow(z, i) {
+  return `<div class="rzrow" id="rzrow-${i}">
+    <input class="rf-zname" placeholder="Zutat" value="${escHtml(z.name||'')}">
+    <input class="rf-zmenge" placeholder="Menge" value="${escHtml(z.menge||'')}">
+    <button class="btn-danger" style="padding:8px" onclick="removeRzRow(${i})">✕</button>
+  </div>`;
+}
+
+let rzRowCount = 0;
+function addRzRow() {
+  const container = document.getElementById('rf-zutaten');
+  const idx = container.querySelectorAll('[id^=rzrow-]').length + (++rzRowCount);
+  const div = document.createElement('div');
+  div.innerHTML = rzRow({name:'',menge:''}, idx);
+  container.appendChild(div.firstElementChild);
+}
+function removeRzRow(i) { const el = document.getElementById('rzrow-'+i); if(el) el.remove(); }
+
+function previewRFoto() {
+  const file = document.getElementById('rf-foto')?.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('rf-foto-preview');
+    if (img) { img.src = e.target.result; img.style.display = 'block'; }
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveRezept() {
+  const titel = document.getElementById('rf-titel')?.value.trim();
+  if (!titel) { showToast('Titel eingeben!', 'err'); return; }
+  const existing = rezeptFormId ? DB.rezepte.find(x=>x.id===rezeptFormId) : null;
+  const fotoPreview = document.getElementById('rf-foto-preview');
+  const foto = fotoPreview && fotoPreview.style.display !== 'none' ? fotoPreview.src : '';
+  const znames = [...document.querySelectorAll('.rf-zname')].map(i=>i.value.trim());
+  const zmengen = [...document.querySelectorAll('.rf-zmenge')].map(i=>i.value.trim());
+  const zutaten = znames.map((n,i)=>({name:n,menge:zmengen[i]})).filter(z=>z.name);
+
+  const obj = {
+    id: rezeptFormId || uid(),
+    titel,
+    kategorie: document.getElementById('rf-kat')?.value,
+    autor: document.getElementById('rf-autor')?.value,
+    portionen: parseInt(document.getElementById('rf-port')?.value)||4,
+    tags: document.getElementById('rf-tags')?.value.trim(),
+    zutaten,
+    zubereitung: document.getElementById('rf-zub')?.value.trim(),
+    tipps: document.getElementById('rf-tipps')?.value.trim(),
+    foto,
+    datum: existing?.datum || nowStr(),
+    kommentare: existing?.kommentare || [],
+  };
+
+  if (existing) DB.rezepte = DB.rezepte.map(x=>x.id===obj.id?obj:x);
+  else DB.rezepte.push(obj);
+
+  sbSave('rezept', obj.id, obj, function(ok) {
+    if (ok) { showToast('Gespeichert ✓', 'ok'); closeRezeptForm(); renderRezepte(); }
+    else showToast('Fehler', 'err');
+  });
+}
+
+function closeRezeptForm() {
+  document.getElementById('rezept-form-area').innerHTML = '';
+  rezeptFormId = null;
+}
+
+// ═══════════════════════════════════════════
+//  AUSTAUSCH TAB
+// ═══════════════════════════════════════════
+const BTYPEN = [
+  {k:'idee',label:'💡 Idee'},
+  {k:'frage',label:'❓ Frage'},
+  {k:'info',label:'ℹ️ Info'},
+  {k:'aufgabe',label:'✅ Aufgabe'},
+  {k:'dringend',label:'🔴 Dringend'},
+];
+const BTYP_COLORS = {idee:'tag-gold',frage:'tag-blue',info:'tag-muted',aufgabe:'tag-green',dringend:'tag-red'};
+
+function renderAustausch() {
+  const html = `
+  <div class="section-title" style="margin-bottom:4px">Team-Austausch</div>
+  <div class="section-sub">Ideen, Fragen und Aufgaben für alle vier Partner</div>
+
+  <div class="card" style="border-color:rgba(201,168,76,.3);margin-bottom:16px">
+    <div style="font-weight:700;font-size:14px;color:var(--gold2);margin-bottom:12px">📝 Neuer Beitrag</div>
+    <div class="g2">
+      <div class="fi"><label>Von</label><select id="ba-autor">${USERS.map(p=>`<option${p.name===currentUser.name?' selected':''}>${p.name}</option>`).join('')}</select></div>
+      <div class="fi"><label>Art</label><select id="ba-typ">${BTYPEN.map(t=>`<option value="${t.k}">${t.label}</option>`).join('')}</select></div>
+    </div>
+    <div class="fi"><label>Titel *</label><input id="ba-titel" placeholder="Kurze Überschrift…"></div>
+    <div class="fi"><label>Inhalt *</label><textarea id="ba-inhalt" rows="3" placeholder="Dein Beitrag, Idee oder Frage…"></textarea></div>
+    <button class="btn-gold" onclick="saveBeitrag()">📤 Posten</button>
+  </div>
+
+  <div id="beitraege-list">
+    ${DB.beitraege.length === 0 ? '<div class="empty">Noch keine Beiträge. Poste den ersten!</div>' :
+      DB.beitraege.map(b => beitragCardHtml(b)).join('')}
+  </div>`;
+
+  document.getElementById('tab-austausch').innerHTML = html;
+}
+
+function beitragCardHtml(b) {
+  const komms = b.kommentare || [];
+  const cls = BTYP_COLORS[b.typ] || 'tag-muted';
+  const typ = BTYPEN.find(t=>t.k===b.typ);
+  return `
+  <div class="card" style="border-left:3px solid ${b.typ==='dringend'?'var(--red2)':b.typ==='idee'?'var(--gold)':b.typ==='aufgabe'?'var(--green)':b.typ==='frage'?'var(--blue)':'var(--muted)'}">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div style="flex:1">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px">
+          <span class="tag ${cls}">${typ?typ.label:b.typ}</span>
+          <span style="font-weight:800;font-size:15px">${escHtml(b.titel)}</span>
+        </div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:6px;line-height:1.6">${escHtml(b.inhalt)}</div>
+        <div style="font-size:11px;color:var(--muted)"><strong style="color:var(--gold)">${escHtml(b.autor)}</strong> · ${escHtml(b.datum||'')}</div>
+      </div>
+      <button class="btn-danger" style="margin-left:10px;padding:6px 11px" onclick="deleteBeitrag('${escHtml(b.id)}')">🗑</button>
+    </div>
+    <div class="komm-section">
+      <button class="komm-toggle" onclick="toggleKomm('bkomm-${escHtml(b.id)}')">💬 ${komms.length} Kommentar${komms.length!==1?'e':''}</button>
+      <div class="expandable" id="bkomm-${escHtml(b.id)}">
+        <div style="margin-top:8px">
+          ${komms.map(c=>`<div class="komm-item"><div class="komm-meta"><strong style="color:var(--gold2)">${escHtml(c.autor)}</strong> · ${escHtml(c.datum||'')}</div><div class="komm-text">${escHtml(c.text)}</div></div>`).join('')}
+          <div class="komm-input-row">
+            <select id="bkommautor-${escHtml(b.id)}" style="background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:8px 8px;font-size:14px">
+              ${USERS.map(p=>`<option${p.name===currentUser.name?' selected':''}>${p.name}</option>`).join('')}
+            </select>
+            <input id="bkommtext-${escHtml(b.id)}" style="background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:8px 10px;font-size:14px;width:100%" placeholder="Kommentar…" onkeydown="if(event.key==='Enter')addBeitragKomm('${escHtml(b.id)}')">
+            <button class="btn-gold" style="padding:7px 14px" onclick="addBeitragKomm('${escHtml(b.id)}')">→</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function saveBeitrag() {
+  const titel = document.getElementById('ba-titel')?.value.trim();
+  const inhalt = document.getElementById('ba-inhalt')?.value.trim();
+  if (!titel || !inhalt) { showToast('Titel und Inhalt ausfüllen!', 'err'); return; }
+  const obj = {
+    id: uid(),
+    autor: document.getElementById('ba-autor')?.value,
+    typ: document.getElementById('ba-typ')?.value,
+    titel, inhalt,
+    datum: nowStr(),
+    kommentare: [],
+  };
+  DB.beitraege.unshift(obj);
+  sbSave('beitrag', obj.id, obj, function(ok) {
+    if (ok) { showToast('Gepostet ✓', 'ok'); renderAustausch(); }
+    else showToast('Fehler', 'err');
+  });
+}
+
+function addBeitragKomm(bid) {
+  const textEl = document.getElementById('bkommtext-' + bid);
+  const autorEl = document.getElementById('bkommautor-' + bid);
+  const text = textEl ? textEl.value.trim() : '';
+  if (!text) return;
+  const b = DB.beitraege.find(x=>x.id===bid);
+  if (!b) return;
+  if (!b.kommentare) b.kommentare = [];
+  b.kommentare.push({id:uid(), autor: autorEl?autorEl.value:currentUser.name, text, datum:nowStr()});
+  sbSave('beitrag', bid, b, function(ok) {
+    if (ok) { showToast('Kommentar gespeichert', 'ok'); renderAustausch(); }
+    else showToast('Fehler', 'err');
+  });
+}
+
+function deleteBeitrag(id) {
+  if (!confirm('Beitrag löschen?')) return;
+  DB.beitraege = DB.beitraege.filter(b=>b.id!==id);
+  sbDeleteEntry(id, function(ok) {
+    if (ok) { showToast('Gelöscht', 'ok'); renderAustausch(); }
+    else showToast('Fehler', 'err');
+  });
+}
+
+// ═══════════════════════════════════════════
+//  BOOT
+// ═══════════════════════════════════════════
+// ═══════════════════════════════════════════
+//  TEILEN & INSTALLIEREN
+// ═══════════════════════════════════════════
+function shareApp() {
+  const url = window.location.href;
+  const title = 'RASA OG – Team Portal';
+  const text = 'RASA OG Team-App: Kalkulation, Rezepte und Austausch für alle Partner.';
+  if (navigator.share) {
+    navigator.share({ title, text, url }).catch(() => copyLink());
+  } else {
+    copyLink();
+  }
+}
+
+function copyLink() {
+  const url = window.location.href;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => showToast('Link kopiert! ✓', 'ok'));
+  } else {
+    // Fallback for older browsers
+    const el = document.createElement('textarea');
+    el.value = url;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    showToast('Link kopiert! ✓', 'ok');
+  }
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+  SB_URL = localStorage.getItem('rasa_sb_url') || 'https://bvodhzacatfuduwtlwut.supabase.co';
+  SB_KEY = localStorage.getItem('rasa_sb_key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2b2RoemFjYXRmdWR1d3Rsd3V0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxODUwMjcsImV4cCI6MjA5NTc2MTAyN30.kX03LLhpIm-iD1VQqreIpCCwAHzsT0pmYdIsl8uSeuY';
+  if (!SB_URL || !SB_KEY) {
+    document.getElementById('setup-screen').classList.add('active');
+  } else {
+    showPinScreen();
+  }
+});
 </script>
 </body>
 </html>
