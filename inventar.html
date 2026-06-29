@@ -18,7 +18,57 @@ body{background:#0f1117;font-family:Segoe UI,system-ui,sans-serif;min-height:100
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const { useState, useEffect, useCallback } = React;
+
+// ── SUPABASE CONFIG ─────────────────────────────────────────────
+// Trage hier deine Supabase URL und Anon Key ein:
+const SB_URL = "DEINE_SUPABASE_URL";   // z.B. https://xxxx.supabase.co
+const SB_KEY = "DEIN_ANON_KEY";        // eyJhbGci...
+
+function sbReq(method, table, body, qs) {
+  return new Promise((resolve, reject) => {
+    const x = new XMLHttpRequest();
+    const url = SB_URL + '/rest/v1/' + table + (qs ? '?' + qs : '');
+    x.open(method, url, true);
+    x.setRequestHeader('apikey', SB_KEY);
+    x.setRequestHeader('Authorization', 'Bearer ' + SB_KEY);
+    x.setRequestHeader('Content-Type', 'application/json');
+    x.setRequestHeader('Prefer', 'return=representation');
+    x.timeout = 12000;
+    x.onload = () => {
+      if (x.status >= 200 && x.status < 300) {
+        try { resolve(JSON.parse(x.responseText || '[]')); } catch { resolve([]); }
+      } else { reject(new Error('HTTP ' + x.status)); }
+    };
+    x.onerror = () => reject(new Error('Netzwerkfehler'));
+    x.ontimeout = () => reject(new Error('Timeout'));
+    x.send(body ? JSON.stringify(body) : null);
+  });
+}
+function sbUpsert(table, data) {
+  return new Promise((resolve, reject) => {
+    const x = new XMLHttpRequest();
+    x.open('POST', SB_URL + '/rest/v1/' + table, true);
+    x.setRequestHeader('apikey', SB_KEY);
+    x.setRequestHeader('Authorization', 'Bearer ' + SB_KEY);
+    x.setRequestHeader('Content-Type', 'application/json');
+    x.setRequestHeader('Prefer', 'resolution=merge-duplicates,return=representation');
+    x.timeout = 12000;
+    x.onload = () => { try { resolve(JSON.parse(x.responseText || '[]')); } catch { resolve([]); } };
+    x.onerror = () => reject(new Error('Netzwerkfehler'));
+    x.ontimeout = () => reject(new Error('Timeout'));
+    x.send(JSON.stringify(data));
+  });
+}
+const sb = {
+  get:   (t, q)    => sbReq('GET',    t, null, q),
+  post:  (t, d)    => sbReq('POST',   t, d),
+  patch: (t, d, q) => sbReq('PATCH',  t, d, q),
+  del:   (t, q)    => sbReq('DELETE', t, null, q),
+};
+const USE_SUPABASE = SB_URL !== "DEINE_SUPABASE_URL" && SB_KEY !== "DEIN_ANON_KEY";
+// ─────────────────────────────────────────────────────────────────
+
+const { useState, useEffect, useCallback, useRef } = React;
 
 
 
@@ -47,17 +97,57 @@ const defaultData = {
   log: [],
 };
 
-function loadData() {
+
+// Lokaler Cache
+const SK = 'ginv4';
+function loadLocal() {
   try {
     const d = JSON.parse(localStorage.getItem(SK));
     if (d && d.users && d.users.length > 0) return d;
   } catch (e) {}
   return JSON.parse(JSON.stringify(defaultData));
 }
-
-function saveData(d) {
+function saveLocal(d) {
   try { localStorage.setItem(SK, JSON.stringify(d)); } catch (e) {}
 }
+async function loadFromSupabase() {
+  const [users, cats, items, log] = await Promise.all([
+    sb.get('inv_users', 'select=*'),
+    sb.get('inv_categories', 'select=*&order=name'),
+    sb.get('inv_items', 'select=*&order=name'),
+    sb.get('inv_log', 'select=*&order=ts.desc&limit=60'),
+  ]);
+  return {
+    users: users.map(u => ({ id: u.id, username: u.username, password: u.password, display: u.display, role: u.role })),
+    cats:  cats.map(c  => ({ id: c.id, name: c.name, icon: c.icon })),
+    items: items.map(i => ({ id: i.id, name: i.name, cid: i.cat_id, qty: Number(i.qty), unit: i.unit||'', min: Number(i.min_qty), loc: i.loc||'', sku: i.sku||'', note: i.note||'' })),
+    log:   log.map(l   => ({ ts: new Date(l.ts).getTime(), item: l.item_name, action: l.action, user: l.username })),
+  };
+}
+async function saveToSupabase(d, changedType, changedId, action) {
+  if (changedType === 'item') {
+    const i = d.items.find(x => x.id === changedId);
+    if (i) {
+      if (action === 'delete') await sb.del('inv_items', 'id=eq.' + changedId);
+      else await sbUpsert('inv_items', [{ id: i.id, name: i.name, cat_id: i.cid, qty: i.qty, unit: i.unit, min_qty: i.min, loc: i.loc, sku: i.sku, note: i.note, updated_at: new Date().toISOString() }]);
+    } else if (action === 'delete') { await sb.del('inv_items', 'id=eq.' + changedId); }
+  }
+  if (changedType === 'cat') {
+    const c = d.cats.find(x => x.id === changedId);
+    if (c) await sbUpsert('inv_categories', [{ id: c.id, name: c.name, icon: c.icon }]);
+    else await sb.del('inv_categories', 'id=eq.' + changedId);
+  }
+  if (changedType === 'user') {
+    const u = d.users.find(x => x.id === changedId);
+    if (u) await sbUpsert('inv_users', [{ id: u.id, username: u.username, password: u.password, display: u.display, role: u.role }]);
+    else await sb.del('inv_users', 'id=eq.' + changedId);
+  }
+  if (changedType === 'log') {
+    const l = d.log[d.log.length - 1];
+    if (l) await sb.post('inv_log', { item_name: l.item, action: l.action, username: l.user });
+  }
+}
+
 
 const s = {
   bg: "#0f1117", sf: "#1a1d27", cd: "#21253a", br: "#2e3350",
@@ -106,7 +196,9 @@ function StatusBadge({ qty, min }) {
 }
 
 function App() {
-  const [data, setData] = useState(() => loadData());
+  const [data, setData] = useState(() => loadLocal());
+  const [syncing, setSyncing] = useState(false);
+  const [cloudOk, setCloudOk] = useState(null); // null=unknown, true=ok, false=err
   const [me, setMe] = useState(null);
   const [page, setPage] = useState(0);
   const [toast, setToast] = useState("");
@@ -136,12 +228,34 @@ function App() {
   // User form
   const [uForm, setUF] = useState({ username: "", password: "", display: "", role: "user" });
 
+
+  // Supabase sync on login
+  useEffect(() => {
+    if (!me || !USE_SUPABASE) return;
+    setSyncing(true);
+    loadFromSupabase()
+      .then(d => { setData(d); saveLocal(d); setCloudOk(true); setSyncing(false); })
+      .catch(() => { setCloudOk(false); setSyncing(false); });
+    const iv = setInterval(() => {
+      loadFromSupabase()
+        .then(d => { setData(d); saveLocal(d); setCloudOk(true); })
+        .catch(() => setCloudOk(false));
+    }, 60000);
+    return () => clearInterval(iv);
+  }, [me]);
+
   const showToast = useCallback((msg, dur = 2500) => {
     setToast(msg);
     setTimeout(() => setToast(""), dur);
   }, []);
 
-  const upd = (newData) => { setData(newData); saveData(newData); };
+  const upd = (newData, type, id, action) => {
+    setData(newData);
+    saveLocal(newData);
+    if (USE_SUPABASE && type) {
+      saveToSupabase(newData, type, id, action).catch(() => {});
+    }
+  };
 
   const addLog = (d, item, action) => {
     const log = [...d.log, { ts: Date.now(), item, action, user: me?.display || me?.username || "" }];
@@ -214,7 +328,9 @@ function App() {
       d = addLog(d, row.name, "Neu angelegt");
       showToast("Hinzugefügt");
     }
-    upd(d); setItemModal(false);
+    upd(d, 'item', editItem ? editItem.id : row.id, editItem ? 'update' : 'insert');
+    upd(d, 'log', null);
+    setItemModal(false);
   };
 
   const saveAdj = () => {
@@ -232,7 +348,9 @@ function App() {
     const item = d.items.find(i => i.id === adjModal.id);
     const act = (aForm.type === "add" ? "+" : aForm.type === "sub" ? "-" : "=") + qty + (aForm.reason ? ` (${aForm.reason})` : "");
     d = addLog(d, adjModal.name, act);
-    upd(d); setAdjModal(null); showToast("Gebucht");
+    upd(d, 'item', adjModal.id, 'update');
+    upd(d, 'log', null);
+    setAdjModal(null); showToast("Gebucht");
     if (item && item.qty <= item.min) {
       setTimeout(() => showToast(item.qty <= 0 ? `⚠️ "${item.name}" ist LEER!` : `⚠️ "${item.name}" Bestand niedrig`, 4000), 600);
     }
@@ -241,14 +359,18 @@ function App() {
   const saveCat = () => {
     if (!cForm.name.trim()) { showToast("Name erforderlich"); return; }
     const d = { ...data, cats: [...data.cats, { id: "c" + Date.now(), name: cForm.name.trim(), icon: cForm.icon.trim() || "📦" }] };
-    upd(d); setCatModal(false); showToast("Kategorie gespeichert");
+    const newCatId = 'c' + Date.now();
+    upd(d, 'cat', newCatId);
+    setCatModal(false); showToast("Kategorie gespeichert");
   };
 
   const saveUser = () => {
     if (!uForm.username.trim() || !uForm.password) { showToast("Benutzername + Passwort erforderlich"); return; }
     if (data.users.find(u => u.username === uForm.username.trim())) { showToast("Benutzername vergeben"); return; }
     const d = { ...data, users: [...data.users, { id: "u" + Date.now(), username: uForm.username.trim(), password: uForm.password, display: uForm.display.trim() || uForm.username.trim(), role: uForm.role }] };
-    upd(d); setUserModal(false); showToast("Benutzer angelegt");
+    const newUserId = 'u' + Date.now();
+    upd(d, 'user', newUserId);
+    setUserModal(false); showToast("Benutzer angelegt");
   };
 
   const doDelete = () => {
@@ -257,7 +379,8 @@ function App() {
     if (delModal.type === "item") d.items = d.items.filter(i => i.id !== delModal.id);
     if (delModal.type === "cat")  d.cats  = d.cats.filter(c => c.id !== delModal.id);
     if (delModal.type === "user") d.users = d.users.filter(u => u.id !== delModal.id);
-    upd(d); setDelModal(null); showToast("Gelöscht");
+    upd(d, delModal.type, delModal.id, 'delete');
+    setDelModal(null); showToast("Gelöscht");
   };
 
   // Filtered items
@@ -274,7 +397,13 @@ function App() {
       <div style={{ background: s.sf, borderBottom: `1px solid ${s.br}`, padding: "0 16px", display: "flex", alignItems: "center", height: 56, position: "sticky", top: 0, zIndex: 100, gap: 10 }}>
         <div style={{ fontWeight: 700, fontSize: 16 }}>📦 <span style={{ color: s.ac }}>Grieer</span> Inventar</div>
         <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8 }}>
-          <div onClick={() => setPage(2)} style={{ position: "relative", cursor: "pointer", background: s.cd, border: `1px solid ${s.br}`, borderRadius: 6, padding: "5px 10px", fontSize: 17 }}>
+          {USE_SUPABASE && (
+          <div title="Cloud Sync" style={{ background: s.cd, border: `1px solid ${s.br}`, borderRadius: 6, padding: "5px 10px", fontSize: 12, display: "flex", alignItems: "center", gap: 5, color: s.mt }}>
+            <div style={{ width: 8, height: 8, borderRadius: "50%", background: syncing ? s.wn : cloudOk === true ? s.ok : cloudOk === false ? s.dg : s.mt }}></div>
+            Cloud
+          </div>
+        )}
+        <div onClick={() => setPage(2)} style={{ position: "relative", cursor: "pointer", background: s.cd, border: `1px solid ${s.br}`, borderRadius: 6, padding: "5px 10px", fontSize: 17 }}>
             🔔{alertItems.length > 0 && <span style={{ position: "absolute", top: -5, right: -5, background: s.dg, color: "#fff", fontSize: 10, fontWeight: 700, borderRadius: 10, minWidth: 16, padding: "0 3px", textAlign: "center", lineHeight: "16px" }}>{alertItems.length}</span>}
           </div>
           <div style={{ background: s.cd, border: `1px solid ${s.br}`, borderRadius: 6, padding: "5px 11px", fontSize: 13, display: "flex", alignItems: "center", gap: 6 }}>
@@ -576,7 +705,6 @@ function App() {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(React.createElement(App));
-
 </script>
 </body>
 </html>
