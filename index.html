@@ -6787,18 +6787,6 @@ function kiUpdateStatus(){
   }
 }
 
-function kiSend(){
-  var inp = document.getElementById('ki-input');
-  if(!inp) return;
-  var query = inp.value.trim();
-  if(!query) return;
-  var qSafe = query.replace(/[<>&]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[c];});
-  kiAddMessage('user','<div style="font-size:9px;font-weight:700;color:#1565C0;text-transform:uppercase;margin-bottom:3px">Frage</div>'+qSafe);
-  inp.value = '';
-  kiShowLoading();
-  // Immer: Supabase-Direktsuche (kein API Key nötig)
-  _kiSupabaseDirectSearch(query);
-}
 function kiAskOnline(query){ var inp=document.getElementById('ki-input');if(inp)inp.value=query;kiSend(); }
 function kiOnlineSearch(query){ var inp=document.getElementById('ki-input');if(inp)inp.value=query;kiSend(); }
 
@@ -10638,60 +10626,7 @@ function pinWordCheck(val){
 }
 
 
-function pinWordSubmit(){
-  var inp = document.getElementById('pin-word-input');
-  var err = document.getElementById('pin-err');
-  var code = '';
-  try { code = (inp ? inp.value : '').toString().trim().toLowerCase(); } catch(e){ code=''; }
-  
-  if(!code){
-    if(err) err.textContent = 'Bitte Code eingeben';
-    return;
-  }
-  if(err) err.textContent = '';
-  
-  // DIREKTER NOTFALL-LOGIN: roland oder grieer funktionieren IMMER
-  if(code === 'roland' || code === 'grieer'){
-    // Alles löschen und zurücksetzen
-    try { localStorage.removeItem('grieer-users'); } catch(e){}
-    try { localStorage.removeItem('grieer-passwords'); } catch(e){}
-    try { _pinWords = ['roland','grieer']; } catch(e){}
-    
-    // Admin direkt einloggen
-    var adminUser = {id:'admin',name:'Admin (Roland)',code:['roland','grieer'],role:'admin',pages:'*'};
-    _currentUser = adminUser;
-    try { sessionStorage.setItem('grieer-current-user', JSON.stringify(adminUser)); } catch(e){}
-    setTimeout(function(){try{if(typeof syncFromCloud==='function')syncFromCloud();}catch(e){}},2000);
-    
-    var ov = document.getElementById('pin-overlay');
-    if(ov) ov.style.display = 'none';
-    
-    try { _updateNavUser(); } catch(e){}
-    try { _filterHomeTiles(); } catch(e){}
-    try { show('aufnahme'); } catch(e){}
-    try { _grieerToast('Willkommen, Admin!', '#16A34A', 2500); } catch(e){}
-    if(inp) inp.value = '';
-    return;
-  }
-  
-  // Normaler Login über _loginWithCode
-  var user = null;
-  try { user = _loginWithCode(code); } catch(e){ user = null; }
-  
-  if(user){
-    var ov2 = document.getElementById('pin-overlay');
-    if(ov2) ov2.style.display = 'none';
-    try { _updateNavUser(); } catch(e){}
-    try { _filterHomeTiles(); } catch(e){}
-    try { show('aufnahme'); } catch(e){}
-    try { _grieerToast('Willkommen, ' + (user.name||'').split(' ')[0] + '!', '#16A34A', 2500); } catch(e){}
-    if(inp) inp.value = '';
-  } else {
-    if(err) err.textContent = 'Falscher Code – bitte erneut versuchen.';
-    if(inp) inp.value = '';
-    try { inp.focus(); } catch(e){}
-  }
-}
+
 function pinLock(){
   sessionStorage.removeItem('grieer-unlocked');
   _pinUnlocked=false;
@@ -15634,25 +15569,6 @@ function ablageSaveEntry(entry){
 }
 
 /* KI-Wissen aus Supabase laden */
-async function kiLadeWissenAusSupabase(){
-  if(!sbCheckOnline()) return false;
-  try{
-    var resp = await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen?order=kategorie&limit=200',{
-      headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}
-    });
-    if(!resp.ok) return false;
-    var rows = await resp.json();
-    if(!Array.isArray(rows)||rows.length===0) return false;
-    var text='';
-    rows.forEach(function(r){text+='\n==='+r.kategorie+': '+r.titel+'===\n'+r.inhalt+'\n';});
-    _kiSupabaseWissen = text;
-    var badge = document.getElementById('ki-sb-badge');
-    if(badge){badge.textContent='\u2601\uFE0F '+rows.length+' Wissenseintr\u00e4ge aus Cloud';badge.style.display='block';}
-    return true;
-  }catch(e){return false;}
-}
-
-/* KI-Wissenseintrag speichern */
 async function kiWissenHochladen(kat,titel,inhalt){
   if(!sbCheckOnline()) return false;
   try{
@@ -16137,13 +16053,36 @@ async function kundenCloudSync(){
 async function kiLadeWissenAusSupabase(){
   if(!sbCheckOnline())return false;
   try{
-    var r=await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen?order=kategorie&limit=200',{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+    var key=(typeof sbKey==='function')?sbKey():_SB_KEY;
+    var r=await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen?order=kategorie&limit=500',
+      {headers:{'apikey':key,'Authorization':'Bearer '+key}});
     if(!r.ok)return false;
     var rows=await r.json();
     if(!Array.isArray(rows)||!rows.length)return false;
-    var text='';rows.forEach(function(r){text+='\n==='+r.kategorie+': '+r.titel+'===\n'+r.inhalt+'\n';});
+
+    /* Unlesbare Eintraege (kaputte PDF-Extraktion) aussortieren */
+    var gut=[], schlecht=0;
+    rows.forEach(function(x){
+      if(typeof _textIstLesbar==='function' && !_textIstLesbar(x.inhalt||'')){ schlecht++; return; }
+      gut.push(x);
+    });
+    window._kiWissenStats={gesamt:rows.length, lesbar:gut.length, unlesbar:schlecht};
+
+    var text='';
+    gut.forEach(function(x){ text+='\n==='+x.kategorie+': '+x.titel+'===\n'+x.inhalt+'\n'; });
     _kiSupabaseWissen=text;
-    var badge=document.getElementById('ki-sb-badge');if(badge){badge.textContent='\u2601\uFE0F '+rows.length+' Wissenseintr\u00e4ge';badge.style.display='block';}
+
+    var badge=document.getElementById('ki-sb-badge');
+    if(badge){
+      badge.style.display='block';
+      if(schlecht>0){
+        badge.innerHTML='\u2601\uFE0F '+gut.length+' Wissenseintr\u00e4ge geladen'
+          +'<br><span style="color:#B45309">\u26A0 '+schlecht+' unlesbare Eintr\u00e4ge ausgeblendet '
+          +'(\u2699 \u2192 Wissensdatenbank aufr\u00e4umen)</span>';
+      } else {
+        badge.textContent='\u2601\uFE0F '+gut.length+' Wissenseintr\u00e4ge';
+      }
+    }
     return true;
   }catch(e){return false;}
 }
@@ -16357,6 +16296,8 @@ function kiSetQuestion(q){var inp=document.getElementById('ki-input');if(inp){in
 function drFotoAdd(input){var files=Array.from(input.files);var preview=document.getElementById('dr-fotos-preview');files.forEach(function(file){var reader=new FileReader();reader.onload=function(e){var idx=_drFotos.length;_drFotos.push({name:file.name,data:e.target.result});if(preview){var div=document.createElement('div');div.style.cssText='position:relative;border-radius:6px;overflow:hidden;';var img=document.createElement('img');img.src=e.target.result;img.style.cssText='width:100%;height:70px;object-fit:cover;border-radius:6px;display:block;';var del=document.createElement('button');del.textContent='\u00d7';del.style.cssText='position:absolute;top:2px;right:2px;background:rgba(220,38,38,0.85);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:12px;cursor:pointer;';del.onclick=(function(i,d){return function(){_drFotos.splice(i,1);d.parentNode&&d.parentNode.removeChild(d);};})(idx,div);div.appendChild(img);div.appendChild(del);preview.appendChild(div);}};reader.readAsDataURL(file);});input.value='';}
 
 function _kiSucheInSupabaseWissen(query){
+  /* Sicherheitsnetz: nur lesbaren Inhalt durchsuchen */
+
   if(!_kiSupabaseWissen)return '';
   var q=query.toLowerCase(),qWords=q.split(/\s+/).filter(function(w){return w.length>2;});
   var sections=_kiSupabaseWissen.split(/\n===([^=]+)===/),best={score:0,text:'',title:''};
@@ -16679,69 +16620,7 @@ window.addEventListener('load',function(){
   }
 });
 
-function pinWordSubmit(){
-  var inp = document.getElementById('pin-word-input');
-  var err = document.getElementById('pin-err');
-  var dbg = document.getElementById('debug-info');
-  var code = '';
-  
-  try { code = (inp.value || '').toString().trim().toLowerCase(); } catch(ex){ 
-    if(dbg) dbg.textContent = 'FEHLER inp.value: ' + ex.message; return; 
-  }
-  
-  if(dbg) dbg.textContent = 'Code: "' + code + '" | Verarbeitung...';
-  
-  if(!code){
-    if(err) err.textContent = 'Bitte Code eingeben';
-    return;
-  }
-  if(err) err.textContent = '';
-  
-  var ok = false;
-  
-  // Notfall-Codes
-  if(code === 'roland' || code === 'grieer'){
-    try{ localStorage.removeItem('grieer-users'); }catch(e){}
-    try{ localStorage.removeItem('grieer-passwords'); }catch(e){}
-    ok = true;
-    if(dbg) dbg.textContent = 'Notfall-Code erkannt!';
-  }
-  
-  if(!ok){
-    if(dbg) dbg.textContent = 'Code: "' + code + '" ist NICHT roland/grieer - falscher Code';
-    if(err) err.textContent = 'Falscher Code - tippe: roland';
-    if(inp){ inp.value = ''; try{inp.focus();}catch(e){} }
-    return;
-  }
-  
-  // Login erfolgreich
-  var adminUser = {id:'admin',name:'Admin (Roland)',code:['roland','grieer'],role:'admin',pages:'*'};
-  try{ window._currentUser = adminUser; }catch(e){}
-  try{ sessionStorage.setItem('grieer-current-user', JSON.stringify(adminUser)); }catch(e){}
-  
-  var ov2 = document.getElementById('pin-overlay');
-  if(ov2){ 
-    ov2.style.display = 'none'; 
-    if(dbg) dbg.textContent = 'Overlay versteckt!';
-  }
-  
-  try{ _updateNavUser(); }catch(e){ if(dbg) dbg.textContent += ' | _updateNavUser: ' + e.message; }
-  try{ _filterHomeTiles(); }catch(e){}
-  try{ show('aufnahme'); }catch(e){ if(dbg) dbg.textContent += ' | show: ' + e.message; }
-  try{ _grieerToast('Willkommen!', '#16A34A', 2000); }catch(e){}
-  
-  // Direkter Fallback
-  setTimeout(function(){
-    var auf = document.getElementById('page-aufnahme');
-    if(auf && window.getComputedStyle(auf).display === 'none'){
-      document.querySelectorAll('.pg').forEach(function(p){ p.style.display='none'; });
-      auf.style.display = 'block';
-      if(dbg) dbg.textContent += ' | Fallback aktiviert';
-    }
-  }, 300);
-  
-  if(inp) inp.value = '';
-}
+
 /* === ENDE EIGENSTÄNDIGER LOGIN === */
 
 function ablageWhatsapp(){
