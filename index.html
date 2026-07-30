@@ -6032,15 +6032,46 @@ function adminEditUser(idx){
   _adminOpenUserForm(users[idx], idx);
 }
 
-function adminDeleteUser(idx){
+async function adminDeleteUser(idx){
   var users = _loadUsers();
-  if(!confirm('Benutzer "' + users[idx].name + '" wirklich löschen?')) return;
+  var u = users[idx];
+  if(!u) return;
+  if(!confirm('Benutzer "' + (u.name||'') + '" wirklich l\u00f6schen?\n\nWird auch aus der Cloud entfernt.')) return;
+
+  /* 1. Aus der Cloud loeschen — sonst holt der naechste Sync ihn zurueck */
+  var cloudOk = null;
+  if(u.id && typeof sbCheckOnline === 'function' && sbCheckOnline()){
+    var keys = [];
+    try{ if(typeof sbKey==='function' && sbKey()) keys.push(sbKey()); }catch(e){}
+    if(typeof _SB_KEY !== 'undefined' && keys.indexOf(_SB_KEY) < 0) keys.push(_SB_KEY);
+    for(var k=0;k<keys.length;k++){
+      try{
+        var r = await fetch(_SB_URL+'/rest/v1/grieer_mitarbeiter?id=eq.'+encodeURIComponent(u.id),{
+          method:'DELETE', headers:{'apikey':keys[k],'Authorization':'Bearer '+keys[k]}});
+        if(r.ok){ cloudOk = true; break; }
+        cloudOk = false;
+      }catch(e){ cloudOk = false; }
+    }
+  }
+
+  /* 2. Lokal loeschen */
   users.splice(idx, 1);
   _saveUsers(users);
-  adminShowUsers();
-  _grieerToast('✓ Benutzer gelöscht', '#DC2626', 2000);
-}
 
+  /* 3. Merken, damit ein Sync ihn nicht wieder einspielt */
+  try{
+    var tomb = JSON.parse(localStorage.getItem('grieer-users-geloescht')||'[]');
+    if(u.id && tomb.indexOf(u.id) < 0){ tomb.push(u.id); }
+    localStorage.setItem('grieer-users-geloescht', JSON.stringify(tomb));
+  }catch(e){}
+
+  adminShowUsers();
+  if(cloudOk === false){
+    _grieerToast('\u26A0 Lokal gel\u00f6scht \u2013 Cloud nicht erreicht.\nService Key pr\u00fcfen (\u2699).', '#F59E0B', 4000);
+  } else {
+    _grieerToast('\u2713 Benutzer gel\u00f6scht', '#DC2626', 2000);
+  }
+}
 function _adminOpenUserForm(user, idx){
   var overlay = document.getElementById('admin-user-form-overlay');
   if(!overlay) return;
@@ -15787,29 +15818,33 @@ async function syncUsersFromCloud(){
   if(!sbCheckOnline()) return;
   try{
     var resp = await fetch(_SB_URL+'/rest/v1/grieer_mitarbeiter?firma_id=eq.grieer',{
-      headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}
-    });
+      headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
     if(!resp.ok) return;
     var rows = await resp.json();
-    if(!Array.isArray(rows)||rows.length===0) return;
-    var cloudUsers = rows.map(function(r){
-      var pages;
-      try{pages=JSON.parse(r.pages||'[]');}catch(e){pages=r.pages||[];}
-      return {id:r.id,name:r.name||'',code:r.code||'',role:r.role||'user',pages:pages};
-    });
-    // Merge: lokale Users + Cloud-Users (Cloud gewinnt bei Konflikt)
-    var local = _loadUsers();
+    if(!Array.isArray(rows)) return;
+
+    /* Bewusst geloeschte Benutzer nicht wieder einspielen */
+    var tomb = [];
+    try{ tomb = JSON.parse(localStorage.getItem('grieer-users-geloescht')||'[]'); }catch(e){}
+
+    var cloudUsers = rows
+      .filter(function(r){ return tomb.indexOf(r.id) < 0; })
+      .map(function(r){
+        var pages;
+        try{ pages = JSON.parse(r.pages||'[]'); }catch(e){ pages = r.pages||[]; }
+        return {id:r.id, name:r.name||'', code:r.code||'', role:r.role||'user', pages:pages};
+      });
+
+    var local = _loadUsers().filter(function(u){ return !u.id || tomb.indexOf(u.id) < 0; });
     var map = {};
-    local.forEach(function(u){map[u.id]=u;});
-    cloudUsers.forEach(function(u){map[u.id]=u;});
-    var admin = local.find(function(u){return u.role==='admin';});
-    if(admin) map[admin.id]=admin; // Admin immer lokal behalten
+    local.forEach(function(u){ map[u.id] = u; });
+    cloudUsers.forEach(function(u){ map[u.id] = u; });
+    var admin = local.filter(function(u){ return u.role === 'admin'; })[0];
+    if(admin) map[admin.id] = admin;
     _saveUsers(Object.values(map));
-    if(typeof adminShowUsers==='function') adminShowUsers();
+    if(typeof adminShowUsers === 'function') adminShowUsers();
   }catch(e){}
 }
-
-/* ─── KUNDEN ──────────────────────────────────────── */
 async function syncKundenToCloud(kunden){
   if(!sbCheckOnline()) return;
   kunden = kunden || JSON.parse(localStorage.getItem('grieer-kunden')||'[]');
@@ -16053,9 +16088,8 @@ async function kundenCloudSync(){
 async function kiLadeWissenAusSupabase(){
   if(!sbCheckOnline())return false;
   try{
-    var key=(typeof sbKey==='function')?sbKey():_SB_KEY;
     var r=await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen?order=kategorie&limit=500',
-      {headers:{'apikey':key,'Authorization':'Bearer '+key}});
+      {headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
     if(!r.ok)return false;
     var rows=await r.json();
     if(!Array.isArray(rows)||!rows.length)return false;
