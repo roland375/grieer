@@ -619,14 +619,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font
 </div>
 
 <!-- DETAIL -->
-<div id="detailOverlay" style="display:none"><div id="detailInhalt"></div></div>
+<div id="detailOverlay"><div id="detailInhalt"></div></div>
 
 <!-- MODAL -->
 <div id="modal">
   <div class="modalBox">
     <div class="modalHead">
       <h3 id="modalTitel"></h3>
-      <button class="modalClose" style="width:34px;height:34px;font-size:1.1rem" onclick="modalZu()">✕</button>
+      <button class="modalClose" onclick="modalZu()">✕</button>
     </div>
     <div class="modalBody" id="modalBody"></div>
   </div>
@@ -655,28 +655,39 @@ let kvFilterAkt='alle',jFilterAkt='alle';
 let pinEingabe='';
 
 // ══ API ══
-async function api(p,o={}){
-  const method=(o.method||'GET').toUpperCase();
-  // Für PATCH/DELETE kein return=representation nötig
-  const prefer=method==='GET'||method==='POST'?'return=representation':'return=minimal';
-  const h={
-    'Content-Type':'application/json',
-    'apikey':KEY,
-    'Authorization':'Bearer '+KEY,
-    'Prefer':prefer
-  };
-  const r=await fetch(SB+p,{...o,headers:{...h,...(o.headers||{})}});
-  // 204 No Content = Erfolg bei PATCH/DELETE
-  if(r.status===204)return [];
-  if(!r.ok){
-    const t=await r.text();
-    // PGRST204 ist kein echter Fehler
-    if(t&&t.includes('PGRST204'))return [];
-    throw new Error(t||r.statusText);
-  }
-  const t=await r.text();
-  return t?JSON.parse(t):[];
+function api(p,o){
+  o=o||{};
+  var KEY2=KEY;
+  var method=(o.method||'GET').toUpperCase();
+  return new Promise(function(resolve,reject){
+    var xhr=new XMLHttpRequest();
+    xhr.withCredentials=false;
+    xhr.open(method,SB+p,true);
+    xhr.setRequestHeader('apikey',KEY2);
+    xhr.setRequestHeader('Authorization','Bearer '+KEY2);
+    xhr.setRequestHeader('Accept','application/json');
+    if(method==='POST'||method==='PATCH'||method==='PUT'){
+      xhr.setRequestHeader('Content-Type','application/json');
+      xhr.setRequestHeader('Prefer','return=representation');
+    }
+    xhr.timeout=20000;
+    xhr.onload=function(){
+      if(xhr.status===204||xhr.status===205){resolve([]);return;}
+      if(xhr.status>=200&&xhr.status<300){
+        try{var t=xhr.responseText;resolve(t&&t.trim()?JSON.parse(t):[]);}
+        catch(e){resolve([]);}
+        return;
+      }
+      var t=xhr.responseText||'';
+      if(t.indexOf('PGRST204')>=0){resolve([]);return;}
+      reject(new Error('HTTP '+xhr.status+' - '+t.substring(0,60)));
+    };
+    xhr.onerror=function(){reject(new Error('Netzwerkfehler (onerror)'));};
+    xhr.ontimeout=function(){reject(new Error('Timeout nach 20s'));};
+    xhr.send(o.body||null);
+  });
 }
+
 
 // ══ LOGIN ══
 function pinBauen(){
@@ -732,8 +743,8 @@ async function laden(){
       if(!b||!b.length)break;alleKunden.push(...b);if(b.length<1000)break;seite++;if(seite>20)break;
     }
     const [a,t,m]=await Promise.all([
-      api('/auftraege?order=datum.desc'),
-      api('/termine?order=datum.asc'),
+      api('/auftraege?order=datum.desc&limit=5000'),
+      api('/termine?order=datum.asc&limit=5000'),
       api('/mitarbeiter?order=name.asc'),
     ]);
     DB={kunden:alleKunden,auftraege:a,termine:t,mitarbeiter:m};
@@ -1231,76 +1242,74 @@ function jRender(){
 function jFilter(f){jFilterAkt=f;['alle','offen','bezahlt'].forEach(x=>document.getElementById('jf'+x.charAt(0).toUpperCase()+x.slice(1))?.classList.toggle('ak',x===f));jRender();}
 
 function preisUndBezahlt(id,kunde){
-  const a=DB.auftraege.find(x=>x.id===id);
-  modalOffen('💰 Abrechnung: '+esc(sauber(kunde||'')),
-    '<div style="background:#d1fae5;border-left:4px solid var(--grn);border-radius:0 8px 8px 0;padding:12px;margin-bottom:14px">'+
-      '<div style="font-weight:700;font-size:.9rem;color:var(--grn)">Auftrag abschließen & abrechnen</div>'+
-      '<div style="font-size:.83rem;color:var(--grn);opacity:.8;margin-top:2px">'+esc(sauber(kunde||''))+'</div>'+
+  var a=DB.auftraege.find(function(x){return x.id===id;});
+  var typOpt=Object.entries(TYPEN).map(function(e){
+    return '<option value="'+e[0]+'" '+(a&&a.typ===e[0]?'selected':'')+'>'+e[1].l+'</option>';
+  }).join('');
+  var datumVal=a&&a.datum?a.datum:new Date().toISOString().split('T')[0];
+  var dauerVal=a&&a.dauer?a.dauer:'';
+  var preisVal=a&&a.preis?a.preis:'';
+  var notizVal=a&&a.notiz?a.notiz:'';
+  var arbeitVal=a&&a.arbeit?a.arbeit:'';
+  var kundeAnz=esc(kunde||'');
+  var datumAnz=datumVal.split('-').reverse().join('.');
+  var speichernBtn='preisUndBezahltSpeichern('+JSON.stringify(id)+')';
+  modalOffen('Abrechnen',
+    '<div style="background:#d1fae5;border-left:4px solid #065f46;border-radius:0 10px 10px 0;padding:12px;margin-bottom:14px">'+
+      '<strong style="color:#065f46;font-size:.95rem">'+kundeAnz+'</strong>'+
+      '<div style="font-size:.8rem;color:#065f46;margin-top:3px">'+datumAnz+'</div>'+
     '</div>'+
     '<div class="fRow"><label>Leistungsart</label>'+
-      '<select id="pbTyp">'+Object.entries(TYPEN).map(([k,v])=>'<option value="'+k+'" '+(a&&a.typ===k?'selected':'')+'>'+v.l+'</option>').join('')+'</select>'+
+      '<select id="pbTyp">'+typOpt+'</select>'+
     '</div>'+
-    '<div class="fRow"><label>Beschreibung der Arbeit</label>'+
-      '<textarea id="pbArbeit" placeholder="Was wurde gemacht?">'+esc(a&&a.arbeit&&!a.arbeit.includes('offen')?a.arbeit:'')+'</textarea>'+
+    '<div class="fRow"><label>Was wurde gemacht?</label>'+
+      '<textarea id="pbArbeit" rows="3">'+esc(arbeitVal)+'</textarea>'+
     '</div>'+
     '<div class="fGrid fg2">'+
-      '<div class="fRow"><label>Dauer (h)</label><input type="number" id="pbDauer" step=".5" min="0" placeholder="z.B. 2" value="'+(a&&a.dauer||'')+'"></div>'+
-      '<div class="fRow"><label>Datum</label><input type="date" id="pbDatum" value="'+(a&&a.datum||new Date().toISOString().split('T')[0])+'"></div>'+
+      '<div class="fRow"><label>Datum</label><input type="date" id="pbDatum" value="'+datumVal+'"></div>'+
+      '<div class="fRow"><label>Dauer (h)</label><input type="number" id="pbDauer" step=".5" value="'+dauerVal+'"></div>'+
     '</div>'+
     (isAdmin()?
-      '<div class="fRow"><label>💰 Preis (€) *</label>'+
-        '<input type="number" id="pbPreis" step=".01" min="0" placeholder="z.B. 120.00"'+
-        ' style="font-size:1.2rem;font-weight:800;border-color:var(--p3);text-align:center"'+
-        ' value="'+(a&&a.preis||'')+'">'+
-      '</div>'
+      '<div class="fRow"><label style="color:#991b1b;font-weight:800">PREIS (€)</label>'+
+        '<input type="number" id="pbPreis" step=".01" min="0" placeholder="0.00"'+
+        ' style="font-size:1.5rem;font-weight:800;border:2px solid #991b1b;text-align:center;padding:14px"'+
+        ' value="'+preisVal+'"></div>'
     :'<input type="hidden" id="pbPreis" value="">')+
     '<div class="fRow"><label>Status</label>'+
-      '<select id="pbBezahlt">'+
+      '<select id="pbBezahlt" style="font-size:1rem;font-weight:700;min-height:50px">'+
         '<option value="true">✅ Bezahlt</option>'+
-        '<option value="false">⏳ Offen (noch nicht bezahlt)</option>'+
+        '<option value="false">⏳ Noch offen</option>'+
       '</select>'+
     '</div>'+
-    '<div class="fRow"><label>Notiz (optional)</label>'+
-      '<input id="pbNotiz" placeholder="Besonderheiten, Material…" value="'+esc(a&&a.notiz&&!a.notiz.includes('Erstellt')?a.notiz:'')+'">'+
-    '</div>'+
+    '<div class="fRow"><label>Notiz</label><input id="pbNotiz" value="'+esc(notizVal)+'" placeholder="Besonderheiten..."></div>'+
     '<div style="display:flex;gap:8px;margin-top:16px">'+
-      '<button class="btn btnGrn" style="flex:1;font-size:.95rem" onclick="preisUndBezahltSpeichern(\''+id+'\')">✅ Speichern & Abschließen</button>'+
-      '<button class="btn btnOut" onclick="modalZu()">Abbrechen</button>'+
+      '<button class="btn btnGrn" style="flex:1;min-height:54px;font-size:1rem;font-weight:800"'+
+        ' onclick="'+speichernBtn+'">✅ Abschließen</button>'+
+      '<button class="btn btnOut" style="min-height:54px" onclick="modalZu()">✕</button>'+
     '</div>'
   );
-  if(isAdmin())setTimeout(()=>document.getElementById('pbPreis')?.focus(),200);
+  if(isAdmin()) setTimeout(function(){var p=document.getElementById('pbPreis');if(p){p.focus();p.select();}},200);
 }
 async function preisUndBezahltSpeichern(id){
-  const arbeit=document.getElementById('pbArbeit')?.value?.trim()||null;
+  const arbeit=document.getElementById('pbArbeit')?.value?.trim();
   const dauer=parseFloat(document.getElementById('pbDauer')?.value)||null;
   const preis=isAdmin()?parseFloat(document.getElementById('pbPreis')?.value)||null:null;
-  const bezahlt=document.getElementById('pbBezahlt')?.value==='true';
-  const datum=document.getElementById('pbDatum')?.value||new Date().toISOString().split('T')[0];
-  const notiz=document.getElementById('pbNotiz')?.value||null;
-  const typ=document.getElementById('pbTyp')?.value||null;
-
-  const d={
-    bezahlt,typ,arbeit,dauer,datum,notiz,
+  // Preis ist optional
+  const daten={
+    bezahlt:document.getElementById('pbBezahlt')?.value==='true'||(isAdmin()&&preis>0),
+    typ:document.getElementById('pbTyp')?.value||null,
+    arbeit:arbeit||null,
+    dauer:dauer,
+    datum:document.getElementById('pbDatum')?.value||new Date().toISOString().split('T')[0],
+    notiz:document.getElementById('pbNotiz')?.value||null,
     geaendert_am:new Date().toISOString()
   };
-  if(preis)d.preis=preis;
-  Object.keys(d).forEach(k=>{if(d[k]===null||d[k]===undefined||d[k]==='')delete d[k];});
-
+  if(preis)daten.preis=preis;
   try{
-    await api('/auftraege?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});
-    toast(bezahlt?'✅ Abgerechnet & bezahlt!':'✅ Gespeichert!');
-    modalZu();
-    await laden();
-    zeigeTab('journal');
-  }catch(e){
-    const msg=e.message||String(e);
-    if(msg.includes('204')||msg.includes('PGRST204')){
-      toast(bezahlt?'✅ Abgerechnet!':'✅ Gespeichert!');
-      modalZu();await laden();zeigeTab('journal');
-    } else {
-      toast('Fehler: '+msg,'err');
-    }
-  }
+    await api('/auftraege?id=eq.'+id,{method:'PATCH',body:JSON.stringify(daten)});
+    toast(isAdmin()?'✓ Abgerechnet & bezahlt markiert!':'✓ Arbeit eingetragen!');
+    modalZu();detailZu();await laden();
+  }catch(e){toast('Fehler: '+e.message,'err');}
 }
 
 function auftragNeu(vorKunde){
@@ -1350,7 +1359,7 @@ async function auftragSpeichern(id,nurSpeichern=false){
   };
   Object.keys(d).forEach(k=>{if(d[k]===null||d[k]===undefined||d[k]==='')delete d[k];});
   try{
-    if(id&&id!==''){
+    if(id){
       await api('/auftraege?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});
       toast('✅ Gespeichert!');
     } else {
@@ -1359,14 +1368,7 @@ async function auftragSpeichern(id,nurSpeichern=false){
     }
     await laden();
     if(!nurSpeichern)modalZu();
-  }catch(e){
-    const msg=e.message||String(e);
-    if(msg.includes('PGRST204')||msg.includes('No Content')||msg.includes('204')){
-      toast('✅ Abgerechnet!');modalZu();detailZu();await laden();
-    } else {
-      toast('Fehler: '+msg,'err');
-    }
-  }
+  }catch(e){toast('Fehler: '+e.message,'err');}
 }
 function auftragDetail(id){
   const a=DB.auftraege.find(x=>x.id===id);if(!a)return;
@@ -1398,63 +1400,67 @@ function auftragDetail(id){
   document.getElementById('detailOverlay').style.display='block';
 }
 function auftragBearbeiten(id){
-  const a=DB.auftraege.find(x=>x.id===id);
-  if(!a){toast('Nicht gefunden','err');return;}
-  // Nur passende Kunden laden (NICHT alle 5789 - würde einfrieren!)
-  const kundeStr=sauber(a.kunde||'').toLowerCase().trim();
-  const erstesWort=kundeStr.split(',')[0].split(' ').pop()||'';
-  const topKunden=DB.kunden
-    .filter(k=>erstesWort?sauber(k.nachname).toLowerCase().includes(erstesWort):true)
-    .slice(0,20)
-    .map(k=>'<option value="'+esc(sauber((k.vorname?k.vorname+' ':'')+k.nachname+(k.ort?', '+k.ort:'')))+'">').join('');
-  modalOffen('Auftrag bearbeiten',
-    '<div class="fGrid fg2">'+
-      '<div class="fRow"><label>Datum</label><input type="date" id="aDatum" value="'+( a.datum||'')+'"></div>'+
-      '<div class="fRow"><label>Dauer (h)</label><input type="number" id="aDauer" step=".5" value="'+(a.dauer||'')+'"></div>'+
-    '</div>'+
-    '<div class="fGrid fg2">'+
-      '<div class="fRow"><label>Von</label><input type="time" id="aVon" value="'+(a.uhrzeit_von||'')+'"></div>'+
-      '<div class="fRow"><label>Bis</label><input type="time" id="aBis" value="'+(a.uhrzeit_bis||'')+'"></div>'+
-    '</div>'+
-    '<div class="fRow"><label>Kunde</label>'+
-      '<input id="aKunde" list="kvBE" value="'+esc(sauber(a.kunde||''))+'" placeholder="Name..." oninput="kvVorschlag(this.value)">'+
-      '<datalist id="kvBE">'+topKunden+'</datalist>'+
-    '</div>'+
-    '<div class="fRow"><label>Leistungsart</label><select id="aTyp">'+
-      Object.entries(TYPEN).map(([k,v])=>'<option value="'+k+'" '+(a.typ===k?'selected':'')+'>'+v.l+'</option>').join('')+
-    '</select></div>'+
-    '<div class="fRow"><label>Beschreibung</label><textarea id="aArbeit">'+esc(a.arbeit||'')+'</textarea></div>'+
-    '<div class="fRow"><label>Notiz</label><input id="aNotiz" value="'+esc(a.notiz||'')+'"></div>'+
-    (isAdmin()?
-      '<div class="fGrid fg2">'+
-        '<div class="fRow"><label>Preis (€)</label><input type="number" id="aPreis" step=".01" value="'+(a.preis||'')+'"></div>'+
-        '<div class="fRow"><label>Status</label><select id="aBezahlt">'+
-          '<option value="false" '+((!a.bezahlt)?'selected':'')+'>Offen</option>'+
-          '<option value="true" '+(a.bezahlt?'selected':'')+'>Bezahlt</option>'+
-        '</select></div>'+
-      '</div>'
-    :'<input type="hidden" id="aPreis" value=""><input type="hidden" id="aBezahlt" value="false">')+
-    '<input type="hidden" id="aOrt" value="'+esc(a.ort||'')+'">'+
-    '<input type="hidden" id="aStrasse" value="'+esc(a.strasse||'')+'">'+
-    '<input type="hidden" id="aFaellig" value="'+(a.naechste_faelligkeit||'')+'">'+
-    '<div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:10px;padding:10px;margin:10px 0">'+
-      '<p style="font-size:.78rem;font-weight:700;color:var(--p);margin-bottom:7px">Nicht stattgefunden?</p>'+
-      '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
-        '<button class="btn btnOut btnSm" onclick="auftragDatumAendern(\''+a.id+'\')">📅 Verschieben</button>'+
-        '<button class="btn btnRed btnSm" onclick="if(confirm(\'Loeschen?\'))auftragLoeschen(\''+a.id+'\')">🗑 Löschen</button>'+
-      '</div>'+
-    '</div>'+
-    '<div style="display:flex;gap:8px;margin-top:10px">'+
-      '<button class="btn btnGrn" style="flex:1" onclick="auftragSpeichern(\''+a.id+'\')">💾 Speichern</button>'+
-      '<button class="btn btnOut btnSm" onclick="auftragSpeichern(\''+a.id+'\',true)">💾 Nur speichern</button>'+
-    '</div>'
-  );
-}
-function kvVorschlag(val){
-  const dl=document.getElementById('kvBE');if(!dl||!val||val.length<2)return;
-  const s=sauber(val).toLowerCase();
-  const m=DB.kunden.filter(k=>sauber((k.vorname||'')+' '+(k.nachname||'')).toLowerCase().includes(s)).slice(0,10);
-  dl.innerHTML=m.map(k=>'<option value="'+esc(sauber((k.vorname?k.vorname+' ':'')+k.nachname+(k.ort?', '+k.ort:'')))+'">').join('');
+  const a=DB.auftraege.find(x=>x.id===id);if(!a)return;
+  const kvOpt=DB.kunden.map(k=>`<option value="${esc(sauber((k.vorname?k.vorname+' ':'')+k.nachname+(k.ort?', '+k.ort:'')))}">`).join('');
+  detailZu();
+  setTimeout(()=>modalOffen('✏️ Auftrag bearbeiten',`
+    <div class="fGrid fg2">
+      <div class="fRow"><label>Datum *</label>
+        <input type="date" id="aDatum" value="${a.datum||''}">
+      </div>
+      <div class="fRow"><label>Dauer (h)</label>
+        <input type="number" id="aDauer" step=".5" value="${a.dauer||''}">
+      </div>
+    </div>
+    <div class="fGrid fg2">
+      <div class="fRow"><label>Von</label>
+        <input type="time" id="aVon" value="${a.uhrzeit_von||''}">
+      </div>
+      <div class="fRow"><label>Bis</label>
+        <input type="time" id="aBis" value="${a.uhrzeit_bis||''}">
+      </div>
+    </div>
+    <div class="fRow"><label>Kunde</label>
+      <input id="aKunde" list="kvBE" value="${esc(sauber(a.kunde||''))}" placeholder="Name suchen…">
+      <datalist id="kvBE">${kvOpt}</datalist>
+    </div>
+    <div class="fRow"><label>Leistungsart</label>
+      <select id="aTyp">
+        ${Object.entries(TYPEN).map(([k,v])=>`<option value="${k}" ${a.typ===k?'selected':''}>${v.l}</option>`).join('')}
+      </select>
+    </div>
+    <div class="fRow"><label>Beschreibung / Arbeit</label>
+      <textarea id="aArbeit">${esc(a.arbeit||'')}</textarea>
+    </div>
+    <div class="fRow"><label>Notiz</label>
+      <input id="aNotiz" value="${esc(a.notiz||'')}">
+    </div>
+    ${isAdmin()?`
+    <div class="fGrid fg2">
+      <div class="fRow"><label>Preis (€)</label>
+        <input type="number" id="aPreis" step=".01" value="${a.preis||''}">
+      </div>
+      <div class="fRow"><label>Status</label>
+        <select id="aBezahlt">
+          <option value="false" ${!a.bezahlt?'selected':''}>Offen</option>
+          <option value="true" ${a.bezahlt?'selected':''}>✓ Bezahlt</option>
+        </select>
+      </div>
+    </div>`:'<input type="hidden" id="aPreis" value=""><input type="hidden" id="aBezahlt" value="false">'}
+    <input type="hidden" id="aOrt" value="${esc(a.ort||'')}">
+    <input type="hidden" id="aStrasse" value="${esc(a.strasse||'')}">
+    <input type="hidden" id="aFaellig" value="${a.naechste_faelligkeit||''}">
+    <div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:10px;padding:12px;margin:10px 0">
+      <p style="font-size:.8rem;font-weight:700;color:var(--p);margin-bottom:8px">⚠️ Termin nicht stattgefunden?</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btnOut btnSm" onclick="auftragDatumAendern('${a.id}')">📅 Datum verschieben</button>
+        <button class="btn btnRed btnSm" onclick="if(confirm('Eintrag loeschen?'))auftragLoeschen('${a.id}')">🗑 Löschen</button>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn btnGrn" style="flex:1" onclick="auftragSpeichern('${a.id}')">💾 Speichern & Schließen</button>
+      <button class="btn btnOut" onclick="auftragSpeichern('${a.id}',true)">💾 Nur speichern</button>
+    </div>`),200);
 }
 async function auftragLoeschen(id){if(!confirm('Auftrag wirklich löschen?'))return;try{await api('/auftraege?id=eq.'+id,{method:'DELETE'});toast('Auftrag gelöscht');detailZu();await laden();}catch(e){toast('Fehler: '+e.message,'err');}}
 
@@ -1498,73 +1504,26 @@ function kalMonat(d){kalMonatIdx+=d;if(kalMonatIdx<0){kalMonatIdx=11;kalJahr--;}
 function kalTagKlick(d){kalTerminListe(d);}
 function kalTerminListe(datum){
   const el=document.getElementById('kalTerminListe');if(!el)return;
-  // Termine des Tages
-  const termine=DB.termine.filter(t=>t.datum===datum)
-    .sort((a,b)=>(a.uhrzeit_von||'00:00').localeCompare(b.uhrzeit_von||'00:00'));
-  // Aufträge des Tages (die NICHT durch einen Termin abgedeckt sind)
-  const auftraege=DB.auftraege.filter(a=>a.datum===datum)
-    .sort((a,b)=>(a.uhrzeit_von||'00:00').localeCompare(b.uhrzeit_von||'00:00'));
-
-  if(!termine.length&&!auftraege.length){
-    el.innerHTML='<div style="padding:16px;text-align:center;color:var(--text2);font-size:.84rem">'+
-      'Keine Einträge am '+datum.split('-').reverse().join('.')+'</div>';
-    return;
-  }
-
-  let html='<div class="card">';
-
-  // Termine anzeigen
-  termine.forEach(t=>{
-    const von=(t.uhrzeit_von||'').substring(0,5);
-    const bis=(t.uhrzeit_bis||'').substring(0,5);
-    const typInfo=t.typ&&TYPEN[t.typ]?TYPEN[t.typ].l:'';
-    const beschText=(t.beschreibung||'').split('|')[0].trim();
-    // Prüfen ob dazu ein Auftrag existiert
-    const hatAuftrag=DB.auftraege.some(a=>a.datum===datum&&sauber(a.kunde||'').toLowerCase()===sauber(t.kunde||'').toLowerCase());
-    html+='<div class="kalTerminCard">'+
-      '<div class="ktZeit">'+
-        (t.ganztag?'<strong style="font-size:.7rem">GANZ</strong><small>TAG</small>':
-          '<strong>'+(von||'--')+'</strong><small>'+(bis||'--')+'</small>')+
-      '</div>'+
-      '<div class="ktMain">'+
-        '<b>'+esc(t.titel||'Termin')+'</b>'+
-        (t.kunde?'<span>👤 '+esc(sauber(t.kunde))+'</span>':'')+
-        (typInfo?'<span>'+typInfo+'</span>':'')+
-        (beschText?'<span style="font-size:.72rem">'+esc(beschText.substring(0,60))+'</span>':'')+
-        (hatAuftrag?'<span class="badge bGrn" style="font-size:.65rem">✓ Im Journal</span>':'<span class="badge bOrange" style="font-size:.65rem">Noch offen</span>')+
-      '</div>'+
-      '<div class="ktActions">'+
-        '<button class="btn btnOut btnSm" onclick="event.stopPropagation();terminBearbeiten(\''+t.id+'\')">✏️</button>'+
-        '<button class="btn btnRed btnSm" onclick="event.stopPropagation();if(confirm(\'Termin loeschen?\'))terminLoeschen(\''+t.id+'\')">🗑</button>'+
-        (!hatAuftrag?'<button class="btn btnGrn btnSm" onclick="event.stopPropagation();terminZuAuftrag(\''+t.id+'\')" title="Als erledigt erfassen">✓</button>':'')+
-      '</div>'+
-    '</div>';
-  });
-
-  // Aufträge anzeigen (falls extra erfasst)
-  auftraege.forEach(a=>{
-    const von=(a.uhrzeit_von||'').substring(0,5);
-    const bis=(a.uhrzeit_bis||'').substring(0,5);
-    const farbe=TYPEN[a.typ]?.c||'#374151';
-    html+='<div class="kalTerminCard" style="border-left:3px solid '+farbe+';background:#f9f9f9">'+
-      '<div class="ktZeit" style="background:'+farbe+'15">'+
-        (von?'<strong style="color:'+farbe+'">'+von+'</strong><small>'+bis+'</small>':
-          '<strong style="font-size:.8rem">'+(TYPEN[a.typ]?.l||'📋').split(' ')[0]+'</strong>')+
-      '</div>'+
-      '<div class="ktMain">'+
-        '<b>'+esc(sauber(a.kunde||'Auftrag'))+'</b>'+
-        (TYPEN[a.typ]?'<span>'+TYPEN[a.typ].l+'</span>':'')+
-        (a.arbeit?'<span>'+esc(a.arbeit.substring(0,50))+'</span>':'')+
-        '<span class="badge '+(a.bezahlt?'bGrn':'bOrange')+'" style="font-size:.65rem">'+(a.bezahlt?'✓ Bezahlt':'Offen')+'</span>'+
-      '</div>'+
-      '<div class="ktActions">'+
-        '<button class="btn btnOut btnSm" onclick="event.stopPropagation();auftragBearbeiten(\''+a.id+'\')">✏️</button>'+
-      '</div>'+
-    '</div>';
-  });
-
-  html+='</div>';
-  el.innerHTML=html;
+  const termine=DB.termine.filter(t=>t.datum===datum);
+  if(termine.length===0){el.innerHTML=`<div style="text-align:center;padding:18px;color:var(--text2);font-size:.84rem">Keine Termine am ${datum?.split('-').reverse().join('.')}</div>`;return;}
+  el.innerHTML='<div class="card">'+termine.map(t=>{
+    // Wer hat angelegt - aus beschreibung parsen
+    const beschParts=(t.beschreibung||'').split('|');
+    const beschText=beschParts[0]?.trim()||'';
+    const angelegt=beschParts.find(p=>p.includes('Eingetragen von:'))?.replace('Eingetragen von:','').trim()||'';
+    const faellig=t.naechste_faelligkeit||null;
+    return`<div class="listItem">
+      <div class="listAvatar" style="background:var(--red2);color:var(--p)">📅</div>
+      <div class="listMain">
+        <strong>${esc(t.titel)}</strong>
+        <span>${t.ganztag?'Ganztag':(t.uhrzeit_von||'')+'–'+(t.uhrzeit_bis||'')}${t.kunde?' · '+esc(t.kunde):''}</span>
+        ${beschText?`<span style="font-size:.72rem">${esc(beschText)}</span>`:''}
+        <span style="font-size:.71rem;color:var(--text2)">${angelegt?'👤 '+angelegt:''}${isAdmin()&&t.preis?' · 💰 €'+parseFloat(t.preis).toFixed(2):''}</span>
+        ${faellig?`<span style="font-size:.71rem"><span class="badge bOrange">Fällig: ${faellig.split('-').reverse().join('.')}</span></span>`:''}
+      </div>
+      <button class="btn btnRed btnSm" onclick="terminLoeschen('${t.id}')">🗑</button>
+    </div>`;
+  }).join('')+'</div>';
 }
 function kalViewWechsel(v){
   kalView=v;
@@ -1616,200 +1575,90 @@ function wocheVorZurueck(t){_wocheOffset+=t;wocheRender();}
 
 function terminNeu(){
   const heute=new Date().toISOString().split('T')[0];
-  const topKunden=DB.kunden.slice(0,50).map(k=>'<option value="'+esc(sauber((k.vorname?k.vorname+' ':'')+k.nachname+(k.ort?', '+k.ort:'')))+'">').join('');
-  modalOffen('📅 Neuer Termin / Auftrag',
-    '<div class="fGrid fg2">'+
-      '<div class="fRow"><label>Datum *</label><input type="date" id="tDatum" value="'+heute+'"></div>'+
-      '<div class="fRow"><label>Leistungsart</label><select id="tTyp">'+
-        Object.entries(TYPEN).map(([k,v])=>'<option value="'+k+'">'+v.l+'</option>').join('')+
-      '</select></div>'+
-    '</div>'+
-    '<div class="fGrid fg2">'+
-      '<div class="fRow"><label>Von</label><input type="time" id="tVon" value="08:00"></div>'+
-      '<div class="fRow"><label>Bis</label><input type="time" id="tBis" value="10:00"></div>'+
-    '</div>'+
-    '<div class="fRow"><label>Kunde *</label>'+
-      '<input id="tKunde" list="kvTN" placeholder="Name suchen…" oninput="kvVorschlag2(this.value)">'+
-      '<datalist id="kvTN">'+topKunden+'</datalist>'+
-    '</div>'+
-    '<div class="fRow"><label>Beschreibung / Was ist geplant?</label>'+
-      '<textarea id="tBeschr" placeholder="z.B. PV-Reinigung, Wartung Heizung…"></textarea>'+
-    '</div>'+
-    '<div class="fGrid fg2">'+
-      '<div class="fRow"><label>Dauer (h)</label><input type="number" id="tDauer" step=".5" placeholder="z.B. 2"></div>'+
-      '<div class="fRow"><label>Preis (€)</label><input type="number" id="tPreis" step=".01" placeholder="0.00"></div>'+
-    '</div>'+
-    '<div class="fRow"><label>Status</label>'+
-      '<select id="tStatus">'+
-        '<option value="geplant">📅 Geplant (noch nicht durchgeführt)</option>'+
-        '<option value="erledigt">✅ Bereits erledigt</option>'+
-        '<option value="bezahlt">💰 Erledigt + Bezahlt</option>'+
-      '</select>'+
-    '</div>'+
-    '<div class="fRow"><label>Notiz (optional)</label>'+
-      '<input id="tNotiz" placeholder="Besonderheiten, Material…">'+
-    '</div>'+
-    '<div style="display:flex;gap:8px;margin-top:14px">'+
-      '<button class="btn btnGrn" style="flex:1" onclick="terminSpeichern()">💾 Speichern</button>'+
-      '<button class="btn btnOut" onclick="modalZu()">Abbrechen</button>'+
-    '</div>'
-  );
+  const kvOpt=DB.kunden.map(k=>{
+    const nn=sauber(k.nachname);const vn=sauber(k.vorname);
+    const name=(vn?vn+' ':'')+nn;
+    const adr=[k.strasse,k.plz?k.plz+' '+k.ort:k.ort].filter(Boolean).join(', ');
+    return`<option value="${esc(name+(adr?' — '+adr:'')+(k.nummer?' Nr.'+k.nummer:''))}">`;
+  }).join('');  modalOffen('📅 Neuer Termin',`
+    <div class="fRow"><label>Bezeichnung *</label><input id="tTitel" placeholder="z.B. Wartung bei Müller"></div>
+    <div class="fRow"><label>Datum *</label><input type="date" id="tDatum" value="${heute}"></div>
+    <div class="fRow"><label>Ganztägig</label><select id="tGanztag" onchange="terminGanztag()"><option value="true">Ja — Ganztag</option><option value="false">Nein — Uhrzeit</option></select></div>
+    <div id="tZeitenDiv" style="display:none"><div class="fGrid fg2"><div class="fRow"><label>Von</label><input type="time" id="tVon" value="08:00"></div><div class="fRow"><label>Bis</label><input type="time" id="tBis" value="10:00"></div></div></div>
+    <div class="fRow"><label>Kunde</label><input id="tKunde" list="kvT" placeholder="Optional…"><datalist id="kvT">${kvOpt}</datalist></div>
+    <div class="fRow"><label>Ort / Adresse</label><input id="tOrt" placeholder="Optional"></div>
+    <div class="fRow"><label>Leistungsart</label><select id="tTyp"><option value="">—</option>${Object.entries(TYPEN).map(([k,v])=>`<option value="${k}">${v.l}</option>`).join('')}</select></div>
+    <div class="fRow"><label>Beschreibung / Was ist zu tun?</label><textarea id="tBeschreibung" placeholder="Details zum Termin…"></textarea></div>
+    ${isAdmin()?`<div class="fRow"><label>Preis (€) — optional</label><input type="number" id="tPreis" step=".01" min="0" placeholder="z.B. 85.00"></div>`:''}
+    <div class="fRow"><label>Fällig bis</label><input type="date" id="tFaellig"></div>
+    <div style="display:flex;gap:10px;margin-top:18px">
+      <button class="btn btnGrn" style="flex:1" onclick="terminSpeichern()">💾 Speichern</button>
+      <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
+    </div>`);
 }
-function kvVorschlag2(val){
-  const dl=document.getElementById('kvTN');if(!dl||!val||val.length<2)return;
-  const s=sauber(val).toLowerCase();
-  const m=DB.kunden.filter(k=>sauber((k.vorname||'')+' '+(k.nachname||'')).toLowerCase().includes(s)).slice(0,10);
-  dl.innerHTML=m.map(k=>'<option value="'+esc(sauber((k.vorname?k.vorname+' ':'')+k.nachname+(k.ort?', '+k.ort:'')))+'">').join('');
-}
+function terminGanztag(){document.getElementById('tZeitenDiv').style.display=document.getElementById('tGanztag')?.value==='true'?'none':'block';}
 async function terminSpeichern(){
-  const datum=document.getElementById('tDatum')?.value;
-  const kunde=(document.getElementById('tKunde')?.value||'').trim();
+  const titel=document.getElementById('tTitel')?.value?.trim();const datum=document.getElementById('tDatum')?.value;
+  if(!titel){toast('Bitte Bezeichnung eingeben','err');document.getElementById('tTitel')?.focus();return;}
   if(!datum){toast('Bitte Datum eingeben','err');return;}
-  const typ=document.getElementById('tTyp')?.value||null;
-  const von=document.getElementById('tVon')?.value||null;
-  const bis=document.getElementById('tBis')?.value||null;
-  const beschr=document.getElementById('tBeschr')?.value||'';
-  const dauer=parseFloat(document.getElementById('tDauer')?.value)||null;
-  const preisVal=document.getElementById('tPreis')?.value;
-  const preis=preisVal?parseFloat(preisVal)||null:null;
-  const status=document.getElementById('tStatus')?.value||'geplant';
-  const notiz=document.getElementById('tNotiz')?.value||null;
-  const titel=kunde?(TYPEN[typ]?.l||'Termin')+' bei '+kunde.split(',')[0]:(TYPEN[typ]?.l||'Termin');
-
-  try{
-    // 1. Immer in Termine speichern (für Kalender)
-    const tDat={
-      titel,datum,typ,
-      uhrzeit_von:von,uhrzeit_bis:bis,
-      kunde:kunde||null,
-      beschreibung:[beschr,user?.name?'Eingetragen von: '+user.name:''].filter(Boolean).join(' | '),
-      ganztag:!von,farbe:'#991b1b',
-    };
-    Object.keys(tDat).forEach(k=>{if(tDat[k]===null||tDat[k]==='')delete tDat[k];});
-    await api('/termine',{method:'POST',body:JSON.stringify(tDat)});
-
-    // 2. Wenn erledigt/bezahlt → auch in Aufträge speichern (für Journal)
-    if(status==='erledigt'||status==='bezahlt'){
-      const aDat={
-        datum,kunde:kunde||null,typ,
-        arbeit:beschr||(TYPEN[typ]?.l||'Auftrag'),
-        uhrzeit_von:von,uhrzeit_bis:bis,
-        dauer,preis,
-        bezahlt:status==='bezahlt',
-        notiz,
-        durchgefuehrt_von:user?.name||null,
-        erstellt_am:new Date().toISOString(),
-      };
-      Object.keys(aDat).forEach(k=>{if(aDat[k]===null||aDat[k]===undefined||aDat[k]==='')delete aDat[k];});
-      await api('/auftraege',{method:'POST',body:JSON.stringify(aDat)});
-    }
-
-    toast('✅ Gespeichert!');
-    modalZu();
-    await laden();
-    zeigeTab('kalender');
-  }catch(e){
-    if(e.message.includes('204')||e.message.includes('PGRST204')){
-      toast('✅ Gespeichert!');modalZu();await laden();zeigeTab('kalender');
-    } else {
-      toast('Fehler: '+e.message,'err');
-    }
-  }
+  const ganztag=document.getElementById('tGanztag')?.value==='true';
+  const beschreibung=document.getElementById('tBeschreibung')?.value||'';
+  const preis=document.getElementById('tPreis')?.value;
+  // Eingetragen von + Preis in Beschreibung speichern
+  const beschFinal=[beschreibung,`Eingetragen von: ${user.name}`,preis?`Preis: €${parseFloat(preis).toFixed(2)}`:''].filter(Boolean).join(' | ');
+  const faellig=document.getElementById('tFaellig')?.value||null;
+  const d={titel,datum,ganztag,
+    uhrzeit_von:ganztag?null:(document.getElementById('tVon')?.value||null),
+    uhrzeit_bis:ganztag?null:(document.getElementById('tBis')?.value||null),
+    kunde:document.getElementById('tKunde')?.value||null,
+    typ:document.getElementById('tTyp')?.value||null,
+    beschreibung:beschFinal,
+    ort:document.getElementById('tOrt')?.value||null,
+    farbe:'#991b1b'
+  };
+  if(faellig)d.naechste_faelligkeit=faellig;
+  Object.keys(d).forEach(k=>{if(d[k]===null||d[k]===undefined||d[k]==='')delete d[k];});
+  try{await api('/termine',{method:'POST',body:JSON.stringify(d)});toast('Termin gespeichert ✓');modalZu();await laden();zeigeTab('kalender');}
+  catch(e){toast('Fehler: '+e.message,'err');}
 }
-
 async function terminZuAuftrag(terminId){
   const t=DB.termine.find(x=>x.id===terminId);if(!t)return;
-  // Nur passende Kunden (nicht alle 5789!)
-  const kundeStr=sauber(t.kunde||'').toLowerCase();
-  const erstesWort=kundeStr.split(',')[0].split(' ').pop()||'';
-  const topK=DB.kunden
-    .filter(k=>erstesWort?sauber(k.nachname).toLowerCase().includes(erstesWort):true)
-    .slice(0,20)
-    .map(k=>'<option value="'+esc(sauber((k.vorname?k.vorname+' ':'')+k.nachname+(k.ort?', '+k.ort:'')))+'">').join('');
-
-  modalOffen('✅ Termin abschließen',
-    '<div style="background:#d1fae5;border-left:4px solid var(--grn);border-radius:0 8px 8px 0;padding:12px;margin-bottom:14px">'+
-      '<strong>'+esc(sauber(t.titel||t.kunde||'Termin'))+'</strong>'+
-      '<div style="font-size:.8rem;color:var(--grn);margin-top:2px">'+
-        (t.datum?.split('-').reverse().join('.')||'')+(t.uhrzeit_von?' · '+t.uhrzeit_von:'')+'</div>'+
-    '</div>'+
-    '<div class="fGrid fg2">'+
-      '<div class="fRow"><label>Datum</label><input type="date" id="aDatum" value="'+(t.datum||'')+'"></div>'+
-      '<div class="fRow"><label>Dauer (h)</label><input type="number" id="aDauer" step=".5" placeholder="z.B. 2"></div>'+
-    '</div>'+
-    '<div class="fGrid fg2">'+
-      '<div class="fRow"><label>Von</label><input type="time" id="aVon" value="'+(t.uhrzeit_von||'')+'"></div>'+
-      '<div class="fRow"><label>Bis</label><input type="time" id="aBis" value="'+(t.uhrzeit_bis||'')+'"></div>'+
-    '</div>'+
-    '<div class="fRow"><label>Kunde</label>'+
-      '<input id="aKunde" list="kvTA" value="'+esc(sauber(t.kunde||''))+'" placeholder="Kunde suchen…" oninput="kvVorschlagTA(this.value)">'+
-      '<datalist id="kvTA">'+topK+'</datalist>'+
-    '</div>'+
-    '<div class="fRow"><label>Leistungsart</label>'+
-      '<select id="aTyp">'+Object.entries(TYPEN).map(([k,v])=>'<option value="'+k+'" '+(t.typ===k?'selected':'')+'>'+v.l+'</option>').join('')+'</select>'+
-    '</div>'+
-    '<div class="fRow"><label>Was wurde gemacht?</label>'+
-      '<textarea id="aArbeit" placeholder="Beschreibung der durchgeführten Arbeit…"></textarea>'+
-    '</div>'+
-    (isAdmin()?
-      '<div class="fGrid fg2">'+
-        '<div class="fRow"><label>Preis (€)</label>'+
-          '<input type="number" id="aPreis" step=".01" placeholder="'+(TYPEN[t.typ]?.p||'0')+'" style="font-size:1.1rem;font-weight:700;text-align:center"></div>'+
-        '<div class="fRow"><label>Status</label>'+
-          '<select id="aBezahlt">'+
-            '<option value="false">Offen (noch nicht bezahlt)</option>'+
-            '<option value="true">✓ Bezahlt</option>'+
-          '</select>'+
-        '</div>'+
-      '</div>'
-    :'<input type="hidden" id="aPreis" value=""><input type="hidden" id="aBezahlt" value="false">')+
-    '<input type="hidden" id="aOrt" value="">'+
-    '<input type="hidden" id="aStrasse" value="">'+
-    '<input type="hidden" id="aNotiz" value="">'+
-    '<input type="hidden" id="aFaellig" value="">'+
-    '<div style="display:flex;gap:8px;margin-top:14px">'+
-      '<button class="btn btnGrn" style="flex:1" onclick="auftragSpeichernNeu(\''+terminId+'\')">✅ Abschließen & speichern</button>'+
-      '<button class="btn btnOut" onclick="modalZu()">Abbrechen</button>'+
-    '</div>'
-  );
-}
-function kvVorschlagTA(val){
-  const dl=document.getElementById('kvTA');if(!dl||!val||val.length<2)return;
-  const s=sauber(val).toLowerCase();
-  const m=DB.kunden.filter(k=>sauber((k.vorname||'')+' '+(k.nachname||'')).toLowerCase().includes(s)).slice(0,10);
-  dl.innerHTML=m.map(k=>'<option value="'+esc(sauber((k.vorname?k.vorname+' ':'')+k.nachname+(k.ort?', '+k.ort:'')))+'">').join('');
-}
-async function auftragSpeichernNeu(terminId){
-  const datum=document.getElementById('aDatum')?.value;
-  if(!datum){toast('Datum eingeben','err');return;}
-  const d={
-    datum,
-    kunde:document.getElementById('aKunde')?.value?.trim()||null,
-    typ:document.getElementById('aTyp')?.value||null,
-    arbeit:document.getElementById('aArbeit')?.value||null,
-    dauer:parseFloat(document.getElementById('aDauer')?.value)||null,
-    uhrzeit_von:document.getElementById('aVon')?.value||null,
-    uhrzeit_bis:document.getElementById('aBis')?.value||null,
-    preis:parseFloat(document.getElementById('aPreis')?.value)||null,
-    bezahlt:document.getElementById('aBezahlt')?.value==='true',
-    durchgefuehrt_von:user?.name||null,
-    erstellt_am:new Date().toISOString(),
-  };
-  Object.keys(d).forEach(k=>{if(d[k]===null||d[k]===undefined||d[k]==='')delete d[k];});
-  try{
-    await api('/auftraege',{method:'POST',body:JSON.stringify(d)});
-    toast('✅ Auftrag gespeichert!');
-    modalZu();
-    await laden();
-    zeigeTab('journal');
-  }catch(e){
-    const msg=e.message||String(e);
-    if(msg.includes('204')||msg.includes('PGRST204')){
-      toast('✅ Gespeichert!');modalZu();await laden();zeigeTab('journal');
-    } else {
-      toast('Fehler: '+msg,'err');
-    }
-  }
+  const kvOpt=DB.kunden.map(k=>`<option value="${esc(sauber((k.vorname?k.vorname+' ':'')+k.nachname+(k.ort?', '+k.ort:'')))}">` ).join('');
+  modalOffen('✅ Termin abschließen',`
+    <div style="background:#d1fae5;border-radius:8px;padding:10px;margin-bottom:12px">
+      <strong>${esc(sauber(t.titel||''))}</strong> · ${t.datum?.split('-').reverse().join('.')||''}
+      ${t.uhrzeit_von?' · '+t.uhrzeit_von:''}
+    </div>
+    <div class="fGrid fg2">
+      <div class="fRow"><label>Datum</label><input type="date" id="aDatum" value="${t.datum||''}"></div>
+      <div class="fRow"><label>Dauer (h)</label><input type="number" id="aDauer" step=".5" placeholder="z.B. 2"></div>
+    </div>
+    <div class="fGrid fg2">
+      <div class="fRow"><label>Von</label><input type="time" id="aVon" value="${t.uhrzeit_von||''}"></div>
+      <div class="fRow"><label>Bis</label><input type="time" id="aBis" value="${t.uhrzeit_bis||''}"></div>
+    </div>
+    <div class="fRow"><label>Kunde</label>
+      <input id="aKunde" list="kvTA" value="${esc(sauber(t.kunde||''))}" placeholder="Kunde suchen…">
+      <datalist id="kvTA">${kvOpt}</datalist>
+    </div>
+    <div class="fRow"><label>Leistungsart</label>
+      <select id="aTyp">${Object.entries(TYPEN).map(([k,v])=>`<option value="${k}" ${t.typ===k?'selected':''}>${v.l}</option>`).join('')}</select>
+    </div>
+    <div class="fRow"><label>Was wurde gemacht?</label>
+      <textarea id="aArbeit" placeholder="Beschreibung der Arbeit…"></textarea>
+    </div>
+    ${isAdmin()?`<div class="fRow"><label>Preis (€)</label>
+      <input type="number" id="aPreis" step=".01" placeholder="${TYPEN[t.typ]?.p||'0'}"></div>`
+      :'<input type="hidden" id="aPreis">'}
+    <input type="hidden" id="aOrt" value="${esc(t.beschreibung||'')}">
+    <input type="hidden" id="aStrasse" value="">
+    <input type="hidden" id="aNotiz" value="">
+    <input type="hidden" id="aFaellig" value="">
+    <input type="hidden" id="aBezahlt" value="false">
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btnGrn" style="flex:1" onclick="auftragSpeichern(null)">✅ Als Auftrag speichern</button>
+      <button class="btn btnOut" onclick="modalZu()">Abbrechen</button>
+    </div>`);
 }
 async function terminLoeschen(id){if(!confirm('Termin wirklich löschen?'))return;try{await api('/termine?id=eq.'+id,{method:'DELETE'});toast('Termin gelöscht');await laden();}catch(e){toast('Fehler: '+e.message,'err');}}
 
@@ -1994,14 +1843,7 @@ async function maSpeichern(id){
       if(id)await api('/mitarbeiter?id=eq.'+id,{method:'PATCH',body:JSON.stringify(extra)});
     }catch(e2){console.log('Berechtigungen nicht gespeichert - SQL nötig');}
     await laden();if(!nurSpeichern)modalZu();
-  }catch(e){
-    const msg=e.message||String(e);
-    if(msg.includes('PGRST204')||msg.includes('No Content')||msg.includes('204')){
-      toast('✅ Abgerechnet!');modalZu();detailZu();await laden();
-    } else {
-      toast('Fehler: '+msg,'err');
-    }
-  }
+  }catch(e){toast('Fehler: '+e.message,'err');}
 }
 
 // ══ BENACHRICHTIGUNGEN ══
@@ -2320,14 +2162,7 @@ async function terminUpdate(id){
   try{
     await api('/termine?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});
     toast('Termin gespeichert ✓');modalZu();await laden();zeigeTab('kalender');
-  }catch(e){
-    const msg=e.message||String(e);
-    if(msg.includes('PGRST204')||msg.includes('No Content')||msg.includes('204')){
-      toast('✅ Abgerechnet!');modalZu();detailZu();await laden();
-    } else {
-      toast('Fehler: '+msg,'err');
-    }
-  }
+  }catch(e){toast('Fehler: '+e.message,'err');}
 }
 
 // ══ DATENPFLEGE ══

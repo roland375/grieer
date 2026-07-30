@@ -6,7 +6,7 @@
 <title>Grieer App - SICHERUNG 08.06.2026 09:50</title>
 <meta name="theme-color" content="#1A2B45">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Grieer">
 <script>
 
@@ -1177,6 +1177,25 @@ input,select,textarea{font-size:max(16px,1em)!important}
     color:#1A2B45 !important; margin-bottom:10px !important;
     padding:8px 0 6px !important; border-bottom:2px solid #2563EB !important;
   }
+}
+
+/* ═══ PWA-Standalone: Platz für Statusleiste/Notch reservieren ═══ */
+@media all and (display-mode: standalone) {
+  nav {
+    padding-top: calc(8px + env(safe-area-inset-top, 20px)) !important;
+  }
+}
+/* Fallback für iOS-Geräte ohne env()-Unterstützung */
+@supports not (padding-top: env(safe-area-inset-top)) {
+  @media all and (display-mode: standalone) {
+    nav { padding-top: 28px !important; }
+  }
+}
+/* Nav-Buttons garantiert antippbar */
+nav button {
+  position: relative;
+  z-index: 2;
+  touch-action: manipulation;
 }
 </style>
 
@@ -17403,64 +17422,67 @@ window.addEventListener('load', function(){
 function pinWordSubmit(){
   var inp = document.getElementById('pin-word-input');
   var err = document.getElementById('pin-err');
-  var dbg = document.getElementById('debug-info');
   var code = '';
-  
-  try { code = (inp.value || '').toString().trim().toLowerCase(); } catch(ex){ 
-    if(dbg) dbg.textContent = 'FEHLER inp.value: ' + ex.message; return; 
-  }
-  
-  if(dbg) dbg.textContent = 'Code: "' + code + '" | Verarbeitung...';
-  
-  if(!code){
-    if(err) err.textContent = 'Bitte Code eingeben';
-    return;
-  }
+  try { code = (inp.value || '').toString().trim().toLowerCase(); } catch(ex){ return; }
+  if(!code){ if(err) err.textContent = 'Bitte Code eingeben'; return; }
   if(err) err.textContent = '';
-  
-  var ok = false;
-  
-  // Notfall-Codes
-  if(code === 'roland' || code === 'grieer'){
-    try{ localStorage.removeItem('grieer-users'); }catch(e){}
-    try{ localStorage.removeItem('grieer-passwords'); }catch(e){}
-    ok = true;
-    if(dbg) dbg.textContent = 'Notfall-Code erkannt!';
+
+  /* ── Benutzer suchen (Admin + Mitarbeiter) — NICHTS wird geloescht ── */
+  var users = [];
+  try { users = (typeof _loadUsers === 'function') ? _loadUsers() : []; } catch(e){}
+  if(!Array.isArray(users) || !users.length){
+    users = [{id:'admin', name:'Admin (Roland)', code:['roland','grieer'], role:'admin', pages:'*'}];
   }
-  
-  if(!ok){
-    if(dbg) dbg.textContent = 'Code: "' + code + '" ist NICHT roland/grieer - falscher Code';
-    if(err) err.textContent = 'Falscher Code - tippe: roland';
-    if(inp){ inp.value = ''; try{inp.focus();}catch(e){} }
+
+  var found = null;
+  for(var i=0; i<users.length; i++){
+    var u = users[i];
+    if(!u) continue;
+    var codes = Array.isArray(u.code) ? u.code : [u.code];
+    for(var j=0; j<codes.length; j++){
+      if(codes[j] && String(codes[j]).trim().toLowerCase() === code){ found = u; break; }
+    }
+    if(found) break;
+  }
+
+  /* ── Admin-Notfallzugang (loescht NICHTS mehr) ── */
+  if(!found && (code === 'roland' || code === 'grieer')){
+    found = users.filter(function(u){ return u && u.role === 'admin'; })[0]
+         || {id:'admin', name:'Admin (Roland)', code:['roland','grieer'], role:'admin', pages:'*'};
+  }
+
+  if(!found){
+    if(err) err.textContent = 'Falscher Code';
+    if(inp){ inp.value = ''; try{ inp.focus(); }catch(e){} }
     return;
   }
-  
-  // Login erfolgreich
-  var adminUser = {id:'admin',name:'Admin (Roland)',code:['roland','grieer'],role:'admin',pages:'*'};
-  try{ window._currentUser = adminUser; }catch(e){}
-  try{ sessionStorage.setItem('grieer-current-user', JSON.stringify(adminUser)); }catch(e){}
-  
-  var ov2 = document.getElementById('pin-overlay');
-  if(ov2){ 
-    ov2.style.display = 'none'; 
-    if(dbg) dbg.textContent = 'Overlay versteckt!';
-  }
-  
-  try{ _updateNavUser(); }catch(e){ if(dbg) dbg.textContent += ' | _updateNavUser: ' + e.message; }
+
+  /* ── Login erfolgreich ── */
+  try{ window._currentUser = found; }catch(e){}
+  try{ sessionStorage.setItem('grieer-current-user', JSON.stringify(found)); }catch(e){}
+  try{ sessionStorage.setItem('grieer-unlocked','1'); }catch(e){}
+
+  var ov = document.getElementById('pin-overlay');
+  if(ov) ov.style.display = 'none';
+
+  try{ _updateNavUser(); }catch(e){}
   try{ _filterHomeTiles(); }catch(e){}
-  try{ show('aufnahme'); }catch(e){ if(dbg) dbg.textContent += ' | show: ' + e.message; }
-  try{ _grieerToast('Willkommen!', '#16A34A', 2000); }catch(e){}
-  
-  // Direkter Fallback
+  try{ show('aufnahme'); }catch(e){}
+  try{ _grieerToast('Willkommen, ' + (found.name || '') + '!', '#16A34A', 2000); }catch(e){}
+
+  /* ── Cloud-Daten nachladen (Mitarbeiter, Kunden, Einstellungen, KI) ── */
+  setTimeout(function(){
+    try{ if(typeof syncFromCloud === 'function') syncFromCloud(); }catch(e){}
+  }, 1800);
+
   setTimeout(function(){
     var auf = document.getElementById('page-aufnahme');
     if(auf && window.getComputedStyle(auf).display === 'none'){
-      document.querySelectorAll('.pg').forEach(function(p){ p.style.display='none'; });
+      document.querySelectorAll('.pg').forEach(function(p){ p.style.display = 'none'; });
       auf.style.display = 'block';
-      if(dbg) dbg.textContent += ' | Fallback aktiviert';
     }
   }, 300);
-  
+
   if(inp) inp.value = '';
 }
 /* === ENDE EIGENSTÄNDIGER LOGIN === */
