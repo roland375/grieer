@@ -15710,7 +15710,15 @@ async function pdfUploadStart(input){
       var tc=await pg.getTextContent();
       txt+=tc.items.map(function(x){return x.str;}).join(' ')+'\n';
     }
-    if(txt.trim().length<50){upd('Kein Text (verschl\u00fcsselt?)','#F59E0B');return;}
+    if(txt.trim().length<50){upd('Kein Text gefunden \u2013 evtl. gescanntes Bild-PDF','#F59E0B');return;}
+    /* Lesbarkeit pruefen: kaputte Schrift-Einbettung erkennen */
+    var _lb = _textLesbarkeit(txt);
+    if(_lb < 0.45){
+      upd('\u274C PDF nicht lesbar (Qualit\u00e4t '+Math.round(_lb*100)+'%) \u2013 nicht importiert','#DC2626');
+      try{_grieerToast('\u274C PDF konnte nicht gelesen werden.\nDie Schrift ist nicht eingebettet.\nBitte als \"Text-PDF\" neu speichern oder Word/Text-Datei nutzen.','#DC2626',6000);}catch(e){}
+      input.value='';
+      return;
+    }
     var fname=file.name.replace('.pdf','').replace(/_/g,' ');
     var parts=txt.split(/\n{2,}/);var cur='';var ci=1;var chunks=[];
     parts.forEach(function(pt){
@@ -15720,6 +15728,7 @@ async function pdfUploadStart(input){
     if(cur.trim().length>50) chunks.push({t:fname+(ci>1?' T'+ci:''),c:cur.trim()});
     var ok=0;
     for(var j=0;j<chunks.length;j++){
+      if(!_textIstLesbar(chunks[j].c)) continue;  /* unlesbare Abschnitte ueberspringen */
       var r2=await kiWissenHochladen(kat,chunks[j].t.slice(0,80),chunks[j].c.slice(0,3000));
       if(r2) ok++;
     }
@@ -16520,7 +16529,9 @@ async function _kiSupabaseDirectSearch(query){
         var t2=searchTerms[ti];
         var url=_SB_URL+'/rest/v1/grieer_ki_wissen?or=(inhalt.ilike.*'+encodeURIComponent(t2)+'*,titel.ilike.*'+encodeURIComponent(t2)+'*,kategorie.ilike.*'+encodeURIComponent(t2)+'*)&limit=30';
         try{var resp=await fetch(url,{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
-          if(resp.ok){(await resp.json()).forEach(function(r){if(r.id&&!seen[r.id]){seen[r.id]=true;r._score=scoreText((r.titel||'')+(r.kategorie||''))*3+scoreText(r.inhalt||'');if(r._score>0)cloudResults.push(r);}});}}catch(e){}
+          if(resp.ok){(await resp.json()).forEach(function(r){if(r.id&&!seen[r.id]){seen[r.id]=true;r._score=scoreText((r.titel||'')+(r.kategorie||''))*3+scoreText(r.inhalt||'');
+          /* Unlesbare Eintraege (kaputte PDF-Extraktion) ausschliessen */
+          if(typeof _textIstLesbar==='function' && !_textIstLesbar(r.inhalt||'')) r._score=0;if(r._score>0)cloudResults.push(r);}});}}catch(e){}
       }
       cloudResults.sort(function(a,b){return b._score-a._score;});
     }catch(e){}
@@ -17034,6 +17045,94 @@ function buildGkvHtml(){
 
   return '<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><style>'+CSS+'</style></head><body>'+body+'</body></html>';
 }
+
+/* ═══ TEXT-LESBARKEIT: erkennt kaputte PDF-Extraktion ═══════════
+   Liefert 0.0 (unlesbar) bis 1.0 (einwandfrei).
+   Kaputte PDFs liefern Glyphen-Nummern statt Buchstaben →
+   sehr wenig Buchstaben, sehr viele Leerzeichen/Symbole.        */
+function _textLesbarkeit(txt){
+  if(!txt) return 0;
+  var t = String(txt);
+  var n = t.length;
+  if(n < 20) return 0;
+  var buchst = 0, leer = 0, symb = 0;
+  for(var i=0;i<n;i++){
+    var c = t[i];
+    if(/[a-zA-ZäöüÄÖÜß]/.test(c)) buchst++;
+    else if(c === ' ' || c === '\n' || c === '\t') leer++;
+    else if(!/[0-9]/.test(c)) symb++;
+  }
+  var qBuchst = buchst / n;
+  var qLeer   = leer / n;
+  var qSymb   = symb / n;
+
+  /* Deutsche Alltagswoerter als starkes Positivsignal */
+  var woerter = ['der','die','das','und','ist','von','mit','fuer','für','bei','dem','den',
+    'nicht','auch','sich','eine','einen','wird','sind','oder','nach','muss','kann','soll',
+    'gemäß','gemaess','Anlage','Abgas','Kehr','Pruefung','Prüfung','Feuerstätte','Feuerstaette'];
+  var lower = t.toLowerCase(), treffer = 0;
+  woerter.forEach(function(w){ if(lower.indexOf(w.toLowerCase()) >= 0) treffer++; });
+  var qWort = Math.min(treffer / 8, 1);
+
+  /* Woerter mit mind. 3 Buchstaben am Stueck */
+  var echteWoerter = (t.match(/[a-zA-ZäöüÄÖÜß]{3,}/g) || []).length;
+  var qEcht = Math.min(echteWoerter / (n / 60), 1);
+
+  var score = qBuchst * 1.6 + qWort * 0.5 + qEcht * 0.4;
+  if(qLeer > 0.45) score -= 0.7;   /* zu viele Leerzeichen */
+  if(qSymb > 0.15) score -= 0.6;   /* zu viele Sonderzeichen */
+  if(qBuchst < 0.25) score -= 0.8; /* kaum Buchstaben */
+  return Math.max(0, Math.min(1, score));
+}
+
+/* Ist der Text brauchbar? (Schwelle bewusst tolerant) */
+function _textIstLesbar(txt){ return _textLesbarkeit(txt) >= 0.45; }
+
+/* ═══ WISSENSDATENBANK AUFRAEUMEN ══════════════════════════════
+   Findet unlesbare Eintraege (kaputte PDF-Extraktion) und
+   loescht sie nach Rueckfrage aus Supabase.                    */
+async function kiWissenAufraeumen(){
+  var st = document.getElementById('ki-cleanup-status');
+  function upd(m,c){ if(st){ st.textContent=m; st.style.color=c||'#374151'; } }
+  if(!sbCheckOnline()){ upd('Kein Internet','#DC2626'); return; }
+  upd('Pruefe Wissensdatenbank...');
+  try{
+    var key = (typeof sbKey==='function') ? sbKey() : _SB_KEY;
+    var resp = await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen?select=id,titel,kategorie,inhalt&limit=2000',{
+      headers:{'apikey':key,'Authorization':'Bearer '+key}});
+    if(!resp.ok){ upd('Fehler '+resp.status,'#DC2626'); return; }
+    var rows = await resp.json();
+    if(!Array.isArray(rows)||!rows.length){ upd('Datenbank ist leer','#94A3B8'); return; }
+
+    var kaputt = rows.filter(function(r){ return !_textIstLesbar(r.inhalt||''); });
+    if(!kaputt.length){
+      upd('\u2705 Alle '+rows.length+' Eintraege sind lesbar','#16A34A');
+      return;
+    }
+
+    var liste = kaputt.slice(0,12).map(function(r){
+      return '\u2022 '+(r.titel||'ohne Titel')+'  ('+Math.round(_textLesbarkeit(r.inhalt||'')*100)+'% lesbar)';
+    }).join('\n');
+    var frage = kaputt.length+' von '+rows.length+' Eintraegen sind unlesbar\n'
+              + '(kaputte PDF-Textextraktion).\n\n'+liste
+              + (kaputt.length>12 ? '\n... und '+(kaputt.length-12)+' weitere' : '')
+              + '\n\nDiese Eintraege jetzt loeschen?';
+    if(!confirm(frage)){ upd('Abgebrochen \u2013 nichts geloescht','#94A3B8'); return; }
+
+    var geloescht = 0;
+    for(var i=0;i<kaputt.length;i++){
+      upd('Loesche '+(i+1)+'/'+kaputt.length+'...');
+      try{
+        var d = await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen?id=eq.'+encodeURIComponent(kaputt[i].id),{
+          method:'DELETE', headers:{'apikey':key,'Authorization':'Bearer '+key}});
+        if(d.ok) geloescht++;
+      }catch(e){}
+    }
+    upd('\u2705 '+geloescht+' unlesbare Eintraege geloescht','#16A34A');
+    try{_grieerToast('\u2705 '+geloescht+' kaputte Eintraege entfernt','#16A34A',3000);}catch(e){}
+    try{ await kiLadeWissenAusSupabase(); }catch(e){}
+  }catch(err){ upd('Fehler: '+err.message,'#DC2626'); }
+}
 </script>
 
 
@@ -17172,6 +17271,18 @@ function buildGkvHtml(){
   <button onclick="document.getElementById('pdf-upload-input').click()" style="width:100%;padding:11px;background:#16A34A;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;min-height:44px">&#128196; PDF ausw&#228;hlen &amp; hochladen</button>
   <div id="pdf-upload-status" style="font-size:10px;color:#374151;margin-top:5px;min-height:14px"></div>
 </div>
+<div style="margin-top:12px;padding:10px;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px">
+  <div style="font-size:11px;font-weight:700;color:#991B1B;margin-bottom:4px">&#129529; Wissensdatenbank aufr&auml;umen</div>
+  <div style="font-size:10px;color:#7F1D1D;line-height:1.5;margin-bottom:8px">
+    Findet Eintr&auml;ge aus PDFs, die nicht richtig gelesen werden konnten
+    (unlesbare Zeichen) und entfernt sie nach R&uuml;ckfrage.
+  </div>
+  <button onclick="kiWissenAufraeumen()" style="width:100%;min-height:44px;background:#DC2626;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">
+    Unlesbare Eintr&auml;ge suchen
+  </button>
+  <div id="ki-cleanup-status" style="font-size:11px;margin-top:6px;text-align:center;color:#374151"></div>
+</div>
+
 
 <div style="background:#FFF7ED;border:1.5px solid #FED7AA;border-radius:12px;padding:12px;margin-bottom:8px">
   <div style="font-size:12px;font-weight:700;color:#C2410C;margin-bottom:4px">&#127760; PDFs aus Supabase Storage importieren</div>
