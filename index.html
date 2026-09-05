@@ -5787,7 +5787,69 @@ html body { padding-bottom: env(safe-area-inset-bottom, 0px); }
 
 
 
-<script>var _ablageTypeLabels = {
+<script>
+/* ═══ GEPRUEFTE ANTWORTEN ══════════════════════════════════════════
+   Fertige Antworten auf haeufige Fragen, jeweils mit Fundstelle.  */
+var KI_ANTWORTEN = [{"id": "kehrfrist_allgemein", "fragen": ["kehrfrist", "kehrfristen", "wie oft kehren", "wie oft muss gekehrt werden", "kehrintervall", "überprüfungsintervall", "wie oft überprüfung"], "titel": "Kehr- und Überprüfungsfristen", "antwort": "Nach § 6 Abs. 1 Bgld. KehrG 2022 gelten vier Fristen:\n\nDREIMAL JÄHRLICH (Z 1)\nAbgasanlagen für feste oder flüssige Brennstoffe – ausgenommen „Heizöl extra leicht\" und Pellets – mit angeschlossenen RAUMHEIZGERÄTEN, die ausschließlich in der Heizperiode beheizt werden.\n\nZWEIMAL JÄHRLICH (Z 2)\nDieselben Brennstoffe – ausgenommen nur „Heizöl extra leicht\" – mit angeschlossenen EINZELRAUMHEIZGERÄTEN, ausschließlich in der Heizperiode beheizt.\n\nEINMAL JÄHRLICH (Z 3)\n• Feuerstätten für „Heizöl extra leicht\"\n• Gasfeuerungen ÜBER 50 kW Nennwärmeleistung\n\nEINMAL ALLE ZWEI JAHRE (Z 4)\nBe- und/oder Entlüftungseinrichtungen sowie Abgasanlagen für Gasgeräte UNTER 50 kW Nennwärmeleistung.\n\nZUSÄTZLICH\n• Beheizung außerhalb der Heizperiode (Z 1 und 2): eine zusätzliche Überprüfung/Kehrung in diesem Zeitraum (§ 6 Abs. 2)\n• Ferienhäuser (nur 1. Mai bis 30. September bewohnt): Z 1 und 2 einmal jährlich, Z 3 alle zwei Jahre (§ 6 Abs. 4)\n• Länger als ein Jahr unbenützte Anlagen: keine Kehrpflicht (§ 6 Abs. 5)\n\nHeizperiode = 1. Oktober bis 30. April des Folgejahres (§ 1 Z 9).", "quelle": "§ 6 Bgld. Kehrgesetz 2022, LGBl. Nr. 52/2022"}, {"id": "kehrfrist_gas", "fragen": ["gas kehrfrist", "gasgerät kehren", "gasgerät überprüfung", "wie oft gas", "gastherme kehren", "gasheizung intervall", "therme überprüfung"], "titel": "Kehrfrist bei Gasgeräten", "antwort": "Maßgeblich ist die Nennwärmeleistung – die Grenze liegt bei 50 kW:\n\nUNTER 50 kW  →  einmal alle zwei Jahre\n   (§ 6 Abs. 1 Z 4 – gilt auch für Be- und Entlüftungseinrichtungen)\n\nÜBER 50 kW  →  einmal jährlich\n   (§ 6 Abs. 1 Z 3)\n\nAchtung: Die Grenze ist 50 kW, nicht 35 kW.\n\nWird die Anlage länger als ein Jahr nicht benützt, entfällt die Kehrpflicht; die Wiederbenützung ist anzuzeigen (§ 6 Abs. 5).", "quelle": "§ 6 Abs. 1 Z 3 und Z 4 Bgld. Kehrgesetz 2022"}, {"id": "kehrfrist_pellets", "fragen": ["pellets", "pelletskessel", "pelletsheizung", "pellet kehren", "wie oft pellets"], "titel": "Pellets – Einordnung der Kehrfrist", "antwort": "Pellets sind im Gesetz nur an einer Stelle ausdrücklich genannt:\n\n§ 6 Abs. 1 Z 1 nimmt Pellets von der dreimal jährlichen Kehrung AUS.\nWörtlich: feste oder flüssige Brennstoffe, „mit Ausnahme von ,Heizöl extra leicht' und Pelletts\".\n\nDamit fallen Pellets bei Raumheizgeräten nicht unter Z 1.\n\nZu beachten: Z 2 (zweimal jährlich, Einzelraumheizgeräte) nimmt nur „Heizöl extra leicht\" aus – Pellets sind dort nicht genannt. Z 3 (einmal jährlich) führt ausdrücklich nur „Heizöl extra leicht\" und Gasfeuerungen über 50 kW an.\n\nDie Zuordnung im Einzelfall ist daher nach Gerätetyp zu beurteilen. Bei Zweifeln empfiehlt sich eine Abklärung mit der Bezirksverwaltungsbehörde – die Einordnung wirkt sich unmittelbar auf Befund und Verrechnung aus.", "quelle": "§ 6 Abs. 1 Z 1 bis 3 Bgld. Kehrgesetz 2022"}, {"id": "abstand_verbindungsstueck", "fragen": ["abstand verbindungsstück", "verbindungsstück brennbar", "rauchrohr abstand", "poterie abstand", "abstand rauchrohr brennbare"], "titel": "Abstände Verbindungsstück zu brennbaren Teilen", "antwort": "TRVB H105, Tabelle 3 – seitliche Mindestabstände zu brennbaren Einrichtungen:\n\n   Feuerstätten aus Eisen ........... 50 cm\n   Gemauerte Öfen ................... 25 cm\n   Verbindungsstücke und Herde ...... 25 cm\n\nDie zweite Spalte (25 / 15 cm) gilt bei Anordnung eines geprüften Brandschutzeinbauelements bzw. entsprechender Herdkonstruktion.\n\nVerbindungsstücke sind Rauchrohre, Poterien und Rauchkanäle von der Feuerstätte zum Rauchfang. Sie müssen aus nichtbrennbaren Baustoffen (A) gefertigt sein.\n\nBei Durchführung durch Wände gelten gesonderte Anforderungen – siehe TRVB H105 Punkt 4.2.", "quelle": "TRVB H105, Punkt 3.2.4.1 und Tabelle 3"}, {"id": "tarif_kehrung", "fragen": ["kehrtarif", "was kostet kehrung", "tarif kehrung", "objekttarif", "preis kehrung", "höchsttarif", "arbeitsentgelt"], "titel": "Höchsttarife Kehrung (Burgenland)", "antwort": "LGBl. 98/2025, Anlage 1, Abschnitt A – Objekttarif und Arbeitsentgelt:\n\nEINZELRAUMHEIZGERÄTE BIS 10 kW\n   Objekttarif ......................... 21,95 €\n   Arbeitsentgelt erste drei Geschosse .. 11,88 €\n   jedes weitere Geschoss ............... 3,95 €\n\nEINZELRAUMHEIZGERÄTE ÜBER 10 bis 50 kW\nsowie Raumheizgeräte bis 50 kW – eigene Position, siehe Anlage 1 Z 2.\n\nEs handelt sich um HÖCHSTtarife – sie dürfen nicht überschritten, wohl aber unterschritten werden. Alle Beträge netto zuzüglich USt.\n\nDie vollständige Tarifliste steht im Originaltext unten.", "quelle": "LGBl. Nr. 98/2025, Anlage 1"}, {"id": "strafen", "fragen": ["strafe", "strafen", "bußgeld", "verwaltungsstrafe", "was passiert bei verletzung", "kehrpflichtverletzung folgen"], "titel": "Strafbestimmungen", "antwort": "§ 21 Bgld. KehrG 2022:\n\nRAUCHFANGKEHRER/IN (Abs. 1) – bis 2.000 €\nBei Verletzung der Pflichten aus:\n• §§ 5 und 6 (Verantwortlichkeit, Überprüfung/Kehrung)\n• § 7 (Ausbrennen und Ausschlagen)\n• § 8 Abs. 2 und 3 (Ablagerungen mindestens einmal im Kalenderjahr)\n• §§ 7, 9, 10, 11, 12, 14, 16, 18, 19\n\nVERFÜGUNGSBERECHTIGTE (Abs. 2)\nBei Verletzung des § 4 (Überprüfungen und Reinigungen dulden), der Anzeigepflicht nach § 6 Abs. 5 sowie bei unterlassener Entfernung von Ablagerungen aus Wohn- und Betriebsräumen.\n\nZuständig ist die Bezirksverwaltungsbehörde. Die Strafe entfällt, wenn ein gerichtlich strafbarer Tatbestand vorliegt – dann greift das Strafrecht.", "quelle": "§ 21 Bgld. Kehrgesetz 2022"}, {"id": "ablagerungen", "fragen": ["ablagerungen", "ruß ausräumen", "kamintür", "wer räumt aus", "russ entfernen"], "titel": "Entfernen von Ablagerungen", "antwort": "§ 8 Bgld. KehrG 2022 – Zuständigkeiten:\n\nEIGENTÜMER/IN (Abs. 1)\nStellt die erforderlichen Gefäße zur Unterbringung der Ablagerungen bereit.\n\nRAUCHFANGKEHRER/IN (Abs. 2)\nRäumt Ablagerungen mindestens EINMAL IM KALENDERJAHR oder nach Bedarf aus. Räumt die verfügungsberechtigte Person selbst aus, hat sich der Rauchfangkehrer im Zuge einer Überprüfung oder Kehrung von der ordnungsgemäßen Vornahme zu überzeugen.\n\nENTFERNUNG AUS KAMINTÜREN (Abs. 3)\n• in Wohn- und Betriebsräumen → verfügungsberechtigte Person\n• in allen übrigen Räumen → Eigentümer/in\n\nDer Eigentümer hat zudem für die gefahrlose Verwahrung bis zur Abfuhr zu sorgen.\n\nDie Unterlassung ist nach § 21 Abs. 1 Z 3 strafbewehrt.", "quelle": "§ 8 Bgld. Kehrgesetz 2022"}, {"id": "reinigung_feuerstaette", "fragen": ["reinigung feuerstätte", "wer reinigt", "feuerstätte reinigen", "ölofen reinigung", "fachunternehmen reinigung"], "titel": "Reinigung der Feuerstätte – wer und wie oft", "antwort": "Zu unterscheiden von der Kehrung der Abgasanlage:\n\nFESTE BRENNSTOFFE und ÖLÖFEN MIT VERDAMPFUNGSBRENNERN\nsamt Verbindungsstücken sowie Be- und Entlüftungseinrichtungen:\n→ mindestens EINMAL JÄHRLICH\n→ durch die verfügungsberechtigte Person selbst oder ein gewerberechtlich befugtes Fachunternehmen\n\nFLÜSSIGE und/oder GASFÖRMIGE BRENNSTOFFE\n(ausgenommen Ölöfen mit Verdampfungsbrennern) samt Verbindungsstücken:\n→ mindestens ALLE ZWEI JAHRE\n→ zwingend durch ein gewerberechtlich befugtes Fachunternehmen\n→ schriftlicher Nachweis, mindestens drei Jahre zur Einsicht aufzubewahren\n\nDiese Reinigung ist nicht dem Rauchfangkehrer vorbehalten – sie trifft die verfügungsberechtigte Person.", "quelle": "§ 9 Abs. 2 und 3 Bgld. Kehrgesetz 2022"}, {"id": "heizperiode", "fragen": ["heizperiode", "wann ist heizperiode", "heizsaison"], "titel": "Heizperiode", "antwort": "Heizperiode = Zeitraum vom 1. OKTOBER bis 30. APRIL des Folgejahres.\n\nBedeutung für die Kehrfristen: Die dreimal bzw. zweimal jährlichen Kehrungen nach § 6 Abs. 1 Z 1 und 2 setzen voraus, dass die Anlage AUSSCHLIESSLICH in der Heizperiode beheizt wird.\n\nWird auch außerhalb beheizt, ist nach § 6 Abs. 2 eine zusätzliche Überprüfung und/oder Kehrung in diesem Zeitraum durchzuführen.", "quelle": "§ 1 Z 9 Bgld. Kehrgesetz 2022"}, {"id": "feuerstaettenbeschau", "fragen": ["feuerstättenbeschau", "beschau", "brandsicherheit prüfen", "was ist feuerstättenbeschau"], "titel": "Feuerstättenbeschau", "antwort": "Die Feuerstättenbeschau ist die Überprüfung der benützten Feuerstätte samt Verbindungsstück auf ihre BRANDSICHERHEIT (§ 9 Abs. 1).\n\nSie umfasst nach der Begriffsbestimmung des § 1:\n• Querschnitt von Verbindungsstück, Anschlussstelle und gesamter Abgasanlage\n• Prüfung, ob ausreichende Verbrennungsluft für die jeweilige Feuerstätte vorhanden ist\n• Betriebs- und Brandsicherheit zur Abwehr von Gefahren für Leib, Leben, Umwelt und Gesundheit\n\nZusätzlich sind nach § 6 Abs. 3 die vorbehaltenen Kehrgegenstände im Zuge jeder gesetzlichen Überprüfung und/oder Kehrung auf ihre Brandsicherheit zu prüfen.\n\nDurchführung: § 10, Mängelbehebung: § 11, Nachbeschau: § 12.", "quelle": "§§ 1, 9 und 10 Bgld. Kehrgesetz 2022"}, {"id": "kehrbuch_kehrplan", "fragen": ["kehrbuch", "kehrplan", "dokumentation", "aufzeichnungen", "unterlagen führen"], "titel": "Kehrplan und Kehrbuch", "antwort": "KEHRPLAN – § 17 Bgld. KehrG\nVon der zuständigen Rauchfangkehrerin bzw. dem zuständigen Rauchfangkehrer zu erstellen.\n\nKEHRBUCH – § 18 Bgld. KehrG\nFührungspflicht; die Richtigkeit der Eintragungen ist zu bestätigen (vgl. § 5 Abs. 2 letzter Satz).\n\nWECHSEL – § 19\nBeim Wechsel der zuständigen Rauchfangkehrerin oder des zuständigen Rauchfangkehrers sind die Unterlagen zu übergeben.\n\nDie Verletzung der Pflichten aus §§ 18 und 19 ist nach § 21 Abs. 1 Z 4 mit Geldstrafe bis 2.000 € bedroht.\n\nErgänzend: Das Heizungsanlagenbuch nach ÖNORM H 7510-1 ist beim Betreiber aufzubewahren.", "quelle": "§§ 17, 18, 19 und 21 Bgld. Kehrgesetz 2022"}, {"id": "ausbrennen", "fragen": ["ausbrennen", "ausschlagen", "rauchfang ausbrennen", "glanzruß"], "titel": "Ausbrennen und Ausschlagen", "antwort": "§ 7 Bgld. KehrG regelt das Ausbrennen und Ausschlagen von Abgasanlagen und fest verlegten Verbindungsstücken (Poterien).\n\nDie ordnungsgemäße Vorgangsweise ist einzuhalten – bei Verstoß droht nach § 21 Abs. 1 Z 2 eine Geldstrafe bis 2.000 €.\n\nDie dabei anfallenden Ablagerungen fallen unter § 8: Der Eigentümer stellt die Gefäße bereit, der Rauchfangkehrer räumt mindestens einmal im Kalenderjahr aus.\n\nDer vollständige Wortlaut des § 7 steht im Originaltext unten.", "quelle": "§ 7 Bgld. Kehrgesetz 2022"}, {"id": "dichtheitspruefung", "fragen": ["dichtheitsprüfung", "betriebsdichtheit", "dichtheit prüfen"], "titel": "Betriebsdichtheitsprüfung", "antwort": "§ 13 Bgld. KehrG regelt die erstmalige und die wiederkehrende Betriebsdichtheitsprüfung.\n\nFür Bestandsanlagen sieht § 22 (Übergangsbestimmungen) eine Frist vor, innerhalb derer die Prüfung nach § 13 Abs. 2 erstmals durchzuführen ist.\n\nDie Verletzung der Pflichten aus § 13 ist nach § 21 strafbewehrt.\n\nDer genaue Wortlaut samt Fristen steht im Originaltext unten – bitte im Einzelfall dort nachlesen.", "quelle": "§§ 13 und 22 Bgld. Kehrgesetz 2022"}, {"id": "unbenutzte_anlage", "fragen": ["unbenützt", "nicht benutzt", "stillgelegt", "außer betrieb", "leerstand"], "titel": "Länger unbenützte Feuerungsanlagen", "antwort": "Feuerungsanlagen, die voraussichtlich LÄNGER ALS EIN JAHR unbenützt sind, unterliegen nicht der Überprüfungs- und/oder Kehrpflicht (§ 6 Abs. 5).\n\nDie Nichtbenützung ist anzuzeigen – ebenso die Wiederbenützung.\n\nDie Verletzung der Anzeigepflicht über die Wiederbenützung ist nach § 21 Abs. 2 Z 1 für die verfügungsberechtigte Person strafbewehrt.", "quelle": "§ 6 Abs. 5 Bgld. Kehrgesetz 2022"}, {"id": "ferienhaus", "fragen": ["ferienhaus", "ferienwohnung", "wochenendhaus", "saisonal bewohnt"], "titel": "Ferienhäuser – verringerte Fristen", "antwort": "Für Kehrobjekte, die AUSSCHLIESSLICH vom 1. Mai bis 30. September bewohnt und beheizt werden (Ferienhäuser), gilt nach § 6 Abs. 4:\n\n• Anlagen nach Abs. 1 Z 1 und Z 2  →  einmal im Jahr\n   (statt dreimal bzw. zweimal jährlich)\n\n• Anlagen nach Abs. 1 Z 3  →  einmal alle zwei Jahre\n   (statt einmal jährlich)\n\nMaßgeblich ist die ausschließliche Nutzung in diesem Zeitraum – wird auch außerhalb bewohnt und beheizt, gelten die regulären Fristen.", "quelle": "§ 6 Abs. 4 Bgld. Kehrgesetz 2022"}];
+
+function _kiNorm(s){
+  return (s||'').toLowerCase()
+    .replace(/\u00e4/g,'a').replace(/\u00f6/g,'o').replace(/\u00fc/g,'u').replace(/\u00df/g,'ss')
+    .replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+}
+
+function kiFindeAntwort(frage){
+  var f = _kiNorm(frage);
+  if(f.length < 3) return null;
+  var STOPP = ['wie','was','wo','wann','warum','ist','sind','muss','musse','darf',
+    'der','die','das','ein','eine','einen','ich','bei','von','zu','mit','fur','und',
+    'oder','den','dem','des','im','in','am','an','auf','es','man','soll','kann','werden'];
+  var woerter = f.split(' ').filter(function(w){ return w.length>2 && STOPP.indexOf(w)<0; });
+
+  var beste = null, besterWert = 0;
+  KI_ANTWORTEN.forEach(function(e){
+    var wert = 0;
+    e.fragen.forEach(function(mst){
+      var m = _kiNorm(mst);
+      if(f.indexOf(m) >= 0) wert = Math.max(wert, 100 + m.length);
+      var teile = m.split(' ').filter(function(x){ return x.length>2; });
+      if(teile.length){
+        var da = teile.filter(function(x){ return f.indexOf(x) >= 0; }).length;
+        if(da === teile.length) wert = Math.max(wert, 60 + m.length);
+        else if(da > 0) wert = Math.max(wert, Math.round(30 * da / teile.length));
+      }
+    });
+    var t = _kiNorm(e.titel);
+    woerter.forEach(function(w){ if(t.indexOf(w) >= 0) wert += 8; });
+    if(wert > besterWert){ besterWert = wert; beste = e; }
+  });
+  return besterWert >= 30 ? beste : null;
+}
+
+/* ═══ KURATIERTE FACHANTWORTEN ═════════════════════════════════════
+   Geprüfte Antworten auf die wiederkehrenden Fragen im Betrieb.
+   Werte direkt aus Kehrgesetz, LGBl-Tarifen, TRVB H105, ÖNORM,
+   HK-VO entnommen. Diese schlagen die Volltextsuche.             */
+
+
+
+
+/* Passende kuratierte Antwort finden */
+
+
+/* ═══ SUPABASE-HEADER ═══════════════════════════════════════════════
+   Klassische anon/service_role-Schluessel sind JWTs und werden
+   zusaetzlich als "Authorization: Bearer" gesendet.
+   Die neuen Publishable-/Secret-Keys (sb_...) sind KEINE JWTs -
+   sie duerfen nur im apikey-Header stehen, sonst folgt 401.        */
+function sbHeaders(key, extra){
+  var k = key || _SB_KEY;
+  var h = { 'apikey': k };
+  if(String(k).indexOf('sb_') !== 0) h['Authorization'] = 'Bearer ' + k;
+  if(extra) for(var n in extra) h[n] = extra[n];
+  return h;
+}
+var _ablageTypeLabels = {
   pv:'PV-Reinigung KV', gas:'Gas-Service KV', luft:'Lueftungs-KV',
   brand:'Brandschutz-KV', kamin:'Kamin-KV', gesamt:'Gesamt-KV',
   wprot:'Wartungsprotokoll', mess:'Messprotokoll', pvprot:'PV-Protokoll',
@@ -6048,7 +6110,7 @@ async function adminDeleteUser(idx){
     for(var k=0;k<keys.length;k++){
       try{
         var r = await fetch(_SB_URL+'/rest/v1/grieer_mitarbeiter?id=eq.'+encodeURIComponent(u.id),{
-          method:'DELETE', headers:{'apikey':keys[k],'Authorization':'Bearer '+keys[k]}});
+          method:'DELETE', headers:sbHeaders(keys[k])});
         if(r.ok){ cloudOk = true; break; }
         cloudOk = false;
       }catch(e){ cloudOk = false; }
@@ -6726,21 +6788,43 @@ function kiShowPDFs(){
 
 
 
-function kiAddMessage(role, html){
-  var chat = document.getElementById('ki-chat');
-  if(!chat) return;
-  var div = document.createElement('div');
-  div.className = 'ki-msg ki-msg-' + role;
-  if(role === 'user'){
-    div.style.cssText = 'background:#E3F2FD;color:#0D47A1;padding:8px 12px;border-radius:12px 12px 4px 12px;margin:8px 0 8px 40px;font-size:12px;line-height:1.4;border-left:3px solid #1565C0;max-width:calc(100% - 40px);width:auto;box-sizing:border-box;word-break:break-word;overflow-wrap:break-word;align-self:flex-end';
+function kiAddMessage(rolle, inhalt){
+  var box = document.getElementById('ki-messages') || document.getElementById('ki-chat');
+  if(!box) return;
+  var d = document.createElement('div');
+  d.className = 'ki-msg';
+  if(rolle === 'user'){
+    /* Frage: kompakt, dunkel, als Kopfzeile der Antwort */
+    d.style.cssText = 'background:#1A2B45;color:#fff;border-radius:10px 10px 0 0;'
+      + 'padding:10px 13px;margin:16px 0 0;font-size:13px;font-weight:600;line-height:1.45;'
+      + 'scroll-margin-top:8px';
+    var rein = String(inhalt).replace(/<[^>]*>/g,'')
+                 .replace(/^\s*(Frage|FRAGE|Ihre Frage)\s*:?\s*/,'').trim();
+    d.innerHTML = '<div style="font-size:9px;color:#94A3B8;text-transform:uppercase;'
+      + 'letter-spacing:.7px;margin-bottom:3px">Ihre Frage</div>'
+      + rein.replace(/[<>&]/g,function(c){
+          return {'<':'&lt;','>':'&gt;','&':'&amp;'}[c]; });
+    d.setAttribute('data-frage','1');
   } else {
-    div.style.cssText = 'background:#fff;color:#212121;padding:12px 14px;border-radius:12px 12px 12px 4px;margin:8px 0;font-size:12px;line-height:1.55;border:1px solid #ddd;max-width:100%;width:auto;box-sizing:border-box;word-break:break-word;overflow-wrap:break-word;align-self:stretch;box-shadow:0 1px 4px rgba(0,0,0,.06)';
+    d.style.cssText = 'background:#fff;border:1px solid #E2E8F0;border-top:none;'
+      + 'border-radius:0 0 10px 10px;padding:12px;margin:0 0 6px;font-size:13px;line-height:1.7';
+    d.innerHTML = inhalt;
   }
-  div.innerHTML = html;
-  chat.appendChild(div);
-  chat.scrollTop = chat.scrollHeight;
-}
+  box.appendChild(d);
 
+  /* Zur zuletzt gestellten Frage springen, damit Frage oben steht
+     und die Antwort darunter gelesen werden kann - kein Scrollen
+     nach oben mehr noetig.                                        */
+  setTimeout(function(){
+    try{
+      var fragen = box.querySelectorAll('[data-frage="1"]');
+      var ziel = fragen.length ? fragen[fragen.length-1] : d;
+      ziel.scrollIntoView({ behavior:'smooth', block:'start' });
+    }catch(e){
+      try{ d.scrollIntoView(); }catch(e2){}
+    }
+  }, 60);
+}
 function kiClassifyQuestion(q){
   var ql = q.toLowerCase();
   if(/was kostet|kosten|preis|gebuhr|gebuehr|tarif|euro|.€/.test(ql)) return 'Kosten/Tarif';
@@ -28873,7 +28957,30 @@ function buildWartHtml(){
   // Ende
 }
 var _SB_URL = 'https://bvodhzacatfuduwtlwut.supabase.co';
-var _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2b2RoemFjYXRmdWR1d3Rsd3V0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxODUwMjcsImV4cCI6MjA5NTc2MTAyN30.kX03LLhpIm-iD1VQqreIpCCwAHzsT0pmYdIsl8uSeuY';
+var _SB_KEY_STANDARD = 'sb_publishable_Tv9BMgILaElZqUrc20NVDA_W-Anyk36';
+/* Eigener Schluessel aus den Einstellungen hat Vorrang.
+   Noetig, wenn Supabase die Schluessel erneuert hat.   */
+var _SB_KEY = (function(){
+  /* Reihenfolge: eigener Schluessel aus den Einstellungen,
+     sonst der eingebaute. Alte JWT-Schluessel (eyJ...) werden
+     verworfen - Supabase nimmt sie fuer dieses Projekt nicht
+     mehr an; sie wuerden nur 401 erzeugen.                    */
+  try{
+    var e = localStorage.getItem('grieer_sb_anon_key');
+    if(e) e = e.trim();
+    if(e && e.indexOf('eyJ') === 0){
+      localStorage.removeItem('grieer_sb_anon_key');   /* veraltet */
+      e = null;
+    }
+    if(e && e === _SB_KEY_STANDARD){
+      localStorage.removeItem('grieer_sb_anon_key');   /* ueberfluessig */
+      e = null;
+    }
+    if(e && e.length > 20) return e;
+  }catch(x){}
+  return _SB_KEY_STANDARD;
+})();
+;
 
 // === Neue globale Variablen ===
 var _drBew=-1,_drTrocken=null,_drGesamt='',_drBefundIdx=0;
@@ -29782,7 +29889,7 @@ function showChangePw(){
 
 function syncUsersFromCloud(cb){
   fetch(_SB_URL+'/rest/v1/grieer_dokumente?firma_id=eq.grieer&doc_type=eq._config&doc_nr=eq.users_v1&select=data',{
-    headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}
+    headers:sbHeaders()
   }).then(function(r){return r.json();})
   .then(function(rows){
     if(rows&&rows.length&&rows[0].data&&rows[0].data.users){
@@ -29797,7 +29904,7 @@ function syncUsersToCloud(users){
   if(!users||!users.length) return;
   fetch(_SB_URL+'/rest/v1/grieer_dokumente',{
     method:'POST',
-    headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
+    headers:sbHeaders(null, {'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates'}),
     body:JSON.stringify({firma_id:'grieer',doc_type:'_config',doc_nr:'users_v1',data:{users:users,ts:Date.now()},ersteller:'system'})
   }).then(function(r){ if(r.ok) _grieerToast('☁️ In Cloud gespeichert','#16A34A',2000); })
   .catch(function(){});
@@ -29969,7 +30076,7 @@ function grieerSyncAll(btn){
   var ablage=[];
   try{ablage=JSON.parse(localStorage.getItem('grieer-ablage')||'[]');}catch(e){}
   if(ablage.length){
-    fetch(_SB_URL+'/rest/v1/grieer_dokumente',{method:'POST',headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(ablage.map(function(e){return {firma_id:'grieer',doc_type:e.type||'ablage',doc_nr:e.id,data:e,ersteller:e.ersteller||'',datum:e.datum||''};}))}).catch(function(){});
+    fetch(_SB_URL+'/rest/v1/grieer_dokumente',{method:'POST',headers:sbHeaders(null, {'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates'}),body:JSON.stringify(ablage.map(function(e){return {firma_id:'grieer',doc_type:e.type||'ablage',doc_nr:e.id,data:e,ersteller:e.ersteller||'',datum:e.datum||''};}))}).catch(function(){});
     upd('Ablage ('+ablage.length+') gespeichert...','#16A34A');
   }
   setTimeout(function(){
@@ -30035,7 +30142,7 @@ function ablageSaveEntry(entry){
   if(sbCheckOnline()){
     fetch(_SB_URL+'/rest/v1/grieer_dokumente',{
       method:'POST',
-      headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
+      headers:sbHeaders(null, {'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates'}),
       body:JSON.stringify({id:entry.id,firma_id:'grieer',doc_type:entry.type||'ablage',doc_nr:entry.id,data:entry,ersteller:entry.ersteller||'',datum:entry.datum||''})
     }).catch(function(){});
   }
@@ -30047,7 +30154,7 @@ async function kiWissenHochladen(kat,titel,inhalt){
   try{
     var r = await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen',{
       method:'POST',
-      headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
+      headers:sbHeaders(null, {'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates'}),
       body:JSON.stringify({kategorie:kat,titel:titel,inhalt:inhalt,aktualisiert_am:new Date().toISOString()})
     });
     return r.ok;
@@ -30141,7 +30248,7 @@ async function kiImportManuell(){
   try{
     var lr=await fetch(_SB_URL+'/storage/v1/object/list/'+bucketName,{
       method:'POST',
-      headers:{'Content-Type':'application/json','apikey':sbKey(),'Authorization':'Bearer '+sbKey()},
+      headers:sbHeaders(sbKey(), {'Content-Type':'application/json'}),
       body:JSON.stringify({limit:200,offset:0,prefix:'',sortBy:{column:'name',order:'asc'}})
     });
     if(lr.status===403||lr.status===400){
@@ -30163,7 +30270,7 @@ async function kiImportManuell(){
       setBtn('('+(i+1)+'/'+pdfs.length+') '+pdfs[i].name.slice(0,20)+'...',true);
       try{
         var dl=await fetch(_SB_URL+'/storage/v1/object/'+bucketName+'/'+encodeURIComponent(pdfs[i].name),{
-          headers:{'apikey':sbKey(),'Authorization':'Bearer '+sbKey()}
+          headers:sbHeaders(sbKey())
         });
         if(!dl.ok){skip++;continue;}
         var ab2=await dl.arrayBuffer();
@@ -30203,14 +30310,14 @@ async function supabaseDiagnostik(){
   try{var p=await fetch(_SB_URL+'/rest/v1/',{headers:{'apikey':_SB_KEY}});log('\u2705 Supabase erreichbar ('+p.status+')');}
   catch(e){log('\u274C Supabase nicht erreichbar: '+e.message,'#DC2626');return;}
   try{
-    var r1=await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen?limit=1',{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+    var r1=await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen?limit=1',{headers:sbHeaders()});
     if(r1.status===200){var d=await r1.json();log('\u2705 grieer_ki_wissen: '+d.length+' Eintr\u00e4ge'+(d.length===0?' \u2192 bitte Wissen hochladen!':''));}
     else log('\u274C grieer_ki_wissen fehlt \u2192 SQL ausf\u00fchren!','#DC2626');
   }catch(e){}
   var bn=(document.getElementById('storage-bucket-name')?.value||'grieer-pdfs').trim();
   try{
     var lr=await fetch(_SB_URL+'/storage/v1/object/list/'+bn,{
-      method:'POST',headers:{'Content-Type':'application/json','apikey':sbKey(),'Authorization':'Bearer '+sbKey()},
+      method:'POST',headers:sbHeaders(sbKey(), {'Content-Type':'application/json'}),
       body:JSON.stringify({limit:5,offset:0,prefix:'',sortBy:{column:'name',order:'asc'}})
     });
     if(lr.status===200){var fs=await lr.json();var ps=fs.filter(function(f){return f.name&&f.name.toLowerCase().endsWith('.pdf');});log('\u2705 Bucket "'+bn+'": '+fs.length+' Dateien, '+ps.length+' PDFs'+(ps.length>0?' \u2192 Bereit zum Import!':' \u274C keine PDFs'));}
@@ -30244,7 +30351,7 @@ async function syncUsersToCloud(){
   try{
     await fetch(_SB_URL+'/rest/v1/grieer_mitarbeiter',{
       method:'POST',
-      headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
+      headers:sbHeaders(null, {'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates'}),
       body: JSON.stringify(users.map(function(u){return {
         id: u.id, firma_id:'grieer', name:u.name||'',
         code: typeof u.code==='string'?u.code:(u.code||[]).join(','),
@@ -30260,7 +30367,7 @@ async function syncUsersFromCloud(){
   if(!sbCheckOnline()) return;
   try{
     var resp = await fetch(_SB_URL+'/rest/v1/grieer_mitarbeiter?firma_id=eq.grieer',{
-      headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+      headers:sbHeaders()});
     if(!resp.ok) return;
     var rows = await resp.json();
     if(!Array.isArray(rows)) return;
@@ -30294,7 +30401,7 @@ async function syncKundenToCloud(kunden){
   try{
     await fetch(_SB_URL+'/rest/v1/grieer_kunden',{
       method:'POST',
-      headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
+      headers:sbHeaders(null, {'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates'}),
       body: JSON.stringify(kunden.map(function(k){return {
         id: k.id||(k.nr?'k_'+k.nr:'k_'+Math.random().toString(36).slice(2)),
         firma_id:'grieer', nr:k.nr||'', name:k.name||'',
@@ -30314,7 +30421,7 @@ async function syncKundenFromCloud(){
   if(!navigator.onLine){upd('❌ Kein Internet','#DC2626');return 0;}
   try{
     var resp=await fetch(_SB_URL+'/rest/v1/grieer_kunden?firma_id=eq.grieer&order=name&limit=500',{
-      headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}
+      headers:sbHeaders()
     });
     if(!resp.ok){upd('❌ Fehler '+resp.status,'#DC2626');return 0;}
     var rows=await resp.json();
@@ -30362,7 +30469,7 @@ async function grieerSyncAll(btn){
     try{
       await fetch(_SB_URL+'/rest/v1/grieer_dokumente',{
         method:'POST',
-        headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
+        headers:sbHeaders(null, {'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates'}),
         body:JSON.stringify(ablage.map(function(e){return {id:e.id,firma_id:'grieer',doc_type:e.type||'ablage',doc_nr:e.id,data:e,ersteller:e.ersteller||'',datum:e.datum||''};}))
       });
     }catch(ex){}
@@ -30423,7 +30530,7 @@ function saveClaudeKey(){
 async function settingsSaveToCloud(key,value){
   if(!sbCheckOnline())return;
   try{await fetch(_SB_URL+'/rest/v1/grieer_einstellungen',{method:'POST',
-    headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
+    headers:sbHeaders(null, {'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates'}),
     body:JSON.stringify({id:'grieer_'+key,firma_id:'grieer',key_name:key,value_data:value,aktualisiert_am:new Date().toISOString()})
   });}catch(e){}
 }
@@ -30431,7 +30538,7 @@ async function settingsLoadFromCloud(){
   if(!sbCheckOnline())return;
   try{
     var r=await fetch(_SB_URL+'/rest/v1/grieer_einstellungen?firma_id=eq.grieer',{
-      headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+      headers:sbHeaders()});
     if(!r.ok)return;
     var rows=await r.json();
     if(!Array.isArray(rows))return;
@@ -30450,7 +30557,7 @@ async function syncUsersToCloud(){
   var users=typeof _loadUsers==='function'?_loadUsers():[];
   if(!users||!users.length)return;
   try{await fetch(_SB_URL+'/rest/v1/grieer_mitarbeiter',{method:'POST',
-    headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
+    headers:sbHeaders(null, {'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates'}),
     body:JSON.stringify(users.filter(function(u){return u&&u.id;}).map(function(u){
       return{id:u.id,firma_id:'grieer',name:u.name||'',code:Array.isArray(u.code)?u.code.join(','):(u.code||''),role:u.role||'user',pages:JSON.stringify(u.pages||[]),aktualisiert_am:new Date().toISOString()};
     }))});}catch(e){}
@@ -30458,7 +30565,7 @@ async function syncUsersToCloud(){
 async function syncUsersFromCloud(){
   if(!sbCheckOnline())return;
   try{
-    var r=await fetch(_SB_URL+'/rest/v1/grieer_mitarbeiter?firma_id=eq.grieer',{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+    var r=await fetch(_SB_URL+'/rest/v1/grieer_mitarbeiter?firma_id=eq.grieer',{headers:sbHeaders()});
     if(!r.ok)return;
     var rows=await r.json();
     if(!Array.isArray(rows)||!rows.length)return;
@@ -30481,14 +30588,14 @@ async function kundenSyncToCloud(){
       var id=k.id||'kd_'+(k.nr||'').replace(/\W/g,'_')+'_'+Math.random().toString(36).slice(2,6);
       return{id:id,firma_id:'grieer',nr:k.nr||'',name:k.name||'',adresse:k.str||k.adresse||'',plz:k.plz||'',ort:k.ort||'',telefon:k.tel||k.telefon||'',email:k.email||'',notizen:k.notizen||'',aktualisiert_am:new Date().toISOString()};
     });
-    var r=await fetch(_SB_URL+'/rest/v1/grieer_kunden',{method:'POST',headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(rows)});
+    var r=await fetch(_SB_URL+'/rest/v1/grieer_kunden',{method:'POST',headers:sbHeaders(null, {'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates'}),body:JSON.stringify(rows)});
     return r.ok?rows.length:0;
   }catch(e){return 0;}
 }
 async function syncKundenFromCloud(){
   if(!sbCheckOnline())return 0;
   try{
-    var r=await fetch(_SB_URL+'/rest/v1/grieer_kunden?firma_id=eq.grieer&order=name',{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+    var r=await fetch(_SB_URL+'/rest/v1/grieer_kunden?firma_id=eq.grieer&order=name',{headers:sbHeaders()});
     if(!r.ok)return 0;
     var cloud=await r.json();
     if(!Array.isArray(cloud)||!cloud.length)return 0;
@@ -30517,7 +30624,7 @@ async function kundenCloudSync(){
           aktualisiert_am:new Date().toISOString()};
       });
       var r2=await fetch(_SB_URL+'/rest/v1/grieer_kunden',{method:'POST',
-        headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
+        headers:sbHeaders(null, {'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates'}),
         body:JSON.stringify(rows)});
       if(r2.ok)uploaded=rows.length;
     }catch(e){}
@@ -30531,7 +30638,7 @@ async function kiLadeWissenAusSupabase(){
   if(!sbCheckOnline())return false;
   try{
     var r=await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen?order=kategorie&limit=500',
-      {headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+      {headers:sbHeaders()});
     if(!r.ok)return false;
     var rows=await r.json();
     if(!Array.isArray(rows)||!rows.length)return false;
@@ -30564,7 +30671,7 @@ async function kiLadeWissenAusSupabase(){
 }
 async function kiWissenHochladen(kat,titel,inhalt){
   if(!sbCheckOnline())return false;
-  try{var r=await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen',{method:'POST',headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},body:JSON.stringify({kategorie:kat,titel:titel,inhalt:inhalt,aktualisiert_am:new Date().toISOString()})});return r.ok;}catch(e){return false;}
+  try{var r=await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen',{method:'POST',headers:sbHeaders(null, {'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates'}),body:JSON.stringify({kategorie:kat,titel:titel,inhalt:inhalt,aktualisiert_am:new Date().toISOString()})});return r.ok;}catch(e){return false;}
 }
 async function kiUploadSystemWissen(){
   if(!sbCheckOnline()){alert('Kein Internet');return;}
@@ -30582,7 +30689,7 @@ async function ablageSaveEntry(entry){
   var idx=all.findIndex(function(e){return e.id===entry.id;});
   if(idx>=0)all[idx]=entry;else all.unshift(entry);
   try{localStorage.setItem('grieer-ablage',JSON.stringify(all));}catch(e){}
-  if(sbCheckOnline()){fetch(_SB_URL+'/rest/v1/grieer_dokumente',{method:'POST',headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},body:JSON.stringify({id:entry.id,firma_id:'grieer',doc_type:entry.type||'ablage',doc_nr:entry.id,data:entry,ersteller:entry.ersteller||'',datum:entry.datum||''})}).catch(function(){});}
+  if(sbCheckOnline()){fetch(_SB_URL+'/rest/v1/grieer_dokumente',{method:'POST',headers:sbHeaders(null, {'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates'}),body:JSON.stringify({id:entry.id,firma_id:'grieer',doc_type:entry.type||'ablage',doc_nr:entry.id,data:entry,ersteller:entry.ersteller||'',datum:entry.datum||''})}).catch(function(){});}
 }
 
 async function syncFromCloud(){
@@ -30599,7 +30706,7 @@ async function grieerSyncAll(btn){
   await syncUsersToCloud();await syncUsersFromCloud();
   await kundenSyncToCloud();await syncKundenFromCloud();
   var ablage=[];try{ablage=JSON.parse(localStorage.getItem('grieer-ablage')||'[]');}catch(e){}
-  if(ablage.length){try{await fetch(_SB_URL+'/rest/v1/grieer_dokumente',{method:'POST',headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(ablage.map(function(e){return{id:e.id,firma_id:'grieer',doc_type:e.type||'ablage',doc_nr:e.id,data:e,ersteller:e.ersteller||'',datum:e.datum||''};}))});}catch(ex){}}
+  if(ablage.length){try{await fetch(_SB_URL+'/rest/v1/grieer_dokumente',{method:'POST',headers:sbHeaders(null, {'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates'}),body:JSON.stringify(ablage.map(function(e){return{id:e.id,firma_id:'grieer',doc_type:e.type||'ablage',doc_nr:e.id,data:e,ersteller:e.ersteller||'',datum:e.datum||''};}))});}catch(ex){}}
   try{_grieerToast('\u2705 Alles synchronisiert!','#16A34A',2500);}catch(e){}
   if(btn){btn.disabled=false;btn.textContent='\u21BB Sync';}
 }
@@ -30641,7 +30748,7 @@ async function kiImportManuell(){
   setBtn('Verbinde...',true);
   try{
     var key=sbKey();
-    var lr=await fetch(_SB_URL+'/storage/v1/object/list/'+bucketName,{method:'POST',headers:{'Content-Type':'application/json','apikey':key,'Authorization':'Bearer '+key},body:JSON.stringify({limit:200,offset:0,prefix:'',sortBy:{column:'name',order:'asc'}})});
+    var lr=await fetch(_SB_URL+'/storage/v1/object/list/'+bucketName,{method:'POST',headers:sbHeaders(key, {'Content-Type':'application/json'}),body:JSON.stringify({limit:200,offset:0,prefix:'',sortBy:{column:'name',order:'asc'}})});
     if(lr.status===403||lr.status===400){upd('\u274C Zugriff verweigert \u2192 Service Role Key eingeben','#DC2626');setBtn('&#128196; PDFs importieren',false);return;}
     if(lr.status===404){upd('\u274C Bucket nicht gefunden','#DC2626');setBtn('&#128196; PDFs importieren',false);return;}
     if(!lr.ok){upd('\u274C Fehler: '+lr.status,'#DC2626');setBtn('&#128196; PDFs importieren',false);return;}
@@ -30654,7 +30761,7 @@ async function kiImportManuell(){
     for(var i=0;i<pdfs.length;i++){
       setBtn('('+(i+1)+'/'+pdfs.length+') '+pdfs[i].name.slice(0,20)+'...',true);
       try{
-        var dl=await fetch(_SB_URL+'/storage/v1/object/'+bucketName+'/'+encodeURIComponent(pdfs[i].name),{headers:{'apikey':key,'Authorization':'Bearer '+key}});
+        var dl=await fetch(_SB_URL+'/storage/v1/object/'+bucketName+'/'+encodeURIComponent(pdfs[i].name),{headers:sbHeaders(key)});
         if(!dl.ok){skip++;continue;}
         var ab2=await dl.arrayBuffer();
         var pdf2=await lib.getDocument({data:ab2,useSystemFonts:true}).promise;
@@ -30684,7 +30791,7 @@ async function supabaseDiagnostik(){
   log('\u2705 Internet OK');
   try{var p=await fetch(_SB_URL+'/rest/v1/',{headers:{'apikey':_SB_KEY}});log('\u2705 Supabase ('+p.status+')');}catch(e){log('\u274C Supabase: '+e.message,'#DC2626');return;}
   for(var tbl of['grieer_ki_wissen','grieer_mitarbeiter','grieer_kunden','grieer_dokumente','grieer_einstellungen']){
-    try{var r=await fetch(_SB_URL+'/rest/v1/'+tbl+'?limit=1',{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});if(r.status===200){var d=await r.json();log('\u2705 '+tbl+': '+d.length+' Eintr\u00e4ge');}else log('\u274C '+tbl+' fehlt \u2192 SQL ausf\u00fchren!','#DC2626');}catch(e){log('\u274C '+tbl+': '+e.message,'#DC2626');}
+    try{var r=await fetch(_SB_URL+'/rest/v1/'+tbl+'?limit=1',{headers:sbHeaders()});if(r.status===200){var d=await r.json();log('\u2705 '+tbl+': '+d.length+' Eintr\u00e4ge');}else log('\u274C '+tbl+' fehlt \u2192 SQL ausf\u00fchren!','#DC2626');}catch(e){log('\u274C '+tbl+': '+e.message,'#DC2626');}
   }
   log('\u23F9 Fertig.','#64748B');
 }
@@ -30700,7 +30807,7 @@ async function kiShowPDFs(){
   box.innerHTML='<div style="font-size:11px;color:#64748B">Lade...</div>';box.style.display='block';
   if(!sbCheckOnline()){box.innerHTML='<div style="font-size:11px;color:#DC2626">Kein Internet</div>';return;}
   try{
-    var r=await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen?order=kategorie,titel&limit=200&select=id,kategorie,titel',{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+    var r=await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen?order=kategorie,titel&limit=200&select=id,kategorie,titel',{headers:sbHeaders()});
     if(!r.ok){box.innerHTML='<div style="font-size:11px;color:#DC2626">Fehler '+r.status+'</div>';return;}
     var rows=await r.json();
     if(!rows.length){box.innerHTML='<div style="font-size:11px;color:#64748B">Keine Eintr\u00e4ge. KI-Wissen hochladen!</div>';return;}
@@ -30790,7 +30897,7 @@ async function _kiSearchAndAsk(query,apiKey){
     for(var wi=0;wi<Math.min(qWords.length,4);wi++){
       var w=qWords[wi];
       var url=_SB_URL+'/rest/v1/grieer_ki_wissen?or=(inhalt.ilike.*'+encodeURIComponent(w)+'*,titel.ilike.*'+encodeURIComponent(w)+'*)&limit=10';
-      var resp=await fetch(url,{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+      var resp=await fetch(url,{headers:sbHeaders()});
       if(resp.ok){var rows=await resp.json();rows.forEach(function(r){if(r.id&&!seen[r.id]){seen[r.id]=true;allRows.push(r);}});}
     }
     if(allRows.length){allRows.forEach(function(r){var text=((r.kategorie||'')+(r.titel||'')+(r.inhalt||'')).toLowerCase();var score=0;qWords.forEach(function(w){score+=(text.match(new RegExp(w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'))||[]).length;});r._score=score;});allRows.sort(function(a,b){return b._score-a._score;});var rel=allRows.filter(function(r){return r._score>0;}).slice(0,8);if(rel.length){sysPrompt+='\n\n=== WISSENSDATENBANK ===\n';rel.forEach(function(r,i){sysPrompt+='\n[Quelle '+(i+1)+': '+r.kategorie+' \u2013 '+r.titel+']\n'+r.inhalt+'\n';quellen.push(r.kategorie+' \u2013 '+r.titel);});}}
@@ -31059,7 +31166,7 @@ async function _kiSupabaseDirectSearch(query){
       for(var ti=0;ti<Math.min(searchTerms.length,5);ti++){
         var t2=searchTerms[ti];
         var url=_SB_URL+'/rest/v1/grieer_ki_wissen?or=(inhalt.ilike.*'+encodeURIComponent(t2)+'*,titel.ilike.*'+encodeURIComponent(t2)+'*,kategorie.ilike.*'+encodeURIComponent(t2)+'*)&limit=30';
-        try{var resp=await fetch(url,{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+        try{var resp=await fetch(url,{headers:sbHeaders()});
           if(resp.ok){(await resp.json()).forEach(function(r){if(r.id&&!seen[r.id]){seen[r.id]=true;r._score=scoreText((r.titel||'')+(r.kategorie||''))*3+scoreText(r.inhalt||'');
           /* Unlesbare Eintraege (kaputte PDF-Extraktion) ausschliessen */
           if(typeof _textIstLesbar==='function' && !_textIstLesbar(r.inhalt||'')) r._score=0;if(r._score>0)cloudResults.push(r);}});}}catch(e){}
@@ -31077,52 +31184,70 @@ async function _kiSupabaseDirectSearch(query){
 
   /* ── Aufbau der Antwort: Beste Treffer zuerst ─────────────────── */
   var html='';
-  /* ══ DIREKTE ANTWORT AUF DIE FRAGE ═══════════════════════════════
-     Statt den ganzen Abschnitt zu zeigen, zuerst die Zeilen, die
-     tatsaechlich die gestellte Frage beantworten.                  */
+  /* ══ 1. KURATIERTE FACHANTWORT (hat immer Vorrang) ═══════════ */
+  var _kur = (typeof kiFindeAntwort === 'function') ? kiFindeAntwort(query) : null;
+  if(_kur){
+    html += '<div style="background:#ECFDF5;border:2px solid #065F46;border-radius:10px;padding:13px;margin-bottom:12px">';
+    html += '<div style="font-size:9px;font-weight:700;color:#047857;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">\u2714 Gepr\u00fcfte Antwort</div>';
+    if(_kur.titel){
+      html += '<div style="font-size:14px;font-weight:700;color:#064E3B;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid #A7F3D0">'
+           +  _kur.titel + '</div>';
+    }
+    var _at = String(_kur.antwort)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/(\u00a7+\s*\d+[a-z]?(?:\s*Abs\.?\s*\d+)?(?:\s*Z\s*\d+)?)/g,'<b style="color:#92400E">$1</b>')
+      .replace(/(\d+[.,]?\d*\s*(?:kW|cm|mm|\u20ac|Euro|Pa|ppm))/g,'<b style="color:#B45309">$1</b>');
+    html += '<div style="font-size:13.5px;line-height:1.9;color:#064E3B;white-space:pre-wrap">'
+         +  _at + '</div>';
+    if(_kur.zusatz){
+      html += '<div style="font-size:12px;line-height:1.7;color:#047857;white-space:pre-wrap;margin-top:9px;padding-top:9px;border-top:1px solid #A7F3D0">'
+           +  _kur.zusatz + '</div>';
+    }
+    html += '<div style="font-size:11px;color:#065F46;margin-top:10px;padding-top:8px;border-top:1px solid #A7F3D0">'
+         +  '<b>Rechtsgrundlage:</b> ' + _kur.quelle + '</div>';
+    html += '<div style="font-size:9px;color:#6B7280;margin-top:6px;font-style:italic">'
+         +  'Im Einzelfall pr\u00fcfen \u2013 ma\u00dfgeblich ist der Originaltext.</div>';
+    html += '</div>';
+  } else {
+    /* Kopfzeile auch ohne kuratierte Antwort */
+    html += '<div style="background:#334155;color:#fff;border-radius:10px;padding:9px 12px;margin-bottom:9px">'
+         +  '<div style="font-size:9px;opacity:.7;text-transform:uppercase;letter-spacing:.6px">Ihre Frage</div>'
+         +  '<div style="font-size:13px;font-weight:600;line-height:1.4">' + qSafe + '</div>'
+         +  '<div style="font-size:10px;opacity:.75;margin-top:5px">Keine hinterlegte Kurzantwort \u2013 '
+         +  'unten die passenden Stellen aus Normen und Gesetzen.</div></div>';
+  }
+
+  /* Beste Fundstellen bestimmen */
+  var bestLocal = localResults[0] || null;
+  var bestCloud = cloudResults[0] || null;
+
+  /* ══ 2. Fundstellen aus dem Volltext ═══════════════════════════ */
   var _absicht = _kiAbsicht(query);
   var _themaBegriffe = phrases.concat(keywords).filter(function(x){ return x.length >= 3; });
-  /* Leitbegriff = der seltenste/aussagekraeftigste Begriff der Frage */
-  var _leit = '';
-  var _besterWert = -1;
+  var _leit = '', _besterWert = -1;
   _themaBegriffe.forEach(function(w){
-    /* Begriffe, die im Wissen gar nicht vorkommen, taugen nicht als Leitbegriff */
     if(typeof _df !== 'undefined' && _df[w] === 0) return;
     var wert = (typeof _idf !== 'undefined' && _idf[w] ? _idf[w] : 1) * Math.min(w.length,12);
     if(wert > _besterWert){ _besterWert = wert; _leit = w; }
   });
-  /* Antwortzeilen in den besten drei Abschnitten suchen */
-  var _zeilen = [];
-  var _quellen = [];
+  var _zeilen = [], _quellen = [];
   localResults.slice(0,3).forEach(function(r){ _quellen.push(r.text); });
   cloudResults.slice(0,2).forEach(function(r){ _quellen.push(r.inhalt||''); });
   for(var _qi=0; _qi<_quellen.length && _zeilen.length===0; _qi++){
     _zeilen = _kiAntwortZeilen(_quellen[_qi], _absicht, _themaBegriffe, _leit);
   }
-  /* Kein Treffer mit Leitbegriff? Dann ohne diesen nochmal versuchen */
   if(_zeilen.length === 0 && _quellen.length){
     _zeilen = _kiAntwortZeilen(_quellen[0], _absicht, _themaBegriffe, '');
   }
-
-  if(_zeilen.length && (_absicht || _zeilen.length <= 4)){
+  if(_zeilen.length && !_kur){
     var _txt = _zeilen.map(function(z){ return z.z.trim(); }).join('\n');
     html += '<div style="background:#FFFBEB;border:2px solid #F59E0B;border-radius:10px;padding:12px;margin-bottom:10px">';
     html += '<div style="font-size:10px;font-weight:700;color:#92400E;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">'
-          + '\u2139\uFE0F Antwort auf Ihre Frage'
-          + (_absicht ? ' \u2013 ' + _absicht.titel : '') + '</div>';
+         +  '\u2139\uFE0F Passende Stelle' + (_absicht ? ' \u2013 ' + _absicht.titel : '') + '</div>';
     html += '<div style="font-size:13px;line-height:1.85;color:#1A2B45;white-space:pre-wrap;font-weight:500">'
-          + hi(_txt) + '</div>';
-    html += '<div style="font-size:9px;color:#B45309;margin-top:7px;font-style:italic">'
-          + 'Vollst\u00e4ndiger Abschnitt darunter \u2013 bitte fachlich pr\u00fcfen.</div>';
-    html += '</div>';
+         +  hi(_txt) + '</div></div>';
   }
-
-
-  // BESTE ANTWORT (grün hervorgehoben)
-  var bestLocal=localResults[0], bestCloud=cloudResults[0];
-  var bestSource=(!bestCloud||bestLocal&&bestLocal.score>=bestCloud._score*0.6)?bestLocal:null;
-  
-  if(bestLocal){
+  if(bestLocal && !_kur){
     var bestSec=bestLocal.text;
     var subs=bestSec.split(/\n(?=(?:OIB-RL\s*\d|TRVB\s|ÖNORM\s|§\s*\d|\d+\.\d+))/);
     var bestSub=subs[0],bss=0;subs.forEach(function(b){var s=scoreText(b);if(s>bss){bss=s;bestSub=b;}});
@@ -31136,7 +31261,7 @@ async function _kiSupabaseDirectSearch(query){
     html+='</div>';
   }
 
-  if(bestCloud){
+  if(bestCloud && !_kur){
     var raw=bestCloud.inhalt||'';
     var ctx=extractContext(raw,30);
     var disp=modus==='einfach'?ctx.slice(0,600):modus==='mittel'?ctx.slice(0,1500):ctx;
@@ -31152,7 +31277,7 @@ async function _kiSupabaseDirectSearch(query){
   }
 
   // WEITERE TREFFER (zusammengeklappt)
-  var extraLocal=localResults.slice(1,3), extraCloud=cloudResults.slice(1, modus==='einfach'?2:modus==='mittel'?4:8);
+  var extraLocal=localResults.slice(_kur?0:1, _kur?3:3), extraCloud=cloudResults.slice(1, modus==='einfach'?2:modus==='mittel'?4:8);
   if(extraLocal.length+extraCloud.length>0){
     html+='<details style="margin-top:6px"><summary style="cursor:pointer;font-size:11px;font-weight:700;color:#475569;padding:8px;background:#F1F5F9;border-radius:8px;list-style:none">▼ '+(extraLocal.length+extraCloud.length)+' weitere Treffer anzeigen</summary><div style="margin-top:6px">';
     extraLocal.forEach(function(r){
@@ -31213,7 +31338,7 @@ window.addEventListener('load',function(){
     // Ablage aus Supabase laden
     try{
       if(typeof _SB_URL!=='undefined'&&_SB_URL){
-        var resp=await fetch(_SB_URL+'/rest/v1/grieer_dokumente?firma_id=eq.grieer&order=erstellt_am.desc&limit=500',{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+        var resp=await fetch(_SB_URL+'/rest/v1/grieer_dokumente?firma_id=eq.grieer&order=erstellt_am.desc&limit=500',{headers:sbHeaders()});
         if(resp.ok){
           var rows=await resp.json();
           if(Array.isArray(rows)&&rows.length>0){
@@ -31354,7 +31479,7 @@ function grieerSyncAll(btn){
   if(ablage.length){
     fetch(_SB_URL+'/rest/v1/grieer_dokumente',{
       method:'POST',
-      headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
+      headers:sbHeaders(null, {'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates'}),
       body:JSON.stringify(ablage.map(function(e){return {firma_id:'grieer',doc_type:e.type||'ablage',doc_nr:e.id,data:e,ersteller:e.ersteller||'',datum:e.datum||''};}))
     }).catch(function(){});
     upd('Ablage ('+ablage.length+' Dok.) gespeichert...','#16A34A');
@@ -31368,7 +31493,7 @@ function grieerSyncAll(btn){
       // Step 4: Ablage von Cloud laden
       setTimeout(function(){
         fetch(_SB_URL+'/rest/v1/grieer_dokumente?firma_id=eq.grieer&doc_type=neq._config&select=data,doc_nr&order=datum.desc&limit=500',{
-          headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}
+          headers:sbHeaders()
         }).then(function(r){return r.json();})
         .then(function(rows){
           if(rows&&rows.length){
@@ -31609,7 +31734,7 @@ async function kiWissenAufraeumen(){
   try{
     var key = (typeof sbKey==='function') ? sbKey() : _SB_KEY;
     var resp = await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen?select=id,titel,kategorie,inhalt&limit=2000',{
-      headers:{'apikey':key,'Authorization':'Bearer '+key}});
+      headers:sbHeaders(key)});
     if(!resp.ok){ upd('Fehler '+resp.status,'#DC2626'); return; }
     var rows = await resp.json();
     if(!Array.isArray(rows)||!rows.length){ upd('Datenbank ist leer','#94A3B8'); return; }
@@ -31634,7 +31759,7 @@ async function kiWissenAufraeumen(){
       upd('Loesche '+(i+1)+'/'+kaputt.length+'...');
       try{
         var d = await fetch(_SB_URL+'/rest/v1/grieer_ki_wissen?id=eq.'+encodeURIComponent(kaputt[i].id),{
-          method:'DELETE', headers:{'apikey':key,'Authorization':'Bearer '+key}});
+          method:'DELETE', headers:sbHeaders(key)});
         if(d.ok) geloescht++;
       }catch(e){}
     }
@@ -31810,15 +31935,25 @@ async function sbDiagnose(){
 
   /* 2. Schluessel pruefen */
   try{
-    var teil = _SB_KEY.split('.');
-    var pl = JSON.parse(atob(teil[1].replace(/-/g,'+').replace(/_/g,'/')));
-    var abgelaufen = pl.exp && (pl.exp*1000 < Date.now());
-    out += zeile(abgelaufen?'\u274C':'\u2705',
-      'Schl\u00fcssel: Rolle <b>'+(pl.role||'?')+'</b>, Projekt <b>'+(pl.ref||'?')+'</b>'
-      + (abgelaufen ? ' \u2013 <b>ABGELAUFEN</b>' : ', g\u00fcltig bis '
-        + new Date(pl.exp*1000).toLocaleDateString('de-AT')),
-      abgelaufen?'#DC2626':'#16A34A');
-  }catch(e){ out += zeile('\u26A0\uFE0F','Schl\u00fcssel nicht lesbar','#F59E0B'); }
+    if(_SB_KEY.indexOf('sb_publishable_') === 0){
+      out += zeile('\u2705','Schl\u00fcssel: <b>Publishable Key</b> (neues Format) \u2013 '
+        + 'wird nur im apikey-Header gesendet','#16A34A');
+    } else if(_SB_KEY.indexOf('sb_secret_') === 0){
+      out += zeile('\u26A0\uFE0F','Schl\u00fcssel: <b>Secret Key</b> \u2013 geh\u00f6rt nicht in die '
+        + 'App, bitte den Publishable Key verwenden','#F59E0B');
+    } else if(_SB_KEY.indexOf('eyJ') === 0){
+      var teil = _SB_KEY.split('.');
+      var pl = JSON.parse(atob(teil[1].replace(/-/g,'+').replace(/_/g,'/')));
+      var ab = pl.exp && (pl.exp*1000 < Date.now());
+      out += zeile(ab?'\u274C':'\u2139\uFE0F',
+        'Schl\u00fcssel: <b>klassischer ' + (pl.role||'?') + ' JWT</b>, Projekt '
+        + (pl.ref||'?') + (ab ? ' \u2013 <b>ABGELAUFEN</b>' : '')
+        + '<br><span style="color:#94A3B8">Dieses Format l\u00e4uft bei Supabase Ende 2026 aus.</span>',
+        ab?'#DC2626':'#64748B');
+    } else {
+      out += zeile('\u26A0\uFE0F','Schl\u00fcssel: unbekanntes Format','#F59E0B');
+    }
+  }catch(e){ out += zeile('\u26A0\uFE0F','Schl\u00fcssel konnte nicht gepr\u00fcft werden','#F59E0B'); }
   schreib(out);
 
   /* 3. Server erreichbar? */
@@ -31826,7 +31961,7 @@ async function sbDiagnose(){
   try{
     var t0 = Date.now();
     var r = await fetch(_SB_URL + '/rest/v1/', {
-      headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+      headers:sbHeaders()});
     status = r.status;
     out += zeile('\u2705','Server antwortet (HTTP '+status+', '+(Date.now()-t0)+' ms)','#16A34A');
   }catch(err){
@@ -31856,7 +31991,7 @@ async function sbDiagnose(){
     var tab = tabellen[i][0], name = tabellen[i][1];
     try{
       var rr = await fetch(_SB_URL+'/rest/v1/'+tab+'?select=id&limit=1',
-        {headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}});
+        {headers:sbHeaders()});
       if(rr.ok){
         var d = await rr.json();
         out += zeile('\u2705', name+' \u2013 lesbar', '#16A34A');
@@ -31864,7 +31999,7 @@ async function sbDiagnose(){
         var txt = '';
         try{ var j = await rr.json(); txt = j.message || j.hint || ''; }catch(e){}
         var erklaerung =
-          rr.status===401 ? 'Schl\u00fcssel wird abgelehnt (falsch oder zur\u00fcckgezogen)' :
+          rr.status===401 ? 'Schl\u00fcssel abgelehnt \u2013 vermutlich in Supabase erneuert' :
           rr.status===403 ? 'Zugriff durch Sicherheitsregel gesperrt (RLS-Policy fehlt)' :
           rr.status===404 ? 'Tabelle existiert nicht' :
           rr.status===503 ? 'Projekt pausiert oder \u00fcberlastet' :
@@ -31879,6 +32014,19 @@ async function sbDiagnose(){
   }
 
   /* 5. Hinweis bei Sperre */
+  if(out.indexOf('abgelehnt') >= 0){
+    out += '<div style="background:#FEF2F2;border-left:3px solid #DC2626;padding:9px;margin-top:8px;font-size:11px;line-height:1.6">'
+        + '<b>Der Schl\u00fcssel wird nicht mehr akzeptiert (HTTP 401).</b><br>'
+        + 'Supabase hat die Schl\u00fcssel des Projekts vermutlich erneuert oder die alten '
+        + 'JWT-Schl\u00fcssel abgeschaltet.<br><br>'
+        + '<b>Neuen Schl\u00fcssel holen:</b><br>'
+        + '1. supabase.com \u2192 anmelden \u2192 Projekt <b>bvodhzacatfuduwtlwut</b><br>'
+        + '2. <b>Settings \u2192 API Keys</b> \u00f6ffnen<br>'
+        + '3. Den \u00f6ffentlichen Schl\u00fcssel kopieren \u2013 hei\u00dft <b>anon public</b> '
+        + 'oder bei neueren Projekten <b>Publishable key</b> (beginnt mit sb_publishable_)<br>'
+        + '4. Hier oben im Feld <b>Cloud-Schl\u00fcssel</b> einf\u00fcgen und speichern<br><br>'
+        + '<span style="color:#7F1D1D">Nicht den <b>service_role</b> / <b>secret</b> Schl\u00fcssel nehmen \u2013 der geh\u00f6rt in das separate Feld darunter.</span></div>';
+  }
   if(out.indexOf('Sicherheitsregel') >= 0){
     out += '<div style="background:#FFFBEB;border-left:3px solid #F59E0B;padding:8px;margin-top:8px;font-size:11px;line-height:1.6">'
         + '<b>Zugriff durch RLS gesperrt.</b><br>'
@@ -31891,6 +32039,31 @@ async function sbDiagnose(){
       + 'KI-Fachassistent mit den eingebauten Normen und Gesetzen.</div>';
   schreib(out);
 }
+
+function sbAnonKeySpeichern(){
+  var el = document.getElementById('sb-anon-key-input');
+  var v = (el && el.value || '').trim();
+  var st = document.getElementById('sb-anon-status');
+  function melde(t,f){ if(st){ st.innerHTML = t; st.style.color = f || '#334155'; } }
+  if(!v){ melde('Bitte Schl\u00fcssel einf\u00fcgen','#DC2626'); return; }
+  if(v.length < 20){ melde('Schl\u00fcssel zu kurz \u2013 vollst\u00e4ndig einf\u00fcgen','#DC2626'); return; }
+  try{ localStorage.setItem('grieer_sb_anon_key', v); }catch(e){}
+  _SB_KEY = v;
+  var art = v.indexOf('sb_publishable_') === 0 ? 'Publishable Key (neu)'
+          : (v.indexOf('eyJ') === 0 ? 'anon JWT (klassisch)' : 'unbekanntes Format');
+  melde('\u2705 Gespeichert \u2013 ' + art + '. Bitte <b>Verbindung testen</b>.', '#16A34A');
+  try{ _grieerToast('\u2705 Schl\u00fcssel gespeichert','#16A34A',2200); }catch(e){}
+}
+function sbAnonKeyZuruecksetzen(){
+  try{ localStorage.removeItem('grieer_sb_anon_key'); }catch(e){}
+  _SB_KEY = _SB_KEY_STANDARD;
+  var el = document.getElementById('sb-anon-key-input'); if(el) el.value = '';
+  var st = document.getElementById('sb-anon-status');
+  if(st){ st.innerHTML = 'Zur\u00fcckgesetzt auf den eingebauten Schl\u00fcssel.'; st.style.color = '#64748B'; }
+}
+
+  /* ══ 2. Treffer aus dem Volltext ══ */
+  
 </script>
 
 
@@ -32039,6 +32212,23 @@ async function sbDiagnose(){
     Unlesbare Eintr&auml;ge suchen
   </button>
   <div id="ki-cleanup-status" style="font-size:11px;margin-top:6px;text-align:center;color:#374151"></div>
+</div>
+
+<div style="margin-top:12px;padding:11px;background:#FFFBEB;border:2px solid #F59E0B;border-radius:9px">
+  <div style="font-size:12px;font-weight:700;color:#92400E;margin-bottom:3px">&#128273; Cloud-Schl&uuml;ssel (anon / publishable)</div>
+  <div style="font-size:10px;color:#92400E;line-height:1.5;margin-bottom:8px">
+    Nur n&ouml;tig, wenn die Verbindung <b>401</b> meldet. In Supabase unter
+    <b>Settings &rarr; API Keys</b> den <b>anon public</b> bzw. <b>Publishable key</b> kopieren.
+    <br><b>Nicht</b> den service_role / secret Key &ndash; der geh&ouml;rt ins Feld darunter.
+  </div>
+  <input id="sb-anon-key-input" type="text" autocomplete="off" spellcheck="false"
+    placeholder="eyJhbGci... oder sb_publishable_..."
+    style="width:100%;min-height:44px;font-size:13px;padding:10px;border:1px solid #FCD34D;border-radius:8px;box-sizing:border-box;margin-bottom:7px">
+  <div style="display:flex;gap:7px">
+    <button onclick="sbAnonKeySpeichern()" style="flex:1;min-height:44px;background:#F59E0B;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">Speichern</button>
+    <button onclick="sbAnonKeyZuruecksetzen()" style="min-height:44px;background:#fff;color:#92400E;border:1px solid #FCD34D;border-radius:8px;font-size:12px;padding:0 13px;cursor:pointer">Zur&uuml;cksetzen</button>
+  </div>
+  <div id="sb-anon-status" style="font-size:11px;margin-top:7px;color:#64748B"></div>
 </div>
 <div style="margin-top:12px;padding:11px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:9px">
   <div style="font-size:12px;font-weight:700;color:#1E40AF;margin-bottom:3px">&#128225; Cloud-Verbindung pr&uuml;fen</div>
@@ -32500,7 +32690,7 @@ function grieerSyncAll(btn){
   if(ablage.length){
     fetch(_SB_URL+'/rest/v1/grieer_dokumente',{
       method:'POST',
-      headers:{'Content-Type':'application/json','apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Prefer':'resolution=merge-duplicates'},
+      headers:(typeof sbHeaders==='function'?sbHeaders(null,{'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'}):{'Content-Type':'application/json','apikey':_SB_KEY,'Prefer':'resolution=merge-duplicates'}),
       body:JSON.stringify(ablage.map(function(e){return {firma_id:'grieer',doc_type:e.type||'ablage',doc_nr:e.id,data:e,ersteller:e.ersteller||'',datum:e.datum||''};}))
     }).catch(function(){});
     upd('Ablage ('+ablage.length+' Dok.) gespeichert...','#16A34A');
@@ -32514,7 +32704,7 @@ function grieerSyncAll(btn){
       // Step 4: Ablage von Cloud laden
       setTimeout(function(){
         fetch(_SB_URL+'/rest/v1/grieer_dokumente?firma_id=eq.grieer&doc_type=neq._config&select=data,doc_nr&order=datum.desc&limit=500',{
-          headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY}
+          headers:(typeof sbHeaders==='function'?sbHeaders():{'apikey':_SB_KEY})
         }).then(function(r){return r.json();})
         .then(function(rows){
           if(rows&&rows.length){
