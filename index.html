@@ -21,7 +21,7 @@
 // === GRIEER CACHE-KILLER v2026-06-01-FIX0938 ===
 (function(){
   try {
-    var CURRENT_VER = "v2026-09-05-0440";
+    var CURRENT_VER = "v2026-09-06-0505";
     var lastVer = null;
     try { lastVer = localStorage.getItem('__grieer_app_ver__'); } catch(e){}
     if('serviceWorker' in navigator){
@@ -745,12 +745,12 @@ body {
   .bez{font-size:9px !important;min-width:100px;word-break:break-word}
   /* EP und GP kompakter */
   .ep-c-verr{padding:1px 2px !important}
-  .ep-c-verr input[type=number]{width:56px !important;font-size:10px !important}
+  .ep-c-verr input[type=number]{width:56px !important;font-size:16px !important}
   .gp-c{font-size:10px !important;min-width:44px}
   /* Menge Input */
-  td.c input[type=number]{width:38px !important;font-size:10px !important}
+  td.c input[type=number]{width:38px !important;font-size:16px !important}
   /* Rabatt Input */
-  td.c input[type=number][id^=vrab]{width:36px !important;font-size:9px !important}
+  td.c input[type=number][id^=vrab]{width:36px !important;font-size:16px !important}
   /* Kategorie-Header Zeilen */
   td[colspan]{padding:4px 6px !important;font-size:10px !important}
 }
@@ -1095,7 +1095,7 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
   
   /* ── PV Rechner: Bundesland-Select ── */
   #pvc-bundesland {
-    font-size: 15px !important;
+    font-size: 16px !important;
     min-height: 44px !important;
   }
   
@@ -1103,7 +1103,7 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
   #page-settings input[type="password"],
   #page-settings input[type="text"],
   #page-settings input[type="email"] {
-    font-size: 14px !important;
+    font-size: 16px !important;
     min-height: 44px !important;
   }
   
@@ -1118,7 +1118,7 @@ label,div,span,p{-webkit-text-size-adjust:100%;}
   }
   #gkv-body input {
     min-height: 36px !important;
-    font-size: 13px !important;
+    font-size: 16px !important;
   }
 }
 
@@ -1247,6 +1247,51 @@ html body { padding-bottom: env(safe-area-inset-bottom, 0px); }
   #page-kehr input,#page-kehr select{width:100%!important;max-width:100%!important;box-sizing:border-box!important;min-width:0!important}
   #page-kehr .bez small{display:block;font-size:8.5px!important;line-height:1.3}
 }
+
+/* ══════════════════════════════════════════════════════════════
+   iOS-ZOOM BEIM TIPPEN VERHINDERN
+   Safari vergroessert die Seite, sobald ein Eingabefeld eine
+   Schrift unter 16px hat - und springt danach nicht zurueck.
+   Alle Zahlen- und Textfelder daher mindestens 16px.
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  html body input[type="number"],
+  html body input[type="text"],
+  html body input[type="tel"],
+  html body input[type="email"],
+  html body input[type="date"],
+  html body input[type="search"],
+  html body input[type="password"],
+  html body select,
+  html body textarea,
+  html body div select, html body div textarea,
+  html body .pg select, html body .pg textarea,
+  html body .card select, html body .card textarea,
+  html body table select, html body table textarea {
+    font-size: 16px !important;
+    -webkit-text-size-adjust: 100% !important;
+  }
+  /* Enge Tabellenfelder trotzdem schmal halten */
+  html body #page-verr input[type="number"],
+  html body #page-kehr input[type="number"],
+  html body #page-gas  input[type="number"],
+  html body #page-gesamt input[type="number"] {
+    font-size: 16px !important;
+    padding: 2px 3px !important;
+    min-height: 34px !important;
+    text-align: center;
+  }
+}
+
+/* Letzte Instanz: jedes Eingabefeld mindestens 16px (iOS-Zoom) */
+@media (max-width:900px){
+  html body input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  html body select,
+  html body textarea{
+    font-size:16px !important;
+    -webkit-text-size-adjust:100% !important;
+  }
+}
 </style>
 
 
@@ -1293,7 +1338,7 @@ html body { padding-bottom: env(safe-area-inset-bottom, 0px); }
 <div style="margin-bottom:6px"><button onclick="toggleMenu('menu-prot')" style="width:100%;padding:10px 14px;background:#E8F4F8;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:#1A2B45"><span>&#128221; Protokolle &amp; Befunde</span><span id="arr-prot">&#9658;</span></button><div id="menu-prot" style="display:none;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:8px 0 4px"><button data-page="wprot" onclick="show('wprot')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128203;<br>Wartungs-<br>protokoll</button><button data-page="mess" onclick="show('mess')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128202;<br>Mess-<br>protokoll</button><button data-page="pvprot" onclick="show('pvprot')" class="home-tile" style="background:#E85D04;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#9728;&#65039;<br>PV-Protokoll</button><button data-page="brandprot" onclick="show('brandprot')" class="home-tile" style="background:#7C3AED;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128737;&#65039;<br>Brand-<br>Prot.</button><button data-page="maengel" onclick="show('maengel')" class="home-tile" style="background:#DC2626;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#9888;&#65039;<br>M&#228;ngel</button><button data-page="auftrag" onclick="show('auftrag')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128196;<br>Auftragsformular</button></div></div>
 <div style="margin-bottom:6px"><button onclick="toggleMenu('menu-ueberpruef')" style="width:100%;padding:10px 14px;background:#E8F4F8;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:#1A2B45"><span>&#128269; &#220;berpr&#252;fungen</span><span id="arr-ueberpruef">&#9658;</span></button><div id="menu-ueberpruef" style="display:none;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:8px 0 4px"><button data-page="b8201" onclick="show('b8201')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#127968;<br>B 8201<br>Fangpr&#252;fung</button><button data-page="luft2" onclick="show('luft2')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128168;<br>Luft-<br>&#252;berpr&#252;fung</button></div></div>
 <div style="margin-bottom:6px"><button onclick="toggleMenu('menu-spezial')" style="width:100%;padding:10px 14px;background:#E8F4F8;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:#1A2B45"><span>&#128300; Spezial-Tools</span><span id="arr-spezial">&#9658;</span></button><div id="menu-spezial" style="display:none;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:8px 0 4px"><button data-page="pvrechner" onclick="show('pvrechner')" class="home-tile" style="background:#D97706;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#9728;&#65039;<br>PV-Soiling<br>Kalkulator</button><button data-page="brandinfo" onclick="show('brandinfo')" class="home-tile" style="background:#DC2626;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#129534;<br>Feuerschutz-<br>Info</button></div></div>
-<div style="margin-bottom:6px"><button onclick="toggleMenu('menu-extras')" style="width:100%;padding:10px 14px;background:#E8F4F8;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:#1A2B45"><span>&#128204; Extras</span><span id="arr-extras">&#9658;</span></button><div id="menu-extras" style="display:none;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:8px 0 4px"><button data-page="kehr" onclick="show('kehr')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#127968;<br>Kehrtarif</button><button data-page="verr" onclick="show('verr')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128176;<br>Preisliste</button><button data-page="wart" onclick="show('wart')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128276;<br>Wartungs-<br>erinnerung</button><button data-page="ki" onclick="show('ki')" class="home-tile" style="background:linear-gradient(135deg,#1A2B45,#6D28D9);color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#129504;<br>KI-Berater</button><button data-page="drohne" onclick="show('drohne')" class="home-tile" style="background:#1D4ED8;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128641;<br>Drohnen-<br>Inspektion</button></div></div>
+<div style="margin-bottom:6px"><button onclick="toggleMenu('menu-extras')" style="width:100%;padding:10px 14px;background:#E8F4F8;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:#1A2B45"><span>&#128204; Extras</span><span id="arr-extras">&#9658;</span></button><div id="menu-extras" style="display:none;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:8px 0 4px"><button data-page="kehr" onclick="show('kehr')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#127968;<br>Kehrtarif</button><button data-page="verr" onclick="show('verr')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128176;<br>Preisliste</button><button data-page="wart" onclick="show('wart')" class="home-tile" style="background:#1A2B45;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128276;<br>Wartungs-<br>erinnerung</button><button data-page="ki" onclick="show('ki')" class="home-tile" style="background:linear-gradient(135deg,#1A2B45,#6D28D9);color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#129504;<br>KI-Berater</button><button data-page="drohne" onclick="show('drohne')" class="home-tile" style="background:#1D4ED8;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128641;<br>Drohnen-<br>Inspektion</button><button data-page="drohne" onclick="show('mat')" class="home-tile" style="background:#1D4ED8;color:#fff;border:none;border-radius:10px;padding:12px 4px;font-size:11px;cursor:pointer;min-height:60px">&#128230;Material-aufnahme<br>Drohnen-<br>Inspektion</button></div></div>
 
 <div class="ibox" style="margin-top:10px"><div style="font-size:12px;font-weight:700;color:#1A2B45;margin-bottom:6px">&#128101; Kundenliste</div><div id="kunden-liste-box"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px"><button id="btn-kunden-sync" onclick="kundenCloudSync()" style="padding:10px;background:linear-gradient(135deg,#2563EB,#1A2B45);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;min-height:40px">&#8661; Sync</button><button onclick="renderKundenliste()" style="padding:10px;background:#475569;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;min-height:40px">&#8635; Anzeigen</button></div><div id="kunden-sync-status" style="font-size:10px;color:#64748B;margin-top:4px;text-align:center"></div></div></div>
 </div>
@@ -3776,25 +3821,7 @@ html body { padding-bottom: env(safe-area-inset-bottom, 0px); }
 <td class="einh">Stück</td>
 <td class="ep-c-verr" style="padding:2px 4px;text-align:right"><input type="number" class="verr-ep-inp" id="vlbl-m14" min="0" step="0.01" value="50.00" style="width:70px;text-align:right;font-weight:600;color:#7D3C98;border:1px solid transparent;border-radius:3px;padding:2px 4px;font-size:12px;background:transparent;outline:none;cursor:pointer;font-family:inherit" title="Preis ändern – Klick zum Bearbeiten" onfocus="this.style.border='1.5px solid #27AE60';this.style.background='#fff'" onblur="verrEpSave(this,'m14')" onchange="verrEpSave(this,'m14')"></td>
 <td class="c" style="padding:2px 4px"><input type="number" min="0" step="1" id="vq-m14" placeholder="0" style="width:46px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px;font-size:12px;outline:none" oninput="calcVerr()"></td>
-<td class="c"><input type="number" id="vrab-m14" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-m14">—</td></tr><tr style="background:#F5F7F9" id="vrow-m15">
-<td class="pos">35</td>
-<td class="bez">Montage Rauchwarnmelder mit Protokoll<br><small style="color:#B45309;font-size:9px;font-weight:600">&#9888; nur wenn Melder separat gekauft &ndash; nicht zus&auml;tzlich zu &bdquo;inkl. Montage&ldquo;</small></td>
-<td class="einh">Stück</td>
-<td class="ep-c-verr" style="padding:2px 4px;text-align:right"><input type="number" class="verr-ep-inp" id="vlbl-m15" min="0" step="0.01" value="4.17" style="width:70px;text-align:right;font-weight:600;color:#7D3C98;border:1px solid transparent;border-radius:3px;padding:2px 4px;font-size:12px;background:transparent;outline:none;cursor:pointer;font-family:inherit" title="Preis ändern – Klick zum Bearbeiten" onfocus="this.style.border='1.5px solid #27AE60';this.style.background='#fff'" onblur="verrEpSave(this,'m15')" onchange="verrEpSave(this,'m15')"></td>
-<td class="c" style="padding:2px 4px"><input type="number" min="0" step="1" id="vq-m15" placeholder="0" style="width:46px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px;font-size:12px;outline:none" oninput="calcVerr()"></td>
-<td class="c"><input type="number" id="vrab-m15" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-m15">—</td></tr><tr style="background:#fff" id="vrow-m16">
-<td class="pos">36</td>
-<td class="bez">Montage ab 5 Stk. Rauchwarnmelder<br><small style="color:#B45309;font-size:9px;font-weight:600">&#9888; nur wenn Melder separat gekauft &ndash; nicht zus&auml;tzlich zu &bdquo;inkl. Montage&ldquo;</small></td>
-<td class="einh">Stück</td>
-<td class="ep-c-verr" style="padding:2px 4px;text-align:right"><input type="number" class="verr-ep-inp" id="vlbl-m16" min="0" step="0.01" value="2.08" style="width:70px;text-align:right;font-weight:600;color:#7D3C98;border:1px solid transparent;border-radius:3px;padding:2px 4px;font-size:12px;background:transparent;outline:none;cursor:pointer;font-family:inherit" title="Preis ändern – Klick zum Bearbeiten" onfocus="this.style.border='1.5px solid #27AE60';this.style.background='#fff'" onblur="verrEpSave(this,'m16')" onchange="verrEpSave(this,'m16')"></td>
-<td class="c" style="padding:2px 4px"><input type="number" min="0" step="1" id="vq-m16" placeholder="0" style="width:46px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px;font-size:12px;outline:none" oninput="calcVerr()"></td>
-<td class="c"><input type="number" id="vrab-m16" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-m16">—</td></tr><tr style="background:#F5F7F9" id="vrow-m17">
-<td class="pos">37</td>
-<td class="bez">Montage ab 10 Stk. (Gratis)<br><small style="color:#B45309;font-size:9px;font-weight:600">&#9888; nur wenn Melder separat gekauft &ndash; nicht zus&auml;tzlich zu &bdquo;inkl. Montage&ldquo;</small></td>
-<td class="einh">Stück</td>
-<td style="text-align:right;font-weight:600;color:#7D3C98;padding:4px 5px;white-space:nowrap" id="vlbl-m17">–&nbsp;€</td>
-<td class="c" style="padding:2px 4px"><input type="number" min="0" step="1" id="vq-m17" placeholder="0" style="width:46px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px;font-size:12px;outline:none" oninput="calcVerr()"></td>
-<td class="c"><input type="number" id="vrab-m17" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-m17">—</td></tr><tr><td colspan="7" style="background:#E67E22;color:#fff;font-weight:700;font-size:11px;padding:4px 8px">Gasservice</td></tr>
+<td class="c"><input type="number" id="vrab-m14" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-m14">—</td></tr><tr><td colspan="7" style="background:#E67E22;color:#fff;font-weight:700;font-size:11px;padding:4px 8px">Gasservice</td></tr>
 <tr style="background:#fff" id="vrow-g0">
 <td class="pos">38</td>
 <td class="bez">Gasservice B-Geräte</td>
@@ -3814,7 +3841,43 @@ html body { padding-bottom: env(safe-area-inset-bottom, 0px); }
 <td class="ep-c-verr" style="padding:2px 4px;text-align:right"><input type="number" class="verr-ep-inp" id="vlbl-g2" min="0" step="0.01" value="112.50" style="width:70px;text-align:right;font-weight:600;color:#E67E22;border:1px solid transparent;border-radius:3px;padding:2px 4px;font-size:12px;background:transparent;outline:none;cursor:pointer;font-family:inherit" title="Preis ändern – Klick zum Bearbeiten" onfocus="this.style.border='1.5px solid #27AE60';this.style.background='#fff'" onblur="verrEpSave(this,'g2')" onchange="verrEpSave(this,'g2')"></td>
 <td class="c" style="padding:2px 4px"><input type="number" min="0" step="1" id="vq-g2" placeholder="0" style="width:46px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px;font-size:12px;outline:none" oninput="calcVerr()"></td>
 <td class="c"><input type="number" id="vrab-g2" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-g2">—</td></tr><tr><td colspan="7" style="background:#C0392B;color:#fff;font-weight:700;font-size:11px;padding:4px 8px">Brandschutz / Melder</td></tr>
-<tr style="background:#fff" id="vrow-b0">
+<tr><td colspan="6" style="background:#C62828;color:#fff;font-weight:700;font-size:10px;padding:5px 8px">&#128293; FEUERL&Ouml;SCHER &ndash; VERKAUF &amp; WARTUNG</td></tr><tr style="background:#F5F7F9" id="vrow-fl1">
+<td class="pos">FL1</td>
+<td class="bez">Kfz-Feuerlöscher Tigra 1<br><small style="color:#888;font-size:9px;font-weight:normal">Pulverlöscher Kartusche · 8A 34B C · 2 kg · 8 Sek. / 3 m · &minus;30&nbsp;°C bis +60&nbsp;°C · Pflicht im KFZ</small></td>
+<td class="einh">Stück</td>
+<td class="ep-c-verr" style="padding:2px 4px;text-align:right"><input type="number" class="verr-ep-inp" id="vlbl-fl1" min="0" step="0.01" value="33.33" style="width:70px;text-align:right;font-weight:600;color:#C0392B;border:1px solid transparent;border-radius:3px;padding:2px 4px;font-size:12px;background:transparent;outline:none;cursor:pointer;font-family:inherit" title="Preis ändern – Klick zum Bearbeiten" onfocus="this.style.border='1.5px solid #27AE60';this.style.background='#fff'" onblur="verrEpSave(this,'b1')" onchange="verrEpSave(this,'b1')"></td>
+<td class="c" style="padding:2px 4px"><input type="number" min="0" step="1" id="vq-fl1" placeholder="0" style="width:46px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px;font-size:12px;outline:none" oninput="calcVerr()"></td>
+<td class="c"><input type="number" id="vrab-fl1" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-fl1">—</td></tr><tr style="background:#fff" id="vrow-fl2">
+<td class="pos">FL2</td>
+<td class="bez">Storm 6 Mano<br><small style="color:#888;font-size:9px;font-weight:normal">Pulverlöscher Dauerdruck · 43A 233B C · 6 Ltr. · 24 Sek. / 5 m · 11,6 kg</small></td>
+<td class="einh">Stück</td>
+<td class="ep-c-verr" style="padding:2px 4px;text-align:right"><input type="number" class="verr-ep-inp" id="vlbl-fl2" min="0" step="0.01" value="70.83" style="width:70px;text-align:right;font-weight:600;color:#C0392B;border:1px solid transparent;border-radius:3px;padding:2px 4px;font-size:12px;background:transparent;outline:none;cursor:pointer;font-family:inherit" title="Preis ändern – Klick zum Bearbeiten" onfocus="this.style.border='1.5px solid #27AE60';this.style.background='#fff'" onblur="verrEpSave(this,'b1')" onchange="verrEpSave(this,'b1')"></td>
+<td class="c" style="padding:2px 4px"><input type="number" min="0" step="1" id="vq-fl2" placeholder="0" style="width:46px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px;font-size:12px;outline:none" oninput="calcVerr()"></td>
+<td class="c"><input type="number" id="vrab-fl2" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-fl2">—</td></tr><tr style="background:#F5F7F9" id="vrow-fl3">
+<td class="pos">FL3</td>
+<td class="bez">Fash PureNature S 6 Mano<br><small style="color:#888;font-size:9px;font-weight:normal">Schaumlöscher Dauerdruck · 27A 144B · 6 Ltr. · 53 Sek. / 6 m · 11 kg · +5&nbsp;°C bis +60&nbsp;°C</small></td>
+<td class="einh">Stück</td>
+<td class="ep-c-verr" style="padding:2px 4px;text-align:right"><input type="number" class="verr-ep-inp" id="vlbl-fl3" min="0" step="0.01" value="104.17" style="width:70px;text-align:right;font-weight:600;color:#C0392B;border:1px solid transparent;border-radius:3px;padding:2px 4px;font-size:12px;background:transparent;outline:none;cursor:pointer;font-family:inherit" title="Preis ändern – Klick zum Bearbeiten" onfocus="this.style.border='1.5px solid #27AE60';this.style.background='#fff'" onblur="verrEpSave(this,'b1')" onchange="verrEpSave(this,'b1')"></td>
+<td class="c" style="padding:2px 4px"><input type="number" min="0" step="1" id="vq-fl3" placeholder="0" style="width:46px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px;font-size:12px;outline:none" oninput="calcVerr()"></td>
+<td class="c"><input type="number" id="vrab-fl3" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-fl3">—</td></tr><tr style="background:#fff" id="vrow-fl4">
+<td class="pos">FL4</td>
+<td class="bez">Graffit SK 6 PureNature<br><small style="color:#888;font-size:9px;font-weight:normal">Schaumlöscher Kartusche · 34A 144B · 6 Ltr. · 44 Sek. / 6 m · bis 1000&nbsp;V, Mindestabstand 1&nbsp;m</small></td>
+<td class="einh">Stück</td>
+<td class="ep-c-verr" style="padding:2px 4px;text-align:right"><input type="number" class="verr-ep-inp" id="vlbl-fl4" min="0" step="0.01" value="120.83" style="width:70px;text-align:right;font-weight:600;color:#C0392B;border:1px solid transparent;border-radius:3px;padding:2px 4px;font-size:12px;background:transparent;outline:none;cursor:pointer;font-family:inherit" title="Preis ändern – Klick zum Bearbeiten" onfocus="this.style.border='1.5px solid #27AE60';this.style.background='#fff'" onblur="verrEpSave(this,'b1')" onchange="verrEpSave(this,'b1')"></td>
+<td class="c" style="padding:2px 4px"><input type="number" min="0" step="1" id="vq-fl4" placeholder="0" style="width:46px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px;font-size:12px;outline:none" oninput="calcVerr()"></td>
+<td class="c"><input type="number" id="vrab-fl4" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-fl4">—</td></tr><tr style="background:#F5F7F9" id="vrow-fl5">
+<td class="pos">FL5</td>
+<td class="bez">Graffit SK 9 PureNature<br><small style="color:#888;font-size:9px;font-weight:normal">Schaumlöscher Kartusche · 43A 183B · 9 Ltr. · 73 Sek. / 6 m · bis 1000&nbsp;V, Mindestabstand 1&nbsp;m</small></td>
+<td class="einh">Stück</td>
+<td class="ep-c-verr" style="padding:2px 4px;text-align:right"><input type="number" class="verr-ep-inp" id="vlbl-fl5" min="0" step="0.01" value="137.50" style="width:70px;text-align:right;font-weight:600;color:#C0392B;border:1px solid transparent;border-radius:3px;padding:2px 4px;font-size:12px;background:transparent;outline:none;cursor:pointer;font-family:inherit" title="Preis ändern – Klick zum Bearbeiten" onfocus="this.style.border='1.5px solid #27AE60';this.style.background='#fff'" onblur="verrEpSave(this,'b1')" onchange="verrEpSave(this,'b1')"></td>
+<td class="c" style="padding:2px 4px"><input type="number" min="0" step="1" id="vq-fl5" placeholder="0" style="width:46px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px;font-size:12px;outline:none" oninput="calcVerr()"></td>
+<td class="c"><input type="number" id="vrab-fl5" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-fl5">—</td></tr><tr style="background:#fff" id="vrow-fl6">
+<td class="pos">FL6</td>
+<td class="bez">Löscherwartung alle 2 Jahre<br><small style="color:#888;font-size:9px;font-weight:normal">ÖNORM F 1053 · Sichtprüfung + Druckprüfung + Protokoll · gilt für alle Feuerlöscher</small></td>
+<td class="einh">Stück</td>
+<td class="ep-c-verr" style="padding:2px 4px;text-align:right"><input type="number" class="verr-ep-inp" id="vlbl-fl6" min="0" step="0.01" value="15.42" style="width:70px;text-align:right;font-weight:600;color:#C0392B;border:1px solid transparent;border-radius:3px;padding:2px 4px;font-size:12px;background:transparent;outline:none;cursor:pointer;font-family:inherit" title="Preis ändern – Klick zum Bearbeiten" onfocus="this.style.border='1.5px solid #27AE60';this.style.background='#fff'" onblur="verrEpSave(this,'b1')" onchange="verrEpSave(this,'b1')"></td>
+<td class="c" style="padding:2px 4px"><input type="number" min="0" step="1" id="vq-fl6" placeholder="0" style="width:46px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px;font-size:12px;outline:none" oninput="calcVerr()"></td>
+<td class="c"><input type="number" id="vrab-fl6" min="0" max="100" step="1" placeholder="0" title="Rabatt % für diese Position" oninput="calcVerr()" style="width:52px;padding:4px;border:1px solid #FFB74D;border-radius:4px;font-size:12px;text-align:center;background:#FFFDE7;box-sizing:border-box"></td><td class="gp-c" id="vgp-fl6">—</td></tr><tr style="background:#fff" id="vrow-b0">
 <td class="pos">41</td>
 <td class="bez">CO-Warnmelder GS828 inkl. Montage<br><small style="color:#888;font-size:9px;font-weight:normal">EN 50291 · elektrochemischer Sensor · 85 dB · Pflicht bei Gas/Öl/Kamin · 230V + Backup</small><br><small style="color:#166534;font-size:9px;font-weight:600">Montage bereits enthalten &ndash; Pos. Montage nicht zus&auml;tzlich verrechnen</small><br><small style="color:#166534;font-size:9px;font-weight:600">&#10003; Montage enthalten &ndash; Montage-Pos. nicht zus&auml;tzlich verrechnen</small></td>
 <td class="einh">Stück</td>
@@ -5745,7 +5808,7 @@ html body { padding-bottom: env(safe-area-inset-bottom, 0px); }
 </div>
 </div></div>
 
-<div id="grieer-version-badge" style="position:fixed;bottom:4px;right:8px;font-size:9px;color:#90A4AE;background:rgba(255,255,255,0.85);padding:2px 6px;border-radius:8px;z-index:50;pointer-events:none;font-family:monospace">App v2026-09-05-0440</div>
+<div id="grieer-version-badge" style="position:fixed;bottom:4px;right:8px;font-size:9px;color:#90A4AE;background:rgba(255,255,255,0.85);padding:2px 6px;border-radius:8px;z-index:50;pointer-events:none;font-family:monospace">App v2026-09-06-0505</div>
 
 
 
@@ -5792,7 +5855,8 @@ html body { padding-bottom: env(safe-area-inset-bottom, 0px); }
 
 
 
-<script>
+<script>var CURRENT_VER_AKTIV = 'v2026-09-06-0505';
+
 /* ═══ GEPRUEFTE ANTWORTEN ══════════════════════════════════════════
    Fertige Antworten auf haeufige Fragen, jeweils mit Fundstelle.  */
 var KI_ANTWORTEN = [{"id": "kehrfrist_allgemein", "fragen": ["kehrfrist", "kehrfristen", "wie oft kehren", "wie oft muss gekehrt werden", "kehrintervall", "überprüfungsintervall", "wie oft überprüfung"], "titel": "Kehr- und Überprüfungsfristen", "antwort": "Nach § 6 Abs. 1 Bgld. KehrG 2022 gelten vier Fristen:\n\nDREIMAL JÄHRLICH (Z 1)\nAbgasanlagen für feste oder flüssige Brennstoffe – ausgenommen „Heizöl extra leicht\" und Pellets – mit angeschlossenen RAUMHEIZGERÄTEN, die ausschließlich in der Heizperiode beheizt werden.\n\nZWEIMAL JÄHRLICH (Z 2)\nDieselben Brennstoffe – ausgenommen nur „Heizöl extra leicht\" – mit angeschlossenen EINZELRAUMHEIZGERÄTEN, ausschließlich in der Heizperiode beheizt.\n\nEINMAL JÄHRLICH (Z 3)\n• Feuerstätten für „Heizöl extra leicht\"\n• Gasfeuerungen ÜBER 50 kW Nennwärmeleistung\n\nEINMAL ALLE ZWEI JAHRE (Z 4)\nBe- und/oder Entlüftungseinrichtungen sowie Abgasanlagen für Gasgeräte UNTER 50 kW Nennwärmeleistung.\n\nZUSÄTZLICH\n• Beheizung außerhalb der Heizperiode (Z 1 und 2): eine zusätzliche Überprüfung/Kehrung in diesem Zeitraum (§ 6 Abs. 2)\n• Ferienhäuser (nur 1. Mai bis 30. September bewohnt): Z 1 und 2 einmal jährlich, Z 3 alle zwei Jahre (§ 6 Abs. 4)\n• Länger als ein Jahr unbenützte Anlagen: keine Kehrpflicht (§ 6 Abs. 5)\n\nHeizperiode = 1. Oktober bis 30. April des Folgejahres (§ 1 Z 9).", "quelle": "§ 6 Bgld. Kehrgesetz 2022, LGBl. Nr. 52/2022"}, {"id": "kehrfrist_gas", "fragen": ["gas kehrfrist", "gasgerät kehren", "gasgerät überprüfung", "wie oft gas", "gastherme kehren", "gasheizung intervall", "therme überprüfung"], "titel": "Kehrfrist bei Gasgeräten", "antwort": "Maßgeblich ist die Nennwärmeleistung – die Grenze liegt bei 50 kW:\n\nUNTER 50 kW  →  einmal alle zwei Jahre\n   (§ 6 Abs. 1 Z 4 – gilt auch für Be- und Entlüftungseinrichtungen)\n\nÜBER 50 kW  →  einmal jährlich\n   (§ 6 Abs. 1 Z 3)\n\nAchtung: Die Grenze ist 50 kW, nicht 35 kW.\n\nWird die Anlage länger als ein Jahr nicht benützt, entfällt die Kehrpflicht; die Wiederbenützung ist anzuzeigen (§ 6 Abs. 5).", "quelle": "§ 6 Abs. 1 Z 3 und Z 4 Bgld. Kehrgesetz 2022"}, {"id": "kehrfrist_pellets", "fragen": ["pellets", "pelletskessel", "pelletsheizung", "pellet kehren", "wie oft pellets"], "titel": "Pellets – Einordnung der Kehrfrist", "antwort": "Pellets sind im Gesetz nur an einer Stelle ausdrücklich genannt:\n\n§ 6 Abs. 1 Z 1 nimmt Pellets von der dreimal jährlichen Kehrung AUS.\nWörtlich: feste oder flüssige Brennstoffe, „mit Ausnahme von ,Heizöl extra leicht' und Pelletts\".\n\nDamit fallen Pellets bei Raumheizgeräten nicht unter Z 1.\n\nZu beachten: Z 2 (zweimal jährlich, Einzelraumheizgeräte) nimmt nur „Heizöl extra leicht\" aus – Pellets sind dort nicht genannt. Z 3 (einmal jährlich) führt ausdrücklich nur „Heizöl extra leicht\" und Gasfeuerungen über 50 kW an.\n\nDie Zuordnung im Einzelfall ist daher nach Gerätetyp zu beurteilen. Bei Zweifeln empfiehlt sich eine Abklärung mit der Bezirksverwaltungsbehörde – die Einordnung wirkt sich unmittelbar auf Befund und Verrechnung aus.", "quelle": "§ 6 Abs. 1 Z 1 bis 3 Bgld. Kehrgesetz 2022"}, {"id": "abstand_verbindungsstueck", "fragen": ["abstand verbindungsstück", "verbindungsstück brennbar", "rauchrohr abstand", "poterie abstand", "abstand rauchrohr brennbare"], "titel": "Abstände Verbindungsstück zu brennbaren Teilen", "antwort": "TRVB H105, Tabelle 3 – seitliche Mindestabstände zu brennbaren Einrichtungen:\n\n   Feuerstätten aus Eisen ........... 50 cm\n   Gemauerte Öfen ................... 25 cm\n   Verbindungsstücke und Herde ...... 25 cm\n\nDie zweite Spalte (25 / 15 cm) gilt bei Anordnung eines geprüften Brandschutzeinbauelements bzw. entsprechender Herdkonstruktion.\n\nVerbindungsstücke sind Rauchrohre, Poterien und Rauchkanäle von der Feuerstätte zum Rauchfang. Sie müssen aus nichtbrennbaren Baustoffen (A) gefertigt sein.\n\nBei Durchführung durch Wände gelten gesonderte Anforderungen – siehe TRVB H105 Punkt 4.2.", "quelle": "TRVB H105, Punkt 3.2.4.1 und Tabelle 3"}, {"id": "tarif_kehrung", "fragen": ["kehrtarif", "was kostet kehrung", "tarif kehrung", "objekttarif", "preis kehrung", "höchsttarif", "arbeitsentgelt"], "titel": "Höchsttarife Kehrung (Burgenland)", "antwort": "LGBl. 98/2025, Anlage 1, Abschnitt A – Objekttarif und Arbeitsentgelt:\n\nEINZELRAUMHEIZGERÄTE BIS 10 kW\n   Objekttarif ......................... 21,95 €\n   Arbeitsentgelt erste drei Geschosse .. 11,88 €\n   jedes weitere Geschoss ............... 3,95 €\n\nEINZELRAUMHEIZGERÄTE ÜBER 10 bis 50 kW\nsowie Raumheizgeräte bis 50 kW – eigene Position, siehe Anlage 1 Z 2.\n\nEs handelt sich um HÖCHSTtarife – sie dürfen nicht überschritten, wohl aber unterschritten werden. Alle Beträge netto zuzüglich USt.\n\nDie vollständige Tarifliste steht im Originaltext unten.", "quelle": "LGBl. Nr. 98/2025, Anlage 1"}, {"id": "strafen", "fragen": ["strafe", "strafen", "bußgeld", "verwaltungsstrafe", "was passiert bei verletzung", "kehrpflichtverletzung folgen"], "titel": "Strafbestimmungen", "antwort": "§ 21 Bgld. KehrG 2022:\n\nRAUCHFANGKEHRER/IN (Abs. 1) – bis 2.000 €\nBei Verletzung der Pflichten aus:\n• §§ 5 und 6 (Verantwortlichkeit, Überprüfung/Kehrung)\n• § 7 (Ausbrennen und Ausschlagen)\n• § 8 Abs. 2 und 3 (Ablagerungen mindestens einmal im Kalenderjahr)\n• §§ 7, 9, 10, 11, 12, 14, 16, 18, 19\n\nVERFÜGUNGSBERECHTIGTE (Abs. 2)\nBei Verletzung des § 4 (Überprüfungen und Reinigungen dulden), der Anzeigepflicht nach § 6 Abs. 5 sowie bei unterlassener Entfernung von Ablagerungen aus Wohn- und Betriebsräumen.\n\nZuständig ist die Bezirksverwaltungsbehörde. Die Strafe entfällt, wenn ein gerichtlich strafbarer Tatbestand vorliegt – dann greift das Strafrecht.", "quelle": "§ 21 Bgld. Kehrgesetz 2022"}, {"id": "ablagerungen", "fragen": ["ablagerungen", "ruß ausräumen", "kamintür", "wer räumt aus", "russ entfernen"], "titel": "Entfernen von Ablagerungen", "antwort": "§ 8 Bgld. KehrG 2022 – Zuständigkeiten:\n\nEIGENTÜMER/IN (Abs. 1)\nStellt die erforderlichen Gefäße zur Unterbringung der Ablagerungen bereit.\n\nRAUCHFANGKEHRER/IN (Abs. 2)\nRäumt Ablagerungen mindestens EINMAL IM KALENDERJAHR oder nach Bedarf aus. Räumt die verfügungsberechtigte Person selbst aus, hat sich der Rauchfangkehrer im Zuge einer Überprüfung oder Kehrung von der ordnungsgemäßen Vornahme zu überzeugen.\n\nENTFERNUNG AUS KAMINTÜREN (Abs. 3)\n• in Wohn- und Betriebsräumen → verfügungsberechtigte Person\n• in allen übrigen Räumen → Eigentümer/in\n\nDer Eigentümer hat zudem für die gefahrlose Verwahrung bis zur Abfuhr zu sorgen.\n\nDie Unterlassung ist nach § 21 Abs. 1 Z 3 strafbewehrt.", "quelle": "§ 8 Bgld. Kehrgesetz 2022"}, {"id": "reinigung_feuerstaette", "fragen": ["reinigung feuerstätte", "wer reinigt", "feuerstätte reinigen", "ölofen reinigung", "fachunternehmen reinigung"], "titel": "Reinigung der Feuerstätte – wer und wie oft", "antwort": "Zu unterscheiden von der Kehrung der Abgasanlage:\n\nFESTE BRENNSTOFFE und ÖLÖFEN MIT VERDAMPFUNGSBRENNERN\nsamt Verbindungsstücken sowie Be- und Entlüftungseinrichtungen:\n→ mindestens EINMAL JÄHRLICH\n→ durch die verfügungsberechtigte Person selbst oder ein gewerberechtlich befugtes Fachunternehmen\n\nFLÜSSIGE und/oder GASFÖRMIGE BRENNSTOFFE\n(ausgenommen Ölöfen mit Verdampfungsbrennern) samt Verbindungsstücken:\n→ mindestens ALLE ZWEI JAHRE\n→ zwingend durch ein gewerberechtlich befugtes Fachunternehmen\n→ schriftlicher Nachweis, mindestens drei Jahre zur Einsicht aufzubewahren\n\nDiese Reinigung ist nicht dem Rauchfangkehrer vorbehalten – sie trifft die verfügungsberechtigte Person.", "quelle": "§ 9 Abs. 2 und 3 Bgld. Kehrgesetz 2022"}, {"id": "heizperiode", "fragen": ["heizperiode", "wann ist heizperiode", "heizsaison"], "titel": "Heizperiode", "antwort": "Heizperiode = Zeitraum vom 1. OKTOBER bis 30. APRIL des Folgejahres.\n\nBedeutung für die Kehrfristen: Die dreimal bzw. zweimal jährlichen Kehrungen nach § 6 Abs. 1 Z 1 und 2 setzen voraus, dass die Anlage AUSSCHLIESSLICH in der Heizperiode beheizt wird.\n\nWird auch außerhalb beheizt, ist nach § 6 Abs. 2 eine zusätzliche Überprüfung und/oder Kehrung in diesem Zeitraum durchzuführen.", "quelle": "§ 1 Z 9 Bgld. Kehrgesetz 2022"}, {"id": "feuerstaettenbeschau", "fragen": ["feuerstättenbeschau", "beschau", "brandsicherheit prüfen", "was ist feuerstättenbeschau"], "titel": "Feuerstättenbeschau", "antwort": "Die Feuerstättenbeschau ist die Überprüfung der benützten Feuerstätte samt Verbindungsstück auf ihre BRANDSICHERHEIT (§ 9 Abs. 1).\n\nSie umfasst nach der Begriffsbestimmung des § 1:\n• Querschnitt von Verbindungsstück, Anschlussstelle und gesamter Abgasanlage\n• Prüfung, ob ausreichende Verbrennungsluft für die jeweilige Feuerstätte vorhanden ist\n• Betriebs- und Brandsicherheit zur Abwehr von Gefahren für Leib, Leben, Umwelt und Gesundheit\n\nZusätzlich sind nach § 6 Abs. 3 die vorbehaltenen Kehrgegenstände im Zuge jeder gesetzlichen Überprüfung und/oder Kehrung auf ihre Brandsicherheit zu prüfen.\n\nDurchführung: § 10, Mängelbehebung: § 11, Nachbeschau: § 12.", "quelle": "§§ 1, 9 und 10 Bgld. Kehrgesetz 2022"}, {"id": "kehrbuch_kehrplan", "fragen": ["kehrbuch", "kehrplan", "dokumentation", "aufzeichnungen", "unterlagen führen"], "titel": "Kehrplan und Kehrbuch", "antwort": "KEHRPLAN – § 17 Bgld. KehrG\nVon der zuständigen Rauchfangkehrerin bzw. dem zuständigen Rauchfangkehrer zu erstellen.\n\nKEHRBUCH – § 18 Bgld. KehrG\nFührungspflicht; die Richtigkeit der Eintragungen ist zu bestätigen (vgl. § 5 Abs. 2 letzter Satz).\n\nWECHSEL – § 19\nBeim Wechsel der zuständigen Rauchfangkehrerin oder des zuständigen Rauchfangkehrers sind die Unterlagen zu übergeben.\n\nDie Verletzung der Pflichten aus §§ 18 und 19 ist nach § 21 Abs. 1 Z 4 mit Geldstrafe bis 2.000 € bedroht.\n\nErgänzend: Das Heizungsanlagenbuch nach ÖNORM H 7510-1 ist beim Betreiber aufzubewahren.", "quelle": "§§ 17, 18, 19 und 21 Bgld. Kehrgesetz 2022"}, {"id": "ausbrennen", "fragen": ["ausbrennen", "ausschlagen", "rauchfang ausbrennen", "glanzruß"], "titel": "Ausbrennen und Ausschlagen", "antwort": "§ 7 Bgld. KehrG regelt das Ausbrennen und Ausschlagen von Abgasanlagen und fest verlegten Verbindungsstücken (Poterien).\n\nDie ordnungsgemäße Vorgangsweise ist einzuhalten – bei Verstoß droht nach § 21 Abs. 1 Z 2 eine Geldstrafe bis 2.000 €.\n\nDie dabei anfallenden Ablagerungen fallen unter § 8: Der Eigentümer stellt die Gefäße bereit, der Rauchfangkehrer räumt mindestens einmal im Kalenderjahr aus.\n\nDer vollständige Wortlaut des § 7 steht im Originaltext unten.", "quelle": "§ 7 Bgld. Kehrgesetz 2022"}, {"id": "dichtheitspruefung", "fragen": ["dichtheitsprüfung", "betriebsdichtheit", "dichtheit prüfen"], "titel": "Betriebsdichtheitsprüfung", "antwort": "§ 13 Bgld. KehrG regelt die erstmalige und die wiederkehrende Betriebsdichtheitsprüfung.\n\nFür Bestandsanlagen sieht § 22 (Übergangsbestimmungen) eine Frist vor, innerhalb derer die Prüfung nach § 13 Abs. 2 erstmals durchzuführen ist.\n\nDie Verletzung der Pflichten aus § 13 ist nach § 21 strafbewehrt.\n\nDer genaue Wortlaut samt Fristen steht im Originaltext unten – bitte im Einzelfall dort nachlesen.", "quelle": "§§ 13 und 22 Bgld. Kehrgesetz 2022"}, {"id": "unbenutzte_anlage", "fragen": ["unbenützt", "nicht benutzt", "stillgelegt", "außer betrieb", "leerstand"], "titel": "Länger unbenützte Feuerungsanlagen", "antwort": "Feuerungsanlagen, die voraussichtlich LÄNGER ALS EIN JAHR unbenützt sind, unterliegen nicht der Überprüfungs- und/oder Kehrpflicht (§ 6 Abs. 5).\n\nDie Nichtbenützung ist anzuzeigen – ebenso die Wiederbenützung.\n\nDie Verletzung der Anzeigepflicht über die Wiederbenützung ist nach § 21 Abs. 2 Z 1 für die verfügungsberechtigte Person strafbewehrt.", "quelle": "§ 6 Abs. 5 Bgld. Kehrgesetz 2022"}, {"id": "ferienhaus", "fragen": ["ferienhaus", "ferienwohnung", "wochenendhaus", "saisonal bewohnt"], "titel": "Ferienhäuser – verringerte Fristen", "antwort": "Für Kehrobjekte, die AUSSCHLIESSLICH vom 1. Mai bis 30. September bewohnt und beheizt werden (Ferienhäuser), gilt nach § 6 Abs. 4:\n\n• Anlagen nach Abs. 1 Z 1 und Z 2  →  einmal im Jahr\n   (statt dreimal bzw. zweimal jährlich)\n\n• Anlagen nach Abs. 1 Z 3  →  einmal alle zwei Jahre\n   (statt einmal jährlich)\n\nMaßgeblich ist die ausschließliche Nutzung in diesem Zeitraum – wird auch außerhalb bewohnt und beheizt, gelten die regulären Fristen.", "quelle": "§ 6 Abs. 4 Bgld. Kehrgesetz 2022"}];
@@ -6420,6 +6484,7 @@ function show(id){
     setTimeout(_initSettings,100);
   }
   setTimeout(function(){try{if(typeof gKundeFill==='function')gKundeFill(id);}catch(e){}},80);
+  if(id==='mat'){ try{ matInit(); }catch(e){} }
 }
 
 
@@ -7984,6 +8049,8 @@ function buildA4Html(pid){
     html = buildWartHtml(); title = 'Wartungserinnerung';
   } else if(clean === 'kehr'){
     html = buildKehrHtml(); title = 'Kehrtarif KV';
+  } else if(clean === 'mat'){
+    html = buildMatHtml(); title = 'Materialaufnahme';
   } else if(clean === 'gesamt'){
     html = buildGkvHtml(); title = 'Kostenvoranschlag';
   } else if(clean === 'b8201'){
@@ -8011,7 +8078,10 @@ function buildA4Html(pid){
 // ═══════════════════════════════════════════════════════════════
 
 
-var VPRICES={"pvr1":15.0,"pvr2":25.0,"pvr3":30.0,"s0":49.34,"s1":4.77,"s2":3.21,"s3":13.44,"s4":36.0,"s5":24.58,"s6":15.79,"s6b":24.58,"s7":24.67,"s7a":15.2,"s7b":14.3,"s8":24.58,"s9":24.58,"s10":17.58,"s11":69.92,"s11a":17.58,"s12":69.92,"s12b":105.0,"s12c":160.0,"s12d":105.0,"s12e":139.92,"s12f":125.0,"s13":17.58,"s13a":17.58,"s14":0.0,"s15":10.0,"s16":0.42,"s17":15.0,"r5":0.0,"r6":15.0,"h0":69.92,"h1":105.0,"h2":139.92,"h3":17.58,"h4":17.58,"r0":20.83,"r1":50.0,"r2":50.0,"r3":20.83,"r4":33.33,"m0":7.83,"m1":3.44,"m2":29.86,"m3":50.0,"m4":8.33,"m5":10.0,"m6":8.33,"m7":4.17,"m8":5.83,"m9":5.83,"m10":5.83,"m11":5.0,"m12":0.52,"m13":110.0,"m14":50.0,"m15":4.17,"m16":2.08,"m17":0,"g0":112.5,"g1":130.83,"g2":112.5,"b0":40.58,"b1":24.75,"b2":20.83,"b3":14.33,"b4":10.83,"b5":1.81};
+var VPRICES={"pvr1":15.0,"pvr2":25.0,"pvr3":30.0,"s0":49.34,"s1":4.77,"s2":3.21,"s3":13.44,"s4":36.0,"s5":24.58,"s6":15.79,"s6b":24.58,"s7":24.67,"s7a":15.2,"s7b":14.3,"s8":24.58,"s9":24.58,"s10":17.58,"s11":69.92,"s11a":17.58,"s12":69.92,"s12b":105.0,"s12c":160.0,"s12d":105.0,"s12e":139.92,"s12f":125.0,"s13":17.58,"s13a":17.58,"s14":0.0,"s15":10.0,"s16":0.42,"s17":15.0,"r5":0.0,"r6":15.0,"h0":69.92,"h1":105.0,"h2":139.92,"h3":17.58,"h4":17.58,"r0":20.83,"r1":50.0,"r2":50.0,"r3":20.83,"r4":33.33,"m0":7.83,"m1":3.44,"m2":29.86,"m3":50.0,"m4":8.33,"m5":10.0,"m6":8.33,"m7":4.17,"m8":5.83,"m9":5.83,"m10":5.83,"m11":5.0,"m12":0.52,"m13":110.0,"m14":50.0,"m15":4.17,"m16":2.08,"m17":0,"g0":112.5,"g1":130.83,"g2":112.5,"b0":40.58,"b1":24.75,"b2":20.83,"b3":14.33,"b4":10.83,"b5":1.81,
+  "fl1":33.33, "fl2":70.83, "fl3":104.17,
+  "fl4":120.83, "fl5":137.50, "fl6":15.42
+};
 var VBASE=Object.assign({},VPRICES);
 var VIDX=['pvr1', 'pvr2', 'pvr3', 's0', 's1', 's2', 's3', 's4', 's5', 's6', 's6b', 's7', 's7a', 's7b', 's8', 's9', 's10', 's11', 's11a', 's12', 's12b', 's12c', 's12d', 's12e', 's12f', 's13', 's13a', 'r0', 'r1', 'r2', 'r3', 'r4', 'm0', 'm1', 'm2', 'm3', 'm4', 'm5', 'm6', 'm7', 'm8', 'm9', 'm10', 'm11', 'm12', 'm13', 'm14', 'm15', 'm16'];
 
@@ -8639,7 +8709,7 @@ function doPrint(){
     '.contact{font-size:8.5px!important}',
     '.kv-title{font-size:13px!important}',
     '.kv-sub{font-size:8px!important}',
-    '.meta input{font-size:9px!important}',
+    '.meta input{font-size:16px!important}',
     '.mrow label{font-size:8px!important}',
     '.ig{gap:6px!important;margin-bottom:6px!important}',
     '.ibox{padding:5px 7px!important}',
@@ -8651,7 +8721,7 @@ function doPrint(){
     'thead th{font-size:9px!important;padding:3px 4px!important}',
     'td{padding:2px 4px!important;font-size:9.5px!important}',
     'td.bez{font-size:9px!important}',
-    'input.ep{font-size:10px!important}',
+    'input.ep{font-size:16px!important}',
     '.tot-wrap{padding:6px 10px!important;margin-top:5px!important}',
     '.tot-row{font-size:10px!important;padding:2px 0!important}',
     '.tot-row:last-child{font-size:12px!important}',
@@ -9081,10 +9151,15 @@ function resetKehrKV() {
 
 // ── Verrechnung zurücksetzen ──────────────────────────────────
 function resetVerr(){
-  if(!confirm('Verrechnungsblatt zurücksetzen?')) return;
+  if(!confirm('Eingaben zur\u00fccksetzen?\n\nMengen und Rabatte werden geleert.\nDie Preise bleiben unver\u00e4ndert.')) return;
   var pg=document.getElementById('page-verr');
   if(!pg) return;
+  /* Nur Eingaben leeren - Preise (EP) bleiben unveraendert.
+     EP-Felder tragen die Klasse .verr-ep-inp bzw. die id vlbl-*   */
   pg.querySelectorAll('input[type=number]').forEach(function(el){
+    if(el.classList.contains('verr-ep-inp')) return;      /* Preis behalten */
+    if(el.id && el.id.indexOf('vlbl-') === 0) return;     /* Preis behalten */
+    if(el.id && el.id.indexOf('vep-')  === 0) return;     /* Preis behalten */
     el.value='';
   });
   pg.querySelectorAll('[id^="vgp-"]').forEach(function(el){
@@ -39115,6 +39190,255 @@ function kiTrefferUmschalten(btn){
     }, 120);
   }catch(e){}
 }
+
+/* ═══ MATERIALAUFNAHME-PROTOKOLL ══════════════════════════════════ */
+var MAT_STANDARD = [
+  ['Dichtung 2-Loch 127,5\u2013154 mm','St\u00fcck',4.50],
+  ['Dichtung 2-Loch 185\u2013200 mm','St\u00fcck',5.80],
+  ['Dichtung 1-Loch 86\u2013150 mm','St\u00fcck',3.90],
+  ['Keramikfaser 6 mm / 0,50 m','St\u00fcck',7.20],
+  ['Keramikfaser 8 mm / 0,50 m','St\u00fcck',8.40],
+  ['Keramikfaser 10 mm / 0,50 m','St\u00fcck',9.60],
+  ['Keramikfaser 12 mm / 0,50 m','St\u00fcck',10.80],
+  ['Kamint\u00fcrl','St\u00fcck',50.00],
+  ['Rauchrohr / Verbindungsst\u00fcck','St\u00fcck',0],
+  ['Rauchrohrbogen','St\u00fcck',0],
+  ['Reinigungs\u00f6ffnung / Putzt\u00fcr','St\u00fcck',0],
+  ['Z\u00fcndelektrode','St\u00fcck',0],
+  ['Ionisationselektrode','St\u00fcck',0],
+  ['Brennerd\u00fcse','St\u00fcck',0],
+  ['\u00d6lfilter','St\u00fcck',0],
+  ['Umw\u00e4lzpumpe','St\u00fcck',0],
+  ['Ausdehnungsgef\u00e4\u00df','St\u00fcck',0],
+  ['Sicherheitsventil','St\u00fcck',0],
+  ['Manometer','St\u00fcck',0],
+  ['Schamottstein','St\u00fcck',0],
+  ['Ofenrost','St\u00fcck',0],
+  ['Sichtscheibe / Glas','St\u00fcck',0],
+  ['Glasdichtband','lfm',0],
+  ['Arbeitszeit Monteur','Std.',49.34]
+];
+
+function matZeileNeu(bez, einh, ep){
+  var tb = document.getElementById('mat-body');
+  if(!tb) return;
+  var i = tb.children.length + 1;
+  var tr = document.createElement('tr');
+  tr.className = 'mat-zeile';
+  tr.style.borderBottom = '1px solid #F1F5F9';
+  tr.innerHTML =
+    '<td style="text-align:center;padding:4px 3px">'
+      + '<input type="checkbox" class="mat-chk" checked onchange="matRechnen()"></td>'
+    + '<td style="padding:4px 6px"><input type="text" class="mat-bez" value="'
+      + (bez ? String(bez).replace(/"/g,'&quot;') : '')
+      + '" placeholder="Material / Ersatzteil" style="width:100%;border:1px solid #E2E8F0;border-radius:4px;padding:5px;box-sizing:border-box"></td>'
+    + '<td style="padding:4px 3px"><input type="number" min="0" step="0.5" class="mat-menge" placeholder="0" '
+      + 'oninput="matRechnen()" style="width:100%;text-align:center;border:1px solid #E2E8F0;border-radius:4px;padding:5px;box-sizing:border-box"></td>'
+    + '<td style="padding:4px 3px"><input type="text" class="mat-einh" value="' + (einh||'St\u00fcck')
+      + '" style="width:100%;text-align:center;border:1px solid #E2E8F0;border-radius:4px;padding:5px;box-sizing:border-box"></td>'
+    + '<td style="padding:4px 3px"><input type="number" min="0" step="0.01" class="mat-ep" value="'
+      + (ep ? Number(ep).toFixed(2) : '')
+      + '" placeholder="0,00" oninput="matRechnen()" style="width:100%;text-align:right;border:1px solid #E2E8F0;border-radius:4px;padding:5px;box-sizing:border-box"></td>'
+    + '<td style="text-align:right;padding:4px 6px;font-weight:600;color:#166534" class="mat-gp">\u2014</td>';
+  tb.appendChild(tr);
+  matRechnen();
+  return tr;
+}
+
+function matVorlage(){
+  var tb = document.getElementById('mat-body');
+  if(!tb) return;
+  if(tb.children.length && !confirm('Standardteile anh\u00e4ngen?\n\nBestehende Zeilen bleiben erhalten.')) return;
+  MAT_STANDARD.forEach(function(z){ matZeileNeu(z[0], z[1], z[2]); });
+}
+
+function matRechnen(){
+  var netto = 0;
+  document.querySelectorAll('#mat-body tr').forEach(function(tr){
+    var an = tr.querySelector('.mat-chk');
+    var mg = parseFloat((tr.querySelector('.mat-menge')||{}).value) || 0;
+    var ep = parseFloat((tr.querySelector('.mat-ep')||{}).value) || 0;
+    var gp = tr.querySelector('.mat-gp');
+    var sum = (an && an.checked) ? mg * ep : 0;
+    if(sum > 0){
+      gp.textContent = sum.toFixed(2).replace('.', ',') + '\u00a0\u20ac';
+      gp.style.color = '#166534';
+      netto += sum;
+    } else {
+      gp.textContent = '\u2014';
+      gp.style.color = '#bbb';
+    }
+    tr.style.opacity = (an && an.checked) ? '1' : '.45';
+  });
+  var ust = netto * 0.20, brutto = netto + ust;
+  function setz(id, w){
+    var e = document.getElementById(id);
+    if(e) e.innerHTML = w.toFixed(2).replace('.', ',') + '&nbsp;&euro;';
+  }
+  setz('mat-net', netto); setz('mat-ust', ust); setz('mat-brutto', brutto);
+}
+
+function matKvUmschalten(){
+  var d = document.getElementById('mat-kv-detail');
+  var j = document.getElementById('mat-kv-ja');
+  if(d) d.style.display = (j && j.checked) ? 'block' : 'none';
+}
+function matBestUmschalten(){
+  var d = document.getElementById('mat-best-detail');
+  var j = document.getElementById('mat-best-ja');
+  if(d) d.style.display = (j && j.checked) ? 'block' : 'none';
+}
+
+/* Beim ersten Oeffnen fuenf leere Zeilen bereitstellen */
+function matInit(){
+  var tb = document.getElementById('mat-body');
+  if(tb && tb.children.length === 0){
+    for(var i = 0; i < 5; i++) matZeileNeu();
+  }
+  var d = document.getElementById('mat-datum');
+  if(d && !d.value){ try{ d.value = _today(); }catch(e){} }
+}
+
+function buildMatHtml(){
+  function g(id){ var e=document.getElementById(id); return e ? (e.value||'') : ''; }
+  function t(sel){ var e=document.querySelector(sel); return e ? (e.value||'') : ''; }
+  var nr=g('mat-nr')||'\u2014', datum=g('mat-datum')||_today(), bearb=g('mat-bearb');
+  var body=_hdrHtml('Materialaufnahme \u2013 Protokoll','Nr.\u00a0'+nr,datum);
+
+  var kd=t('.kd-name'), str=t('.kd-str'), plz=t('.kd-plz'), tel=t('.kd-tel');
+  if(kd||str){
+    body+='<div style="background:#FFFBEB;border-left:3px solid #B45309;padding:8px 10px;margin-bottom:10px;font-size:10px">';
+    body+='<b>Auftraggeber/in:</b> '+kd+(str?' \u00b7 '+str:'')+(plz?' \u00b7 '+plz:'')+(tel?' \u00b7 '+tel:'')+'</div>';
+  }
+  body+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;font-size:10px">';
+  body+='<div style="border:1px solid #E2E8F0;border-radius:5px;padding:7px">'
+      + '<b>Ger\u00e4t</b><br>'+g('mat-geraet')
+      + (g('mat-hersteller')?'<br>Hersteller: '+g('mat-hersteller'):'')
+      + (g('mat-modell')?'<br>Typ: '+g('mat-modell'):'')
+      + (g('mat-serie')?'<br>Serien-Nr.: '+g('mat-serie'):'')
+      + (g('mat-baujahr')?'<br>Baujahr: '+g('mat-baujahr'):'')
+      + (g('mat-kw')?'<br>Leistung: '+g('mat-kw')+' kW':'')+'</div>';
+  var kvJa=(document.getElementById('mat-kv-ja')||{}).checked;
+  var beJa=(document.getElementById('mat-best-ja')||{}).checked;
+  body+='<div style="border:1px solid #E2E8F0;border-radius:5px;padding:7px">'
+      + '<b>Weiteres Vorgehen</b><br>'
+      + 'Kostenvoranschlag: <b>'+(kvJa?'JA':'nein')+'</b>'
+      + (kvJa?' ('+g('mat-kv-weg')+(g('mat-kv-gueltig')?', g\u00fcltig bis '+g('mat-kv-gueltig'):'')+')':'')
+      + '<br>Bestellung: <b>'+(beJa?'JA':'nein')+'</b>'
+      + (beJa?'<br>Lieferant: '+g('mat-lieferant')
+             +(g('mat-best-datum')?'<br>Bestellt am: '+g('mat-best-datum'):'')
+             +(g('mat-liefertermin')?'<br>Liefertermin: '+g('mat-liefertermin'):'')
+             +'<br>Dringlichkeit: '+g('mat-dring'):'')
+      + '</div></div>';
+
+  var zeilen='', n=0, netto=0;
+  document.querySelectorAll('#mat-body tr').forEach(function(tr){
+    var an=tr.querySelector('.mat-chk');
+    if(!an||!an.checked) return;
+    var bez=(tr.querySelector('.mat-bez')||{}).value||'';
+    var mg=parseFloat((tr.querySelector('.mat-menge')||{}).value)||0;
+    var ep=parseFloat((tr.querySelector('.mat-ep')||{}).value)||0;
+    if(!bez.trim() || mg<=0) return;
+    var gp=mg*ep; netto+=gp; n++;
+    zeilen+='<tr style="font-size:10px;border-bottom:.5px solid #E2E8F0">'
+      +'<td style="padding:4px 6px">'+bez+'</td>'
+      +'<td style="text-align:center;padding:4px">'+mg+'</td>'
+      +'<td style="text-align:center;padding:4px">'+((tr.querySelector('.mat-einh')||{}).value||'')+'</td>'
+      +'<td style="text-align:right;padding:4px">'+ep.toFixed(2).replace('.',',')+'\u00a0\u20ac</td>'
+      +'<td style="text-align:right;padding:4px 6px;font-weight:600">'+gp.toFixed(2).replace('.',',')+'\u00a0\u20ac</td></tr>';
+  });
+  if(!n){
+    body+='<div style="padding:16px;text-align:center;color:#90A4AE;border:1px dashed #CBD5E1;border-radius:6px">Kein Material erfasst.</div>';
+  } else {
+    body+='<table style="width:100%;border-collapse:collapse;margin-bottom:12px">'
+       +'<thead><tr style="background:#B45309;color:#fff;font-size:10px">'
+       +'<th style="text-align:left;padding:5px 6px">Material / Ersatzteil</th>'
+       +'<th style="text-align:center;padding:5px">Menge</th>'
+       +'<th style="text-align:center;padding:5px">Einh.</th>'
+       +'<th style="text-align:right;padding:5px">EP netto</th>'
+       +'<th style="text-align:right;padding:5px 6px">GP netto</th></tr></thead>'
+       +'<tbody>'+zeilen+'</tbody></table>';
+    var ust=netto*0.20;
+    body+='<div style="display:flex;justify-content:flex-end;margin-bottom:12px"><div style="min-width:200px;font-size:11px">'
+       +'<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:.5px solid #E2E8F0"><span>Netto</span><b>'+netto.toFixed(2).replace('.',',')+'\u00a0\u20ac</b></div>'
+       +'<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:.5px solid #E2E8F0"><span>+ 20\u00a0% USt.</span><b>'+ust.toFixed(2).replace('.',',')+'\u00a0\u20ac</b></div>'
+       +'<div style="display:flex;justify-content:space-between;background:#1A2B45;color:#fff;padding:6px 8px;border-radius:4px;margin-top:4px"><b>GESAMT brutto</b><b style="font-size:14px">'+(netto+ust).toFixed(2).replace('.',',')+'\u00a0\u20ac</b></div>'
+       +'</div></div>';
+  }
+
+  var bem=g('mat-bemerk');
+  if(bem) body+='<div style="border:1px solid #E2E8F0;border-radius:5px;padding:8px;margin-bottom:10px;font-size:10px"><b>Anmerkungen:</b><br>'+bem.replace(/\n/g,'<br>')+'</div>';
+
+  var fotos=document.querySelectorAll('#foto-grid-mat img');
+  if(fotos.length){
+    body+='<div style="font-size:10px;font-weight:700;margin:8px 0 5px">Fotos ('+fotos.length+')</div>';
+    body+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:10px">';
+    fotos.forEach(function(im){ body+='<img src="'+im.src+'" style="width:100%;border:1px solid #E2E8F0;border-radius:4px">'; });
+    body+='</div>';
+  }
+
+  body+='<div style="font-size:9px;color:#90A4AE;margin-bottom:12px">Preise netto exkl. 20\u00a0% USt. \u00b7 unverbindliche Materialaufnahme \u00b7 Grieer Energietechnik OG</div>';
+  body+='<div class="sig-grid"><div><div class="sig-box"></div><div class="sig-lbl">Grieer Rauchfangkehrermeister \u00b7 '+(bearb||'')+'</div></div>';
+  body+='<div><div class="sig-box"></div><div class="sig-lbl">Auftraggeber/in \u00b7 Datum: ____________</div></div></div>';
+  return _wrapHtml('Materialaufnahme \u2013 Nr. '+nr, body);
+}
+
+/* ═══ AUTOMATISCHE AKTUALISIERUNG ═════════════════════════════════
+   Prueft im Hintergrund, ob auf dem Server eine neuere Fassung
+   liegt. Wenn ja: Hinweis mit einem Knopf zum Laden. Damit
+   entfaellt das manuelle Neuladen am Handy.                      */
+function grieerUpdatePruefen(still){
+  try{
+    if(location.protocol === 'file:') return;      /* lokal sinnlos */
+    fetch(location.pathname + '?v=' + Date.now(), {cache:'no-store'})
+      .then(function(r){ return r.ok ? r.text() : null; })
+      .then(function(txt){
+        if(!txt) return;
+        var m = txt.match(/var CURRENT_VER = "([^"]+)"/);
+        if(!m) return;
+        var serverVer = m[1];
+        if(typeof CURRENT_VER_AKTIV !== 'undefined' && serverVer !== CURRENT_VER_AKTIV){
+          grieerUpdateBanner(serverVer);
+        } else if(!still){
+          try{ _grieerToast('\u2713 Sie haben die neueste Fassung', '#16A34A', 2200); }catch(e){}
+        }
+      }).catch(function(){});
+  }catch(e){}
+}
+
+function grieerUpdateBanner(neueVer){
+  if(document.getElementById('grieer-upd-banner')) return;
+  var d = document.createElement('div');
+  d.id = 'grieer-upd-banner';
+  d.style.cssText = 'position:fixed;left:10px;right:10px;bottom:calc(14px + env(safe-area-inset-bottom,0px));'
+    + 'background:#16A34A;color:#fff;border-radius:12px;padding:13px 15px;z-index:99998;'
+    + 'box-shadow:0 6px 22px rgba(0,0,0,.3);font-size:13px;display:flex;align-items:center;'
+    + 'gap:11px;justify-content:space-between;flex-wrap:wrap';
+  d.innerHTML = '<div style="flex:1;min-width:150px;line-height:1.45">'
+    + '<b>Neue Fassung verf\u00fcgbar</b><br>'
+    + '<span style="font-size:11px;opacity:.9">' + neueVer + '</span></div>'
+    + '<div style="display:flex;gap:7px">'
+    + '<button onclick="grieerJetztLaden()" style="min-height:42px;background:#fff;color:#166534;'
+    + 'border:none;border-radius:8px;padding:0 15px;font-size:13px;font-weight:700;cursor:pointer">Jetzt laden</button>'
+    + '<button onclick="this.closest(\'#grieer-upd-banner\').remove()" style="min-height:42px;'
+    + 'background:transparent;color:#fff;border:1px solid rgba(255,255,255,.55);border-radius:8px;'
+    + 'padding:0 12px;font-size:13px;cursor:pointer">Sp\u00e4ter</button></div>';
+  document.body.appendChild(d);
+}
+
+function grieerJetztLaden(){
+  try{
+    if('caches' in window){ caches.keys().then(function(k){ k.forEach(function(n){ caches.delete(n); }); }); }
+  }catch(e){}
+  setTimeout(function(){ location.reload(true); }, 200);
+}
+
+/* Alle 10 Minuten still pruefen, ausserdem beim Zurueckholen der App */
+setTimeout(function(){ grieerUpdatePruefen(true); }, 8000);
+setInterval(function(){ grieerUpdatePruefen(true); }, 600000);
+document.addEventListener('visibilitychange', function(){
+  if(!document.hidden) setTimeout(function(){ grieerUpdatePruefen(true); }, 1500);
+});
 </script>
 
 
@@ -39499,6 +39823,165 @@ function kiTrefferUmschalten(btn){
   <div id="pv-info-title" style="font-size:15px;font-weight:700;color:#1A2B45;margin-bottom:8px"></div>
   <div id="pv-info-text" style="font-size:13px;color:#374151;line-height:1.7"></div>
   <button onclick="document.getElementById('pv-info-overlay').style.display='none'" style="margin-top:14px;width:100%;padding:11px;background:#1A2B45;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;min-height:44px">OK</button>
+</div>
+</div>
+
+
+<div class="pg" id="page-mat">
+<div class="card">
+  <div class="kv-hdr">
+    <img class="logo" src="data:image/png;base64,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" alt="Grieer">
+    <div class="contact">
+      Neugeb&auml;u 10, 7201 Neud&ouml;rfl a.d. Leitha<br>
+      +43&nbsp;(0)&nbsp;2622&nbsp;77062 &nbsp;|&nbsp;
+      <a href="mailto:office@grieer.com">office@grieer.com</a> &nbsp;|&nbsp; www.grieer.com
+    </div>
+  </div>
+
+  <div class="title-row">
+    <div>
+      <div class="kv-title" style="color:#B45309">Materialaufnahme &ndash; Protokoll</div>
+      <div class="kv-sub">Ben&ouml;tigtes Material je Ger&auml;t &middot; Kostenvoranschlag &amp; Bestellung</div>
+    </div>
+    <div class="meta">
+      <div class="mrow"><label>Nr.</label><input type="text" id="mat-nr" placeholder="MA-2026-001"></div>
+      <div class="mrow"><label>Datum</label><input type="text" class="adate" id="mat-datum"></div>
+      <div class="mrow"><label>Aufgenommen von</label><input type="text" id="mat-bearb"></div>
+    </div>
+  </div>
+
+  <div class="ig" style="grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+    <div class="ibox">
+      <div class="btl">Kundendaten</div>
+      <div class="frow"><label>Kd.-Nr.</label><input type="text" class="fin kd-nr" placeholder="z.B. 2026-0001"></div>
+      <div class="frow"><label>Name / Firma</label><input type="text" class="fin kd-name" placeholder="Name / Firma"></div>
+      <div class="frow"><label>Adresse</label><input type="text" class="fin kd-str" placeholder="Stra&szlig;e, Hausnr."></div>
+      <div class="frow"><label>PLZ / Ort</label><input type="text" class="fin kd-plz" placeholder="PLZ Ort"></div>
+      <div class="frow"><label>Telefon</label><input type="text" class="fin kd-tel" placeholder="+43 ..."></div>
+      <div class="frow"><label>E-Mail</label><input type="text" class="fin kd-email" placeholder="name@beispiel.at"></div>
+    </div>
+    <div class="ibox ibox-b">
+      <div class="btl btl-b">Ger&auml;t / Anlage</div>
+      <div class="frow"><label>Ger&auml;teart</label>
+        <select class="fin-sel" id="mat-geraet">
+          <option>Gas-Heizkessel (B-Ger&auml;t)</option>
+          <option>Gastherme (C-Ger&auml;t)</option>
+          <option>Kombitherme</option>
+          <option>Pelletskessel</option>
+          <option>St&uuml;ckholzkessel</option>
+          <option>Hackgutkessel</option>
+          <option>&Ouml;lkessel</option>
+          <option>Kachelofen</option>
+          <option>Kaminofen</option>
+          <option>Herd / K&uuml;chenofen</option>
+          <option>L&uuml;ftungsanlage</option>
+          <option>Rauchfang / Abgasanlage</option>
+          <option>Sonstiges</option>
+        </select>
+      </div>
+      <div class="frow"><label>Hersteller</label><input type="text" class="fin" id="mat-hersteller" placeholder="z.B. Vaillant"></div>
+      <div class="frow"><label>Modell / Typ</label><input type="text" class="fin" id="mat-modell" placeholder="lt. Typenschild"></div>
+      <div class="frow"><label>Serien-Nr.</label><input type="text" class="fin" id="mat-serie" placeholder="lt. Typenschild"></div>
+      <div class="frow"><label>Baujahr</label><input type="text" class="fin" id="mat-baujahr" placeholder="z.B. 2015"></div>
+      <div class="frow"><label>Leistung (kW)</label><input type="text" class="fin" id="mat-kw" placeholder="z.B. 24"></div>
+      <div class="frow"><label>Objekt-Adresse</label><input type="text" class="fin" id="mat-objadr" placeholder="falls abweichend"></div>
+    </div>
+  </div>
+
+  <div class="ibox" style="margin-bottom:10px">
+    <div class="btl">Ben&ouml;tigtes Material</div>
+    <div class="tbl-wrap">
+      <table style="width:100%;border-collapse:collapse" id="mat-tabelle">
+        <thead><tr style="background:#B45309;color:#fff;font-size:10px">
+          <th style="text-align:center;padding:5px 3px;width:34px">&#10003;</th>
+          <th style="text-align:left;padding:5px 6px">Material / Ersatzteil</th>
+          <th style="text-align:center;padding:5px 3px;width:64px">Menge</th>
+          <th style="text-align:center;padding:5px 3px;width:60px">Einheit</th>
+          <th style="text-align:right;padding:5px 6px;width:78px">EP netto</th>
+          <th style="text-align:right;padding:5px 6px;width:82px">GP netto</th>
+        </tr></thead>
+        <tbody id="mat-body"></tbody>
+      </table>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+      <button onclick="matZeileNeu()" style="flex:1;min-width:150px;min-height:44px;background:#B45309;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">+ Zeile hinzuf&uuml;gen</button>
+      <button onclick="matVorlage()" style="flex:1;min-width:150px;min-height:44px;background:#F1F5F9;color:#334155;border:1px solid #CBD5E1;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">&#9776; Standardteile</button>
+    </div>
+    <div class="tot-wrap" style="margin-top:10px">
+      <div class="tot-row"><span>Materialsumme netto</span><span id="mat-net">0,00&nbsp;&euro;</span></div>
+      <div class="tot-row"><span>USt. 20&nbsp;%</span><span id="mat-ust">0,00&nbsp;&euro;</span></div>
+    </div>
+    <div class="grand">
+      <span style="font-size:14px;font-weight:600">GESAMT brutto</span>
+      <span style="font-size:22px;font-weight:700" id="mat-brutto">0,00&nbsp;&euro;</span>
+    </div>
+  </div>
+
+  <div class="ig" style="grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+    <div class="ibox" style="border-color:#2563EB">
+      <div class="btl" style="background:#2563EB">Kostenvoranschlag senden?</div>
+      <label style="display:flex;align-items:center;gap:10px;min-height:44px;font-size:13px;cursor:pointer">
+        <input type="radio" name="mat-kv" id="mat-kv-ja" value="ja" onchange="matKvUmschalten()"> Ja &ndash; KV erstellen und senden
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;min-height:44px;font-size:13px;cursor:pointer">
+        <input type="radio" name="mat-kv" id="mat-kv-nein" value="nein" checked onchange="matKvUmschalten()"> Nein
+      </label>
+      <div id="mat-kv-detail" style="display:none;margin-top:6px">
+        <div class="frow"><label>Versandweg</label>
+          <select class="fin-sel" id="mat-kv-weg">
+            <option>E-Mail</option><option>Post</option><option>pers&ouml;nlich &uuml;bergeben</option>
+          </select>
+        </div>
+        <div class="frow"><label>G&uuml;ltig bis</label><input type="text" class="fin" id="mat-kv-gueltig" placeholder="TT.MM.JJJJ"></div>
+      </div>
+    </div>
+    <div class="ibox" style="border-color:#16A34A">
+      <div class="btl" style="background:#16A34A">Sofort bestellen?</div>
+      <label style="display:flex;align-items:center;gap:10px;min-height:44px;font-size:13px;cursor:pointer">
+        <input type="radio" name="mat-best" id="mat-best-ja" value="ja" onchange="matBestUmschalten()"> Ja &ndash; Material bestellen
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;min-height:44px;font-size:13px;cursor:pointer">
+        <input type="radio" name="mat-best" id="mat-best-nein" value="nein" checked onchange="matBestUmschalten()"> Nein
+      </label>
+      <div id="mat-best-detail" style="display:none;margin-top:6px">
+        <div class="frow"><label>Lieferant</label><input type="text" class="fin" id="mat-lieferant" placeholder="z.B. Gro&szlig;handel"></div>
+        <div class="frow"><label>Bestellt am</label><input type="text" class="fin" id="mat-best-datum" placeholder="TT.MM.JJJJ"></div>
+        <div class="frow"><label>Liefertermin</label><input type="text" class="fin" id="mat-liefertermin" placeholder="TT.MM.JJJJ"></div>
+        <div class="frow"><label>Dringlichkeit</label>
+          <select class="fin-sel" id="mat-dring">
+            <option>normal</option><option>dringend</option><option>sofort / Gefahr im Verzug</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ibox" style="margin-bottom:10px">
+    <div class="btl">Anmerkungen / Zustand</div>
+    <textarea id="mat-bemerk" rows="3" style="width:100%;box-sizing:border-box;border:1px solid #CBD5E1;border-radius:6px;padding:8px" placeholder="Zustand des Ger&auml;ts, Befund, besondere Hinweise ..."></textarea>
+  </div>
+
+  <div class="foto-section no-print">
+    <div class="btl">&#128247; Fotos &ndash; Typenschild &amp; Bestand</div>
+    <div style="font-size:10px;color:#64748B;margin:4px 0 8px">
+      Typenschild, Ger&auml;t gesamt, Anschl&uuml;sse, Sch&auml;den &ndash; beliebig viele Aufnahmen.
+    </div>
+    <label class="foto-upload-btn">&#128248; Foto aufnehmen oder w&auml;hlen
+      <input type="file" accept="image/*" capture="environment" multiple onchange="fotoAdd(this,'mat')">
+    </label>
+    <span id="foto-empty-mat" class="foto-empty">Noch keine Fotos hinzugef&uuml;gt</span>
+    <div class="foto-grid" id="foto-grid-mat"></div>
+  </div>
+
+  <div class="sig"><div class="sig-box">
+    <div class="sig-lbl">Datum &amp; Unterschrift Auftraggeber/in</div>
+    <canvas class="sig-canvas" id="sig-mat1" width="400" height="120"></canvas>
+    <button class="sig-clr" onclick="sigClear('sig-mat1')">&#10005; L&ouml;schen</button>
+  </div><div class="sig-box">
+    <div class="sig-lbl">Grieer Rauchfangkehrermeister</div>
+    <canvas class="sig-canvas" id="sig-mat2" width="400" height="120"></canvas>
+    <button class="sig-clr" onclick="sigClear('sig-mat2')">&#10005; L&ouml;schen</button>
+  </div></div>
 </div>
 </div>
 
