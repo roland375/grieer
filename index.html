@@ -39193,90 +39193,72 @@ function kiTrefferUmschalten(btn){
 
 /* ═══ MATERIALAUFNAHME-PROTOKOLL ══════════════════════════════════ */
 var MAT_STANDARD = [
-  ['Dichtung 2-Loch 127,5\u2013154 mm','St\u00fcck',4.50],
-  ['Dichtung 2-Loch 185\u2013200 mm','St\u00fcck',5.80],
-  ['Dichtung 1-Loch 86\u2013150 mm','St\u00fcck',3.90],
-  ['Keramikfaser 6 mm / 0,50 m','St\u00fcck',7.20],
-  ['Keramikfaser 8 mm / 0,50 m','St\u00fcck',8.40],
-  ['Keramikfaser 10 mm / 0,50 m','St\u00fcck',9.60],
-  ['Keramikfaser 12 mm / 0,50 m','St\u00fcck',10.80],
-  ['Kamint\u00fcrl','St\u00fcck',50.00],
-  ['Rauchrohr / Verbindungsst\u00fcck','St\u00fcck',0],
-  ['Rauchrohrbogen','St\u00fcck',0],
-  ['Reinigungs\u00f6ffnung / Putzt\u00fcr','St\u00fcck',0],
-  ['Z\u00fcndelektrode','St\u00fcck',0],
-  ['Ionisationselektrode','St\u00fcck',0],
-  ['Brennerd\u00fcse','St\u00fcck',0],
-  ['\u00d6lfilter','St\u00fcck',0],
-  ['Umw\u00e4lzpumpe','St\u00fcck',0],
-  ['Ausdehnungsgef\u00e4\u00df','St\u00fcck',0],
-  ['Sicherheitsventil','St\u00fcck',0],
-  ['Manometer','St\u00fcck',0],
-  ['Schamottstein','St\u00fcck',0],
-  ['Ofenrost','St\u00fcck',0],
-  ['Sichtscheibe / Glas','St\u00fcck',0],
-  ['Glasdichtband','lfm',0],
-  ['Arbeitszeit Monteur','Std.',49.34]
+  ['Dichtung 2-Loch 127,5–154 mm','Stück'],
+  ['Dichtung 2-Loch 185–200 mm','Stück'],
+  ['Dichtung 1-Loch 86–150 mm','Stück'],
+  ['Keramikfaser 6 mm / 0,50 m','Stück'],
+  ['Keramikfaser 8 mm / 0,50 m','Stück'],
+  ['Keramikfaser 10 mm / 0,50 m','Stück'],
+  ['Keramikfaser 12 mm / 0,50 m','Stück'],
+  ['Dichtschnur rund – Durchmesser:','lfm'],
+  ['Kamintürl – Maß:','Stück'],
+  ['Rauchrohr – Durchmesser / Länge:','Stück'],
+  ['Rauchrohrbogen – Grad:','Stück'],
+  ['Reinigungsöffnung / Putztür','Stück'],
+  ['Zündelektrode','Stück'],
+  ['Ionisationselektrode','Stück'],
+  ['Brennerdüse – Größe:','Stück'],
+  ['Ölfilter','Stück'],
+  ['Umwälzpumpe – Typ:','Stück'],
+  ['Ausdehnungsgefäß – Liter:','Stück'],
+  ['Sicherheitsventil – bar:','Stück'],
+  ['Manometer','Stück'],
+  ['Schamottstein – Maß:','Stück'],
+  ['Ofenrost – Maß:','Stück'],
+  ['Sichtscheibe / Glas – Maß:','Stück'],
+  ['Glasdichtband – Breite:','lfm']
 ];
 
-function matZeileNeu(bez, einh, ep){
+function matZeileNeu(nr, bez, einh){
   var tb = document.getElementById('mat-body');
   if(!tb) return;
-  var i = tb.children.length + 1;
   var tr = document.createElement('tr');
   tr.className = 'mat-zeile';
   tr.style.borderBottom = '1px solid #F1F5F9';
   tr.innerHTML =
-    '<td style="text-align:center;padding:4px 3px">'
-      + '<input type="checkbox" class="mat-chk" checked onchange="matRechnen()"></td>'
-    + '<td style="padding:4px 6px"><input type="text" class="mat-bez" value="'
-      + (bez ? String(bez).replace(/"/g,'&quot;') : '')
-      + '" placeholder="Material / Ersatzteil" style="width:100%;border:1px solid #E2E8F0;border-radius:4px;padding:5px;box-sizing:border-box"></td>'
-    + '<td style="padding:4px 3px"><input type="number" min="0" step="0.5" class="mat-menge" placeholder="0" '
-      + 'oninput="matRechnen()" style="width:100%;text-align:center;border:1px solid #E2E8F0;border-radius:4px;padding:5px;box-sizing:border-box"></td>'
-    + '<td style="padding:4px 3px"><input type="text" class="mat-einh" value="' + (einh||'St\u00fcck')
-      + '" style="width:100%;text-align:center;border:1px solid #E2E8F0;border-radius:4px;padding:5px;box-sizing:border-box"></td>'
-    + '<td style="padding:4px 3px"><input type="number" min="0" step="0.01" class="mat-ep" value="'
-      + (ep ? Number(ep).toFixed(2) : '')
-      + '" placeholder="0,00" oninput="matRechnen()" style="width:100%;text-align:right;border:1px solid #E2E8F0;border-radius:4px;padding:5px;box-sizing:border-box"></td>'
-    + '<td style="text-align:right;padding:4px 6px;font-weight:600;color:#166534" class="mat-gp">\u2014</td>';
+    '<td style="text-align:center;padding:5px 3px;vertical-align:top">'
+      + '<input type="checkbox" class="mat-chk" checked onchange="matZeileAn(this)"></td>'
+    + '<td style="padding:5px 4px;vertical-align:top"><input type="text" class="mat-nr" value="'
+      + (nr ? String(nr).replace(/"/g,'&quot;') : '')
+      + '" placeholder="Art.-Nr." style="width:100%;border:1px solid #E2E8F0;border-radius:4px;padding:6px;box-sizing:border-box"></td>'
+    + '<td style="padding:5px 4px"><textarea class="mat-bez" rows="2" placeholder="Material, Ma\u00dfe, Ausf\u00fchrung \u2026" '
+      + 'style="width:100%;border:1px solid #E2E8F0;border-radius:4px;padding:6px;box-sizing:border-box;line-height:1.5;resize:vertical;min-height:52px">'
+      + (bez ? String(bez) : '') + '</textarea></td>'
+    + '<td style="padding:5px 3px;vertical-align:top"><input type="number" min="0" step="1" class="mat-menge" placeholder="0" '
+      + 'style="width:100%;text-align:center;border:1px solid #E2E8F0;border-radius:4px;padding:6px;box-sizing:border-box"></td>'
+    + '<td style="padding:5px 3px;vertical-align:top"><input type="text" class="mat-einh" value="' + (einh||'St\u00fcck')
+      + '" style="width:100%;text-align:center;border:1px solid #E2E8F0;border-radius:4px;padding:6px;box-sizing:border-box"></td>';
   tb.appendChild(tr);
-  matRechnen();
   return tr;
 }
+
+/* Abgehakte Zeilen werden blass dargestellt */
+function matZeileAn(chk){
+  var tr = chk.closest('tr');
+  if(tr) tr.style.opacity = chk.checked ? '1' : '.45';
+}
+
 
 function matVorlage(){
   var tb = document.getElementById('mat-body');
   if(!tb) return;
   if(tb.children.length && !confirm('Standardteile anh\u00e4ngen?\n\nBestehende Zeilen bleiben erhalten.')) return;
-  MAT_STANDARD.forEach(function(z){ matZeileNeu(z[0], z[1], z[2]); });
+  MAT_STANDARD.forEach(function(z){ matZeileNeu('', z[0], z[1]); });
 }
 
-function matRechnen(){
-  var netto = 0;
-  document.querySelectorAll('#mat-body tr').forEach(function(tr){
-    var an = tr.querySelector('.mat-chk');
-    var mg = parseFloat((tr.querySelector('.mat-menge')||{}).value) || 0;
-    var ep = parseFloat((tr.querySelector('.mat-ep')||{}).value) || 0;
-    var gp = tr.querySelector('.mat-gp');
-    var sum = (an && an.checked) ? mg * ep : 0;
-    if(sum > 0){
-      gp.textContent = sum.toFixed(2).replace('.', ',') + '\u00a0\u20ac';
-      gp.style.color = '#166534';
-      netto += sum;
-    } else {
-      gp.textContent = '\u2014';
-      gp.style.color = '#bbb';
-    }
-    tr.style.opacity = (an && an.checked) ? '1' : '.45';
-  });
-  var ust = netto * 0.20, brutto = netto + ust;
-  function setz(id, w){
-    var e = document.getElementById(id);
-    if(e) e.innerHTML = w.toFixed(2).replace('.', ',') + '&nbsp;&euro;';
-  }
-  setz('mat-net', netto); setz('mat-ust', ust); setz('mat-brutto', brutto);
-}
+
+function matRechnen(){ /* keine Preise mehr - nichts zu rechnen */ }
+
 
 function matKvUmschalten(){
   var d = document.getElementById('mat-kv-detail');
@@ -39302,72 +39284,75 @@ function matInit(){
 function buildMatHtml(){
   function g(id){ var e=document.getElementById(id); return e ? (e.value||'') : ''; }
   function t(sel){ var e=document.querySelector(sel); return e ? (e.value||'') : ''; }
+  function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   var nr=g('mat-nr')||'\u2014', datum=g('mat-datum')||_today(), bearb=g('mat-bearb');
   var body=_hdrHtml('Materialaufnahme \u2013 Protokoll','Nr.\u00a0'+nr,datum);
 
   var kd=t('.kd-name'), str=t('.kd-str'), plz=t('.kd-plz'), tel=t('.kd-tel');
   if(kd||str){
     body+='<div style="background:#FFFBEB;border-left:3px solid #B45309;padding:8px 10px;margin-bottom:10px;font-size:10px">';
-    body+='<b>Auftraggeber/in:</b> '+kd+(str?' \u00b7 '+str:'')+(plz?' \u00b7 '+plz:'')+(tel?' \u00b7 '+tel:'')+'</div>';
+    body+='<b>Auftraggeber/in:</b> '+esc(kd)+(str?' \u00b7 '+esc(str):'')+(plz?' \u00b7 '+esc(plz):'')+(tel?' \u00b7 '+esc(tel):'')+'</div>';
   }
+
   body+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;font-size:10px">';
-  body+='<div style="border:1px solid #E2E8F0;border-radius:5px;padding:7px">'
-      + '<b>Ger\u00e4t</b><br>'+g('mat-geraet')
-      + (g('mat-hersteller')?'<br>Hersteller: '+g('mat-hersteller'):'')
-      + (g('mat-modell')?'<br>Typ: '+g('mat-modell'):'')
-      + (g('mat-serie')?'<br>Serien-Nr.: '+g('mat-serie'):'')
-      + (g('mat-baujahr')?'<br>Baujahr: '+g('mat-baujahr'):'')
-      + (g('mat-kw')?'<br>Leistung: '+g('mat-kw')+' kW':'')+'</div>';
+  body+='<div style="border:1px solid #E2E8F0;border-radius:5px;padding:7px"><b>Ger\u00e4t</b><br>'+esc(g('mat-geraet'))
+      + (g('mat-hersteller')?'<br>Hersteller: '+esc(g('mat-hersteller')):'')
+      + (g('mat-modell')?'<br>Typ: '+esc(g('mat-modell')):'')
+      + (g('mat-serie')?'<br>Serien-Nr.: '+esc(g('mat-serie')):'')
+      + (g('mat-baujahr')?'<br>Baujahr: '+esc(g('mat-baujahr')):'')
+      + (g('mat-kw')?'<br>Leistung: '+esc(g('mat-kw'))+' kW':'')+'</div>';
   var kvJa=(document.getElementById('mat-kv-ja')||{}).checked;
   var beJa=(document.getElementById('mat-best-ja')||{}).checked;
-  body+='<div style="border:1px solid #E2E8F0;border-radius:5px;padding:7px">'
-      + '<b>Weiteres Vorgehen</b><br>'
+  body+='<div style="border:1px solid #E2E8F0;border-radius:5px;padding:7px"><b>Weiteres Vorgehen</b><br>'
       + 'Kostenvoranschlag: <b>'+(kvJa?'JA':'nein')+'</b>'
-      + (kvJa?' ('+g('mat-kv-weg')+(g('mat-kv-gueltig')?', g\u00fcltig bis '+g('mat-kv-gueltig'):'')+')':'')
+      + (kvJa?' ('+esc(g('mat-kv-weg'))+(g('mat-kv-gueltig')?', g\u00fcltig bis '+esc(g('mat-kv-gueltig')):'')+')':'')
       + '<br>Bestellung: <b>'+(beJa?'JA':'nein')+'</b>'
-      + (beJa?'<br>Lieferant: '+g('mat-lieferant')
-             +(g('mat-best-datum')?'<br>Bestellt am: '+g('mat-best-datum'):'')
-             +(g('mat-liefertermin')?'<br>Liefertermin: '+g('mat-liefertermin'):'')
-             +'<br>Dringlichkeit: '+g('mat-dring'):'')
+      + (beJa?'<br>Lieferant: '+esc(g('mat-lieferant'))
+             +(g('mat-best-datum')?'<br>Bestellt am: '+esc(g('mat-best-datum')):'')
+             +(g('mat-liefertermin')?'<br>Liefertermin: '+esc(g('mat-liefertermin')):'')
+             +'<br>Dringlichkeit: '+esc(g('mat-dring')):'')
       + '</div></div>';
 
-  var zeilen='', n=0, netto=0;
+  var zeilen='', n=0;
   document.querySelectorAll('#mat-body tr').forEach(function(tr){
     var an=tr.querySelector('.mat-chk');
     if(!an||!an.checked) return;
+    var mnr=(tr.querySelector('.mat-nr')||{}).value||'';
     var bez=(tr.querySelector('.mat-bez')||{}).value||'';
-    var mg=parseFloat((tr.querySelector('.mat-menge')||{}).value)||0;
-    var ep=parseFloat((tr.querySelector('.mat-ep')||{}).value)||0;
-    if(!bez.trim() || mg<=0) return;
-    var gp=mg*ep; netto+=gp; n++;
+    var mg =(tr.querySelector('.mat-menge')||{}).value||'';
+    var eh =(tr.querySelector('.mat-einh')||{}).value||'';
+    if(!bez.trim() && !mnr.trim()) return;
+    n++;
     zeilen+='<tr style="font-size:10px;border-bottom:.5px solid #E2E8F0">'
-      +'<td style="padding:4px 6px">'+bez+'</td>'
-      +'<td style="text-align:center;padding:4px">'+mg+'</td>'
-      +'<td style="text-align:center;padding:4px">'+((tr.querySelector('.mat-einh')||{}).value||'')+'</td>'
-      +'<td style="text-align:right;padding:4px">'+ep.toFixed(2).replace('.',',')+'\u00a0\u20ac</td>'
-      +'<td style="text-align:right;padding:4px 6px;font-weight:600">'+gp.toFixed(2).replace('.',',')+'\u00a0\u20ac</td></tr>';
+      +'<td style="padding:5px 6px;white-space:nowrap;font-family:monospace">'+esc(mnr)+'</td>'
+      +'<td style="padding:5px 6px;line-height:1.5">'+esc(bez).replace(/\n/g,'<br>')+'</td>'
+      +'<td style="text-align:center;padding:5px;font-weight:700">'+esc(mg)+'</td>'
+      +'<td style="text-align:center;padding:5px">'+esc(eh)+'</td></tr>';
   });
-  if(!n){
-    body+='<div style="padding:16px;text-align:center;color:#90A4AE;border:1px dashed #CBD5E1;border-radius:6px">Kein Material erfasst.</div>';
-  } else {
+  if(n){
+    body+='<div style="font-size:10px;font-weight:700;margin-bottom:5px">Ben\u00f6tigtes Material ('+n+' Positionen)</div>';
     body+='<table style="width:100%;border-collapse:collapse;margin-bottom:12px">'
        +'<thead><tr style="background:#B45309;color:#fff;font-size:10px">'
-       +'<th style="text-align:left;padding:5px 6px">Material / Ersatzteil</th>'
-       +'<th style="text-align:center;padding:5px">Menge</th>'
-       +'<th style="text-align:center;padding:5px">Einh.</th>'
-       +'<th style="text-align:right;padding:5px">EP netto</th>'
-       +'<th style="text-align:right;padding:5px 6px">GP netto</th></tr></thead>'
+       +'<th style="text-align:left;padding:5px 6px;width:100px">Material-Nr.</th>'
+       +'<th style="text-align:left;padding:5px 6px">Material / Beschreibung</th>'
+       +'<th style="text-align:center;padding:5px;width:52px">St\u00fcck</th>'
+       +'<th style="text-align:center;padding:5px;width:58px">Einheit</th></tr></thead>'
        +'<tbody>'+zeilen+'</tbody></table>';
-    var ust=netto*0.20;
-    body+='<div style="display:flex;justify-content:flex-end;margin-bottom:12px"><div style="min-width:200px;font-size:11px">'
-       +'<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:.5px solid #E2E8F0"><span>Netto</span><b>'+netto.toFixed(2).replace('.',',')+'\u00a0\u20ac</b></div>'
-       +'<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:.5px solid #E2E8F0"><span>+ 20\u00a0% USt.</span><b>'+ust.toFixed(2).replace('.',',')+'\u00a0\u20ac</b></div>'
-       +'<div style="display:flex;justify-content:space-between;background:#1A2B45;color:#fff;padding:6px 8px;border-radius:4px;margin-top:4px"><b>GESAMT brutto</b><b style="font-size:14px">'+(netto+ust).toFixed(2).replace('.',',')+'\u00a0\u20ac</b></div>'
-       +'</div></div>';
   }
 
+  var besch=g('mat-beschreibung');
+  if(besch){
+    body+='<div style="border:1px solid #B45309;border-radius:5px;padding:9px;margin-bottom:10px;font-size:10px;line-height:1.65">'
+        +'<b>Was wird ben\u00f6tigt \u2013 Beschreibung:</b><br>'+esc(besch).replace(/\n/g,'<br>')+'</div>';
+  }
   var bem=g('mat-bemerk');
-  if(bem) body+='<div style="border:1px solid #E2E8F0;border-radius:5px;padding:8px;margin-bottom:10px;font-size:10px"><b>Anmerkungen:</b><br>'+bem.replace(/\n/g,'<br>')+'</div>';
+  if(bem){
+    body+='<div style="border:1px solid #E2E8F0;border-radius:5px;padding:8px;margin-bottom:10px;font-size:10px;line-height:1.6">'
+        +'<b>Zustand / Anmerkungen:</b><br>'+esc(bem).replace(/\n/g,'<br>')+'</div>';
+  }
+  if(!n && !besch){
+    body+='<div style="padding:16px;text-align:center;color:#90A4AE;border:1px dashed #CBD5E1;border-radius:6px;margin-bottom:10px">Kein Material erfasst.</div>';
+  }
 
   var fotos=document.querySelectorAll('#foto-grid-mat img');
   if(fotos.length){
@@ -39377,8 +39362,8 @@ function buildMatHtml(){
     body+='</div>';
   }
 
-  body+='<div style="font-size:9px;color:#90A4AE;margin-bottom:12px">Preise netto exkl. 20\u00a0% USt. \u00b7 unverbindliche Materialaufnahme \u00b7 Grieer Energietechnik OG</div>';
-  body+='<div class="sig-grid"><div><div class="sig-box"></div><div class="sig-lbl">Grieer Rauchfangkehrermeister \u00b7 '+(bearb||'')+'</div></div>';
+  body+='<div style="font-size:9px;color:#90A4AE;margin-bottom:12px">Materialaufnahme \u2013 unverbindlich \u00b7 Grieer Energietechnik OG</div>';
+  body+='<div class="sig-grid"><div><div class="sig-box"></div><div class="sig-lbl">Grieer Rauchfangkehrermeister \u00b7 '+esc(bearb)+'</div></div>';
   body+='<div><div class="sig-box"></div><div class="sig-lbl">Auftraggeber/in \u00b7 Datum: ____________</div></div></div>';
   return _wrapHtml('Materialaufnahme \u2013 Nr. '+nr, body);
 }
@@ -39892,14 +39877,7 @@ document.addEventListener('visibilitychange', function(){
     <div class="btl">Ben&ouml;tigtes Material</div>
     <div class="tbl-wrap">
       <table style="width:100%;border-collapse:collapse" id="mat-tabelle">
-        <thead><tr style="background:#B45309;color:#fff;font-size:10px">
-          <th style="text-align:center;padding:5px 3px;width:34px">&#10003;</th>
-          <th style="text-align:left;padding:5px 6px">Material / Ersatzteil</th>
-          <th style="text-align:center;padding:5px 3px;width:64px">Menge</th>
-          <th style="text-align:center;padding:5px 3px;width:60px">Einheit</th>
-          <th style="text-align:right;padding:5px 6px;width:78px">EP netto</th>
-          <th style="text-align:right;padding:5px 6px;width:82px">GP netto</th>
-        </tr></thead>
+        <thead><tr style="background:#B45309;color:#fff;font-size:10px"><th style="text-align:center;padding:5px 3px;width:34px">&#10003;</th><th style="text-align:left;padding:5px 6px;width:104px">Material-Nr.</th><th style="text-align:left;padding:5px 6px">Material / Beschreibung</th><th style="text-align:center;padding:5px 3px;width:60px">St&uuml;ck</th><th style="text-align:center;padding:5px 3px;width:62px">Einheit</th></tr></thead>
         <tbody id="mat-body"></tbody>
       </table>
     </div>
@@ -39907,15 +39885,7 @@ document.addEventListener('visibilitychange', function(){
       <button onclick="matZeileNeu()" style="flex:1;min-width:150px;min-height:44px;background:#B45309;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">+ Zeile hinzuf&uuml;gen</button>
       <button onclick="matVorlage()" style="flex:1;min-width:150px;min-height:44px;background:#F1F5F9;color:#334155;border:1px solid #CBD5E1;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">&#9776; Standardteile</button>
     </div>
-    <div class="tot-wrap" style="margin-top:10px">
-      <div class="tot-row"><span>Materialsumme netto</span><span id="mat-net">0,00&nbsp;&euro;</span></div>
-      <div class="tot-row"><span>USt. 20&nbsp;%</span><span id="mat-ust">0,00&nbsp;&euro;</span></div>
-    </div>
-    <div class="grand">
-      <span style="font-size:14px;font-weight:600">GESAMT brutto</span>
-      <span style="font-size:22px;font-weight:700" id="mat-brutto">0,00&nbsp;&euro;</span>
-    </div>
-  </div>
+    
 
   <div class="ig" style="grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
     <div class="ibox" style="border-color:#2563EB">
@@ -39957,8 +39927,16 @@ document.addEventListener('visibilitychange', function(){
   </div>
 
   <div class="ibox" style="margin-bottom:10px">
-    <div class="btl">Anmerkungen / Zustand</div>
-    <textarea id="mat-bemerk" rows="3" style="width:100%;box-sizing:border-box;border:1px solid #CBD5E1;border-radius:6px;padding:8px" placeholder="Zustand des Ger&auml;ts, Befund, besondere Hinweise ..."></textarea>
+    <div class="btl">Was wird ben&ouml;tigt &ndash; ausf&uuml;hrliche Beschreibung</div>
+    <div style="font-size:10px;color:#64748B;margin:3px 0 7px">
+      Ma&szlig;e, Ausf&uuml;hrung, Anschlussgr&ouml;&szlig;e, wof&uuml;r es gebraucht wird,
+      Bezugsquelle, m&ouml;gliche Alternativen.
+    </div>
+    <textarea id="mat-beschreibung" rows="9" style="width:100%;box-sizing:border-box;border:1px solid #CBD5E1;border-radius:6px;padding:10px;line-height:1.7;resize:vertical;min-height:200px" placeholder="z.B.&#10;Dichtschnur 12 mm rund, schwarz, ca. 2,5 lfm f&uuml;r Sichtscheibe&#10;Rauchrohr 130 mm, 0,5 m, schwarz emailliert&#10;Ersatzglas 340 x 240 mm hitzebest&auml;ndig&#10;&#10;Bezugsquelle / Hinweise:"></textarea>
+  </div>
+  <div class="ibox" style="margin-bottom:10px">
+    <div class="btl">Zustand / Anmerkungen</div>
+    <textarea id="mat-bemerk" rows="5" style="width:100%;box-sizing:border-box;border:1px solid #CBD5E1;border-radius:6px;padding:10px;line-height:1.7;resize:vertical;min-height:110px" placeholder="Zustand des Ger&auml;ts, Befund, besondere Hinweise ..."></textarea>
   </div>
 
   <div class="foto-section no-print">
