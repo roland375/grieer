@@ -21,7 +21,7 @@
 // === GRIEER CACHE-KILLER v2026-06-01-FIX0938 ===
 (function(){
   try {
-    var CURRENT_VER = "v2026-09-07-1500";
+    var CURRENT_VER = "v2026-09-08-0340";
     var lastVer = null;
     try { lastVer = localStorage.getItem('__grieer_app_ver__'); } catch(e){}
     if('serviceWorker' in navigator){
@@ -2180,7 +2180,7 @@ html body { padding-bottom: env(safe-area-inset-bottom, 0px); }
 
 <div style="background:#FFF8E1;border:1px solid #FFB74D;border-radius:8px;padding:10px 12px;margin-bottom:8px">
   <div style="font-size:9px;font-weight:700;color:#E65100;text-transform:uppercase;padding-bottom:5px;border-bottom:1px solid #FFD180;margin-bottom:8px;letter-spacing:.5px">OBJEKT / KV</div>
-  <div style="margin-bottom:8px"><label style="font-size:10px;color:#888;display:block;margin-bottom:2px">KV-Nr.</label><input type="text" class="fin" placeholder="2026-001" style="width:100%;border:none;border-bottom:1px solid #FFD180;font-size:14px;font-weight:600;padding:4px 2px;outline:none;background:transparent;box-sizing:border-box"></div>
+  <div style="margin-bottom:8px"><label style="font-size:10px;color:#888;display:block;margin-bottom:2px">Kunde / Objekt</label><input type="text" class="fin kd-name" id="kehr-kunde" placeholder="Name / Firma" style="width:100%;border:none;border-bottom:1px solid #FFD180;font-size:14px;padding:4px 2px;outline:none;background:transparent;box-sizing:border-box"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px"><div><label style="font-size:10px;color:#888;display:block;margin-bottom:2px">Adresse</label><input type="text" class="fin kd-str" placeholder="Stra&szlig;e, Nr." style="width:100%;border:none;border-bottom:1px solid #FFD180;font-size:14px;padding:4px 2px;outline:none;background:transparent;box-sizing:border-box;font-size:13px"></div><div><label style="font-size:10px;color:#888;display:block;margin-bottom:2px">PLZ / Ort</label><input type="text" class="fin kd-plz" placeholder="PLZ Ort" style="width:100%;border:none;border-bottom:1px solid #FFD180;font-size:14px;padding:4px 2px;outline:none;background:transparent;box-sizing:border-box;font-size:13px"></div></div><div style="margin-bottom:8px"><label style="font-size:10px;color:#888;display:block;margin-bottom:2px">KV-Nr.</label><input type="text" class="fin" placeholder="2026-001" style="width:100%;border:none;border-bottom:1px solid #FFD180;font-size:14px;font-weight:600;padding:4px 2px;outline:none;background:transparent;box-sizing:border-box"></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
     <div><label style="font-size:10px;color:#888;display:block;margin-bottom:2px">Datum</label><input type="text" class="fin adate" style="width:100%;border:none;border-bottom:1px solid #FFD180;font-size:13px;padding:4px 2px;outline:none;background:transparent;box-sizing:border-box"></div>
     <div><label style="font-size:10px;color:#888;display:block;margin-bottom:2px">Bearbeiter</label><input type="text" class="fin" placeholder="Grieer" style="width:100%;border:none;border-bottom:1px solid #FFD180;font-size:13px;padding:4px 2px;outline:none;background:transparent;box-sizing:border-box"></div>
@@ -5839,7 +5839,7 @@ html body { padding-bottom: env(safe-area-inset-bottom, 0px); }
 </div>
 </div></div>
 
-<div id="grieer-version-badge" style="position:fixed;bottom:4px;right:8px;font-size:9px;color:#90A4AE;background:rgba(255,255,255,0.85);padding:2px 6px;border-radius:8px;z-index:50;pointer-events:none;font-family:monospace">App v2026-09-07-1500</div>
+<div id="grieer-version-badge" style="position:fixed;bottom:4px;right:8px;font-size:9px;color:#90A4AE;background:rgba(255,255,255,0.85);padding:2px 6px;border-radius:8px;z-index:50;pointer-events:none;font-family:monospace">App v2026-09-08-0340</div>
 
 
 
@@ -5890,7 +5890,7 @@ html body { padding-bottom: env(safe-area-inset-bottom, 0px); }
 
 
 
-<script>var CURRENT_VER_AKTIV = 'v2026-09-07-1500';
+<script>var CURRENT_VER_AKTIV = 'v2026-09-08-0340';
 
 /* ═══ GEPRUEFTE ANTWORTEN ══════════════════════════════════════════
    Fertige Antworten auf haeufige Fragen, jeweils mit Fundstelle.  */
@@ -5954,17 +5954,27 @@ function sbHeaders(key, extra){
   return h;
 }
 var _ablageTypeLabels = {
+  'pv': 'PV-Reinigung',
+  'gas': 'Gas-Service',
+  'luft': 'L&#252;ftung',
+  'brand': 'Brandschutz',
+  'kamin': 'Kamin',
+  'kehr': 'Kehrtarif',
+  'gesamt': 'Gesamt-KV',
+  'verr': 'Verrechnungsblatt',
+  'wprot': 'Wartungsprotokoll',
+  'wart': 'Wartung Gasheizung',
+  'maengel': 'M&#228;ngelprotokoll',
+  'mess': 'Messprotokoll',
+  'beschau': 'Feuerst&#228;ttenbeschau',
+  'b8201': '&#214;NORM B 8201',
+  'luft2': 'L&#252;ftungsprotokoll',
+  'pvprot': 'PV-Protokoll',
   'brandprot': 'Brandschutz-Protokoll',
-  'mat': 'Materialaufnahme', mat:'Materialaufnahme',
-  pv:'PV-Reinigung KV', gas:'Gas-Service KV', luft:'Lueftungs-KV',
-  brand:'Brandschutz-KV', kamin:'Kamin-KV', gesamt:'Gesamt-KV',
-  wprot:'Wartungsprotokoll', mess:'Messprotokoll', pvprot:'PV-Protokoll',
-  brandprot:'Brandschutz-Protokoll', maengel:'Maengelprotokoll',
-  auftrag:'Auftragsprotokoll', b8201:'B8201 Fangpruefung',
-  luft2:'Luftueberpruefung', drohne:'Drohnen-Inspektion',
-  brandinfo:'Brandschutz-Info', beschau:'Feuerstaettenbeschau',
-  kehr:'Kehrtarif', verr:'Preisliste', wart:'Wartungserinnerung',
-  pvrechner:'PV-Soiling Kalkulation'
+  'auftrag': 'Auftragsprotokoll',
+  'drohne': 'Drohnenaufnahme',
+  'pvrechner': 'PV-Rechner',
+  'mat': 'Materialaufnahme'
 };
 
 
@@ -36391,6 +36401,18 @@ function ablageSpeichern(pageId) {
     var el = pg.querySelector('.' + kl);
     if(el && el.value && !data[kl]) data[kl] = el.value;
   });
+  /* Manche Seiten fuehren den Kunden unter eigener ID - auch diese
+     beruecksichtigen, damit jeder Eintrag am Namen erkennbar ist. */
+  if(!data['kd-name']){
+    var _ids = ['kehr-kunde','dr-kunde','pvc-kunde','bi-kunde','bsp-kunde','pvp-kunde',
+                'mess-kunde','l2-kunde','wp-kunde','wart-kunde','ap-name','gkv-kd-name'];
+    for(var _k=0; _k<_ids.length; _k++){
+      /* nur auf der gerade gespeicherten Seite suchen, sonst wird der
+         Name einer anderen Seite uebernommen                        */
+      var _e = pg.querySelector('#' + _ids[_k]);
+      if(_e && _e.value){ data['kd-name'] = _e.value; break; }
+    }
+  }
   var kdName = data['kd-name'] || data['pv-kd-name'] || data['g-kd-name']
             || data['gkv-kd-name'] || data['ap-name'] || data['we-kd-name'] || '';
   if(!kdName){ var _kn = pg.querySelector('.kd-name'); if(_kn) kdName = _kn.value || ''; }
@@ -36439,8 +36461,27 @@ function ablageSpeichern(pageId) {
           updated_at: new Date().toISOString()
         })
       }).then(function(r){
-        if(r.ok){ try{ _grieerToast('\u2601 Auch in der Cloud gesichert','#16A34A',1800); }catch(e){} }
-      }).catch(function(){});
+        if(r.ok){
+          try{ entry._cloud = true;
+               var _l=JSON.parse(localStorage.getItem('grieer-ablage')||'[]');
+               var _i=_l.findIndex(function(x){return x&&x.id===entry.id;});
+               if(_i>=0){ _l[_i]._cloud=true; localStorage.setItem('grieer-ablage',JSON.stringify(_l)); }
+          }catch(e){}
+          try{ _grieerToast('\u2601 In der Cloud gesichert \u2013 f\u00fcr alle sichtbar','#16A34A',2200); }catch(e){}
+        } else {
+          /* Fehlschlag sichtbar machen, statt still zu scheitern */
+          var grund = r.status===401 ? 'Schl\u00fcssel abgelehnt'
+                    : r.status===403 ? 'Zugriff gesperrt (RLS-Regel)'
+                    : r.status===404 ? 'Tabelle grieer_dokumente fehlt'
+                    : 'HTTP ' + r.status;
+          try{ _grieerToast('\u26A0 Nur lokal gespeichert \u2013 ' + grund
+               + '\n\u2699 \u2192 Verbindung testen', '#DC2626', 5000); }catch(e){}
+        }
+      }).catch(function(err){
+        try{ _grieerToast('\u26A0 Nur lokal gespeichert \u2013 Cloud nicht erreichbar.'
+             + '\nDaten gehen nicht verloren, aber der Chef sieht sie noch nicht.',
+             '#F59E0B', 5000); }catch(e){}
+      });
     }
   } catch(e2){}
   
@@ -39615,6 +39656,42 @@ async function ablagePdfTeilen(){
 
 /* WhatsApp: nun mit PDF statt nur Text */
 function ablageWhatsapp(){ ablagePdfTeilen(); }
+
+/* ═══ NICHT ÜBERTRAGENE EINTRÄGE NACHREICHEN ══════════════════════
+   Wurde ein Protokoll ohne Verbindung gespeichert, wird es beim
+   naechsten Start automatisch in die Cloud nachgetragen.         */
+async function ablageNachtragen(still){
+  if(typeof sbCheckOnline!=='function' || !sbCheckOnline()) return 0;
+  var ablage=[];
+  try{ ablage=JSON.parse(localStorage.getItem('grieer-ablage')||'[]'); }catch(e){ return 0; }
+  var offen = ablage.filter(function(e){ return e && !e._cloud; });
+  if(!offen.length){ 
+    if(!still){ try{ _grieerToast('\u2705 Alles \u00fcbertragen','#16A34A',1800); }catch(e){} }
+    return 0;
+  }
+  var ok=0;
+  for(var i=0;i<offen.length;i++){
+    var e=offen[i];
+    try{
+      var r = await fetch(_SB_URL+'/rest/v1/grieer_dokumente',{
+        method:'POST',
+        headers:(typeof sbHeaders==='function'
+          ? sbHeaders(null,{'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'})
+          : {'Content-Type':'application/json','apikey':_SB_KEY,'Prefer':'resolution=merge-duplicates'}),
+        body: JSON.stringify({id:e.id, firma_id:'grieer', doc_type:e.type||'ablage',
+          doc_nr:e.id, data:e, ersteller:e.ersteller||'', datum:e.datum||'',
+          updated_at:new Date().toISOString()})
+      });
+      if(r.ok){ e._cloud = true; ok++; }
+    }catch(x){}
+  }
+  if(ok){
+    try{ localStorage.setItem('grieer-ablage', JSON.stringify(ablage)); }catch(e){}
+    try{ _grieerToast('\u2601 ' + ok + ' Eintr\u00e4ge nachgetragen','#16A34A',2600); }catch(e){}
+  }
+  return ok;
+}
+setTimeout(function(){ try{ ablageNachtragen(true); }catch(e){} }, 12000);
 </script>
 
 
@@ -40167,21 +40244,29 @@ function ablageWhatsapp(){ ablagePdfTeilen(); }
 <div style="display:grid;grid-template-columns:1fr auto;gap:6px;margin-bottom:8px">
   <input type="text" id="ablage-search" placeholder="&#128269; Suchen..." oninput="ablageRender()" style="padding:9px 12px;border:1.5px solid #CBD5E1;border-radius:8px;font-size:13px;box-sizing:border-box">
   <select id="ablage-filter-type" onchange="ablageRender()" style="padding:9px 8px;border:1.5px solid #CBD5E1;border-radius:8px;font-size:12px;background:#fff;min-width:100px">
-    <option value="">Alle Typen</option>
-    <option value="pv">PV-Reinigung</option>
-    <option value="gas">Gas-Service</option>
-    <option value="luft">L&#252;ftung</option>
-    <option value="brand">Brandschutz</option>
-    <option value="kamin">Kamin</option>
-    <option value="gesamt">Gesamt-KV</option>
-    <option value="wprot">Wartungsprotokoll</option>
-    <option value="mess">Messprotokoll</option>
-    <option value="pvprot">PV-Protokoll</option>
-    <option value="brandprot">Brand-Prot.</option>
-    <option value="maengel">M&#228;ngel</option>
-    <option value="auftrag">Auftrag</option>
-    <option value="drohne">Drohnen</option>
-  </select>
+  <option value="">Alle Typen</option>
+  <option value="pv">PV-Reinigung</option>
+  <option value="gas">Gas-Service</option>
+  <option value="luft">L&#252;ftung</option>
+  <option value="brand">Brandschutz</option>
+  <option value="kamin">Kamin</option>
+  <option value="kehr">Kehrtarif</option>
+  <option value="gesamt">Gesamt-KV</option>
+  <option value="verr">Verrechnungsblatt</option>
+  <option value="wprot">Wartungsprotokoll</option>
+  <option value="wart">Wartung Gasheizung</option>
+  <option value="maengel">M&#228;ngelprotokoll</option>
+  <option value="mess">Messprotokoll</option>
+  <option value="beschau">Feuerst&#228;ttenbeschau</option>
+  <option value="b8201">&#214;NORM B 8201</option>
+  <option value="luft2">L&#252;ftungsprotokoll</option>
+  <option value="pvprot">PV-Protokoll</option>
+  <option value="brandprot">Brandschutz-Protokoll</option>
+  <option value="auftrag">Auftragsprotokoll</option>
+  <option value="drohne">Drohnenaufnahme</option>
+  <option value="pvrechner">PV-Rechner</option>
+  <option value="mat">Materialaufnahme</option>
+</select>
 </div>
 
 <select id="ablage-filter-user" onchange="ablageRender()" style="display:none;width:100%;padding:9px;border:1.5px solid #CBD5E1;border-radius:8px;font-size:12px;background:#fff;margin-bottom:8px;box-sizing:border-box">
