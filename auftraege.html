@@ -809,8 +809,8 @@
       <button class="tabbtn" data-view="bestellliste" aria-pressed="false">Bestellliste<span class="count" id="cBestell"></span></button>
     </div>
     <div class="filters" id="filters">
-      <button class="chip" data-filter="alle" aria-pressed="true">Alle<span class="count" id="cAlle"></span></button>
-      <button class="chip" data-filter="offen" aria-pressed="false">Offen<span class="count" id="cOffen"></span></button>
+      <button class="chip" data-filter="alle" aria-pressed="false">Alle<span class="count" id="cAlle"></span></button>
+      <button class="chip" data-filter="offen" aria-pressed="true">Offen<span class="count" id="cOffen"></span></button>
       <button class="chip" data-filter="erledigt" aria-pressed="false">Erledigt<span class="count" id="cErledigt"></span></button>
       <button class="chip" data-filter="ersatzteile" aria-pressed="false">Ersatzteile nötig<span class="count" id="cErsatz"></span></button>
     </div>
@@ -1018,7 +1018,7 @@
 
   var COLLECTION = "auftraege";
   var state = {
-    orders: [], filter: "alle", betriebFilter: "alle", view: "auftraege", editingId: null,
+    orders: [], filter: "offen", betriebFilter: "alle", view: "auftraege", editingId: null,
     db: null, writable: false, sheetParts: [], sheetPhotos: [], sheetPdf: null,
     assetsNS: null, userNS: null, myId: null, nameCache: {}, pdfJsPromise: null
   };
