@@ -2375,13 +2375,13 @@
     return {
       id: id,
       set: function (data) {
-        return sb.from("auftraege").upsert({ id: id, data: data, updated_by: session.user.id }).then(chk);
+        return sb.from("team_auftraege").upsert({ id: id, data: data, updated_by: session.user.id }).then(chk);
       },
       update: function (patch) {
-        return sb.rpc("merge_auftrag", { p_id: id, p_patch: patch }).then(chk);
+        return sb.rpc("merge_team_auftrag", { p_id: id, p_patch: patch }).then(chk);
       },
       delete: function () {
-        return sb.from("auftraege").delete().eq("id", id).then(chk);
+        return sb.from("team_auftraege").delete().eq("id", id).then(chk);
       }
     };
   }
@@ -2391,7 +2391,7 @@
       return {
         onSnapshot: function (ok, err) {
           function load() {
-            sb.from("auftraege").select("id,data").then(function (r) {
+            sb.from("team_auftraege").select("id,data").then(function (r) {
               if (r.error) { if (err) err(r.error); return; }
               ok((r.data || []).map(function (row) {
                 return { id: row.id, data: function () { return row.data || {}; } };
@@ -2400,7 +2400,7 @@
           }
           load();
           try {
-            sb.channel("auftraege-live").on("postgres_changes", { event: "*", schema: "public", table: "auftraege" }, load).subscribe();
+            sb.channel("auftraege-live").on("postgres_changes", { event: "*", schema: "public", table: "team_auftraege" }, load).subscribe();
           } catch (e) { /* Polling unten genügt */ }
           setInterval(load, 20000);
         },
