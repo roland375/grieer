@@ -1,0 +1,2480 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Auftragsübersicht</title>
+<style>
+  :root {
+    --ink: #211d19;
+    --ink-soft: #4a423b;
+    --paper: #f1ede4;
+    --paper-raised: #ffffff;
+    --line: #ddd5c7;
+    --brass: #a97a2f;
+    --brass-deep: #7d5a20;
+    --brass-tint: #f3e6cd;
+    --good: #3e7a53;
+    --good-tint: #dfeee3;
+    --warn: #b5541f;
+    --warn-tint: #f6e3d4;
+    --need-tint: #fbe6e2;
+    --need: #af3b2c;
+    --shadow: 0 1px 2px rgba(33,29,25,.06), 0 6px 16px -8px rgba(33,29,25,.18);
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #efe9df;
+      --ink-soft: #bcb2a4;
+      --paper: #17140f;
+      --paper-raised: #221e18;
+      --line: #3a332a;
+      --brass: #d9a856;
+      --brass-deep: #f0c179;
+      --brass-tint: #382a15;
+      --good: #7fbd94;
+      --good-tint: #1c3324;
+      --warn: #e08b52;
+      --warn-tint: #3a2415;
+      --need-tint: #3a1c17;
+      --need: #e3735f;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 24px -10px rgba(0,0,0,.6);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #efe9df;
+    --ink-soft: #bcb2a4;
+    --paper: #17140f;
+    --paper-raised: #221e18;
+    --line: #3a332a;
+    --brass: #d9a856;
+    --brass-deep: #f0c179;
+    --brass-tint: #382a15;
+    --good: #7fbd94;
+    --good-tint: #1c3324;
+    --warn: #e08b52;
+    --warn-tint: #3a2415;
+    --need-tint: #3a1c17;
+    --need: #e3735f;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 24px -10px rgba(0,0,0,.6);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .headline {
+    font-family: "Big Shoulders Display", "Arial Narrow", sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding-inline: 16px;
+    padding-block: 14px 100px;
+  }
+
+  header.top {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 10;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    padding-block: 14px 12px;
+    margin-inline: calc(-1 * max(16px, (100% - 728px) / 2));
+    padding-inline: max(16px, (100% - 728px) / 2);
+  }
+
+  .top-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 26px;
+    line-height: 1;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  .sub {
+    margin: 4px 0 0;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+
+  .sync-dot {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .sync-dot .d {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--good);
+    box-shadow: 0 0 0 2px var(--good-tint);
+  }
+  .sync-dot.off .d { background: var(--warn); box-shadow: 0 0 0 2px var(--warn-tint); }
+
+  .tabs {
+    display: flex;
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .tabbtn {
+    flex: 1;
+    font-family: "Public Sans", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 9px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--paper-raised);
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .tabbtn[aria-pressed="true"] {
+    background: var(--brass);
+    color: #201803;
+    border-color: var(--brass);
+  }
+
+  .filters {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    margin-top: 10px;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+  .filters::-webkit-scrollbar { display: none; }
+
+  .chip {
+    flex: none;
+    font-family: "Public Sans", sans-serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 7px 13px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--paper-raised);
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .chip[aria-pressed="true"] {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  .count {
+    font-variant-numeric: tabular-nums;
+    font-size: 12px;
+    opacity: .75;
+    margin-left: 4px;
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .card {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    padding: 13px 14px 12px;
+  }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .card-name {
+    font-size: 16.5px;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .card-meta {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin-top: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+  .betrieb-badge {
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    padding: 2px 7px;
+    border-radius: 999px;
+  }
+  .betrieb-badge.rfk { background: var(--brass-tint); color: var(--brass-deep); }
+  .betrieb-badge.energietechnik { background: var(--good-tint); color: var(--good); }
+  .card-meta2 {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 4px;
+  }
+  .termin-line {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--brass-deep);
+    margin-top: 6px;
+  }
+  .card-address {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin-top: 8px;
+    line-height: 1.4;
+    white-space: pre-line;
+  }
+
+  .pill {
+    flex: none;
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    padding: 4px 9px;
+    border-radius: 999px;
+  }
+  .pill.offen { background: var(--warn-tint); color: var(--warn); }
+  .pill.erledigt { background: var(--good-tint); color: var(--good); }
+  .pill[data-status-toggle] { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .pill[data-status-toggle]:active { opacity: .75; }
+
+  .toggles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .tgl {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 10px 6px 8px;
+    border-radius: 8px;
+    border: 1px solid var(--need);
+    background: var(--need-tint);
+    color: var(--need);
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tgl .box {
+    width: 14px; height: 14px;
+    border-radius: 4px;
+    border: 1.5px solid var(--need);
+    flex: none;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .tgl .box svg { width: 10px; height: 10px; display: none; }
+  .tgl.on { color: var(--good); border-color: var(--good); background: var(--good-tint); }
+  .tgl.on .box { background: var(--good); border-color: var(--good); }
+  .tgl.on .box svg { display: block; color: var(--paper); }
+
+  .note {
+    margin-top: 9px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+    white-space: pre-wrap;
+  }
+
+  .arbeit-block {
+    margin-top: 9px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: var(--paper-raised);
+    border: 1.5px solid var(--line);
+  }
+  .arbeit-block.done {
+    background: var(--good-tint);
+    border-color: transparent;
+  }
+  .arbeit-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--good);
+    margin-bottom: 3px;
+  }
+  .arbeit-text {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.4;
+    white-space: pre-wrap;
+  }
+  .arbeit-von {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 3px;
+  }
+
+  .parts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .part-chip {
+    font-size: 12px;
+    font-weight: 600;
+    background: var(--need-tint);
+    color: var(--need);
+    padding: 5px 9px;
+    border-radius: 7px;
+    font-variant-numeric: tabular-nums;
+  }
+  .part-chip.done { background: var(--good-tint); color: var(--good); }
+  .parts-detail-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 4px 0 8px;
+  }
+  .parts-detail-row {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  .parts-detail-row b { color: var(--ink); font-weight: 600; }
+
+  /* --- parts editor inside the sheet --- */
+  .parts-editor { margin-bottom: 4px; }
+  .parts-editor-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .part-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--paper-raised);
+    border: 1.5px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 10px;
+  }
+  .part-row .p-qty {
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    color: var(--brass-deep);
+    flex: none;
+    min-width: 22px;
+  }
+  .part-row .p-name { font-size: 14px; }
+  .part-row .p-remove {
+    flex: none;
+    background: none;
+    border: none;
+    color: var(--ink-soft);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 2px 4px;
+  }
+  .part-add-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .part-add-row input[type="text"] { flex: 1; }
+  .part-add-row input[type="number"] {
+    width: 64px;
+    font-size: 15px;
+    font-family: inherit;
+    padding: 10px 8px;
+    border-radius: 8px;
+    border: 1.5px solid var(--line);
+    background: var(--paper-raised);
+    color: var(--ink);
+    text-align: center;
+  }
+  .part-add-row-2 input[type="text"] {
+    flex: 1;
+    min-width: 0;
+    font-size: 13px;
+  }
+  .part-add-row-2 input[type="text"]::placeholder { font-size: 13px; }
+  .btn-part-add {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .part-row .p-detail {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .part-row .p-sub {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+  }
+  .btn-small {
+    flex: none;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 0 14px;
+    border-radius: 8px;
+    border: 1.5px solid var(--brass);
+    background: var(--brass-tint);
+    color: var(--brass-deep);
+    cursor: pointer;
+  }
+  .parts-empty-hint {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+
+  .attribution {
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--ink-soft);
+    opacity: .85;
+  }
+
+  /* --- photo strip on a card --- */
+  .photos {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    margin-top: 10px;
+    padding-bottom: 2px;
+  }
+  .photo-thumb {
+    flex: none;
+    width: 64px; height: 64px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    cursor: pointer;
+  }
+
+  /* --- photo editor inside the sheet --- */
+  .photo-editor-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .photo-edit-thumb {
+    position: relative;
+    width: 72px; height: 72px;
+  }
+  .photo-edit-thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    display: block;
+  }
+  .photo-edit-thumb.pending img { opacity: .4; }
+  .photo-edit-thumb .p-remove {
+    position: absolute;
+    top: -6px; right: -6px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .photo-add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 9px 14px;
+    border-radius: 8px;
+    border: 1.5px dashed var(--brass);
+    background: var(--brass-tint);
+    color: var(--brass-deep);
+    cursor: pointer;
+  }
+  .photo-add-btn input { display: none; }
+
+  /* --- PDF chip (attached Lieferschein) --- */
+  .pdf-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--paper-raised);
+    border: 1.5px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+  }
+  .pdf-chip.pending { opacity: .6; }
+  .pdf-chip-name {
+    flex: 1;
+    font-size: 13.5px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .pdf-chip-open {
+    flex: none;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--brass-deep);
+    text-decoration: none;
+  }
+  .pdf-link-row { margin-top: 8px; }
+  .pdf-link {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--brass-deep);
+    text-decoration: none;
+  }
+
+  /* --- lightbox --- */
+  .lightbox {
+    position: fixed; inset: 0;
+    background: rgba(10,8,6,.9);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .lightbox img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 6px;
+  }
+  .lightbox-close {
+    position: absolute;
+    top: calc(14px + env(safe-area-inset-top, 0px));
+    right: 16px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.15);
+    color: #fff;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  /* --- Bestellliste view --- */
+  .bestell-section { margin-top: 18px; }
+  .bestell-section:first-child { margin-top: 16px; }
+  .bestell-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .bestell-heading h2 {
+    font-family: "Big Shoulders Display", sans-serif;
+    font-size: 17px;
+    text-transform: uppercase;
+    margin: 0;
+    color: var(--ink-soft);
+    letter-spacing: .02em;
+  }
+  .copy-btn {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 11px;
+    border-radius: 7px;
+    border: 1px solid var(--line);
+    background: var(--paper-raised);
+    color: var(--brass-deep);
+    cursor: pointer;
+  }
+  .bestell-card { margin-bottom: 10px; }
+  .bestell-card .parts { margin-top: 8px; }
+  .advance-btn {
+    margin-top: 10px;
+    width: 100%;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 9px;
+    border-radius: 8px;
+    border: 1.5px solid var(--brass);
+    background: var(--brass-tint);
+    color: var(--brass-deep);
+    cursor: pointer;
+  }
+
+  .card-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 14px;
+    margin-top: 8px;
+  }
+  .edit-btn, .print-btn {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--brass-deep);
+    background: none;
+    border: none;
+    padding: 4px 2px;
+    cursor: pointer;
+  }
+
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--ink-soft);
+  }
+  .empty .headline { font-size: 20px; color: var(--ink); margin-bottom: 6px; }
+
+  .fab {
+    position: fixed;
+    right: 18px;
+    bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    font-size: 28px;
+    line-height: 1;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 20;
+  }
+  .fab:active { transform: scale(0.96); }
+
+  .sheet-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(20,17,13,.45);
+    z-index: 30;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .sheet {
+    width: 100%;
+    max-width: 560px;
+    max-height: 88vh;
+    overflow-y: auto;
+    background: var(--paper);
+    border-radius: 16px 16px 0 0;
+    padding: 18px 18px calc(18px + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 -10px 30px rgba(0,0,0,.25);
+  }
+  .sheet-grab {
+    width: 40px; height: 4px;
+    border-radius: 3px;
+    background: var(--line);
+    margin: 0 auto 14px;
+  }
+  .sheet h2 {
+    font-family: "Big Shoulders Display", sans-serif;
+    font-size: 22px;
+    text-transform: uppercase;
+    margin: 0 0 14px;
+  }
+  .field { margin-bottom: 12px; }
+  .field label {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    color: var(--ink-soft);
+    margin-bottom: 5px;
+  }
+  .field input[type="text"],
+  .field input[type="date"],
+  .field select,
+  .field textarea {
+    width: 100%;
+    font-size: 15px;
+    font-family: inherit;
+    padding: 10px 11px;
+    border-radius: 8px;
+    border: 1.5px solid var(--line);
+    background: var(--paper-raised);
+    color: var(--ink);
+  }
+  .field textarea { resize: vertical; min-height: 60px; }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: none;
+    border-color: var(--brass);
+  }
+
+  .row2 { display: flex; gap: 10px; }
+  .row2 > .field { flex: 1; min-width: 0; }
+
+  .sheet-toggles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .sheet-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .btn {
+    flex: 1;
+    font-size: 14.5px;
+    font-weight: 700;
+    padding: 12px;
+    border-radius: 9px;
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn.primary { background: var(--ink); color: var(--paper); }
+  .btn.ghost { background: transparent; color: var(--ink-soft); border-color: var(--line); }
+  .btn.danger { background: transparent; color: var(--need); border-color: var(--need); flex: none; padding-inline: 16px; }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: 999px;
+    box-shadow: var(--shadow);
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(-4px); }
+
+  .ro-banner { margin-top:14px; padding:11px 13px; border-radius:10px; background: var(--warn-tint); color: var(--warn); border:1.5px solid var(--warn); font-size:13px; line-height:1.45; font-weight:600; }
+  .ro-banner small { display:block; margin-top:4px; font-weight:400; opacity:.85; word-break:break-word; }
+  .login-box { position:fixed; inset:0; z-index:100; background:var(--paper); display:flex; align-items:center; justify-content:center; padding:20px; }
+  .login-card { width:100%; max-width:380px; background:var(--paper-raised); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow); padding:22px 20px; }
+  .login-card h1 { font-size:26px; margin:0 0 4px; }
+  .login-card p { margin:0 0 16px; font-size:13px; color:var(--ink-soft); }
+  .login-card input { width:100%; font-size:16px; font-family:inherit; padding:11px; border-radius:8px; border:1.5px solid var(--line); background:var(--paper); color:var(--ink); margin-bottom:10px; }
+  .login-card button { width:100%; font-size:15px; font-weight:700; padding:12px; border-radius:9px; border:none; background:var(--ink); color:var(--paper); cursor:pointer; font-family:inherit; }
+  #loginMsg { margin-top:10px; font-size:13px; color:var(--need); min-height:18px; }
+  .logout-btn { font-size:11.5px; font-weight:600; color:var(--ink-soft); background:none; border:1px solid var(--line); border-radius:7px; padding:4px 8px; cursor:pointer; margin-left:8px; }
+  [hidden] { display: none !important; }
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Public+Sans:wght@400;500;600;700&display=swap">
+
+<div class="wrap">
+  <header class="top">
+    <div class="top-row">
+      <div>
+        <h1 class="headline">Auftragsübersicht</h1>
+        <p class="sub">Rauchfangkehrer Roland Grieer &amp; Grieer Energietechnik OG &middot; Neudörfl</p>
+      </div>
+      <span class="sync-dot" id="syncDot"><span class="d"></span><span id="syncText">verbindet…</span></span>
+    </div>
+    <div class="tabs" id="viewTabs">
+      <button class="tabbtn" data-view="auftraege" aria-pressed="true">Aufträge</button>
+      <button class="tabbtn" data-view="bestellliste" aria-pressed="false">Bestellliste<span class="count" id="cBestell"></span></button>
+    </div>
+    <div class="filters" id="filters">
+      <button class="chip" data-filter="alle" aria-pressed="true">Alle<span class="count" id="cAlle"></span></button>
+      <button class="chip" data-filter="offen" aria-pressed="false">Offen<span class="count" id="cOffen"></span></button>
+      <button class="chip" data-filter="erledigt" aria-pressed="false">Erledigt<span class="count" id="cErledigt"></span></button>
+      <button class="chip" data-filter="ersatzteile" aria-pressed="false">Ersatzteile nötig<span class="count" id="cErsatz"></span></button>
+    </div>
+    <div class="filters" id="betriebFilters">
+      <button class="chip" data-betrieb="alle" aria-pressed="true">Beide Betriebe</button>
+      <button class="chip" data-betrieb="Rauchfangkehrer" aria-pressed="false">Rauchfangkehrer</button>
+      <button class="chip" data-betrieb="Energietechnik" aria-pressed="false">Energietechnik</button>
+    </div>
+  </header>
+
+  <div class="ro-banner" id="roBanner" hidden></div>
+
+  <div class="list" id="list"></div>
+
+  <div class="empty" id="empty" hidden>
+    <div class="headline">Noch keine Aufträge</div>
+    <p>Tippe unten rechts auf „+“, um den ersten Auftrag einzutragen.</p>
+  </div>
+
+  <div id="bestellView" hidden></div>
+
+  <div class="empty" id="bestellEmpty" hidden>
+    <div class="headline">Nichts zu bestellen</div>
+    <p>Sobald bei einem Auftrag Ersatzteile eingetragen sind, erscheinen sie hier.</p>
+  </div>
+</div>
+
+<button class="fab" id="addBtn" aria-label="Auftrag hinzufügen">+</button>
+
+<div class="sheet-backdrop" id="backdrop" hidden>
+  <div class="sheet">
+    <div class="sheet-grab"></div>
+    <h2 id="sheetTitle">Neuer Auftrag</h2>
+    <form id="form">
+      <div class="field" id="importField">
+        <label for="importPaste">Aus Tarifrechner einfügen</label>
+        <div class="part-add-row">
+          <input type="text" id="importPaste" placeholder="Hier einfügen (GRIEER-AUFTRAG:…)" autocomplete="off">
+          <button type="button" class="btn-small" id="importBtn">Übernehmen</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="f_betrieb">Betrieb</label>
+        <select id="f_betrieb">
+          <option value="Rauchfangkehrer">Rauchfangkehrer Roland Grieer</option>
+          <option value="Energietechnik">Grieer Energietechnik OG</option>
+        </select>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="f_datum">Datum</label>
+          <input type="date" id="f_datum" required>
+        </div>
+        <div class="field">
+          <label for="f_kdnr">Projekt-Nr.</label>
+          <input type="text" id="f_kdnr" placeholder="z. B. 200048156" inputmode="text">
+        </div>
+      </div>
+      <div class="field">
+        <label for="f_auftragsnr">Arbeitsauftragsnummer</label>
+        <input type="text" id="f_auftragsnr" placeholder="z. B. AA-2026-0142" inputmode="text">
+      </div>
+      <div class="field">
+        <label for="f_name">Auftrag / Kunde</label>
+        <input type="text" id="f_name" placeholder="Name, Objekt oder Kurzbeschreibung" required>
+      </div>
+      <div class="field">
+        <label for="f_adresse">Adresse</label>
+        <textarea id="f_adresse" placeholder="Straße, PLZ Ort" style="min-height: 44px;"></textarea>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="f_telefon">Telefon</label>
+          <input type="text" id="f_telefon" placeholder="z. B. 0664 9346100" inputmode="tel">
+        </div>
+        <div class="field">
+          <label for="f_art">Auftragsart</label>
+          <select id="f_art">
+            <option value="">– wählen –</option>
+            <option value="Montage">Montage</option>
+            <option value="Reparatur">Reparatur</option>
+            <option value="Wartung">Wartung</option>
+            <option value="Sonstiges">Sonstiges</option>
+          </select>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="f_monteur">Monteur</label>
+          <input type="text" id="f_monteur" placeholder="Name">
+        </div>
+        <div class="field">
+          <label for="f_helfer">Helfer</label>
+          <input type="text" id="f_helfer" placeholder="Name (optional)">
+        </div>
+      </div>
+      <div class="field">
+        <label for="f_zeit">Uhrzeit</label>
+        <input type="text" id="f_zeit" placeholder="z. B. 13:15 - 14:55 Uhr">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="f_termindatum">Termin ausgemacht – Datum</label>
+          <input type="date" id="f_termindatum">
+        </div>
+        <div class="field">
+          <label for="f_terminzeit">Termin ausgemacht – Uhrzeit</label>
+          <input type="text" id="f_terminzeit" placeholder="z. B. 14:00 Uhr">
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="f_status">Status</label>
+          <select id="f_status">
+            <option value="offen">Offen</option>
+            <option value="erledigt">Erledigt</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="f_ausgefuehrtVon">Ausgeführt von</label>
+        <input type="text" id="f_ausgefuehrtVon" placeholder="Name(n)">
+      </div>
+      <div class="sheet-toggles">
+        <label class="tgl" id="t_vorhanden"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Auftrag vorhanden</label>
+        <label class="tgl" id="t_terminAusgemacht"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Termin ausgemacht</label>
+        <label class="tgl need" id="t_ersatzteileNoetig"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Ersatzteile nötig</label>
+        <label class="tgl" id="t_durchgefuehrt"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Durchgeführt</label>
+      </div>
+      <div class="field" id="durchgefuehrtAmField" hidden>
+        <label for="f_durchgefuehrtAm">Durchgeführt am</label>
+        <input type="date" id="f_durchgefuehrtAm">
+      </div>
+
+      <div class="field parts-editor">
+        <label>Ersatzteile (optional, falls schon bekannt)</label>
+        <div class="parts-editor-list" id="partsEditorList"></div>
+        <p class="parts-empty-hint" id="partsEmptyHint">Noch keine Teile eingetragen.</p>
+        <div class="part-add-row">
+          <input type="text" id="partName" placeholder="Bezeichnung, z. B. Reinigungsdeckel">
+          <input type="number" id="partQty" min="1" value="1" inputmode="numeric">
+        </div>
+        <div class="part-add-row part-add-row-2">
+          <input type="text" id="partLieferant" list="lieferantList" placeholder="Wo bestellt (z. B. SHT)">
+          <input type="text" id="partBestellnr" placeholder="Bestellnummer">
+          <input type="text" id="partPreis" inputmode="decimal" placeholder="Preis netto €">
+        </div>
+        <datalist id="lieferantList">
+          <option value="SHT">
+          <option value="Bertrams">
+          <option value="Vaillant">
+          <option value="Viessmann">
+          <option value="Hoval">
+        </datalist>
+        <button type="button" class="btn-small btn-part-add" id="partAddBtn">+ Teil hinzufügen</button>
+      </div>
+
+      <div class="sheet-toggles" id="partStatusToggles" hidden>
+        <label class="tgl" id="t_bestellt"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Ersatzteile bestellt</label>
+        <label class="tgl" id="t_lieferung"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Wird geliefert</label>
+        <label class="tgl" id="t_abgeholt"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Ersatzteile abgeholt</label>
+      </div>
+
+      <div class="field" id="pdfFieldOuter">
+        <label>Lieferschein (PDF)</label>
+        <div id="pdfChipWrap"></div>
+        <label class="photo-add-btn" id="pdfAddBtn">
+          📄 PDF anhängen &amp; Felder befüllen
+          <input type="file" id="pdfInput" accept="application/pdf">
+        </label>
+      </div>
+
+      <div class="field">
+        <label>Fotos</label>
+        <div class="photo-editor-list" id="photoEditorList"></div>
+        <label class="photo-add-btn" id="photoAddBtn">
+          📷 Foto hinzufügen
+          <input type="file" id="photoInput" accept="image/*" multiple>
+        </label>
+      </div>
+
+      <div class="field">
+        <label for="f_note">Kundenwunsch / Anmerkung</label>
+        <textarea id="f_note" placeholder="Was möchte der Kunde, was wurde festgestellt …"></textarea>
+      </div>
+      <div class="sheet-actions">
+        <button type="button" class="btn danger" id="deleteBtn" hidden>Löschen</button>
+        <button type="button" class="btn ghost" id="cancelBtn">Abbrechen</button>
+        <button type="submit" class="btn primary" id="saveBtn">Speichern</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Schließen">&times;</button>
+  <img id="lightboxImg" src="" alt="Foto">
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="text/plain" id="appcode">
+(function () {
+  "use strict";
+
+  var COLLECTION = "auftraege";
+  var state = {
+    orders: [], filter: "alle", betriebFilter: "alle", view: "auftraege", editingId: null,
+    db: null, writable: false, sheetParts: [], sheetPhotos: [], sheetPdf: null,
+    assetsNS: null, userNS: null, myId: null, nameCache: {}, pdfJsPromise: null
+  };
+  var partIdSeq = 1;
+  var photoIdSeq = 1;
+
+  var els = {
+    list: document.getElementById("list"),
+    empty: document.getElementById("empty"),
+    filters: document.getElementById("filters"),
+    betriebFilters: document.getElementById("betriebFilters"),
+    viewTabs: document.getElementById("viewTabs"),
+    bestellView: document.getElementById("bestellView"),
+    bestellEmpty: document.getElementById("bestellEmpty"),
+    counts: {
+      alle: document.getElementById("cAlle"),
+      offen: document.getElementById("cOffen"),
+      erledigt: document.getElementById("cErledigt"),
+      ersatzteile: document.getElementById("cErsatz"),
+      bestell: document.getElementById("cBestell")
+    },
+    roBanner: document.getElementById("roBanner"),
+    syncDot: document.getElementById("syncDot"),
+    syncText: document.getElementById("syncText"),
+    backdrop: document.getElementById("backdrop"),
+    form: document.getElementById("form"),
+    sheetTitle: document.getElementById("sheetTitle"),
+    addBtn: document.getElementById("addBtn"),
+    cancelBtn: document.getElementById("cancelBtn"),
+    deleteBtn: document.getElementById("deleteBtn"),
+    toast: document.getElementById("toast"),
+    importField: document.getElementById("importField"),
+    importPaste: document.getElementById("importPaste"),
+    importBtn: document.getElementById("importBtn"),
+    f_datum: document.getElementById("f_datum"),
+    f_betrieb: document.getElementById("f_betrieb"),
+    f_kdnr: document.getElementById("f_kdnr"),
+    f_auftragsnr: document.getElementById("f_auftragsnr"),
+    f_name: document.getElementById("f_name"),
+    f_adresse: document.getElementById("f_adresse"),
+    f_telefon: document.getElementById("f_telefon"),
+    f_art: document.getElementById("f_art"),
+    f_monteur: document.getElementById("f_monteur"),
+    f_helfer: document.getElementById("f_helfer"),
+    f_zeit: document.getElementById("f_zeit"),
+    f_termindatum: document.getElementById("f_termindatum"),
+    f_terminzeit: document.getElementById("f_terminzeit"),
+    f_status: document.getElementById("f_status"),
+    f_ausgefuehrtVon: document.getElementById("f_ausgefuehrtVon"),
+    f_durchgefuehrtAm: document.getElementById("f_durchgefuehrtAm"),
+    durchgefuehrtAmField: document.getElementById("durchgefuehrtAmField"),
+    f_note: document.getElementById("f_note"),
+    t_vorhanden: document.getElementById("t_vorhanden"),
+    t_terminAusgemacht: document.getElementById("t_terminAusgemacht"),
+    t_ersatzteileNoetig: document.getElementById("t_ersatzteileNoetig"),
+    t_bestellt: document.getElementById("t_bestellt"),
+    t_lieferung: document.getElementById("t_lieferung"),
+    t_abgeholt: document.getElementById("t_abgeholt"),
+    t_durchgefuehrt: document.getElementById("t_durchgefuehrt"),
+    partStatusToggles: document.getElementById("partStatusToggles"),
+    partsEditorList: document.getElementById("partsEditorList"),
+    partsEmptyHint: document.getElementById("partsEmptyHint"),
+    partName: document.getElementById("partName"),
+    partQty: document.getElementById("partQty"),
+    partLieferant: document.getElementById("partLieferant"),
+    partBestellnr: document.getElementById("partBestellnr"),
+    partPreis: document.getElementById("partPreis"),
+    partAddBtn: document.getElementById("partAddBtn"),
+    photoEditorList: document.getElementById("photoEditorList"),
+    photoInput: document.getElementById("photoInput"),
+    photoAddBtn: document.getElementById("photoAddBtn"),
+    pdfFieldOuter: document.getElementById("pdfFieldOuter"),
+    pdfChipWrap: document.getElementById("pdfChipWrap"),
+    pdfInput: document.getElementById("pdfInput"),
+    pdfAddBtn: document.getElementById("pdfAddBtn"),
+    lightbox: document.getElementById("lightbox"),
+    lightboxImg: document.getElementById("lightboxImg"),
+    lightboxClose: document.getElementById("lightboxClose")
+  };
+
+  function showToast(msg) {
+    els.toast.textContent = msg;
+    els.toast.classList.add("show");
+    setTimeout(function () { els.toast.classList.remove("show"); }, 1800);
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return "—";
+    var parts = iso.split("-");
+    if (parts.length !== 3) return iso;
+    return parts[2] + "." + parts[1] + "." + parts[0];
+  }
+
+  function esc(s) {
+    var d = document.createElement("div");
+    d.textContent = s == null ? "" : String(s);
+    return d.innerHTML;
+  }
+
+  function parts(o) { return Array.isArray(o.teile) ? o.teile : []; }
+  function hasParts(o) { return parts(o).length > 0; }
+  // "Ersatzteile nötig" gilt entweder, weil konkrete Teile eingetragen sind, ODER weil der
+  // Schalter im Formular manuell gesetzt wurde (ohne dass schon feststeht, welche Teile genau).
+  function needsErsatzteile(o) { return hasParts(o) || !!o.ersatzteileNoetig; }
+  function needsOrdering(o) { return needsErsatzteile(o) && !o.ersatzteileBestellt; }
+  function needsPickup(o) { return needsErsatzteile(o) && !!o.ersatzteileBestellt && !o.ersatzteileAbgeholt && !o.ersatzteileLieferung; }
+  function materialReady(o) { return !needsErsatzteile(o) || !!o.ersatzteileBestellt || !!o.ersatzteileAbgeholt; }
+  function hasTermin(o) { return !!(o.terminAusgemacht || o.terminDatum || o.terminZeit); }
+  function printReady(o) { return materialReady(o) && hasTermin(o); }
+
+  function orderBetrieb(o) { return o.betrieb || "Rauchfangkehrer"; }
+
+  function matchesFilter(o) {
+    if (state.betriebFilter !== "alle" && orderBetrieb(o) !== state.betriebFilter) return false;
+    if (state.filter === "alle") return true;
+    if (state.filter === "offen") return o.status !== "erledigt";
+    if (state.filter === "erledigt") return o.status === "erledigt";
+    if (state.filter === "ersatzteile") return needsErsatzteile(o) && !o.ersatzteileAbgeholt;
+    return true;
+  }
+
+  function updateCounts() {
+    var scoped = state.betriebFilter === "alle"
+      ? state.orders
+      : state.orders.filter(function (o) { return orderBetrieb(o) === state.betriebFilter; });
+    var all = scoped.length;
+    var offen = scoped.filter(function (o) { return o.status !== "erledigt"; }).length;
+    var erledigt = all - offen;
+    var ersatz = scoped.filter(function (o) { return needsErsatzteile(o) && !o.ersatzteileAbgeholt; }).length;
+    var bestell = scoped.filter(function (o) { return needsOrdering(o) || needsPickup(o); }).length;
+    els.counts.alle.textContent = all ? " " + all : "";
+    els.counts.offen.textContent = offen ? " " + offen : "";
+    els.counts.erledigt.textContent = erledigt ? " " + erledigt : "";
+    els.counts.ersatzteile.textContent = ersatz ? " " + ersatz : "";
+    els.counts.bestell.textContent = bestell ? " " + bestell : "";
+  }
+
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        showToast("Liste kopiert");
+      }).catch(function () { fallbackCopy(text); });
+    } else {
+      fallbackCopy(text);
+    }
+  }
+  function fallbackCopy(text) {
+    try {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      showToast("Liste kopiert");
+    } catch (err) {
+      showToast("Kopieren nicht möglich");
+    }
+  }
+
+  var EXCLUSIVE_PAIRS = { ersatzteileAbgeholt: "ersatzteileLieferung", ersatzteileLieferung: "ersatzteileAbgeholt" };
+
+  function toggleField(order, field) {
+    if (!state.writable) { showToast("Nur Lesezugriff"); return; }
+    var next = !order[field];
+    var prevOther = null;
+    var otherField = EXCLUSIVE_PAIRS[field];
+    var update = objSet(field, next);
+    if (next && otherField && order[otherField]) {
+      prevOther = order[otherField];
+      order[otherField] = false;
+      update[otherField] = false;
+    }
+    order[field] = next; // optimistic
+    render();
+    state.db.doc(COLLECTION + "/" + order.id)
+      .update(update)
+      .catch(function (err) {
+        order[field] = !next;
+        if (otherField && prevOther !== null) order[otherField] = prevOther;
+        render();
+        writeFailed(err, "Änderung");
+      });
+  }
+
+  function toggleStatus(order) {
+    if (!state.writable) { showToast("Nur Lesezugriff"); return; }
+    var prev = order.status;
+    var next = prev === "erledigt" ? "offen" : "erledigt";
+    order.status = next; // optimistic
+    render();
+    state.db.doc(COLLECTION + "/" + order.id)
+      .update({ status: next })
+      .catch(function (err) {
+        order.status = prev;
+        render();
+        writeFailed(err, "Änderung");
+      });
+  }
+
+  function objSet(key, val) {
+    var o = {};
+    o[key] = val;
+    return o;
+  }
+
+  function partsChips(o, doneClass) {
+    return parts(o).map(function (t) {
+      return '<span class="part-chip' + (doneClass ? ' done' : '') + '">' + (t.menge || 1) + '&times; ' + esc(t.name) + '</span>';
+    }).join("");
+  }
+
+  function partsDetailList(o) {
+    var items = parts(o).filter(function (t) { return t.lieferant || t.bestellnr || t.preis; });
+    if (!items.length) return "";
+    return '<div class="parts-detail-list">' + items.map(function (t) {
+      var bits = [];
+      if (t.lieferant) bits.push(esc(t.lieferant));
+      if (t.bestellnr) bits.push("Nr. " + esc(t.bestellnr));
+      if (t.preis) bits.push(formatPreis(t.preis));
+      return '<div class="parts-detail-row"><b>' + (t.menge || 1) + '&times; ' + esc(t.name) + '</b>' +
+        (bits.length ? ' — ' + bits.join(" · ") : "") + '</div>';
+    }).join("") + '</div>';
+  }
+
+  function photos(o) { return Array.isArray(o.fotos) ? o.fotos : []; }
+
+  function pdfLink(o) {
+    return o.lieferscheinPdf
+      ? '<div class="pdf-link-row"><a class="pdf-link" href="' + BLOB_BASE + o.lieferscheinPdf + '" target="_blank" rel="noopener">📄 Lieferschein öffnen</a></div>'
+      : "";
+  }
+
+  function photosStrip(o) {
+    var ids = photos(o);
+    if (!ids.length) return "";
+    return '<div class="photos">' + ids.map(function (id) {
+      return '<img class="photo-thumb" src="' + BLOB_BASE + id + '" data-lightbox="' + id + '" alt="Foto zum Auftrag">';
+    }).join("") + '</div>';
+  }
+
+  function displayName(id) {
+    if (!id) return "";
+    var n = state.nameCache[id];
+    return n === undefined ? "…" : (n || "");
+  }
+
+  function ensureNames(ids) {
+    var unique = [];
+    ids.forEach(function (id) {
+      if (id && unique.indexOf(id) === -1) unique.push(id);
+    });
+    var missing = unique.filter(function (id) { return !(id in state.nameCache); });
+    if (!missing.length || !state.userNS || typeof state.userNS.profiles !== "function") return;
+    missing.forEach(function (id) { state.nameCache[id] = undefined; }); // mark pending
+    state.userNS.profiles(missing).then(function (ps) {
+      missing.forEach(function (id) {
+        state.nameCache[id] = (ps[id] && ps[id].name) || "";
+      });
+      render();
+    }).catch(function () {});
+  }
+
+  function attributionLine(o) {
+    if (!o.createdBy) return "";
+    var creator = displayName(o.createdBy);
+    var line = creator ? "Angelegt von " + esc(creator) : "";
+    if (o.updatedBy && o.updatedBy !== o.createdBy) {
+      var editor = displayName(o.updatedBy);
+      if (editor) line += (line ? " &middot; " : "") + "bearbeitet von " + esc(editor);
+    }
+    return line ? '<div class="attribution">' + line + '</div>' : "";
+  }
+
+  function meta2Line(o) {
+    var bits = [];
+    if (o.auftragsart) bits.push(esc(o.auftragsart));
+    if (o.monteur) bits.push("Monteur: " + esc(o.monteur) + (o.helfer ? " (+ " + esc(o.helfer) + ")" : ""));
+    if (o.uhrzeit) bits.push(esc(o.uhrzeit));
+    return bits.length ? '<div class="card-meta2">' + bits.join(" &middot; ") + '</div>' : "";
+  }
+
+  function terminLine(o) {
+    if (!hasTermin(o)) return "";
+    var bits = [];
+    if (o.terminDatum) bits.push(fmtDate(o.terminDatum));
+    if (o.terminZeit) bits.push(esc(o.terminZeit));
+    return '<div class="termin-line">📅 Termin ausgemacht' + (bits.length ? ": " + bits.join(", ") : "") + '</div>';
+  }
+
+  function addressBlock(o) {
+    if (!o.adresse && !o.telefon) return "";
+    var lines = [];
+    if (o.adresse) lines.push(esc(o.adresse));
+    if (o.telefon) lines.push("Tel. " + esc(o.telefon));
+    return '<div class="card-address">' + lines.join("\n") + '</div>';
+  }
+
+  function arbeitBlock(o) {
+    if (!o.durchgefuehrt && !o.ausgefuehrtVon) return "";
+    var lines = [];
+    var head = "✔ Durchgeführt" + (o.durchgefuehrtAm ? " am " + fmtDate(o.durchgefuehrtAm) : "");
+    if (o.ausgefuehrtVon) lines.push('<div class="arbeit-von">Ausgeführt von: ' + esc(o.ausgefuehrtVon) + '</div>');
+    return '<div class="arbeit-block' + (o.durchgefuehrt ? ' done' : '') + '"><div class="arbeit-label">' + head + '</div>' + lines.join("") + '</div>';
+  }
+
+  function betriebBadge(o) {
+    var b = orderBetrieb(o);
+    var cls = b === "Energietechnik" ? "energietechnik" : "rfk";
+    return '<span class="betrieb-badge ' + cls + '">' + esc(b === "Energietechnik" ? "Energietechnik" : "Rauchfangkehrer") + '</span>';
+  }
+
+  function cardTemplate(o) {
+    var pillClass = o.status === "erledigt" ? "erledigt" : "offen";
+    var pillLabel = o.status === "erledigt" ? "Erledigt" : "Offen";
+    var meta = fmtDate(o.datum) +
+      (o.kundennummer ? " &middot; Projekt-Nr. " + esc(o.kundennummer) : "") +
+      (o.auftragsnummer ? " &middot; AA-Nr. " + esc(o.auftragsnummer) : "");
+    var partsBlock = hasParts(o)
+      ? '<div class="parts">' + partsChips(o, o.ersatzteileAbgeholt) + '</div>'
+      : "";
+    var partToggles = needsErsatzteile(o)
+      ? toggleChip(o, "ersatzteileBestellt", "bestellt", false) +
+        (o.ersatzteileAbgeholt ? "" : toggleChip(o, "ersatzteileLieferung", "wird geliefert", false)) +
+        (o.ersatzteileLieferung ? "" : toggleChip(o, "ersatzteileAbgeholt", "abgeholt", false))
+      : "";
+    return (
+      '<div class="card" data-id="' + o.id + '">' +
+        '<div class="card-top">' +
+          '<div>' +
+            '<div class="card-name">' + esc(o.name || "Ohne Bezeichnung") + '</div>' +
+            '<div class="card-meta">' + meta + '</div>' +
+            betriebBadge(o) +
+            meta2Line(o) +
+          '</div>' +
+          '<span class="pill ' + pillClass + '" data-status-toggle data-id="' + o.id + '" role="button" tabindex="0">' + pillLabel + '</span>' +
+        '</div>' +
+        addressBlock(o) +
+        terminLine(o) +
+        '<div class="toggles">' +
+          toggleChip(o, "auftragVorhanden", "Auftrag vorhanden", false) +
+          toggleChip(o, "terminAusgemacht", "Termin ausgemacht", false) +
+          partToggles +
+        '</div>' +
+        partsBlock +
+        photosStrip(o) +
+        pdfLink(o) +
+        (o.note ? '<div class="note">' + esc(o.note) + '</div>' : '') +
+        arbeitBlock(o) +
+        attributionLine(o) +
+        '<div class="card-actions">' +
+          '<button type="button" class="edit-btn" data-edit="' + o.id + '">Bearbeiten</button>' +
+          '<button type="button" class="print-btn" data-print="' + o.id + '">🖨️ Drucken</button>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function buildPrintHtml(o) {
+    var b = orderBetrieb(o);
+    var betriebName = b === "Energietechnik" ? "Grieer Energietechnik OG" : "Rauchfangkehrer Roland Grieer";
+    var rows = [];
+    rows.push(["Status", o.status === "erledigt" ? "Erledigt" : "Offen"]);
+    rows.push(["Datum", fmtDate(o.datum)]);
+    if (o.kundennummer) rows.push(["Projekt-Nr.", o.kundennummer]);
+    if (o.auftragsnummer) rows.push(["Arbeitsauftragsnummer", o.auftragsnummer]);
+    if (o.auftragsart) rows.push(["Auftragsart", o.auftragsart]);
+    if (o.monteur) rows.push(["Monteur", o.monteur + (o.helfer ? " (+ " + o.helfer + ")" : "")]);
+    if (hasTermin(o)) {
+      var t = [];
+      if (o.terminDatum) t.push(fmtDate(o.terminDatum));
+      if (o.terminZeit) t.push(o.terminZeit);
+      rows.push(["Termin ausgemacht", t.join(", ")]);
+    }
+    if (needsErsatzteile(o)) {
+      rows.push(["Ersatzteile bestellt", o.ersatzteileBestellt ? "Ja" : "Nein"]);
+      if (o.ersatzteileLieferung) rows.push(["Wird geliefert", "Ja"]);
+      rows.push(["Ersatzteile abgeholt", o.ersatzteileAbgeholt ? "Ja" : "Nein"]);
+    }
+    var rowsHtml = rows.map(function (r) {
+      return '<tr><td class="pk">' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td></tr>';
+    }).join("");
+
+    var partsItems = parts(o);
+    var partsHtml = "";
+    if (partsItems.length) {
+      partsHtml = '<h3>Ersatzteile</h3><table class="print-table">' +
+        partsItems.map(function (p) {
+          var extra = [];
+          if (p.lieferant) extra.push(esc(p.lieferant));
+          if (p.bestellnr) extra.push("Nr. " + esc(p.bestellnr));
+          if (p.preis) extra.push(formatPreis(p.preis));
+          return '<tr><td class="pk">' + (p.menge || 1) + '&times;</td><td>' + esc(p.name) +
+            (extra.length ? '<br><span class="print-sub">' + extra.join(" · ") + '</span>' : '') + '</td></tr>';
+        }).join("") + '</table>';
+    }
+
+    return (
+      '<div class="print-sheet">' +
+        '<div class="print-header">' +
+          '<div class="print-betrieb">' + esc(betriebName) + '</div>' +
+          '<div class="print-title">Auftrag</div>' +
+        '</div>' +
+        '<div class="print-name">' + esc(o.name || "Ohne Bezeichnung") + '</div>' +
+        (o.adresse ? '<div class="print-address">' + esc(o.adresse) + '</div>' : '') +
+        (o.telefon ? '<div class="print-address">Tel. ' + esc(o.telefon) + '</div>' : '') +
+        '<table class="print-table">' + rowsHtml + '</table>' +
+        partsHtml +
+        (o.note ? '<h3>Kundenwunsch / Anmerkung</h3><div class="print-note">' + esc(o.note) + '</div>' : "") +
+      '</div>'
+    );
+  }
+
+  var PRINT_CSS =
+    'body{font-family:"Public Sans",Arial,sans-serif;color:#111;padding:12mm;margin:0;}' +
+    '.print-header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #111;padding-bottom:8px;margin-bottom:14px;}' +
+    '.print-betrieb{font-size:14px;font-weight:700;}' +
+    '.print-title{font-size:20px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;}' +
+    '.print-name{font-size:22px;font-weight:700;margin-bottom:2px;}' +
+    '.print-address{font-size:13px;color:#333;margin-bottom:2px;}' +
+    '.print-table{width:100%;border-collapse:collapse;margin:14px 0;}' +
+    '.print-table td{padding:5px 6px;border-bottom:1px solid #ccc;font-size:13px;vertical-align:top;}' +
+    '.print-table td.pk{font-weight:700;width:38%;color:#333;}' +
+    '.print-sub{font-size:11.5px;color:#555;}' +
+    'h3{font-size:14px;margin:16px 0 4px;text-transform:uppercase;letter-spacing:.03em;}' +
+    '.print-note{font-size:13px;white-space:pre-wrap;line-height:1.5;}';
+
+  function buildPrintDocument(o) {
+    return (
+      '<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8">' +
+      '<title>Auftrag - ' + esc(o.name || "Auftrag") + '</title>' +
+      '<style>' + PRINT_CSS + '</style></head>' +
+      '<body>' + buildPrintHtml(o) +
+      '<script>window.onload=function(){window.print();};<\/script>' +
+      '</body></html>'
+    );
+  }
+
+  function printOrder(o) {
+    var html = buildPrintDocument(o);
+    var blob = new Blob([html], { type: "text/html" });
+    var url = URL.createObjectURL(blob);
+    var opened = null;
+    try { opened = window.open(url, "_blank"); } catch (err) { opened = null; }
+    if (!opened) { location.href = url; }
+    setTimeout(function () { URL.revokeObjectURL(url); }, 60000);
+  }
+
+  function toggleChip(o, field, label, isNeed) {
+    var on = !!o[field];
+    return (
+      '<span class="tgl' + (isNeed ? ' need' : '') + (on ? ' on' : '') + '" data-toggle="' + field + '" data-id="' + o.id + '">' +
+        '<span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+        label +
+      '</span>'
+    );
+  }
+
+  function bestellCard(o, mode) {
+    var meta = fmtDate(o.datum) + (o.kundennummer ? " &middot; Projekt-Nr. " + esc(o.kundennummer) : "");
+    var btn = mode === "order"
+      ? '<button type="button" class="advance-btn" data-advance="bestellt" data-id="' + o.id + '">Als bestellt markieren</button>'
+      : '<button type="button" class="advance-btn" data-advance="abgeholt" data-id="' + o.id + '">Als abgeholt markieren</button>';
+    return (
+      '<div class="card bestell-card" data-id="' + o.id + '">' +
+        '<div class="card-name">' + esc(o.name || "Ohne Bezeichnung") + '</div>' +
+        '<div class="card-meta">' + meta + '</div>' +
+        '<div class="parts">' + partsChips(o, false) + '</div>' +
+        partsDetailList(o) +
+        btn +
+      '</div>'
+    );
+  }
+
+  function buildOrderListText(orders) {
+    return orders.map(function (o) {
+      var lines = parts(o).map(function (t) {
+        var extra = [];
+        if (t.lieferant) extra.push(t.lieferant);
+        if (t.bestellnr) extra.push("Nr. " + t.bestellnr);
+        if (t.preis) extra.push(formatPreisPlain(t.preis));
+        return "- " + (t.menge || 1) + "x " + t.name + (extra.length ? " (" + extra.join(", ") + ")" : "");
+      }).join("\n");
+      return (o.name || "Auftrag") + (o.kundennummer ? " (Projekt-Nr. " + o.kundennummer + ")" : "") + ":\n" + lines;
+    }).join("\n\n");
+  }
+
+  function formatPreisPlain(v) {
+    var n = parseFloat(String(v).replace(",", "."));
+    if (isNaN(n)) return String(v);
+    return n.toLocaleString("de-AT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " EUR";
+  }
+
+  function renderBestellliste() {
+    var scoped = state.betriebFilter === "alle"
+      ? state.orders
+      : state.orders.filter(function (o) { return orderBetrieb(o) === state.betriebFilter; });
+    var toOrder = scoped.filter(needsOrdering);
+    var toPickup = scoped.filter(needsPickup);
+    updateCounts();
+    if (!toOrder.length && !toPickup.length) {
+      els.bestellView.hidden = true;
+      els.bestellView.innerHTML = "";
+      els.bestellEmpty.hidden = false;
+      return;
+    }
+    els.bestellEmpty.hidden = true;
+    els.bestellView.hidden = false;
+    var html = "";
+    if (toOrder.length) {
+      html +=
+        '<div class="bestell-section">' +
+          '<div class="bestell-heading"><h2>Zu bestellen</h2><button type="button" class="copy-btn" id="copyOrderList">Liste kopieren</button></div>' +
+          toOrder.map(function (o) { return bestellCard(o, "order"); }).join("") +
+        '</div>';
+    }
+    if (toPickup.length) {
+      html +=
+        '<div class="bestell-section">' +
+          '<div class="bestell-heading"><h2>Bestellt &ndash; zur Abholung</h2></div>' +
+          toPickup.map(function (o) { return bestellCard(o, "pickup"); }).join("") +
+        '</div>';
+    }
+    els.bestellView.innerHTML = html;
+    var copyBtn = document.getElementById("copyOrderList");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", function () { copyText(buildOrderListText(toOrder)); });
+    }
+  }
+
+  function render() {
+    if (state.view === "bestellliste") {
+      els.list.hidden = true;
+      els.empty.hidden = true;
+      els.filters.hidden = true;
+      renderBestellliste();
+      return;
+    }
+    els.filters.hidden = false;
+    els.bestellView.hidden = true;
+    els.bestellEmpty.hidden = true;
+
+    var visible = state.orders.filter(matchesFilter);
+    visible.sort(function (a, b) {
+      return (b.datum || "").localeCompare(a.datum || "") || (b.createdAt || 0) - (a.createdAt || 0);
+    });
+    updateCounts();
+    if (!visible.length) {
+      els.list.hidden = true;
+      els.list.innerHTML = "";
+      els.empty.hidden = false;
+      if (state.orders.length && state.filter !== "alle") {
+        els.empty.querySelector(".headline").textContent = "Nichts in dieser Ansicht";
+        els.empty.querySelector("p").textContent = "Filter wechseln oder neuen Auftrag anlegen.";
+      } else {
+        els.empty.querySelector(".headline").textContent = "Noch keine Aufträge";
+        els.empty.querySelector("p").textContent = "Tippe unten rechts auf „+“, um den ersten Auftrag einzutragen.";
+      }
+      return;
+    }
+    els.empty.hidden = true;
+    els.list.hidden = false;
+    els.list.innerHTML = visible.map(cardTemplate).join("");
+
+    var ids = [];
+    visible.forEach(function (o) { ids.push(o.createdBy, o.updatedBy); });
+    ensureNames(ids);
+  }
+
+  els.list.addEventListener("click", function (e) {
+    var lb = e.target.closest("[data-lightbox]");
+    if (lb) { openLightbox(lb.getAttribute("data-lightbox")); return; }
+    var t = e.target.closest("[data-toggle]");
+    if (t) {
+      var order = state.orders.find(function (o) { return o.id === t.getAttribute("data-id"); });
+      if (order) toggleField(order, t.getAttribute("data-toggle"));
+      return;
+    }
+    var st = e.target.closest("[data-status-toggle]");
+    if (st) {
+      var statusOrder = state.orders.find(function (o) { return o.id === st.getAttribute("data-id"); });
+      if (statusOrder) toggleStatus(statusOrder);
+      return;
+    }
+    var edit = e.target.closest("[data-edit]");
+    if (edit) { openSheet(edit.getAttribute("data-edit")); return; }
+    var pr = e.target.closest("[data-print]");
+    if (pr) {
+      var printOrderObj = state.orders.find(function (o) { return o.id === pr.getAttribute("data-print"); });
+      if (printOrderObj) printOrder(printOrderObj);
+    }
+  });
+
+  function openLightbox(assetId) {
+    els.lightboxImg.src = BLOB_BASE + assetId;
+    els.lightbox.hidden = false;
+  }
+  function closeLightbox() { els.lightbox.hidden = true; els.lightboxImg.src = ""; }
+  els.lightboxClose.addEventListener("click", closeLightbox);
+  els.lightbox.addEventListener("click", function (e) { if (e.target === els.lightbox) closeLightbox(); });
+
+  els.bestellView.addEventListener("click", function (e) {
+    var adv = e.target.closest("[data-advance]");
+    if (!adv) return;
+    var order = state.orders.find(function (o) { return o.id === adv.getAttribute("data-id"); });
+    if (order) toggleField(order, adv.getAttribute("data-advance") === "bestellt" ? "ersatzteileBestellt" : "ersatzteileAbgeholt");
+  });
+
+  els.filters.addEventListener("click", function (e) {
+    var chip = e.target.closest(".chip");
+    if (!chip) return;
+    state.filter = chip.getAttribute("data-filter");
+    Array.prototype.forEach.call(els.filters.querySelectorAll(".chip"), function (c) {
+      c.setAttribute("aria-pressed", c === chip ? "true" : "false");
+    });
+    render();
+  });
+
+  els.betriebFilters.addEventListener("click", function (e) {
+    var chip = e.target.closest(".chip");
+    if (!chip) return;
+    state.betriebFilter = chip.getAttribute("data-betrieb");
+    Array.prototype.forEach.call(els.betriebFilters.querySelectorAll(".chip"), function (c) {
+      c.setAttribute("aria-pressed", c === chip ? "true" : "false");
+    });
+    render();
+  });
+
+  els.viewTabs.addEventListener("click", function (e) {
+    var tab = e.target.closest(".tabbtn");
+    if (!tab) return;
+    state.view = tab.getAttribute("data-view");
+    Array.prototype.forEach.call(els.viewTabs.querySelectorAll(".tabbtn"), function (b) {
+      b.setAttribute("aria-pressed", b === tab ? "true" : "false");
+    });
+    render();
+  });
+
+  function setSheetToggle(el, on) { el.classList.toggle("on", !!on); el.dataset.on = on ? "1" : ""; }
+  function getSheetToggle(el) { return !!el.dataset.on; }
+
+  function updateDurchgefuehrtVisibility() {
+    els.durchgefuehrtAmField.hidden = !getSheetToggle(els.t_durchgefuehrt);
+  }
+
+  [els.t_vorhanden, els.t_terminAusgemacht, els.t_ersatzteileNoetig, els.t_bestellt, els.t_lieferung, els.t_abgeholt, els.t_durchgefuehrt].forEach(function (el) {
+    el.addEventListener("click", function () {
+      var nowOn = !getSheetToggle(el);
+      setSheetToggle(el, nowOn);
+      if (el === els.t_ersatzteileNoetig) updatePartStatusVisibility();
+      if (el === els.t_durchgefuehrt) {
+        if (nowOn && !els.f_durchgefuehrtAm.value) {
+          els.f_durchgefuehrtAm.value = new Date().toISOString().slice(0, 10);
+        }
+        updateDurchgefuehrtVisibility();
+      }
+      if (nowOn && el === els.t_lieferung) setSheetToggle(els.t_abgeholt, false);
+      if (nowOn && el === els.t_abgeholt) setSheetToggle(els.t_lieferung, false);
+    });
+  });
+
+  function updatePartStatusVisibility() {
+    els.partStatusToggles.hidden = state.sheetParts.length === 0 && !getSheetToggle(els.t_ersatzteileNoetig);
+  }
+
+  function partSubline(p) {
+    var bits = [];
+    if (p.lieferant) bits.push(esc(p.lieferant));
+    if (p.bestellnr) bits.push("Nr. " + esc(p.bestellnr));
+    if (p.preis) bits.push(formatPreis(p.preis));
+    return bits.join(" · ");
+  }
+
+  function formatPreis(v) {
+    var n = parseFloat(String(v).replace(",", "."));
+    if (isNaN(n)) return esc(String(v));
+    return n.toLocaleString("de-AT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+  }
+
+  function renderPartsEditor() {
+    els.partsEmptyHint.hidden = state.sheetParts.length > 0;
+    els.partsEditorList.innerHTML = state.sheetParts.map(function (p) {
+      var sub = partSubline(p);
+      return (
+        '<div class="part-row" data-pid="' + p.id + '">' +
+          '<span class="p-qty">' + p.menge + '&times;</span>' +
+          '<span class="p-detail">' +
+            '<span class="p-name">' + esc(p.name) + '</span>' +
+            (sub ? '<span class="p-sub">' + sub + '</span>' : '') +
+          '</span>' +
+          '<button type="button" class="p-remove" data-remove="' + p.id + '" aria-label="Teil entfernen">&times;</button>' +
+        '</div>'
+      );
+    }).join("");
+    updatePartStatusVisibility();
+  }
+
+  els.partsEditorList.addEventListener("click", function (e) {
+    var rm = e.target.closest("[data-remove]");
+    if (!rm) return;
+    var pid = rm.getAttribute("data-remove");
+    state.sheetParts = state.sheetParts.filter(function (p) { return String(p.id) !== pid; });
+    renderPartsEditor();
+  });
+
+  function addPartFromInputs() {
+    var name = els.partName.value.trim();
+    if (!name) { els.partName.focus(); return; }
+    var qty = parseInt(els.partQty.value, 10);
+    if (!qty || qty < 1) qty = 1;
+    var lieferant = els.partLieferant.value.trim();
+    var bestellnr = els.partBestellnr.value.trim();
+    var preis = els.partPreis.value.trim();
+    state.sheetParts.push({
+      id: "p" + (partIdSeq++), name: name, menge: qty,
+      lieferant: lieferant, bestellnr: bestellnr, preis: preis
+    });
+    els.partName.value = "";
+    els.partQty.value = "1";
+    els.partLieferant.value = "";
+    els.partBestellnr.value = "";
+    els.partPreis.value = "";
+    els.partName.focus();
+    renderPartsEditor();
+  }
+  els.partAddBtn.addEventListener("click", addPartFromInputs);
+  els.partName.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { e.preventDefault(); addPartFromInputs(); }
+  });
+
+  function renderPhotosEditor() {
+    els.photoEditorList.innerHTML = state.sheetPhotos.map(function (p) {
+      return (
+        '<div class="photo-edit-thumb' + (p.pending ? ' pending' : '') + '" data-pid="' + p.localId + '">' +
+          '<img src="' + p.url + '" alt="Foto">' +
+          (p.pending ? '' : '<button type="button" class="p-remove" data-removephoto="' + p.localId + '" aria-label="Foto entfernen">&times;</button>') +
+        '</div>'
+      );
+    }).join("");
+    els.photoAddBtn.hidden = !state.assetsNS;
+    if (!state.assetsNS && !state.sheetPhotos.length) {
+      els.photoEditorList.innerHTML = '<p class="parts-empty-hint">Fotos sind in dieser Ansicht nicht verfügbar.</p>';
+    }
+  }
+
+  els.photoEditorList.addEventListener("click", function (e) {
+    var rm = e.target.closest("[data-removephoto]");
+    if (!rm) return;
+    var localId = rm.getAttribute("data-removephoto");
+    var p = state.sheetPhotos.find(function (x) { return x.localId === localId; });
+    if (!p) return;
+    state.sheetPhotos = state.sheetPhotos.filter(function (x) { return x.localId !== localId; });
+    renderPhotosEditor();
+    if (p.assetId && state.assetsNS) {
+      state.assetsNS.delete(p.assetId).catch(function () {});
+    }
+  });
+
+  els.photoInput.addEventListener("change", function () {
+    var files = Array.prototype.slice.call(els.photoInput.files || []);
+    els.photoInput.value = "";
+    if (!files.length || !state.assetsNS) return;
+    files.forEach(function (file) {
+      var localId = "ph" + (photoIdSeq++);
+      var previewUrl = URL.createObjectURL(file);
+      state.sheetPhotos.push({ localId: localId, assetId: null, url: previewUrl, pending: true });
+      renderPhotosEditor();
+      state.assetsNS.upload(file).then(function (res) {
+        var entry = state.sheetPhotos.find(function (x) { return x.localId === localId; });
+        if (!entry) { return; } // removed while uploading
+        entry.assetId = res.id;
+        entry.url = res.url;
+        entry.pending = false;
+        renderPhotosEditor();
+      }).catch(function () {
+        state.sheetPhotos = state.sheetPhotos.filter(function (x) { return x.localId !== localId; });
+        renderPhotosEditor();
+        showToast("Foto-Upload fehlgeschlagen");
+      });
+    });
+  });
+
+  /* --- PDF import: load pdf.js from cdn, read text, guess fields --- */
+  var PDFJS_VERSION = "3.11.174";
+  function loadPdfJs() {
+    if (window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+    if (state.pdfJsPromise) return state.pdfJsPromise;
+    state.pdfJsPromise = new Promise(function (resolve, reject) {
+      var s = document.createElement("script");
+      s.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/" + PDFJS_VERSION + "/pdf.min.js";
+      s.onload = function () {
+        try {
+          window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+            "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/" + PDFJS_VERSION + "/pdf.worker.min.js";
+          resolve(window.pdfjsLib);
+        } catch (err) { reject(err); }
+      };
+      s.onerror = function () { reject(new Error("pdfjs_load_failed")); };
+      document.head.appendChild(s);
+    });
+    return state.pdfJsPromise;
+  }
+
+  function extractPdfText(file) {
+    return loadPdfJs().then(function (pdfjsLib) {
+      return file.arrayBuffer().then(function (buf) {
+        return pdfjsLib.getDocument({ data: buf }).promise.then(function (pdf) {
+          var pagePromises = [];
+          for (var i = 1; i <= pdf.numPages; i++) {
+            pagePromises.push(pdf.getPage(i).then(function (page) {
+              return page.getTextContent().then(function (tc) {
+                return tc.items.map(function (it) { return it.str; }).join(" ");
+              });
+            }));
+          }
+          return Promise.all(pagePromises).then(function (texts) { return texts.join("\n"); });
+        });
+      });
+    });
+  }
+
+  var FIELD_LABELS = {
+    datum: ["Datum"],
+    uhrzeit: ["Uhrzeit"],
+    monteur: ["Monteur"],
+    helfer: ["Helfer"],
+    auftragsart: ["Auswahl"],
+    kundennummer: ["Projekt-Nr.", "Projekt-Nr", "Projektnummer"],
+    anschrift: ["Anschrift"],
+    ansprechpartner: ["Ansprechpartner"],
+    kundenwunsch: ["Kundenwunsch"],
+    material: ["Verwendetes Material", "Material"],
+    abgeschlossen: ["Arbeiten abgeschlossen"]
+  };
+  var ALL_LABELS = Object.keys(FIELD_LABELS).reduce(function (acc, k) { return acc.concat(FIELD_LABELS[k]); }, []);
+
+  function extractByLabel(text, labels) {
+    for (var i = 0; i < labels.length; i++) {
+      var label = labels[i];
+      var idx = text.toLowerCase().indexOf(label.toLowerCase());
+      if (idx === -1) continue;
+      var rest = text.slice(idx + label.length).replace(/^[\s:.\-]+/, "");
+      var cut = rest.length;
+      ALL_LABELS.forEach(function (l) {
+        if (l.toLowerCase() === label.toLowerCase()) return;
+        var j = rest.toLowerCase().indexOf(l.toLowerCase());
+        if (j !== -1 && j < cut) cut = j;
+      });
+      var val = rest.slice(0, cut).trim();
+      if (val) return val;
+    }
+    return "";
+  }
+
+  function parseGermanDate(s) {
+    var m = s.match(/(\d{1,2})[.\/](\d{1,2})[.\/](\d{2,4})/);
+    if (!m) return "";
+    var d = ("0" + m[1]).slice(-2), mo = ("0" + m[2]).slice(-2);
+    var y = m[3].length === 2 ? "20" + m[3] : m[3];
+    return y + "-" + mo + "-" + d;
+  }
+
+  function extractPhone(s) {
+    if (!s) return "";
+    var m = s.match(/(\+?\d[\d\s\/\-]{5,}\d)/);
+    return m ? m[0].trim() : "";
+  }
+
+  function guessNameFromAnschrift(block) {
+    if (!block) return "";
+    var m = block.match(/^(.*?)(?=\d{4,5}\b|,)/);
+    var name = m && m[1] ? m[1].trim() : block.split(",")[0].trim();
+    return name.slice(0, 80);
+  }
+
+  function parsePartsFromMaterial(materialText) {
+    if (!materialText) return [];
+    var out = [];
+    var re = /(\d+)\s*(?:x|X|Stk\.?|St\.?)\s*([^,;\d]+?)(?=(?:\d+\s*(?:x|X|Stk\.?|St\.?))|$|,|;)/g;
+    var m;
+    while ((m = re.exec(materialText))) {
+      var name = m[2].trim().replace(/[,;]$/, "");
+      if (name) out.push({ id: "p" + (partIdSeq++), name: name, menge: parseInt(m[1], 10) || 1 });
+    }
+    if (!out.length) {
+      materialText.split(/[,;]/).forEach(function (chunk) {
+        var name = chunk.trim();
+        if (name) out.push({ id: "p" + (partIdSeq++), name: name, menge: 1 });
+      });
+    }
+    return out;
+  }
+
+  function parseLieferschein(rawText) {
+    var f = {};
+    f.datum = parseGermanDate(extractByLabel(rawText, FIELD_LABELS.datum));
+    f.uhrzeit = extractByLabel(rawText, FIELD_LABELS.uhrzeit);
+    f.monteur = extractByLabel(rawText, FIELD_LABELS.monteur);
+    f.helfer = extractByLabel(rawText, FIELD_LABELS.helfer);
+    f.auftragsart = extractByLabel(rawText, FIELD_LABELS.auftragsart);
+    f.kundennummer = extractByLabel(rawText, FIELD_LABELS.kundennummer);
+    var anschrift = extractByLabel(rawText, FIELD_LABELS.anschrift);
+    f.adresse = anschrift;
+    f.name = guessNameFromAnschrift(anschrift);
+    var ansprech = extractByLabel(rawText, FIELD_LABELS.ansprechpartner);
+    f.telefon = extractPhone(ansprech) || extractPhone(anschrift);
+    f.note = extractByLabel(rawText, FIELD_LABELS.kundenwunsch);
+    var material = extractByLabel(rawText, FIELD_LABELS.material);
+    f.teile = parsePartsFromMaterial(material);
+    var abgeschlossen = extractByLabel(rawText, FIELD_LABELS.abgeschlossen);
+    f.status = /^ja/i.test(abgeschlossen) ? "erledigt" : "offen";
+
+    var filledCount = ["datum", "uhrzeit", "monteur", "kundennummer", "adresse", "telefon", "note"]
+      .filter(function (k) { return f[k]; }).length;
+    if (filledCount < 3) {
+      f.note = (f.note ? f.note + "\n\n" : "") +
+        "Automatisch aus PDF gelesen (bitte prüfen und ergänzen):\n" + rawText.slice(0, 1500);
+    }
+    return f;
+  }
+
+  function applyParsedFields(f) {
+    if (f.datum) els.f_datum.value = f.datum;
+    if (f.kundennummer) els.f_kdnr.value = f.kundennummer;
+    if (f.name) els.f_name.value = f.name;
+    if (f.adresse) els.f_adresse.value = f.adresse;
+    if (f.telefon) els.f_telefon.value = f.telefon;
+    if (f.auftragsart) {
+      var match = null;
+      Array.prototype.forEach.call(els.f_art.options, function (o) {
+        if (o.value && o.value.toLowerCase() === f.auftragsart.toLowerCase()) match = o.value;
+      });
+      if (match) els.f_art.value = match;
+    }
+    if (f.monteur) els.f_monteur.value = f.monteur;
+    if (f.helfer) els.f_helfer.value = f.helfer;
+    if (f.uhrzeit) els.f_zeit.value = f.uhrzeit;
+    if (f.status) els.f_status.value = f.status;
+    if (f.note) els.f_note.value = (els.f_note.value ? els.f_note.value + "\n\n" : "") + f.note;
+    if (f.teile && f.teile.length) {
+      state.sheetParts = state.sheetParts.concat(f.teile);
+      renderPartsEditor();
+    }
+  }
+
+  function renderPdfField() {
+    if (!els.pdfChipWrap) return;
+    if (!state.sheetPdf) {
+      els.pdfChipWrap.innerHTML = '<p class="parts-empty-hint">Noch kein PDF angehängt.</p>';
+      return;
+    }
+    var p = state.sheetPdf;
+    els.pdfChipWrap.innerHTML =
+      '<div class="pdf-chip' + (p.pending ? ' pending' : '') + '">' +
+        '<span class="pdf-chip-name">📄 ' + esc(p.name || "Lieferschein.pdf") + (p.pending ? ' (wird verarbeitet…)' : '') + '</span>' +
+        (p.pending ? '' :
+          '<a href="' + p.url + '" target="_blank" rel="noopener" class="pdf-chip-open">Öffnen</a>' +
+          '<button type="button" class="p-remove" id="pdfRemoveBtn" aria-label="PDF entfernen">&times;</button>'
+        ) +
+      '</div>';
+  }
+
+  if (els.pdfFieldOuter) {
+    els.pdfFieldOuter.addEventListener("click", function (e) {
+      if (!e.target.closest("#pdfRemoveBtn")) return;
+      var p = state.sheetPdf;
+      state.sheetPdf = null;
+      renderPdfField();
+      if (p && p.assetId && state.assetsNS) {
+        state.assetsNS.delete(p.assetId).catch(function () {});
+      }
+    });
+  }
+
+  if (els.pdfInput) {
+    els.pdfInput.addEventListener("change", function () {
+      var file = els.pdfInput.files && els.pdfInput.files[0];
+      els.pdfInput.value = "";
+      if (!file) return;
+      if (!state.assetsNS) { showToast("PDF-Upload in dieser Ansicht nicht verfügbar"); return; }
+      state.sheetPdf = { assetId: null, url: URL.createObjectURL(file), name: file.name, pending: true };
+      renderPdfField();
+      showToast("PDF wird gelesen …");
+      var pendingRef = state.sheetPdf;
+      var uploadPromise = state.assetsNS.upload(file, { type: "application/pdf" });
+      var textPromise = extractPdfText(file).catch(function () { return ""; });
+      Promise.all([uploadPromise, textPromise]).then(function (res) {
+        if (state.sheetPdf !== pendingRef) return; // removed or replaced meanwhile
+        var uploadRes = res[0], text = res[1];
+        state.sheetPdf.assetId = uploadRes.id;
+        state.sheetPdf.url = uploadRes.url;
+        state.sheetPdf.pending = false;
+        renderPdfField();
+        if (text) {
+          applyParsedFields(parseLieferschein(text));
+          showToast("Felder aus PDF übernommen – bitte prüfen");
+        } else {
+          showToast("PDF angehängt (Text konnte nicht automatisch gelesen werden)");
+        }
+      }).catch(function () {
+        if (state.sheetPdf === pendingRef) { state.sheetPdf = null; renderPdfField(); }
+        showToast("PDF-Upload fehlgeschlagen");
+      });
+    });
+  }
+
+  function openSheet(id) {
+    state.editingId = id || null;
+    els.importField.hidden = !!id;
+    if (id) {
+      var o = state.orders.find(function (x) { return x.id === id; });
+      if (!o) return;
+      els.sheetTitle.textContent = "Auftrag bearbeiten";
+      els.f_betrieb.value = o.betrieb || "Rauchfangkehrer";
+      els.f_datum.value = o.datum || "";
+      els.f_kdnr.value = o.kundennummer || "";
+      els.f_auftragsnr.value = o.auftragsnummer || "";
+      els.f_name.value = o.name || "";
+      els.f_adresse.value = o.adresse || "";
+      els.f_telefon.value = o.telefon || "";
+      els.f_art.value = o.auftragsart || "";
+      els.f_monteur.value = o.monteur || "";
+      els.f_helfer.value = o.helfer || "";
+      els.f_zeit.value = o.uhrzeit || "";
+      els.f_termindatum.value = o.terminDatum || "";
+      els.f_terminzeit.value = o.terminZeit || "";
+      els.f_status.value = o.status || "offen";
+      els.f_ausgefuehrtVon.value = o.ausgefuehrtVon || "";
+      els.f_durchgefuehrtAm.value = o.durchgefuehrtAm || "";
+      els.f_note.value = o.note || "";
+      setSheetToggle(els.t_vorhanden, o.auftragVorhanden);
+      setSheetToggle(els.t_terminAusgemacht, o.terminAusgemacht);
+      setSheetToggle(els.t_durchgefuehrt, o.durchgefuehrt);
+      updateDurchgefuehrtVisibility();
+      setSheetToggle(els.t_ersatzteileNoetig, o.ersatzteileNoetig);
+      setSheetToggle(els.t_bestellt, o.ersatzteileBestellt);
+      setSheetToggle(els.t_lieferung, o.ersatzteileLieferung);
+      setSheetToggle(els.t_abgeholt, o.ersatzteileAbgeholt);
+      state.sheetParts = parts(o).map(function (p) { return { id: p.id || ("p" + (partIdSeq++)), name: p.name, menge: p.menge || 1, lieferant: p.lieferant || "", bestellnr: p.bestellnr || "", preis: p.preis || "" }; });
+      state.sheetPhotos = photos(o).map(function (assetId) {
+        return { localId: "ph" + (photoIdSeq++), assetId: assetId, url: BLOB_BASE + assetId, pending: false };
+      });
+      state.sheetPdf = o.lieferscheinPdf
+        ? { assetId: o.lieferscheinPdf, url: BLOB_BASE + o.lieferscheinPdf, name: "Lieferschein.pdf", pending: false }
+        : null;
+      els.deleteBtn.hidden = false;
+    } else {
+      els.sheetTitle.textContent = "Neuer Auftrag";
+      els.form.reset();
+      var today = new Date();
+      els.f_datum.value = today.toISOString().slice(0, 10);
+      els.f_betrieb.value = (state.betriebFilter === "Energietechnik") ? "Energietechnik" : "Rauchfangkehrer";
+      els.f_status.value = "offen";
+      els.f_ausgefuehrtVon.value = "";
+      els.f_durchgefuehrtAm.value = "";
+      [els.t_vorhanden, els.t_terminAusgemacht, els.t_ersatzteileNoetig, els.t_bestellt, els.t_lieferung, els.t_abgeholt, els.t_durchgefuehrt].forEach(function (el) { setSheetToggle(el, false); });
+      updateDurchgefuehrtVisibility();
+      state.sheetParts = [];
+      state.sheetPhotos = [];
+      state.sheetPdf = null;
+      els.deleteBtn.hidden = true;
+    }
+    renderPartsEditor();
+    renderPhotosEditor();
+    renderPdfField();
+    els.backdrop.hidden = false;
+  }
+
+  function closeSheet() {
+    els.backdrop.hidden = true;
+    state.editingId = null;
+    state.sheetParts = [];
+    state.sheetPhotos = [];
+    state.sheetPdf = null;
+  }
+
+  els.addBtn.addEventListener("click", function () { openSheet(null); });
+  els.cancelBtn.addEventListener("click", closeSheet);
+  els.backdrop.addEventListener("click", function (e) { if (e.target === els.backdrop) closeSheet(); });
+
+  els.deleteBtn.addEventListener("click", function () {
+    if (!state.editingId || !state.db) return;
+    var id = state.editingId;
+    closeSheet();
+    state.db.doc(COLLECTION + "/" + id).delete()
+      .then(function () { showToast("Auftrag gelöscht"); })
+      .catch(function (err) { writeFailed(err, "Löschen"); });
+  });
+
+  els.form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!state.db) return;
+    if (!state.writable) { showToast("Nur Lesezugriff – Bearbeitungsrecht nötig"); return; }
+    if (state.sheetPhotos.some(function (p) { return p.pending; })) {
+      showToast("Fotos werden noch hochgeladen – bitte kurz warten");
+      return;
+    }
+    if (state.sheetPdf && state.sheetPdf.pending) {
+      showToast("PDF wird noch verarbeitet – bitte kurz warten");
+      return;
+    }
+    var teile = state.sheetParts.map(function (p) { return { id: p.id, name: p.name, menge: p.menge, lieferant: p.lieferant || "", bestellnr: p.bestellnr || "", preis: p.preis || "" }; });
+    var fotos = state.sheetPhotos.filter(function (p) { return p.assetId; }).map(function (p) { return p.assetId; });
+    var ersatzteileNoetig = teile.length > 0 || getSheetToggle(els.t_ersatzteileNoetig);
+    var payload = {
+      lieferscheinPdf: (state.sheetPdf && state.sheetPdf.assetId) ? state.sheetPdf.assetId : null,
+      betrieb: els.f_betrieb.value,
+      datum: els.f_datum.value,
+      kundennummer: els.f_kdnr.value.trim(),
+      auftragsnummer: els.f_auftragsnr.value.trim(),
+      name: els.f_name.value.trim(),
+      adresse: els.f_adresse.value.trim(),
+      telefon: els.f_telefon.value.trim(),
+      auftragsart: els.f_art.value,
+      monteur: els.f_monteur.value.trim(),
+      helfer: els.f_helfer.value.trim(),
+      uhrzeit: els.f_zeit.value.trim(),
+      terminDatum: els.f_termindatum.value,
+      terminZeit: els.f_terminzeit.value.trim(),
+      status: els.f_status.value,
+      durchgefuehrt: getSheetToggle(els.t_durchgefuehrt),
+      durchgefuehrtAm: getSheetToggle(els.t_durchgefuehrt) ? els.f_durchgefuehrtAm.value : "",
+      ausgefuehrtVon: els.f_ausgefuehrtVon.value.trim(),
+      auftragVorhanden: getSheetToggle(els.t_vorhanden),
+      terminAusgemacht: getSheetToggle(els.t_terminAusgemacht),
+      teile: teile,
+      ersatzteileNoetig: ersatzteileNoetig,
+      ersatzteileBestellt: ersatzteileNoetig ? getSheetToggle(els.t_bestellt) : false,
+      ersatzteileLieferung: ersatzteileNoetig ? getSheetToggle(els.t_lieferung) : false,
+      ersatzteileAbgeholt: ersatzteileNoetig ? getSheetToggle(els.t_abgeholt) : false,
+      fotos: fotos,
+      note: els.f_note.value.trim(),
+      createdAt: Date.now()
+    };
+    if (state.myId) payload.updatedBy = state.myId;
+    if (!payload.name) { els.f_name.focus(); return; }
+
+    var ref;
+    if (state.editingId) {
+      ref = state.db.doc(COLLECTION + "/" + state.editingId);
+      delete payload.createdAt;
+      ref.update(payload)
+        .then(function () { closeSheet(); showToast("Gespeichert"); })
+        .catch(function (err) { writeFailed(err, "Speichern"); });
+    } else {
+      if (state.myId) payload.createdBy = state.myId;
+      ref = state.db.collection(COLLECTION).doc();
+      ref.set(payload)
+        .then(function () { closeSheet(); showToast("Auftrag angelegt"); })
+        .catch(function (err) { writeFailed(err, "Anlegen"); });
+    }
+  });
+
+  function errText(err) {
+    var m = err && (err.message || err.code || err.toString && err.toString());
+    return m ? String(m).slice(0, 160) : "";
+  }
+  function writeFailed(err, what) {
+    var msg = errText(err);
+    var denied = /permission|denied|forbidden|read.?only|not allowed|unauthor|403|role/i.test(msg);
+    if (denied || state.canWrite === false) {
+      setReadOnly(err);
+      showToast("Keine Schreibrechte – siehe Hinweis oben");
+    } else {
+      showToast(what + " fehlgeschlagen" + (msg ? ": " + msg.slice(0, 60) : ""));
+    }
+  }
+  function setReadOnly(err) {
+    state.canWrite = false;
+    state.writable = false;
+    els.syncDot.classList.add("off");
+    els.syncText.textContent = "nur lesen";
+    els.roBanner.hidden = false;
+    els.roBanner.innerHTML = 'Du kannst hier nur ansehen, nicht ändern. Roland muss dich in diesem Artefakt über „Teilen“ mit deiner persönlichen E-Mail-Adresse als <b>Editor</b> einladen – „Jeder mit Link“ reicht nicht.' +
+      (errText(err) ? '<small>Technisch: ' + esc(errText(err)) + '</small>' : '');
+  }
+
+  function setSync(ok, writable) {
+    if (state.canWrite === false) writable = false;
+    state.writable = !!writable;
+    els.syncDot.classList.toggle("off", !ok);
+    els.syncText.textContent = ok ? (writable ? "live" : "live (nur lesen)") : "offline";
+  }
+
+  function fromBase64Url(b64url) {
+    var b64 = b64url.replace(/-/g, "+").replace(/_/g, "/");
+    while (b64.length % 4) b64 += "=";
+    return decodeURIComponent(escape(atob(b64)));
+  }
+
+  function checkImportFromUrl() {
+    try {
+      var params = new URLSearchParams(location.search);
+      var raw = params.get("import");
+      if (!raw) return;
+      var data = JSON.parse(fromBase64Url(raw));
+      openSheet(null);
+      applyImport(data);
+      history.replaceState(null, "", location.pathname);
+    } catch (err) { /* malformed or missing import param — ignore silently */ }
+  }
+
+  // Übernimmt eine Tarifrechner-Übergabe ("GRIEER-AUFTRAG:<base64url>") aus Text.
+  function importFromText(text) {
+    try {
+      var t = String(text || "").trim();
+      var i = t.indexOf("GRIEER-AUFTRAG:");
+      if (i === -1) return false;
+      var b64 = t.slice(i + "GRIEER-AUFTRAG:".length).replace(/\s+/g, "");
+      applyImport(JSON.parse(fromBase64Url(b64)));
+      return true;
+    } catch (err) { return false; }
+  }
+
+  els.importBtn.addEventListener("click", async function () {
+    var txt = els.importPaste.value;
+    if (!txt && navigator.clipboard && navigator.clipboard.readText) {
+      try { txt = await navigator.clipboard.readText(); } catch (err) { txt = ""; }
+    }
+    if (!importFromText(txt)) {
+      showToast("Zwischenablage nicht lesbar – bitte ins Feld lange tippen → Einfügen");
+      els.importPaste.focus();
+    }
+    else els.importPaste.value = "";
+  });
+  els.importPaste.addEventListener("input", function () {
+    if (els.importPaste.value.indexOf("GRIEER-AUFTRAG:") !== -1 && importFromText(els.importPaste.value)) {
+      els.importPaste.value = "";
+    }
+  });
+
+  function applyImport(data) {
+    try {
+      if (data.note) els.f_note.value = data.note;
+      if (data.name) els.f_name.value = data.name;
+      if (data.kundennummer) els.f_kdnr.value = data.kundennummer;
+      if (data.adresse) els.f_adresse.value = data.adresse;
+      if (data.telefon) els.f_telefon.value = data.telefon;
+      if (data.datum) els.f_datum.value = data.datum;
+      if (data.auftragsart) els.f_art.value = data.auftragsart;
+      if (Array.isArray(data.teile) && data.teile.length) {
+        state.sheetParts = data.teile.map(function (p) {
+          return {
+            id: "p" + (partIdSeq++),
+            name: p.name || "",
+            menge: p.menge || 1,
+            lieferant: p.lieferant || "",
+            bestellnr: p.bestellnr || "",
+            preis: p.preis || ""
+          };
+        });
+        renderPartsEditor();
+      }
+      showToast("Übernommen – bitte prüfen & speichern");
+      history.replaceState(null, "", location.pathname);
+    } catch (err) { /* malformed or missing import param — ignore silently */ }
+  }
+
+  async function boot() {
+    render();
+    checkImportFromUrl();
+    var db = (window.claude && window.claude.use) ? await window.claude.use("db") : null;
+    if (!db) {
+      setSync(false, false);
+      showToast("Live-Speicher nicht verfügbar in dieser Ansicht");
+      return;
+    }
+    state.db = db;
+
+    var canWrite = true;
+    state.canWrite = true;
+    try {
+      var user = (window.claude && window.claude.use) ? await window.claude.use("user") : null;
+      state.userNS = user;
+      if (user && typeof user.can === "function") {
+        var writeAnswer = await user.can("data.write");
+        if (writeAnswer === false) { canWrite = false; state.canWrite = false; }
+      }
+      if (user && typeof user.id === "function") {
+        state.myId = await user.id();
+      }
+    } catch (err) { /* keep optimistic default; a rejected write will correct it */ }
+
+    try {
+      state.assetsNS = (window.claude && window.claude.use) ? await window.claude.use("assets") : null;
+    } catch (err) { state.assetsNS = null; }
+    if (els.pdfAddBtn) els.pdfAddBtn.hidden = !state.assetsNS;
+    renderPhotosEditor();
+
+    db.collection(COLLECTION).onSnapshot(function (snap) {
+      state.orders = (snap.docs || snap || []).map(function (d) {
+        var data = (d.data && typeof d.data === "function") ? d.data() : (d.data || d);
+        return Object.assign({ id: d.id }, data);
+      });
+      setSync(true, canWrite);
+      if (state.canWrite === false) setReadOnly(null);
+      render();
+    }, function () {
+      setSync(false, canWrite);
+    });
+
+    // Schreibrechte wirklich prüfen (statt nur "live" anzuzeigen)
+    if (canWrite && state.myId) {
+      try {
+        db.doc("_probe/" + state.myId).set({ t: Date.now() })
+          .catch(function (err) { setReadOnly(err); });
+      } catch (err) { setReadOnly(err); }
+    }
+  }
+
+  boot();
+})();
+</script>
+<div class="login-box" id="loginBox" hidden>
+  <form class="login-card" id="loginForm">
+    <h1 class="headline">Auftragsübersicht</h1>
+    <p>Rauchfangkehrer Roland Grieer &amp; Grieer Energietechnik OG – bitte anmelden.</p>
+    <input type="email" id="loginEmail" placeholder="E-Mail" autocomplete="username" required>
+    <input type="password" id="loginPass" placeholder="Passwort" autocomplete="current-password" required>
+    <button type="submit">Anmelden</button>
+    <div id="loginMsg" role="alert"></div>
+  </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function () {
+  "use strict";
+  var SB_URL = "https://bvodhzacatfuduwtlwut.supabase.co";
+  var SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2b2RoemFjYXRmdWR1d3Rsd3V0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxODUwMjcsImV4cCI6MjA5NTc2MTAyN30.kX03LLhpIm-iD1VQqreIpCCwAHzsT0pmYdIsl8uSeuY";
+  var BUCKET = "auftraege-files";
+  window.BLOB_BASE = SB_URL + "/storage/v1/object/public/" + BUCKET + "/";
+
+  var loginBox = document.getElementById("loginBox");
+  var loginMsg = document.getElementById("loginMsg");
+  function setMsg(t) { loginMsg.textContent = t || ""; }
+  if (!window.supabase || !window.supabase.createClient) {
+    loginBox.hidden = false;
+    setMsg("Verbindung zu Supabase konnte nicht geladen werden. Bitte Internet prüfen und Seite neu laden.");
+    return;
+  }
+  var sb = window.supabase.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
+  var session = null;
+
+  function uuid() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID().replace(/-/g, "");
+    return String(Date.now()) + Math.random().toString(36).slice(2, 10);
+  }
+  function chk(r) { if (r && r.error) throw r.error; return r; }
+
+  function docRef(id) {
+    return {
+      id: id,
+      set: function (data) {
+        return sb.from("auftraege").upsert({ id: id, data: data, updated_by: session.user.id }).then(chk);
+      },
+      update: function (patch) {
+        return sb.rpc("merge_auftrag", { p_id: id, p_patch: patch }).then(chk);
+      },
+      delete: function () {
+        return sb.from("auftraege").delete().eq("id", id).then(chk);
+      }
+    };
+  }
+
+  var dbNS = {
+    collection: function () {
+      return {
+        onSnapshot: function (ok, err) {
+          function load() {
+            sb.from("auftraege").select("id,data").then(function (r) {
+              if (r.error) { if (err) err(r.error); return; }
+              ok((r.data || []).map(function (row) {
+                return { id: row.id, data: function () { return row.data || {}; } };
+              }));
+            });
+          }
+          load();
+          try {
+            sb.channel("auftraege-live").on("postgres_changes", { event: "*", schema: "public", table: "auftraege" }, load).subscribe();
+          } catch (e) { /* Polling unten genügt */ }
+          setInterval(load, 20000);
+        },
+        doc: function () { return docRef(uuid()); }
+      };
+    },
+    doc: function (path) {
+      if (path.indexOf("_probe/") === 0) return { set: function () { return Promise.resolve(); } };
+      return docRef(path.split("/")[1]);
+    }
+  };
+
+  var userNS = {
+    can: function () { return Promise.resolve(true); },
+    id: function () { return Promise.resolve(session.user.id); },
+    profiles: function (ids) {
+      return sb.from("team_profiles").select("id,name").in("id", ids).then(function (r) {
+        var out = {};
+        (r.data || []).forEach(function (p) { out[p.id] = { name: p.name }; });
+        return out;
+      });
+    }
+  };
+
+  var assetsNS = {
+    upload: function (file, opts) {
+      var ext = (file.name && file.name.indexOf(".") > -1) ? file.name.split(".").pop().toLowerCase().replace(/[^a-z0-9]/g, "") : "";
+      var path = uuid() + (ext ? "." + ext : "");
+      return sb.storage.from(BUCKET).upload(path, file, { contentType: (opts && opts.type) || file.type || "application/octet-stream" })
+        .then(function (r) { chk(r); return { id: path, url: window.BLOB_BASE + path }; });
+    },
+    delete: function (id) { return sb.storage.from(BUCKET).remove([id]).then(chk); }
+  };
+
+  window.claude = { use: function (n) { return Promise.resolve({ db: dbNS, user: userNS, assets: assetsNS }[n] || null); } };
+
+  var started = false;
+  function startApp() {
+    if (started) return;
+    started = true;
+    loginBox.hidden = true;
+    var name = (session.user.user_metadata && session.user.user_metadata.name) || (session.user.email || "").split("@")[0];
+    sb.from("team_profiles").upsert({ id: session.user.id, name: name }).then(function () {});
+    var s = document.createElement("script");
+    s.textContent = document.getElementById("appcode").textContent;
+    document.body.appendChild(s);
+    var row = document.querySelector(".top-row");
+    if (row) {
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "logout-btn"; b.textContent = "Abmelden";
+      b.addEventListener("click", function () { sb.auth.signOut().then(function () { location.reload(); }); });
+      row.appendChild(b);
+    }
+  }
+
+  document.getElementById("loginForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    setMsg("Anmelden …");
+    sb.auth.signInWithPassword({
+      email: document.getElementById("loginEmail").value.trim(),
+      password: document.getElementById("loginPass").value
+    }).then(function (r) {
+      if (r.error) { setMsg("Anmeldung fehlgeschlagen: " + (/invalid/i.test(r.error.message) ? "E-Mail oder Passwort falsch." : r.error.message)); return; }
+      session = r.data.session; startApp();
+    });
+  });
+
+  sb.auth.getSession().then(function (r) {
+    if (r.data && r.data.session) { session = r.data.session; startApp(); }
+    else { loginBox.hidden = false; }
+  });
+})();
+
+</script>
+
+
+</body></html>
