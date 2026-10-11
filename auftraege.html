@@ -1793,6 +1793,18 @@
         }
       });
     }
+    if (show && window.__meta && window.__me) {
+      var seenKey = "lastSeen_" + window.__me.id, seen = 0;
+      try { seen = Number(localStorage.getItem(seenKey)) || 0; } catch (e) {}
+      if (seen) {
+        var fresh = [];
+        scopedOrders().forEach(function (o) {
+          var m = window.__meta[o.id];
+          if (m && m.at > seen && m.by !== window.__me.id) fresh.push([o.id, "🆕 " + (o.createdAt && o.createdAt > seen ? "Neu" : "Geändert") + ": <b>" + esc(o.name || "Ohne Bezeichnung") + "</b>"]);
+        });
+        items = fresh.concat(items);
+      }
+    }
     if (!items.length) { els.hinweise.hidden = true; els.hinweise.innerHTML = ""; return; }
     var wasOpen = els.hinweise.open;
     els.hinweise.innerHTML = '<summary>⚠ ' + items.length + (items.length === 1 ? ' Hinweis' : ' Hinweise') + '</summary><ul>' +
@@ -2849,13 +2861,21 @@
     };
   }
 
+  function markSeen() {
+    try { if (window.__me && window.__me.id && window.__meta) localStorage.setItem("lastSeen_" + window.__me.id, String(Date.now())); } catch (e) {}
+  }
+  document.addEventListener("visibilitychange", function () { if (document.hidden) markSeen(); });
+  window.addEventListener("pagehide", markSeen);
+
   var dbNS = {
     collection: function () {
       return {
         onSnapshot: function (ok, err) {
           function load() {
-            sb.from("team_auftraege").select("id,data").then(function (r) {
+            sb.from("team_auftraege").select("id,data,updated_at,updated_by").then(function (r) {
               if (r.error) { if (err) err(r.error); return; }
+              window.__meta = window.__meta || {};
+              (r.data || []).forEach(function (row) { window.__meta[row.id] = { at: Date.parse(row.updated_at) || 0, by: row.updated_by }; });
               ok((r.data || []).map(function (row) {
                 return { id: row.id, data: function () { return row.data || {}; } };
               }));
