@@ -762,6 +762,12 @@
   .btn.ghost { background: transparent; color: var(--ink-soft); border-color: var(--line); }
   .btn.danger { background: transparent; color: var(--need); border-color: var(--need); flex: none; padding-inline: 16px; }
 
+  #popups { position: fixed; top: calc(10px + env(safe-area-inset-top, 0px)); left: 10px; right: 10px; z-index: 60; display: flex; flex-direction: column; gap: 8px; pointer-events: none; max-width: 480px; margin: 0 auto; }
+  .popup { pointer-events: auto; background: var(--paper); color: var(--ink); border: 1px solid var(--line, #ccc); border-left: 5px solid #2e7d32; border-radius: 12px; box-shadow: 0 8px 28px rgba(0,0,0,.28); padding: 10px 12px; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; animation: popin .25s ease; }
+  .popup.neu { border-left-color: #1565c0; } .popup.ueber { border-left-color: #c0392b; } .popup.abr { border-left-color: #8e24aa; }
+  .popup .pt { flex: 1; cursor: pointer; } .popup .pt small { display: block; opacity: .7; margin-top: 2px; }
+  .popup .px { border: 0; background: transparent; color: inherit; font-size: 18px; line-height: 1; padding: 2px 6px; cursor: pointer; }
+  @keyframes popin { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
   .toast {
     position: fixed;
     left: 50%;
@@ -851,7 +857,7 @@
       <button class="chip" data-filter="offen" aria-pressed="true">Offen<span class="count" id="cOffen"></span></button>
       <button class="chip" data-filter="erledigt" aria-pressed="false">Erledigt<span class="count" id="cErledigt"></span></button>
       <button class="chip" data-filter="meine" aria-pressed="false">Meine<span class="count" id="cMeine"></span></button>
-      <button class="chip" data-filter="ersatzteile" aria-pressed="false">Ersatzteile nötig<span class="count" id="cErsatz"></span></button>
+      <button class="chip" data-filter="ersatzteile" aria-pressed="false">Material / Ersatzteile<span class="count" id="cErsatz"></span></button>
     </div>
     <div class="filters" id="betriebFilters">
       <button class="chip" data-betrieb="alle" aria-pressed="true">Beide Betriebe</button>
@@ -873,7 +879,9 @@
 
   <div id="bestellView" hidden></div>
   <div id="abrechnungView" hidden></div>
+  <div id="popups" aria-live="polite"></div>
   <div class="foot-tools" id="footTools">
+    <button type="button" class="copy-btn" id="notifBtn" hidden>🔔 Benachrichtigungen aktivieren</button>
     <button type="button" class="copy-btn" id="backupBtn" hidden>💾 Sicherung herunterladen</button>
   </div>
 
@@ -942,6 +950,7 @@
           <select id="f_art">
             <option value="">– wählen –</option>
             <option value="Montage">Montage</option>
+            <option value="Installation">Installation</option>
             <option value="Reparatur">Reparatur</option>
             <option value="Wartung">Wartung</option>
             <option value="Sonstiges">Sonstiges</option>
@@ -1001,7 +1010,13 @@
         <label class="tgl" id="t_vorhanden"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Auftrag vorhanden</label>
         <label class="tgl" id="t_terminAusgemacht"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Termin ausgemacht</label>
         <label class="tgl need" id="t_ersatzteileNoetig"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Ersatzteile nötig</label>
+        <label class="tgl need" id="t_materialNoetig"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Material nötig</label>
         <label class="tgl" id="t_durchgefuehrt"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Durchgeführt</label>
+      </div>
+      <div class="field" id="materialField" hidden>
+        <label for="f_material">Welches Material? (z. B. Feuerlöscher)</label>
+        <input type="text" id="f_material" placeholder="Feuerlöscher, Rohr, Dichtung …">
+        <div class="sheet-toggles" style="margin-top:8px"><label class="tgl" id="t_materialBesorgt"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Material besorgt</label></div>
       </div>
       <div class="field" id="durchgefuehrtAmField" hidden>
         <label for="f_durchgefuehrtAm">Durchgeführt am</label>
@@ -1164,6 +1179,10 @@
     t_vorhanden: document.getElementById("t_vorhanden"),
     t_terminAusgemacht: document.getElementById("t_terminAusgemacht"),
     t_ersatzteileNoetig: document.getElementById("t_ersatzteileNoetig"),
+    t_materialNoetig: document.getElementById("t_materialNoetig"),
+    t_materialBesorgt: document.getElementById("t_materialBesorgt"),
+    materialField: document.getElementById("materialField"),
+    f_material: document.getElementById("f_material"),
     t_bestellt: document.getElementById("t_bestellt"),
     t_lieferung: document.getElementById("t_lieferung"),
     t_abgeholt: document.getElementById("t_abgeholt"),
@@ -1213,6 +1232,7 @@
   // "Ersatzteile nötig" gilt entweder, weil konkrete Teile eingetragen sind, ODER weil der
   // Schalter im Formular manuell gesetzt wurde (ohne dass schon feststeht, welche Teile genau).
   function needsErsatzteile(o) { return hasParts(o) || !!o.ersatzteileNoetig; }
+  function needsMaterial(o) { return !!o.materialNoetig; }
   function needsOrdering(o) { return needsErsatzteile(o) && !o.ersatzteileBestellt; }
   function needsPickup(o) { return needsErsatzteile(o) && !!o.ersatzteileBestellt && !o.ersatzteileAbgeholt && !o.ersatzteileLieferung; }
   function materialReady(o) { return !needsErsatzteile(o) || !!o.ersatzteileBestellt || !!o.ersatzteileAbgeholt; }
@@ -1282,7 +1302,7 @@
       }).join("") : "Noch keine Einträge.";
     }).catch(function () { els.verlaufList.textContent = ""; });
   }
-  var CHANGE_LABELS = { name: "Kunde", adresse: "Adresse", telefon: "Telefon", datum: "Datum", kundennummer: "Projekt-Nr.", auftragsnummer: "AA-Nr.", auftragsart: "Auftragsart", monteur: "Monteur", helfer: "Helfer", uhrzeit: "Uhrzeit", terminDatum: "Termin", terminZeit: "Termin-Uhrzeit", status: "Status", durchgefuehrt: "Durchgeführt", ausgefuehrtVon: "Ausgeführt von", teile: "Teile", note: "Notiz", wiederholung: "Wiederholung", fotos: "Fotos", unterschrift: "Unterschrift", ersatzteileBestellt: "bestellt", ersatzteileAbgeholt: "abgeholt", ersatzteileLieferung: "wird geliefert", terminAusgemacht: "Termin ausgemacht", auftragVorhanden: "Auftrag vorhanden", ersatzteileNoetig: "Ersatzteile nötig", lieferscheinPdf: "Lieferschein" };
+  var CHANGE_LABELS = { name: "Kunde", adresse: "Adresse", telefon: "Telefon", datum: "Datum", kundennummer: "Projekt-Nr.", auftragsnummer: "AA-Nr.", auftragsart: "Auftragsart", monteur: "Monteur", helfer: "Helfer", uhrzeit: "Uhrzeit", terminDatum: "Termin", terminZeit: "Termin-Uhrzeit", status: "Status", durchgefuehrt: "Durchgeführt", ausgefuehrtVon: "Ausgeführt von", teile: "Teile", note: "Notiz", wiederholung: "Wiederholung", fotos: "Fotos", unterschrift: "Unterschrift", ersatzteileBestellt: "bestellt", ersatzteileAbgeholt: "abgeholt", ersatzteileLieferung: "wird geliefert", terminAusgemacht: "Termin ausgemacht", auftragVorhanden: "Auftrag vorhanden", ersatzteileNoetig: "Ersatzteile nötig", materialNoetig: "Material nötig", materialText: "Material", materialBesorgt: "Material besorgt", lieferscheinPdf: "Lieferschein" };
   function normVal(v) { return (v === undefined || v === null || v === false || v === "" || (Array.isArray(v) && !v.length)) ? "" : JSON.stringify(v); }
   function changedLabels(existing, payload) {
     if (!existing) return [];
@@ -1333,7 +1353,7 @@
     if (state.filter === "meine") return myMatch(o) && o.status !== "erledigt";
     if (state.filter === "offen") return o.status !== "erledigt";
     if (state.filter === "erledigt") return o.status === "erledigt";
-    if (state.filter === "ersatzteile") return needsErsatzteile(o) && !o.ersatzteileAbgeholt;
+    if (state.filter === "ersatzteile") return (needsErsatzteile(o) && !o.ersatzteileAbgeholt) || (needsMaterial(o) && !o.materialBesorgt);
     return true;
   }
 
@@ -1344,7 +1364,7 @@
     var all = scoped.length;
     var offen = scoped.filter(function (o) { return o.status !== "erledigt"; }).length;
     var erledigt = all - offen;
-    var ersatz = scoped.filter(function (o) { return needsErsatzteile(o) && !o.ersatzteileAbgeholt; }).length;
+    var ersatz = scoped.filter(function (o) { return (needsErsatzteile(o) && !o.ersatzteileAbgeholt) || (needsMaterial(o) && !o.materialBesorgt); }).length;
     var bestell = scoped.filter(function (o) { return needsOrdering(o) || needsPickup(o); }).length;
     els.counts.alle.textContent = all ? " " + all : "";
     els.counts.offen.textContent = offen ? " " + offen : "";
@@ -1579,7 +1599,9 @@
           toggleChip(o, "auftragVorhanden", "Auftrag vorhanden", false) +
           toggleChip(o, "terminAusgemacht", "Termin ausgemacht", false) +
           partToggles +
+          (needsMaterial(o) ? toggleChip(o, "materialBesorgt", "Material besorgt", false) : "") +
         '</div>' +
+        (needsMaterial(o) ? '<div class="note" style="border-left:3px solid #c0392b">🧰 <b>Material:</b> ' + esc(o.materialText || "benötigt") + '</div>' : "") +
         partsBlock +
         photosStrip(o) +
         pdfLink(o) +
@@ -1616,6 +1638,7 @@
       if (o.ersatzteileLieferung) rows.push(["Wird geliefert", "Ja"]);
       rows.push(["Ersatzteile abgeholt", o.ersatzteileAbgeholt ? "Ja" : "Nein"]);
     }
+    if (needsMaterial(o)) rows.push(["Material nötig", (o.materialText || "Ja") + (o.materialBesorgt ? " (besorgt)" : " (noch nicht besorgt)")]);
     var rowsHtml = rows.map(function (r) {
       return '<tr><td class="pk">' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td></tr>';
     }).join("");
@@ -1784,6 +1807,7 @@
         if (o.terminDatum && (o.terminDatum === today || o.terminDatum === tomorrow) && needsErsatzteile(o) && !o.ersatzteileAbgeholt) {
           items.push([o.id, "🔧 Termin " + (o.terminDatum === today ? "heute" : "morgen") + ", Material noch nicht da: " + nm]);
         }
+        if (needsMaterial(o) && !o.materialBesorgt && o.terminDatum && o.terminDatum <= tomorrow) items.push([o.id, "🧰 Material fehlt (" + esc(o.materialText || "Material") + ") – Termin " + fmtDate(o.terminDatum) + ": " + nm]);
         if (needsPickup(o) && o.bestelltAm) {
           var days = Math.floor((Date.now() - Number(o.bestelltAm)) / 86400000);
           if (days >= 5) items.push([o.id, "⏰ Seit " + days + " Tagen bestellt, nicht abgeholt: " + nm]);
@@ -1902,10 +1926,69 @@
   });
   els.searchInput.addEventListener("input", function () { state.search = els.searchInput.value.trim().toLowerCase(); render(); });
   els.sortSel.addEventListener("change", function () { state.sort = els.sortSel.value; render(); });
+(function () {
+    var b = document.getElementById("notifBtn");
+    if (b && window.Notification && Notification.permission === "default") {
+      b.hidden = false;
+      b.addEventListener("click", function () { Notification.requestPermission().then(function () { b.hidden = true; showToast("Benachrichtigungen aktiviert"); }); });
+    }
+  })();
   els.backupBtn.addEventListener("click", function () {
     var data = { exportiert: new Date().toISOString(), anzahl: state.orders.length, auftraege: state.orders };
     downloadFile("auftraege-sicherung-" + todayStr() + ".json", "application/json", JSON.stringify(data, null, 1));
   });
+
+  // ---- Benachrichtigungen (Popups) ----
+  var notif = { prev: null, startDone: false };
+  function nameOf(uid) { return (window.__names && window.__names[uid]) || ""; }
+  function popup(kind, icon, title, sub, id) {
+    var box = document.getElementById("popups"); if (!box) return;
+    while (box.children.length >= 5) box.removeChild(box.firstChild);
+    var d = document.createElement("div"); d.className = "popup " + kind;
+    d.innerHTML = '<div style="font-size:20px">' + icon + '</div><div class="pt"' + (id ? ' data-open="' + id + '"' : "") + '>' + title + (sub ? '<small>' + sub + '</small>' : "") + '</div><button class="px" type="button" aria-label="Schließen">✕</button>';
+    d.querySelector(".px").addEventListener("click", function (e) { e.stopPropagation(); d.remove(); });
+    d.querySelector(".pt").addEventListener("click", function () { if (id) openSheet(id); d.remove(); });
+    box.appendChild(d);
+    try {
+      if (document.hidden && window.Notification && Notification.permission === "granted") new Notification(title.replace(/<[^>]+>/g, ""), { body: sub || "" });
+    } catch (e) {}
+  }
+  function checkNotifications(orders) {
+    if (!window.__me || !window.__meta) return;
+    var me = window.__me.id, meta = window.__meta, admin = myRole() === "admin";
+    var seenKey = "lastSeen_" + me, seen = 0;
+    try { seen = Number(localStorage.getItem(seenKey)) || 0; } catch (e) {}
+    function fire(o, init) {
+      var m = meta[o.id] || {}, who = nameOf(m.by);
+      var nm = '<b>' + esc(o.name || "Ohne Bezeichnung") + '</b>';
+      var wh = who ? "von " + esc(who) : "";
+      if (o.durchgefuehrt) { popup("abr", "💶", "Durchgeführt: " + nm, (wh ? wh + " · " : "") + (admin ? "bereit zur Abrechnung" : "abgearbeitet"), o.id); }
+      else if (o.status === "erledigt") { popup("", "✅", "Abgearbeitet: " + nm, wh, o.id); }
+      else if (o.createdAt && o.createdAt > (init ? seen : 0) && !notif.prev[o.id] ) { popup("neu", "🆕", "Neuer Auftrag: " + nm, wh, o.id); }
+    }
+    var cur = {};
+    orders.forEach(function (o) { cur[o.id] = { st: o.status, dg: !!o.durchgefuehrt }; });
+    if (!notif.prev) {
+      notif.prev = cur;
+      if (seen) {
+        orders.forEach(function (o) {
+          var m = meta[o.id];
+          if (m && m.at > seen && m.by !== me && (o.status === "erledigt" || o.durchgefuehrt || (o.createdAt && o.createdAt > seen))) fire(o, true);
+        });
+      }
+      var today = todayStr(), ue = orders.filter(function (o) { return o.status !== "erledigt" && !o.durchgefuehrt && o.terminDatum && o.terminDatum < today; }).length;
+      if (ue) popup("ueber", "📅", ue + (ue === 1 ? " Termin ist überfällig" : " Termine sind überfällig"), "Siehe Hinweise oben", null);
+      return;
+    }
+    orders.forEach(function (o) {
+      var m = meta[o.id] || {}, pv = notif.prev[o.id];
+      if (m.by === me) return;
+      if (!pv) { if (o.createdAt) fire(o, false); return; }
+      if ((o.status === "erledigt" && pv.st !== "erledigt") || (o.durchgefuehrt && !pv.dg)) fire(o, false);
+    });
+    notif.prev = cur;
+  }
+  window.__checkNotifications = checkNotifications;
 
   function render() {
     var v = state.view;
@@ -2026,15 +2109,17 @@
   function setSheetToggle(el, on) { el.classList.toggle("on", !!on); el.dataset.on = on ? "1" : ""; }
   function getSheetToggle(el) { return !!el.dataset.on; }
 
+  function updateMaterialVisibility() { els.materialField.hidden = !getSheetToggle(els.t_materialNoetig); }
   function updateDurchgefuehrtVisibility() {
     els.durchgefuehrtAmField.hidden = !getSheetToggle(els.t_durchgefuehrt);
   }
 
-  [els.t_vorhanden, els.t_terminAusgemacht, els.t_ersatzteileNoetig, els.t_bestellt, els.t_lieferung, els.t_abgeholt, els.t_durchgefuehrt].forEach(function (el) {
+  [els.t_vorhanden, els.t_terminAusgemacht, els.t_ersatzteileNoetig, els.t_materialNoetig, els.t_materialBesorgt, els.t_bestellt, els.t_lieferung, els.t_abgeholt, els.t_durchgefuehrt].forEach(function (el) {
     el.addEventListener("click", function () {
       var nowOn = !getSheetToggle(el);
       setSheetToggle(el, nowOn);
       if (el === els.t_ersatzteileNoetig) updatePartStatusVisibility();
+      if (el === els.t_materialNoetig) updateMaterialVisibility();
       if (el === els.t_durchgefuehrt) {
         if (nowOn && !els.f_durchgefuehrtAm.value) {
           els.f_durchgefuehrtAm.value = new Date().toISOString().slice(0, 10);
@@ -2422,6 +2507,10 @@
       setSheetToggle(els.t_durchgefuehrt, o.durchgefuehrt);
       updateDurchgefuehrtVisibility();
       setSheetToggle(els.t_ersatzteileNoetig, o.ersatzteileNoetig);
+      setSheetToggle(els.t_materialNoetig, o.materialNoetig);
+      setSheetToggle(els.t_materialBesorgt, o.materialBesorgt);
+      els.f_material.value = o.materialText || "";
+      updateMaterialVisibility();
       setSheetToggle(els.t_bestellt, o.ersatzteileBestellt);
       setSheetToggle(els.t_lieferung, o.ersatzteileLieferung);
       setSheetToggle(els.t_abgeholt, o.ersatzteileAbgeholt);
@@ -2444,7 +2533,8 @@
       els.f_durchgefuehrtAm.value = "";
       els.f_wiederholung.value = "";
       setSig("");
-      [els.t_vorhanden, els.t_terminAusgemacht, els.t_ersatzteileNoetig, els.t_bestellt, els.t_lieferung, els.t_abgeholt, els.t_durchgefuehrt].forEach(function (el) { setSheetToggle(el, false); });
+      [els.t_vorhanden, els.t_terminAusgemacht, els.t_ersatzteileNoetig, els.t_materialNoetig, els.t_materialBesorgt, els.t_bestellt, els.t_lieferung, els.t_abgeholt, els.t_durchgefuehrt].forEach(function (el) { setSheetToggle(el, false); });
+      els.f_material.value = ""; updateMaterialVisibility();
       updateDurchgefuehrtVisibility();
       state.sheetParts = [];
       state.sheetPhotos = [];
@@ -2522,6 +2612,9 @@
       ersatzteileBestellt: ersatzteileNoetig ? getSheetToggle(els.t_bestellt) : false,
       ersatzteileLieferung: ersatzteileNoetig ? getSheetToggle(els.t_lieferung) : false,
       ersatzteileAbgeholt: ersatzteileNoetig ? getSheetToggle(els.t_abgeholt) : false,
+      materialNoetig: getSheetToggle(els.t_materialNoetig),
+      materialText: getSheetToggle(els.t_materialNoetig) ? els.f_material.value.trim() : "",
+      materialBesorgt: getSheetToggle(els.t_materialNoetig) ? getSheetToggle(els.t_materialBesorgt) : false,
       fotos: fotos,
       note: els.f_note.value.trim(),
       wiederholung: els.f_wiederholung.value,
@@ -2793,6 +2886,7 @@
       });
       setSync(true, canWrite);
       if (state.canWrite === false) setReadOnly(null);
+      try { checkNotifications(state.orders); } catch (e) {}
       render();
     }, function () {
       setSync(false, canWrite);
@@ -2876,6 +2970,10 @@
               if (r.error) { if (err) err(r.error); return; }
               window.__meta = window.__meta || {};
               (r.data || []).forEach(function (row) { window.__meta[row.id] = { at: Date.parse(row.updated_at) || 0, by: row.updated_by }; });
+              if (!window.__namesLoaded) {
+                window.__namesLoaded = true; window.__names = {};
+                try { Promise.resolve(sb.from("team_profiles").select("id,name")).then(function (pr) { (pr.data || []).forEach(function (p) { window.__names[p.id] = p.name; }); }); } catch (e) {}
+              }
               ok((r.data || []).map(function (row) {
                 return { id: row.id, data: function () { return row.data || {}; } };
               }));
