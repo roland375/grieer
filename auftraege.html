@@ -266,6 +266,12 @@
   .card.is-offen { border-left: 6px solid #c62828; }
   .card.is-abgeschlossen { border-left: 6px solid #ef8f00; }
   .card.is-verrechnet { border-left: 6px solid var(--good); }
+  .card.is-verrechnet { background: var(--good-tint); }
+  .card.is-verrechnet .tgl, .card.is-verrechnet .tgl.need { color: var(--good); border-color: var(--good); background: rgba(255,255,255,.55); }
+  .card.is-verrechnet .tgl .box { background: var(--good); border-color: var(--good); }
+  .card.is-verrechnet .tgl .box svg { display: block; color: var(--paper); }
+  .card.is-verrechnet .part-chip { background: rgba(255,255,255,.6); color: var(--good); }
+  .card.is-verrechnet .note { border-left-color: var(--good) !important; }
   .closebtn { display: inline-block; margin-top: 10px; background: #c62828; color: #fff; font-weight: 700; font-size: 13.5px; padding: 9px 14px; border-radius: 10px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
   .closebtn:active { opacity: .8; }
   .closebtn.reopen { background: transparent; color: var(--ink-soft); border: 1px solid var(--line, #bbb); font-weight: 600; }
@@ -878,6 +884,7 @@
   </header>
 
   <div class="ro-banner" id="roBanner" hidden></div>
+  <div id="offlineBar" hidden style="background:#fff3cd;color:#7a5a00;font-weight:600;font-size:13px;padding:8px 14px;text-align:center;position:sticky;top:0;z-index:30"></div>
 
   <details class="hinweise" id="hinweise" hidden></details>
 
@@ -1247,6 +1254,7 @@
   function needsMaterial(o) { return !!o.materialNoetig; }
   function allThere(o) { return (!needsErsatzteile(o) || !!o.ersatzteileAbgeholt) && (!needsMaterial(o) || !!o.materialBesorgt); }
   function needsTerminNow(o) { return o.status !== "erledigt" && !o.durchgefuehrt && (needsErsatzteile(o) || needsMaterial(o)) && allThere(o) && !hasTermin(o); }
+  function isOpen(o) { return o.status !== "erledigt"; }
   function needsOrdering(o) { return needsErsatzteile(o) && !o.ersatzteileBestellt; }
   function needsPickup(o) { return needsErsatzteile(o) && !!o.ersatzteileBestellt && !o.ersatzteileAbgeholt && !o.ersatzteileLieferung; }
   function materialReady(o) { return !needsErsatzteile(o) || !!o.ersatzteileBestellt || !!o.ersatzteileAbgeholt; }
@@ -1364,11 +1372,11 @@
     if (state.betriebFilter !== "alle" && orderBetrieb(o) !== state.betriebFilter) return false;
     if (!matchesSearch(o)) return false;
     if (state.filter === "alle") return true;
-    if (state.filter === "meine") return myMatch(o) && o.status !== "erledigt";
-    if (state.filter === "offen") return o.status !== "erledigt";
+    if (state.filter === "meine") return myMatch(o) && isOpen(o);
+    if (state.filter === "offen") return isOpen(o);
     if (state.filter === "erledigt") return o.status === "erledigt";
     if (state.filter === "verrechnen") return o.status === "erledigt" && !o.verrechnet;
-    if (state.filter === "ersatzteile") return (needsErsatzteile(o) && !o.ersatzteileAbgeholt) || (needsMaterial(o) && !o.materialBesorgt);
+    if (state.filter === "ersatzteile") return isOpen(o) && (needsErsatzteile(o) && !o.ersatzteileAbgeholt) || (needsMaterial(o) && !o.materialBesorgt);
     return true;
   }
 
@@ -1377,10 +1385,10 @@
       ? state.orders
       : state.orders.filter(function (o) { return orderBetrieb(o) === state.betriebFilter; });
     var all = scoped.length;
-    var offen = scoped.filter(function (o) { return o.status !== "erledigt"; }).length;
-    var erledigt = all - offen;
-    var ersatz = scoped.filter(function (o) { return (needsErsatzteile(o) && !o.ersatzteileAbgeholt) || (needsMaterial(o) && !o.materialBesorgt); }).length;
-    var bestell = scoped.filter(function (o) { return needsOrdering(o) || needsPickup(o) || (needsMaterial(o) && !o.materialBesorgt && o.status !== "erledigt"); }).length;
+    var offen = scoped.filter(isOpen).length;
+    var erledigt = scoped.filter(function (o) { return o.status === "erledigt"; }).length;
+    var ersatz = scoped.filter(function (o) { return isOpen(o) && (needsErsatzteile(o) && !o.ersatzteileAbgeholt) || (needsMaterial(o) && !o.materialBesorgt); }).length;
+    var bestell = scoped.filter(function (o) { return isOpen(o) && (needsOrdering(o) || needsPickup(o)) || (needsMaterial(o) && !o.materialBesorgt && o.status !== "erledigt"); }).length;
     els.counts.alle.textContent = all ? " " + all : "";
     els.counts.offen.textContent = offen ? " " + offen : "";
     els.counts.erledigt.textContent = erledigt ? " " + erledigt : "";
@@ -1388,7 +1396,7 @@
     els.counts.verr.textContent = zuverr ? " " + zuverr : "";
     els.counts.ersatzteile.textContent = ersatz ? " " + ersatz : "";
     els.counts.bestell.textContent = bestell ? " " + bestell : "";
-    var meine = scoped.filter(function (o) { return myMatch(o) && o.status !== "erledigt"; }).length;
+    var meine = scoped.filter(function (o) { return myMatch(o) && isOpen(o); }).length;
     els.counts.meine.textContent = meine ? " " + meine : "";
   }
 
@@ -1426,6 +1434,7 @@
     var prevOther = null;
     var otherField = EXCLUSIVE_PAIRS[field];
     var update = objSet(field, next);
+    if (field === "verrechnet" && next && order.status !== "erledigt") { update.status = "erledigt"; order.status = "erledigt"; }
     if (field === "ersatzteileBestellt") { update.bestelltAm = next ? Date.now() : ""; order.bestelltAm = update.bestelltAm; }
     if (next && otherField && order[otherField]) {
       prevOther = order[otherField];
@@ -1488,9 +1497,21 @@
 
   function photos(o) { return Array.isArray(o.fotos) ? o.fotos : []; }
 
+  var BLANK = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+  function assetUrl(id) { return (window.__signUrl ? window.__signUrl(id) : Promise.resolve(BLOB_BASE + id)); }
+  function resolveAssets() {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-asset]:not([data-resolved])"), function (el) {
+      el.setAttribute("data-resolved", "1");
+      assetUrl(el.getAttribute("data-asset")).then(function (u) {
+        if (el.tagName === "IMG") el.src = u; else el.href = u;
+      });
+    });
+  }
+  try { new MutationObserver(resolveAssets).observe(document.body, { childList: true, subtree: true }); } catch (e) {}
+
   function pdfLink(o) {
     return o.lieferscheinPdf
-      ? '<div class="pdf-link-row"><a class="pdf-link" href="' + BLOB_BASE + o.lieferscheinPdf + '" target="_blank" rel="noopener">📄 Lieferschein öffnen</a></div>'
+      ? '<div class="pdf-link-row"><a class="pdf-link" href="#" data-asset="' + o.lieferscheinPdf + '" target="_blank" rel="noopener">📄 Lieferschein öffnen</a></div>'
       : "";
   }
 
@@ -1498,7 +1519,7 @@
     var ids = photos(o);
     if (!ids.length) return "";
     return '<div class="photos">' + ids.map(function (id) {
-      return '<img class="photo-thumb" src="' + BLOB_BASE + id + '" data-lightbox="' + id + '" alt="Foto zum Auftrag">';
+      return '<img class="photo-thumb" src="' + BLANK + '" data-asset="' + id + '" data-lightbox="' + id + '" alt="Foto zum Auftrag">';
     }).join("") + '</div>';
   }
 
@@ -1636,11 +1657,13 @@
         '<div class="card-actions">' +
           '<button type="button" class="edit-btn" data-edit="' + o.id + '">Bearbeiten</button>' +
           '<button type="button" class="print-btn" data-print="' + o.id + '">🖨️ Drucken</button>' +
+          (o.status === "erledigt" || o.durchgefuehrt ? '<button type="button" class="print-btn" data-report="' + o.id + '">📄 Arbeitsbericht</button>' : "") +
         '</div>' +
       '</div>'
     );
   }
 
+  var REPORT = false, REPORT_PHOTOS = [];
   function buildPrintHtml(o) {
     var b = orderBetrieb(o);
     var betriebName = b === "Energietechnik" ? "Grieer Energietechnik OG" : "Rauchfangkehrer Roland Grieer";
@@ -1651,6 +1674,8 @@
     if (o.auftragsnummer) rows.push(["Arbeitsauftragsnummer", o.auftragsnummer]);
     if (o.auftragsart) rows.push(["Auftragsart", o.auftragsart]);
     if (o.monteur) rows.push(["Monteur", o.monteur + (o.helfer ? " (+ " + o.helfer + ")" : "")]);
+    if (REPORT && o.ausgefuehrtVon) rows.push(["Ausgeführt von", o.ausgefuehrtVon]);
+    if (REPORT && o.durchgefuehrtAm) rows.push(["Durchgeführt am", fmtDate(o.durchgefuehrtAm)]);
     if (hasTermin(o)) {
       var t = [];
       if (o.terminDatum) t.push(fmtDate(o.terminDatum));
@@ -1685,7 +1710,7 @@
       '<div class="print-sheet">' +
         '<div class="print-header">' +
           '<div class="print-betrieb">' + esc(betriebName) + '</div>' +
-          '<div class="print-title">Auftrag</div>' +
+          '<div class="print-title">' + (REPORT ? "Arbeitsbericht" : "Auftrag") + '</div>' +
         '</div>' +
         '<div class="print-name">' + esc(o.name || "Ohne Bezeichnung") + '</div>' +
         (o.adresse ? '<div class="print-address">' + esc(o.adresse) + '</div>' : '') +
@@ -1693,6 +1718,7 @@
         '<table class="print-table">' + rowsHtml + '</table>' +
         partsHtml +
         (o.note ? '<h3>Kundenwunsch / Anmerkung</h3><div class="print-note">' + esc(o.note) + '</div>' : "") +
+        (REPORT && REPORT_PHOTOS.length ? '<h3>Fotos</h3><div>' + REPORT_PHOTOS.map(function (u) { return '<img src="' + u + '" style="width:48%;margin:1%;border:1px solid #ccc">'; }).join("") + '</div>' : "") +
         (o.unterschrift ? '<h3>Unterschrift Kunde</h3><img src="' + o.unterschrift + '" style="height:80px;border-bottom:1px solid #999">' : "") +
       '</div>'
     );
@@ -1723,8 +1749,14 @@
     );
   }
 
-  function printOrder(o) {
-    var html = buildPrintDocument(o);
+  function printReport(o) {
+    Promise.all(photos(o).map(assetUrl)).then(function (urls) {
+      REPORT = true; REPORT_PHOTOS = urls;
+      try { openPrintHtml(buildPrintDocument(o)); } finally { REPORT = false; REPORT_PHOTOS = []; }
+    });
+  }
+  function printOrder(o) { openPrintHtml(buildPrintDocument(o)); }
+  function openPrintHtml(html) {
     var blob = new Blob([html], { type: "text/html" });
     var url = URL.createObjectURL(blob);
     var opened = null;
@@ -1782,8 +1814,8 @@
     var scoped = state.betriebFilter === "alle"
       ? state.orders
       : state.orders.filter(function (o) { return orderBetrieb(o) === state.betriebFilter; });
-    var toOrder = scoped.filter(needsOrdering);
-    var toPickup = scoped.filter(needsPickup);
+    var toOrder = scoped.filter(function (o) { return isOpen(o) && needsOrdering(o); });
+    var toPickup = scoped.filter(function (o) { return isOpen(o) && needsPickup(o); });
     var toMaterial = scoped.filter(function (o) { return needsMaterial(o) && !o.materialBesorgt && o.status !== "erledigt"; });
     updateCounts();
     if (!toOrder.length && !toPickup.length && !toMaterial.length) {
@@ -2099,6 +2131,12 @@
     }
     var edit = e.target.closest("[data-edit]");
     if (edit) { openSheet(edit.getAttribute("data-edit")); return; }
+    var rp = e.target.closest("[data-report]");
+    if (rp) {
+      var repOrder = state.orders.find(function (o) { return o.id === rp.getAttribute("data-report"); });
+      if (repOrder) printReport(repOrder);
+      return;
+    }
     var pr = e.target.closest("[data-print]");
     if (pr) {
       var printOrderObj = state.orders.find(function (o) { return o.id === pr.getAttribute("data-print"); });
@@ -2107,7 +2145,7 @@
   });
 
   function openLightbox(assetId) {
-    els.lightboxImg.src = BLOB_BASE + assetId;
+    assetUrl(assetId).then(function (u) { els.lightboxImg.src = u; });
     els.lightbox.hidden = false;
   }
   function closeLightbox() { els.lightbox.hidden = true; els.lightboxImg.src = ""; }
@@ -2164,6 +2202,7 @@
       var nowOn = !getSheetToggle(el);
       setSheetToggle(el, nowOn);
       if (el === els.t_ersatzteileNoetig) updatePartStatusVisibility();
+      if (el === els.t_durchgefuehrt && nowOn) els.f_status.value = "erledigt";
       if (el === els.t_materialNoetig) updateMaterialVisibility();
       if (el === els.t_durchgefuehrt) {
         if (nowOn && !els.f_durchgefuehrtAm.value) {
@@ -2249,7 +2288,7 @@
     els.photoEditorList.innerHTML = state.sheetPhotos.map(function (p) {
       return (
         '<div class="photo-edit-thumb' + (p.pending ? ' pending' : '') + '" data-pid="' + p.localId + '">' +
-          '<img src="' + p.url + '" alt="Foto">' +
+          (p.assetId && !p.pending ? '<img src="' + BLANK + '" data-asset="' + p.assetId + '" alt="Foto">' : '<img src="' + p.url + '" alt="Foto">') +
           (p.pending ? '' : '<button type="button" class="p-remove" data-removephoto="' + p.localId + '" aria-label="Foto entfernen">&times;</button>') +
         '</div>'
       );
@@ -2927,7 +2966,10 @@
     db.collection(COLLECTION).onSnapshot(function (snap) {
       state.orders = (snap.docs || snap || []).map(function (d) {
         var data = (d.data && typeof d.data === "function") ? d.data() : (d.data || d);
-        return Object.assign({ id: d.id }, data);
+        var ord = Object.assign({ id: d.id }, data);
+        // Durchgeführt oder verrechnet = abgeschlossen (auch wenn der Status noch "offen" steht)
+        if ((ord.durchgefuehrt || ord.verrechnet) && ord.status !== "erledigt") ord.status = "erledigt";
+        return ord;
       });
       setSync(true, canWrite);
       if (state.canWrite === false) setReadOnly(null);
@@ -2985,18 +3027,67 @@
   }
   function chk(r) { if (r && r.error) throw r.error; return r; }
 
+  // ---- Offline: Zwischenspeicher + Warteschlange ----
+  var OUTBOX_KEY = "outbox_v1", CACHE_KEY = "cache_orders_v1";
+  function lsGet(k, d) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function isNetErr(e) {
+    var m = String((e && e.message) || e || "").toLowerCase();
+    return (typeof navigator !== "undefined" && navigator.onLine === false) || /failed to fetch|networkerror|network request|load failed|fetch/.test(m);
+  }
+  function setOfflineBar() {
+    var n = lsGet(OUTBOX_KEY, []).length, off = navigator.onLine === false;
+    var bar = document.getElementById("offlineBar");
+    if (!bar) return;
+    bar.hidden = !(off || n);
+    bar.textContent = (off ? "📡 Offline – Änderungen werden gespeichert und später gesendet" : "⏳ Sende gespeicherte Änderungen …") + (n ? " (" + n + " wartend)" : "");
+  }
+  function applyLocal(op) {
+    var rows = lsGet(CACHE_KEY, []), i = rows.findIndex(function (r) { return r.id === op.id; });
+    if (op.t === "delete") { if (i > -1) rows.splice(i, 1); }
+    else if (op.t === "set") { var r0 = { id: op.id, data: op.data, updated_at: new Date().toISOString(), updated_by: session.user.id }; if (i > -1) rows[i] = r0; else rows.push(r0); }
+    else if (op.t === "update" && i > -1) { rows[i].data = Object.assign({}, rows[i].data, op.patch); }
+    lsSet(CACHE_KEY, rows);
+  }
+  function sendOp(op) {
+    if (op.t === "set") return sb.from("team_auftraege").upsert({ id: op.id, data: op.data, updated_by: session.user.id }).then(chk);
+    if (op.t === "update") return sb.rpc("merge_team_auftrag", { p_id: op.id, p_patch: op.patch }).then(chk);
+    return sb.from("team_auftraege").delete().eq("id", op.id).then(chk);
+  }
+  var flushing = false;
+  function flushOutbox() {
+    if (flushing || !session) return Promise.resolve();
+    var q = lsGet(OUTBOX_KEY, []);
+    if (!q.length) { setOfflineBar(); return Promise.resolve(); }
+    flushing = true;
+    function next() {
+      q = lsGet(OUTBOX_KEY, []);
+      if (!q.length) { flushing = false; setOfflineBar(); return Promise.resolve(); }
+      return sendOp(q[0]).then(function () { q.shift(); lsSet(OUTBOX_KEY, q); return next(); })
+        .catch(function (e) {
+          if (isNetErr(e)) { flushing = false; setOfflineBar(); return; }
+          q.shift(); lsSet(OUTBOX_KEY, q); return next(); // dauerhaft abgelehnt (z. B. fehlende Rechte): verwerfen
+        });
+    }
+    return next();
+  }
+  window.addEventListener("online", function () { setOfflineBar(); flushOutbox(); });
+  window.addEventListener("offline", setOfflineBar);
+  function runOp(op) {
+    return sendOp(op).catch(function (e) {
+      if (!isNetErr(e)) throw e;
+      var q = lsGet(OUTBOX_KEY, []); q.push(op); lsSet(OUTBOX_KEY, q);
+      applyLocal(op); setOfflineBar();
+      return { queued: true };
+    });
+  }
+
   function docRef(id) {
     return {
       id: id,
-      set: function (data) {
-        return sb.from("team_auftraege").upsert({ id: id, data: data, updated_by: session.user.id }).then(chk);
-      },
-      update: function (patch) {
-        return sb.rpc("merge_team_auftrag", { p_id: id, p_patch: patch }).then(chk);
-      },
-      delete: function () {
-        return sb.from("team_auftraege").delete().eq("id", id).then(chk);
-      }
+      set: function (data) { return runOp({ t: "set", id: id, data: data }); },
+      update: function (patch) { return runOp({ t: "update", id: id, patch: patch }); },
+      delete: function () { return runOp({ t: "delete", id: id }); }
     };
   }
 
@@ -3011,8 +3102,13 @@
       return {
         onSnapshot: function (ok, err) {
           function load() {
-            sb.from("team_auftraege").select("id,data,updated_at,updated_by").then(function (r) {
+            flushOutbox();
+            Promise.resolve(sb.from("team_auftraege").select("id,data,updated_at,updated_by")).then(function (r) {
+              return r;
+            }, function (e) { return { error: e }; }).then(function (r) {
+              if (r.error && isNetErr(r.error)) { r = { data: lsGet(CACHE_KEY, []), error: null, cached: true }; setOfflineBar(); }
               if (r.error) { if (err) err(r.error); return; }
+              if (!r.cached && !(lsGet(OUTBOX_KEY, []).length)) lsSet(CACHE_KEY, r.data || []);
               window.__meta = window.__meta || {};
               (r.data || []).forEach(function (row) { window.__meta[row.id] = { at: Date.parse(row.updated_at) || 0, by: row.updated_by }; });
               if (!window.__namesLoaded) {
@@ -3061,17 +3157,55 @@
     });
   };
 
+  function shrinkImage(file) {
+    return new Promise(function (resolve) {
+      var orig = { blob: file, ext: (file.name || "").split(".").pop().toLowerCase().replace(/[^a-z0-9]/g, ""), type: file.type };
+      try {
+        var url = URL.createObjectURL(file), img = new Image();
+        img.onload = function () {
+          try {
+            var max = 1600, sc = Math.min(1, max / Math.max(img.width, img.height));
+            var c = document.createElement("canvas"); c.width = Math.round(img.width * sc); c.height = Math.round(img.height * sc);
+            c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+            c.toBlob(function (b) { URL.revokeObjectURL(url); resolve(b && b.size < file.size ? { blob: b, ext: "jpg", type: "image/jpeg" } : orig); }, "image/jpeg", 0.8);
+          } catch (e) { resolve(orig); }
+        };
+        img.onerror = function () { URL.revokeObjectURL(url); resolve(orig); };
+        img.src = url;
+      } catch (e) { resolve(orig); }
+    });
+  }
+
+  var signCache = {};
+  window.__signUrl = function (id) {
+    var c = signCache[id];
+    if (c && c.exp > Date.now()) return Promise.resolve(c.url);
+    var sp; try { sp = sb.storage.from(BUCKET).createSignedUrl(id, 3600); } catch (e) { sp = Promise.resolve(null); }
+    return Promise.resolve(sp).then(function (r) {
+      var u = (r && r.data && r.data.signedUrl) || (window.BLOB_BASE + id);
+      signCache[id] = { url: u, exp: Date.now() + 3000 * 1000 };
+      return u;
+    }, function () { return window.BLOB_BASE + id; });
+  };
+
   var assetsNS = {
     upload: function (file, opts) {
       var ext = (file.name && file.name.indexOf(".") > -1) ? file.name.split(".").pop().toLowerCase().replace(/[^a-z0-9]/g, "") : "";
-      var path = uuid() + (ext ? "." + ext : "");
-      return sb.storage.from(BUCKET).upload(path, file, { contentType: (opts && opts.type) || file.type || "application/octet-stream" })
-        .then(function (r) { chk(r); return { id: path, url: window.BLOB_BASE + path }; });
+      var isImg = /^image\/(jpeg|png|webp|heic|heif)/i.test(file.type || "") && !(opts && opts.type);
+      var prep = isImg ? shrinkImage(file) : Promise.resolve({ blob: file, ext: ext, type: (opts && opts.type) || file.type || "application/octet-stream" });
+      return prep.then(function (pr) {
+        var path = uuid() + (pr.ext ? "." + pr.ext : "");
+        return sb.storage.from(BUCKET).upload(path, pr.blob, { contentType: pr.type })
+          .then(function (r) { chk(r); return { id: path, url: window.BLOB_BASE + path }; });
+      });
     },
     delete: function (id) { return sb.storage.from(BUCKET).remove([id]).then(chk); }
   };
 
   window.claude = { use: function (n) { return Promise.resolve({ db: dbNS, user: userNS, assets: assetsNS }[n] || null); } };
+
+  try { if ("serviceWorker" in navigator && location.protocol.indexOf("http") === 0) navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {}
+  setInterval(function () { flushOutbox(); }, 30000);
 
   var started = false;
   function startApp() {
