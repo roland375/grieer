@@ -952,7 +952,8 @@
       </div>
       <div class="field">
         <label for="f_name">Auftrag / Kunde</label>
-        <input type="text" id="f_name" placeholder="Name, Objekt oder Kurzbeschreibung" required>
+        <input type="text" id="f_name" list="dlKunden" autocomplete="off" placeholder="Name, Objekt oder Kurzbeschreibung" required>
+        <datalist id="dlKunden"></datalist>
       </div>
       <div class="field">
         <label for="f_adresse">Adresse</label>
@@ -2559,6 +2560,25 @@
       });
     });
   }
+
+  function fillKunden() {
+    var seen = {}, html = "";
+    state.orders.forEach(function (o) {
+      var n = (o.name || "").trim();
+      if (n && !seen[n.toLowerCase()]) { seen[n.toLowerCase()] = 1; html += '<option value="' + esc(n) + '"></option>'; }
+    });
+    var dl = document.getElementById("dlKunden");
+    if (dl && dl.getAttribute("data-n") !== String(Object.keys(seen).length)) { dl.innerHTML = html; dl.setAttribute("data-n", String(Object.keys(seen).length)); }
+  }
+  document.getElementById("f_name").addEventListener("focus", fillKunden);
+  document.getElementById("f_name").addEventListener("change", function () {
+    var v = this.value.trim().toLowerCase();
+    if (!v || (els.f_adresse.value.trim() && els.f_telefon.value.trim())) return;
+    var hit = state.orders.slice().sort(function (a, b) { return (b.createdAt || 0) - (a.createdAt || 0); }).find(function (o) { return (o.name || "").trim().toLowerCase() === v; });
+    if (!hit) return;
+    if (!els.f_adresse.value.trim() && hit.adresse) els.f_adresse.value = hit.adresse;
+    if (!els.f_telefon.value.trim() && hit.telefon) els.f_telefon.value = hit.telefon;
+  });
 
   function openSheet(id) {
     state.editingId = id || null;
