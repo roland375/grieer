@@ -260,8 +260,18 @@
     padding: 4px 9px;
     border-radius: 999px;
   }
-  .pill.offen { background: var(--warn-tint); color: var(--warn); }
-  .pill.erledigt { background: var(--good-tint); color: var(--good); }
+  .pill.offen { background: #c62828; color: #fff; font-size: 13px; padding: 6px 12px; box-shadow: 0 0 0 3px rgba(198,40,40,.22); }
+  .pill.erledigt { background: #ef8f00; color: #fff; font-size: 12px; padding: 5px 10px; }
+  .pill.verrechnet { background: var(--good); color: #fff; }
+  .card.is-offen { border-left: 6px solid #c62828; }
+  .card.is-abgeschlossen { border-left: 6px solid #ef8f00; }
+  .card.is-verrechnet { border-left: 6px solid var(--good); }
+  .closebtn { display: inline-block; margin-top: 10px; background: #c62828; color: #fff; font-weight: 700; font-size: 13.5px; padding: 9px 14px; border-radius: 10px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .closebtn:active { opacity: .8; }
+  .closebtn.reopen { background: transparent; color: var(--ink-soft); border: 1px solid var(--line, #bbb); font-weight: 600; }
+  .terminbanner { display: block; width: 100%; margin-top: 10px; background: #1565c0; color: #fff; font-weight: 700; font-size: 14px; padding: 11px 14px; border-radius: 10px; cursor: pointer; text-align: left; border: 0; animation: pulsebl 1.8s ease-in-out infinite; }
+  @keyframes pulsebl { 50% { box-shadow: 0 0 0 5px rgba(21,101,192,.28); } }
+  .allebanner { margin-top: 10px; background: var(--good-tint); color: var(--good); font-weight: 700; font-size: 13px; padding: 8px 12px; border-radius: 10px; }
   .pill[data-status-toggle] { cursor: pointer; -webkit-tap-highlight-color: transparent; }
   .pill[data-status-toggle]:active { opacity: .75; }
 
@@ -855,7 +865,8 @@
     <div class="filters" id="filters">
       <button class="chip" data-filter="alle" aria-pressed="false">Alle<span class="count" id="cAlle"></span></button>
       <button class="chip" data-filter="offen" aria-pressed="true">Offen<span class="count" id="cOffen"></span></button>
-      <button class="chip" data-filter="erledigt" aria-pressed="false">Erledigt<span class="count" id="cErledigt"></span></button>
+      <button class="chip" data-filter="erledigt" aria-pressed="false">Abgeschlossen<span class="count" id="cErledigt"></span></button>
+      <button class="chip" data-filter="verrechnen" aria-pressed="false">Zu verrechnen<span class="count" id="cVerr"></span></button>
       <button class="chip" data-filter="meine" aria-pressed="false">Meine<span class="count" id="cMeine"></span></button>
       <button class="chip" data-filter="ersatzteile" aria-pressed="false">Material / Ersatzteile<span class="count" id="cErsatz"></span></button>
     </div>
@@ -887,7 +898,7 @@
 
   <div class="empty" id="bestellEmpty" hidden>
     <div class="headline">Nichts zu bestellen</div>
-    <p>Sobald bei einem Auftrag Ersatzteile eingetragen sind, erscheinen sie hier.</p>
+    <p>Sobald bei einem Auftrag Ersatzteile oder Material eingetragen sind, erscheinen sie hier.</p>
   </div>
 </div>
 
@@ -998,7 +1009,7 @@
           <label for="f_status">Status</label>
           <select id="f_status">
             <option value="offen">Offen</option>
-            <option value="erledigt">Erledigt</option>
+            <option value="erledigt">Abgeschlossen</option>
           </select>
         </div>
       </div>
@@ -1131,6 +1142,7 @@
       alle: document.getElementById("cAlle"),
       offen: document.getElementById("cOffen"),
       erledigt: document.getElementById("cErledigt"),
+      verr: document.getElementById("cVerr"),
       ersatzteile: document.getElementById("cErsatz"),
       bestell: document.getElementById("cBestell"),
       meine: document.getElementById("cMeine")
@@ -1233,6 +1245,8 @@
   // Schalter im Formular manuell gesetzt wurde (ohne dass schon feststeht, welche Teile genau).
   function needsErsatzteile(o) { return hasParts(o) || !!o.ersatzteileNoetig; }
   function needsMaterial(o) { return !!o.materialNoetig; }
+  function allThere(o) { return (!needsErsatzteile(o) || !!o.ersatzteileAbgeholt) && (!needsMaterial(o) || !!o.materialBesorgt); }
+  function needsTerminNow(o) { return o.status !== "erledigt" && !o.durchgefuehrt && (needsErsatzteile(o) || needsMaterial(o)) && allThere(o) && !hasTermin(o); }
   function needsOrdering(o) { return needsErsatzteile(o) && !o.ersatzteileBestellt; }
   function needsPickup(o) { return needsErsatzteile(o) && !!o.ersatzteileBestellt && !o.ersatzteileAbgeholt && !o.ersatzteileLieferung; }
   function materialReady(o) { return !needsErsatzteile(o) || !!o.ersatzteileBestellt || !!o.ersatzteileAbgeholt; }
@@ -1302,7 +1316,7 @@
       }).join("") : "Noch keine Einträge.";
     }).catch(function () { els.verlaufList.textContent = ""; });
   }
-  var CHANGE_LABELS = { name: "Kunde", adresse: "Adresse", telefon: "Telefon", datum: "Datum", kundennummer: "Projekt-Nr.", auftragsnummer: "AA-Nr.", auftragsart: "Auftragsart", monteur: "Monteur", helfer: "Helfer", uhrzeit: "Uhrzeit", terminDatum: "Termin", terminZeit: "Termin-Uhrzeit", status: "Status", durchgefuehrt: "Durchgeführt", ausgefuehrtVon: "Ausgeführt von", teile: "Teile", note: "Notiz", wiederholung: "Wiederholung", fotos: "Fotos", unterschrift: "Unterschrift", ersatzteileBestellt: "bestellt", ersatzteileAbgeholt: "abgeholt", ersatzteileLieferung: "wird geliefert", terminAusgemacht: "Termin ausgemacht", auftragVorhanden: "Auftrag vorhanden", ersatzteileNoetig: "Ersatzteile nötig", materialNoetig: "Material nötig", materialText: "Material", materialBesorgt: "Material besorgt", lieferscheinPdf: "Lieferschein" };
+  var CHANGE_LABELS = { name: "Kunde", adresse: "Adresse", telefon: "Telefon", datum: "Datum", kundennummer: "Projekt-Nr.", auftragsnummer: "AA-Nr.", auftragsart: "Auftragsart", monteur: "Monteur", helfer: "Helfer", uhrzeit: "Uhrzeit", terminDatum: "Termin", terminZeit: "Termin-Uhrzeit", status: "Status", durchgefuehrt: "Durchgeführt", ausgefuehrtVon: "Ausgeführt von", teile: "Teile", note: "Notiz", wiederholung: "Wiederholung", fotos: "Fotos", unterschrift: "Unterschrift", ersatzteileBestellt: "bestellt", ersatzteileAbgeholt: "abgeholt", ersatzteileLieferung: "wird geliefert", terminAusgemacht: "Termin ausgemacht", auftragVorhanden: "Auftrag vorhanden", ersatzteileNoetig: "Ersatzteile nötig", materialNoetig: "Material nötig", verrechnet: "Verrechnet", materialText: "Material", materialBesorgt: "Material besorgt", lieferscheinPdf: "Lieferschein" };
   function normVal(v) { return (v === undefined || v === null || v === false || v === "" || (Array.isArray(v) && !v.length)) ? "" : JSON.stringify(v); }
   function changedLabels(existing, payload) {
     if (!existing) return [];
@@ -1353,6 +1367,7 @@
     if (state.filter === "meine") return myMatch(o) && o.status !== "erledigt";
     if (state.filter === "offen") return o.status !== "erledigt";
     if (state.filter === "erledigt") return o.status === "erledigt";
+    if (state.filter === "verrechnen") return o.status === "erledigt" && !o.verrechnet;
     if (state.filter === "ersatzteile") return (needsErsatzteile(o) && !o.ersatzteileAbgeholt) || (needsMaterial(o) && !o.materialBesorgt);
     return true;
   }
@@ -1365,10 +1380,12 @@
     var offen = scoped.filter(function (o) { return o.status !== "erledigt"; }).length;
     var erledigt = all - offen;
     var ersatz = scoped.filter(function (o) { return (needsErsatzteile(o) && !o.ersatzteileAbgeholt) || (needsMaterial(o) && !o.materialBesorgt); }).length;
-    var bestell = scoped.filter(function (o) { return needsOrdering(o) || needsPickup(o); }).length;
+    var bestell = scoped.filter(function (o) { return needsOrdering(o) || needsPickup(o) || (needsMaterial(o) && !o.materialBesorgt && o.status !== "erledigt"); }).length;
     els.counts.alle.textContent = all ? " " + all : "";
     els.counts.offen.textContent = offen ? " " + offen : "";
     els.counts.erledigt.textContent = erledigt ? " " + erledigt : "";
+    var zuverr = scoped.filter(function (o) { return o.status === "erledigt" && !o.verrechnet; }).length;
+    els.counts.verr.textContent = zuverr ? " " + zuverr : "";
     els.counts.ersatzteile.textContent = ersatz ? " " + ersatz : "";
     els.counts.bestell.textContent = bestell ? " " + bestell : "";
     var meine = scoped.filter(function (o) { return myMatch(o) && o.status !== "erledigt"; }).length;
@@ -1436,7 +1453,7 @@
     render();
     state.db.doc(COLLECTION + "/" + order.id)
       .update({ status: next })
-      .then(function () { logChange(order.id, "Status: " + (next === "erledigt" ? "Erledigt" : "Offen")); if (next === "erledigt") maybeFollowUp(order); })
+      .then(function () { logChange(order.id, "Status: " + (next === "erledigt" ? "Abgeschlossen" : "Offen")); if (next === "erledigt") maybeFollowUp(order); })
       .catch(function (err) {
         order.status = prev;
         render();
@@ -1569,8 +1586,9 @@
   }
 
   function cardTemplate(o) {
-    var pillClass = o.status === "erledigt" ? "erledigt" : "offen";
-    var pillLabel = o.status === "erledigt" ? "Erledigt" : "Offen";
+    var isDone = o.status === "erledigt";
+    var pillClass = !isDone ? "offen" : (o.verrechnet ? "verrechnet" : "erledigt");
+    var pillLabel = !isDone ? "Offen" : (o.verrechnet ? "Verrechnet" : "Abgeschlossen");
     var meta = fmtDate(o.datum) +
       (o.kundennummer ? " &middot; Projekt-Nr. " + esc(o.kundennummer) : "") +
       (o.auftragsnummer ? " &middot; AA-Nr. " + esc(o.auftragsnummer) : "");
@@ -1583,7 +1601,7 @@
         (o.ersatzteileLieferung ? "" : toggleChip(o, "ersatzteileAbgeholt", "abgeholt", false))
       : "";
     return (
-      '<div class="card" data-id="' + o.id + '">' +
+      '<div class="card ' + (!isDone ? "is-offen" : (o.verrechnet ? "is-verrechnet" : "is-abgeschlossen")) + '" data-id="' + o.id + '">' +
         '<div class="card-top">' +
           '<div>' +
             '<div class="card-name">' + esc(o.name || "Ohne Bezeichnung") + '</div>' +
@@ -1600,8 +1618,14 @@
           toggleChip(o, "terminAusgemacht", "Termin ausgemacht", false) +
           partToggles +
           (needsMaterial(o) ? toggleChip(o, "materialBesorgt", "Material besorgt", false) : "") +
+          (isDone ? toggleChip(o, "verrechnet", "Verrechnet", false) : "") +
         '</div>' +
-        (needsMaterial(o) ? '<div class="note" style="border-left:3px solid #c0392b">🧰 <b>Material:</b> ' + esc(o.materialText || "benötigt") + '</div>' : "") +
+        (isDone && !o.verrechnet ? '<div class="allebanner" style="background:#fdebd0;color:#b45f06">💶 Abgeschlossen – noch nicht verrechnet</div>' : "") +
+        (needsTerminNow(o) ? '<button type="button" class="terminbanner" data-edit="' + o.id + '">📞 Termin jetzt ausmachen – alles ist vorhanden</button>'
+          : (!isDone && (needsErsatzteile(o) || needsMaterial(o)) && allThere(o) ? '<div class="allebanner">✔ Alles vorhanden</div>' : "")) +
+        (!isDone ? '<span class="closebtn" data-status-toggle data-id="' + o.id + '" role="button" tabindex="0">✔ Auftrag abschließen</span>'
+          : '<span class="closebtn reopen" data-status-toggle data-id="' + o.id + '" role="button" tabindex="0">↺ Wieder öffnen</span>') +
+        (needsMaterial(o) ? '<div class="note" style="border-left:4px solid ' + (o.materialBesorgt ? "var(--good)" : "#c0392b") + ';' + (o.materialBesorgt ? "background:var(--good-tint);color:var(--good)" : "") + '">' + (o.materialBesorgt ? "✔" : "🧰") + ' <b>Material' + (o.materialBesorgt ? " vorhanden" : " fehlt") + ':</b> ' + esc(o.materialText || "benötigt") + '</div>' : "") +
         partsBlock +
         photosStrip(o) +
         pdfLink(o) +
@@ -1621,7 +1645,7 @@
     var b = orderBetrieb(o);
     var betriebName = b === "Energietechnik" ? "Grieer Energietechnik OG" : "Rauchfangkehrer Roland Grieer";
     var rows = [];
-    rows.push(["Status", o.status === "erledigt" ? "Erledigt" : "Offen"]);
+    rows.push(["Status", o.status === "erledigt" ? (o.verrechnet ? "Abgeschlossen und verrechnet" : "Abgeschlossen, noch nicht verrechnet") : "Offen"]);
     rows.push(["Datum", fmtDate(o.datum)]);
     if (o.kundennummer) rows.push(["Projekt-Nr.", o.kundennummer]);
     if (o.auftragsnummer) rows.push(["Arbeitsauftragsnummer", o.auftragsnummer]);
@@ -1760,8 +1784,9 @@
       : state.orders.filter(function (o) { return orderBetrieb(o) === state.betriebFilter; });
     var toOrder = scoped.filter(needsOrdering);
     var toPickup = scoped.filter(needsPickup);
+    var toMaterial = scoped.filter(function (o) { return needsMaterial(o) && !o.materialBesorgt && o.status !== "erledigt"; });
     updateCounts();
-    if (!toOrder.length && !toPickup.length) {
+    if (!toOrder.length && !toPickup.length && !toMaterial.length) {
       els.bestellView.hidden = true;
       els.bestellView.innerHTML = "";
       els.bestellEmpty.hidden = false;
@@ -1782,6 +1807,17 @@
         '<div class="bestell-section">' +
           '<div class="bestell-heading"><h2>Bestellt &ndash; zur Abholung</h2></div>' +
           toPickup.map(function (o) { return bestellCard(o, "pickup"); }).join("") +
+        '</div>';
+    }
+    if (toMaterial.length) {
+      html +=
+        '<div class="bestell-section">' +
+          '<div class="bestell-heading"><h2>Material besorgen</h2></div>' +
+          toMaterial.map(function (o) {
+            return '<div class="card bestell-card" data-id="' + o.id + '"><div class="card-name">' + esc(o.name || "Ohne Bezeichnung") + '</div><div class="card-meta">' + fmtDate(o.datum) + '</div>' +
+              '<div class="note" style="border-left:4px solid #c0392b">🧰 ' + esc(o.materialText || "Material benötigt") + '</div>' +
+              '<button type="button" class="advance-btn" data-advance="material" data-id="' + o.id + '">Als besorgt markieren</button></div>';
+          }).join("") +
         '</div>';
     }
     els.bestellView.innerHTML = html;
@@ -1807,6 +1843,7 @@
         if (o.terminDatum && (o.terminDatum === today || o.terminDatum === tomorrow) && needsErsatzteile(o) && !o.ersatzteileAbgeholt) {
           items.push([o.id, "🔧 Termin " + (o.terminDatum === today ? "heute" : "morgen") + ", Material noch nicht da: " + nm]);
         }
+        if (needsTerminNow(o)) items.push([o.id, "📞 Termin ausmachen – alles vorhanden: " + nm]);
         if (needsMaterial(o) && !o.materialBesorgt && o.terminDatum && o.terminDatum <= tomorrow) items.push([o.id, "🧰 Material fehlt (" + esc(o.materialText || "Material") + ") – Termin " + fmtDate(o.terminDatum) + ": " + nm]);
         if (needsPickup(o) && o.bestelltAm) {
           var days = Math.floor((Date.now() - Number(o.bestelltAm)) / 86400000);
@@ -1828,6 +1865,13 @@
         });
         items = fresh.concat(items);
       }
+    }
+    if (show && myRole() === "admin") {
+      var cut = Date.now() - 7 * 86400000;
+      scopedOrders().forEach(function (o) {
+        var m = window.__meta && window.__meta[o.id];
+        if (o.status === "erledigt" && !o.verrechnet && m && m.at && m.at < cut) items.push([o.id, "💶 Seit über 7 Tagen abgeschlossen, nicht verrechnet: <b>" + esc(o.name || "Ohne Bezeichnung") + "</b>"]);
+      });
     }
     if (!items.length) { els.hinweise.hidden = true; els.hinweise.innerHTML = ""; return; }
     var wasOpen = els.hinweise.open;
@@ -1888,14 +1932,14 @@
     });
     var html = '<div class="abr-head"><input type="month" id="abrMonth" value="' + esc(state.month) + '">' +
       '<button type="button" class="copy-btn" id="abrCsv">CSV herunterladen</button>' +
-      '<span class="sub">' + rows.length + ' durchgeführte Aufträge</span></div>';
+      '<span class="sub">' + rows.length + ' durchgeführte Aufträge, ' + rows.filter(function (o) { return !o.verrechnet; }).length + ' noch nicht verrechnet</span></div>';
     if (!rows.length) html += '<div class="empty"><div class="headline">Nichts in diesem Monat</div><p>Hier erscheinen Aufträge mit „Durchgeführt“ im gewählten Monat.</p></div>';
     Object.keys(groups).sort().forEach(function (who) {
       html += '<div class="abr-group"><div class="bestell-heading"><h2>' + esc(who) + ' (' + groups[who].length + ')</h2></div>' +
         groups[who].map(function (o) {
           return '<div class="abr-row" data-edit="' + o.id + '"><span><b>' + esc(o.name || "Ohne Bezeichnung") + '</b><br><span class="sub">' +
             esc((o.auftragsart || "") + (o.kundennummer ? " · Projekt-Nr. " + o.kundennummer : "") + (o.auftragsnummer ? " · AA-Nr. " + o.auftragsnummer : "")) +
-            '</span></span><span>' + fmtDate(o.durchgefuehrtAm || o.datum) + '</span></div>';
+            '</span></span><span>' + fmtDate(o.durchgefuehrtAm || o.datum) + '<br><span class="sub">' + (o.verrechnet ? "✔ verrechnet" : "💶 offen") + '</span></span></div>';
         }).join("") + '</div>';
     });
     els.abrechnungView.innerHTML = html;
@@ -1904,10 +1948,10 @@
   function csvCell(v) { return '"' + String(v == null ? "" : v).replace(/"/g, '""').replace(/\r?\n/g, " ") + '"'; }
   function exportAbrechnungCsv() {
     var rows = abrechnungRows();
-    var head = ["Datum", "Kunde", "Adresse", "Projekt-Nr.", "AA-Nr.", "Betrieb", "Auftragsart", "Ausgeführt von", "Monteur", "Teile", "Notiz"];
+    var head = ["Verrechnet", "Datum", "Kunde", "Adresse", "Projekt-Nr.", "AA-Nr.", "Betrieb", "Auftragsart", "Ausgeführt von", "Monteur", "Teile", "Notiz"];
     var lines = [head.map(csvCell).join(";")];
     rows.forEach(function (o) {
-      lines.push([fmtDate(o.durchgefuehrtAm || o.datum), o.name, o.adresse, o.kundennummer, o.auftragsnummer, orderBetrieb(o), o.auftragsart, o.ausgefuehrtVon, o.monteur,
+      lines.push([o.verrechnet ? "ja" : "nein", fmtDate(o.durchgefuehrtAm || o.datum), o.name, o.adresse, o.kundennummer, o.auftragsnummer, orderBetrieb(o), o.auftragsart, o.ausgefuehrtVon, o.monteur,
         parts(o).map(function (p) { return (p.menge || 1) + "x " + p.name; }).join(", "), o.note].map(csvCell).join(";"));
     });
     downloadFile("abrechnung-" + state.month + ".csv", "text/csv;charset=utf-8", "\ufeff" + lines.join("\r\n"));
@@ -1949,6 +1993,7 @@
     d.querySelector(".px").addEventListener("click", function (e) { e.stopPropagation(); d.remove(); });
     d.querySelector(".pt").addEventListener("click", function () { if (id) openSheet(id); d.remove(); });
     box.appendChild(d);
+    if (kind === "ueber") setTimeout(function () { if (d.parentNode) d.remove(); }, 9000);
     try {
       if (document.hidden && window.Notification && Notification.permission === "granted") new Notification(title.replace(/<[^>]+>/g, ""), { body: sub || "" });
     } catch (e) {}
@@ -2073,7 +2118,7 @@
     var adv = e.target.closest("[data-advance]");
     if (!adv) return;
     var order = state.orders.find(function (o) { return o.id === adv.getAttribute("data-id"); });
-    if (order) toggleField(order, adv.getAttribute("data-advance") === "bestellt" ? "ersatzteileBestellt" : "ersatzteileAbgeholt");
+    if (order) toggleField(order, adv.getAttribute("data-advance") === "bestellt" ? "ersatzteileBestellt" : (adv.getAttribute("data-advance") === "material" ? "materialBesorgt" : "ersatzteileAbgeholt"));
   });
 
   els.filters.addEventListener("click", function (e) {
