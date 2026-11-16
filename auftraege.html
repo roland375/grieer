@@ -280,6 +280,7 @@
   .need-row.ok { border-color: var(--good); background: var(--good-tint); }
   .need-head { font-size: 13px; font-weight: 700; color: #b3261e; }
   .need-row.ok .need-head { color: var(--good); }
+  .need-text { margin-top: 5px; font-size: 13.5px; font-weight: 600; color: var(--ink); white-space: pre-wrap; }
   .need-row .toggles { margin-top: 7px; }
   .need-row .parts { margin-top: 6px; }
   .step-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 11px; }
@@ -984,7 +985,7 @@
           <input type="text" id="f_kdnr" placeholder="z. B. 200048156" inputmode="text">
         </div>
       </div>
-      <div class="field">
+      <div class="field" hidden>
         <label for="f_auftragsnr">Arbeitsauftragsnummer</label>
         <input type="text" id="f_auftragsnr" placeholder="z. B. AA-2026-0142" inputmode="text">
       </div>
@@ -1024,7 +1025,7 @@
           <input type="text" id="f_helfer" placeholder="Name (optional)">
         </div>
       </div>
-      <div class="field">
+      <div class="field" hidden>
         <label for="f_zeit">Uhrzeit</label>
         <input type="text" id="f_zeit" placeholder="z. B. 13:15 - 14:55 Uhr">
       </div>
@@ -1067,14 +1068,14 @@
       <div class="sheet-toggles">
         <label class="tgl" id="t_vorhanden"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Auftrag vorhanden</label>
         <label class="tgl" id="t_terminAusgemacht" hidden><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Termin ausgemacht</label>
-        <label class="tgl need" id="t_ersatzteileNoetig"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Ersatzteile nötig</label>
-        <label class="tgl need" id="t_materialNoetig"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Material nötig</label>
+        <label class="tgl need" id="t_ersatzteileNoetig"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Material / Ersatzteile nötig</label>
+        <label class="tgl need" id="t_materialNoetig" hidden><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Material nötig</label>
         <label class="tgl" id="t_durchgefuehrt" hidden><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Durchgeführt</label>
       </div>
       <div class="field" id="materialField" hidden>
-        <label for="f_material">Welches Material? (z. B. Feuerlöscher)</label>
-        <input type="text" id="f_material" placeholder="Feuerlöscher, Rohr, Dichtung …">
-        <div class="sheet-toggles" style="margin-top:8px"><label class="tgl" id="t_materialBesorgt"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Material besorgt</label></div>
+        <label for="f_material">Was wird gebraucht?</label>
+        <input type="text" id="f_material" placeholder="z. B. Feuerlöscher, Rohr 150, Dichtung …">
+        <div class="sheet-toggles" style="margin-top:8px" hidden><label class="tgl" id="t_materialBesorgt"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Material besorgt</label></div>
       </div>
       <div class="field" id="durchgefuehrtAmField" hidden>
         <label for="f_durchgefuehrtAm">Durchgeführt am</label>
@@ -1082,7 +1083,7 @@
       </div>
 
       <div class="field parts-editor">
-        <label>Ersatzteile (optional, falls schon bekannt)</label>
+        <label>Einzelne Teile mit Lieferant / Bestellnummer (optional)</label>
         <div class="parts-editor-list" id="partsEditorList"></div>
         <p class="parts-empty-hint" id="partsEmptyHint">Noch keine Teile eingetragen.</p>
         <div class="part-add-row">
@@ -1105,9 +1106,9 @@
       </div>
 
       <div class="sheet-toggles" id="partStatusToggles" hidden>
-        <label class="tgl" id="t_bestellt"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Ersatzteile bestellt</label>
+        <label class="tgl" id="t_bestellt"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Bestellt</label>
         <label class="tgl" id="t_lieferung"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Wird geliefert</label>
-        <label class="tgl" id="t_abgeholt"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Ersatzteile da (abgeholt / geliefert)</label>
+        <label class="tgl" id="t_abgeholt"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Alles da (abgeholt / geliefert)</label>
       </div>
 
       <div class="field" id="pdfFieldOuter">
@@ -1299,13 +1300,14 @@
   function hasParts(o) { return parts(o).length > 0; }
   // "Ersatzteile nötig" gilt entweder, weil konkrete Teile eingetragen sind, ODER weil der
   // Schalter im Formular manuell gesetzt wurde (ohne dass schon feststeht, welche Teile genau).
-  function needsErsatzteile(o) { return hasParts(o) || !!o.ersatzteileNoetig; }
-  function needsMaterial(o) { return !!o.materialNoetig; }
+  // Material und Ersatzteile sind EIN Thema: Liste der Teile und/oder freier Text.
+  function needsErsatzteile(o) { return hasParts(o) || !!o.ersatzteileNoetig || !!o.materialNoetig; }
+  function needsMaterial(o) { return false; }
   // EIN Stand pro Auftrag: durchgeführt/abgeschlossen/verrechnet zählen alle als "erledigt".
   function isDone(o) { return o.status === "erledigt" || !!o.durchgefuehrt || !!o.verrechnet; }
   function isOpen(o) { return !isDone(o); }
   function partsMissing(o) { return needsErsatzteile(o) && !o.ersatzteileAbgeholt; }
-  function materialMissing(o) { return needsMaterial(o) && !o.materialBesorgt; }
+  function materialMissing(o) { return false; }
   function allThere(o) { return !partsMissing(o) && !materialMissing(o); }
   function needsOrdering(o) { return partsMissing(o) && !o.ersatzteileBestellt; }
   function needsPickup(o) { return partsMissing(o) && !!o.ersatzteileBestellt; }
@@ -1408,7 +1410,7 @@
       }).join("") : "Noch keine Einträge.";
     }).catch(function () { els.verlaufList.textContent = ""; });
   }
-  var CHANGE_LABELS = { name: "Kunde", adresse: "Adresse", telefon: "Telefon", datum: "Datum", kundennummer: "Projekt-Nr.", auftragsnummer: "AA-Nr.", auftragsart: "Auftragsart", monteur: "Monteur", helfer: "Helfer", uhrzeit: "Uhrzeit", terminDatum: "Termin", terminZeit: "Termin-Uhrzeit", status: "Status", durchgefuehrt: "Durchgeführt", ausgefuehrtVon: "Ausgeführt von", teile: "Teile", note: "Notiz", wiederholung: "Wiederholung", fotos: "Fotos", unterschrift: "Unterschrift", ersatzteileBestellt: "bestellt", ersatzteileAbgeholt: "abgeholt", ersatzteileLieferung: "wird geliefert", terminAusgemacht: "Termin ausgemacht", auftragVorhanden: "Auftrag vorhanden", ersatzteileNoetig: "Ersatzteile nötig", materialNoetig: "Material nötig", verrechnet: "Verrechnet", materialText: "Material", materialBesorgt: "Material besorgt", lieferscheinPdf: "Lieferschein" };
+  var CHANGE_LABELS = { name: "Kunde", adresse: "Adresse", telefon: "Telefon", datum: "Datum", kundennummer: "Projekt-Nr.", auftragsnummer: "AA-Nr.", auftragsart: "Auftragsart", monteur: "Monteur", helfer: "Helfer", uhrzeit: "Uhrzeit", terminDatum: "Termin", terminZeit: "Termin-Uhrzeit", status: "Status", durchgefuehrt: "Durchgeführt", ausgefuehrtVon: "Ausgeführt von", teile: "Teile", note: "Notiz", wiederholung: "Wiederholung", fotos: "Fotos", unterschrift: "Unterschrift", ersatzteileBestellt: "Bestellt", ersatzteileAbgeholt: "Material/Ersatzteile da", ersatzteileLieferung: "wird geliefert", terminAusgemacht: "Termin ausgemacht", auftragVorhanden: "Auftrag vorhanden", ersatzteileNoetig: "Material/Ersatzteile nötig", materialNoetig: "Material nötig", verrechnet: "Verrechnet", materialText: "Material", materialBesorgt: "Material besorgt", lieferscheinPdf: "Lieferschein" };
   function normVal(v) { return (v === undefined || v === null || v === false || v === "" || (Array.isArray(v) && !v.length)) ? "" : JSON.stringify(v); }
   function changedLabels(existing, payload) {
     if (!existing) return [];
@@ -1532,6 +1534,7 @@
       patch.bestelltAm = next ? Date.now() : "";
       if (!next) { patch.ersatzteileLieferung = false; patch.ersatzteileAbgeholt = false; }
     }
+    if (field === "ersatzteileAbgeholt") patch.materialBesorgt = next;
     if (field === "ersatzteileAbgeholt" && next && !order.ersatzteileBestellt) {
       patch.ersatzteileBestellt = true; patch.bestelltAm = order.bestelltAm || Date.now();
     }
@@ -1652,7 +1655,6 @@
     var bits = [];
     if (o.auftragsart) bits.push(esc(o.auftragsart));
     if (o.monteur) bits.push("Monteur: " + esc(o.monteur) + (o.helfer ? " (+ " + esc(o.helfer) + ")" : ""));
-    if (o.uhrzeit) bits.push(esc(o.uhrzeit));
     return bits.length ? '<div class="card-meta2">' + bits.join(" &middot; ") + '</div>' : "";
   }
 
@@ -1698,32 +1700,23 @@
     return '<span class="betrieb-badge ' + cls + '">' + esc(b === "Energietechnik" ? "Energietechnik" : "Rauchfangkehrer") + '</span>';
   }
 
-  // Was fehlt noch? Ein Block für Ersatzteile, einer für Material – rot solange offen, grün wenn da.
+  // Was fehlt noch? EIN Block für Material und Ersatzteile – rot solange offen, grün wenn da.
   function needsBlock(o, withDetails) {
-    var html = "", done = isDone(o);
-    if (needsErsatzteile(o)) {
-      var da = !!o.ersatzteileAbgeholt;
-      var txt = da ? "✔ Ersatzteile da"
-        : "🔧 Ersatzteile fehlen – " + (!o.ersatzteileBestellt ? "noch bestellen" : (o.ersatzteileLieferung ? "bestellt, wird geliefert" : "bestellt, abholen"));
-      html += '<div class="need-row ' + (da || done ? "ok" : "miss") + '">' +
-        '<div class="need-head">' + (done && !da ? "Ersatzteile" : txt) + '</div>' +
-        (hasParts(o) ? '<div class="parts">' + partsChips(o, da || done) + '</div>' : "") +
-        (withDetails ? partsDetailList(o) : "") +
-        (done ? "" : '<div class="toggles">' +
-          toggleChip(o, "ersatzteileBestellt", "bestellt", false) +
-          (o.ersatzteileBestellt && !da ? toggleChip(o, "ersatzteileLieferung", "wird geliefert", false) : "") +
-          toggleChip(o, "ersatzteileAbgeholt", "Teile da", false) +
-        '</div>') +
-      '</div>';
-    }
-    if (needsMaterial(o)) {
-      var mda = !!o.materialBesorgt;
-      html += '<div class="need-row ' + (mda || done ? "ok" : "miss") + '">' +
-        '<div class="need-head">' + (mda ? "✔ Material da: " : (done ? "Material: " : "🧰 Material fehlt: ")) + esc(o.materialText || "Material") + '</div>' +
-        (done ? "" : '<div class="toggles">' + toggleChip(o, "materialBesorgt", "Material da", false) + '</div>') +
-      '</div>';
-    }
-    return html;
+    if (!needsErsatzteile(o)) return "";
+    var done = isDone(o), da = !!o.ersatzteileAbgeholt;
+    var txt = da ? "✔ Material / Ersatzteile da"
+      : "🔧 Material / Ersatzteile fehlen – " + (!o.ersatzteileBestellt ? "noch bestellen" : (o.ersatzteileLieferung ? "bestellt, wird geliefert" : "bestellt, abholen"));
+    return '<div class="need-row ' + (da || done ? "ok" : "miss") + '">' +
+      '<div class="need-head">' + (done && !da ? "Material / Ersatzteile" : txt) + '</div>' +
+      (o.materialText ? '<div class="need-text">' + esc(o.materialText) + '</div>' : "") +
+      (hasParts(o) ? '<div class="parts">' + partsChips(o, da || done) + '</div>' : "") +
+      (withDetails ? partsDetailList(o) : "") +
+      (done ? "" : '<div class="toggles">' +
+        toggleChip(o, "ersatzteileBestellt", "bestellt", false) +
+        (o.ersatzteileBestellt && !da ? toggleChip(o, "ersatzteileLieferung", "wird geliefert", false) : "") +
+        toggleChip(o, "ersatzteileAbgeholt", "alles da", false) +
+      '</div>') +
+    '</div>';
   }
 
   // Genau EIN nächster Schritt pro Stufe.
@@ -1744,8 +1737,7 @@
   function cardTemplate(o) {
     var ph = phase(o);
     var meta = fmtDate(o.datum) +
-      (o.kundennummer ? " &middot; Projekt-Nr. " + esc(o.kundennummer) : "") +
-      (o.auftragsnummer ? " &middot; AA-Nr. " + esc(o.auftragsnummer) : "");
+      (o.kundennummer ? " &middot; Projekt-Nr. " + esc(o.kundennummer) : "");
     return (
       '<div class="card ph-' + ph + '" data-id="' + o.id + '">' +
         '<div class="card-top">' +
@@ -1801,7 +1793,7 @@
       if (o.ersatzteileLieferung) rows.push(["Wird geliefert", "Ja"]);
       rows.push(["Ersatzteile da", o.ersatzteileAbgeholt ? "Ja" : "Nein"]);
     }
-    if (needsMaterial(o)) rows.push(["Material nötig", (o.materialText || "Ja") + (o.materialBesorgt ? " (besorgt)" : " (noch nicht besorgt)")]);
+    if (o.materialText) rows.push(["Material / Ersatzteile", o.materialText]);
     var rowsHtml = rows.map(function (r) {
       return '<tr><td class="pk">' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td></tr>';
     }).join("");
@@ -1911,6 +1903,7 @@
         if (t.preis) extra.push(formatPreisPlain(t.preis));
         return "- " + (t.menge || 1) + "x " + t.name + (extra.length ? " (" + extra.join(", ") + ")" : "");
       }).join("\n");
+      if (o.materialText) lines = "- " + o.materialText + (lines ? "\n" + lines : "");
       return (o.name || "Auftrag") + (o.kundennummer ? " (Projekt-Nr. " + o.kundennummer + ")" : "") + ":\n" + lines;
     }).join("\n\n");
   }
@@ -1942,7 +1935,7 @@
         list.map(bestellCard).join("") +
       '</div>';
     var copyBtn = document.getElementById("copyOrderList");
-    if (copyBtn) copyBtn.addEventListener("click", function () { copyText(buildOrderListText(toOrder.filter(hasParts))); });
+    if (copyBtn) copyBtn.addEventListener("click", function () { copyText(buildOrderListText(toOrder.filter(function (o) { return hasParts(o) || o.materialText; }))); });
   }
 
   function scopedOrders() {
@@ -1972,7 +1965,7 @@
         }
         if (o.terminDatum && o.terminDatum < today) add(o, "📅 Termin überfällig (" + fmtDate(o.terminDatum) + ")");
         if (o.terminDatum && o.terminDatum >= today && o.terminDatum <= tomorrow && !allThere(o)) {
-          add(o, "🔧 Termin " + (o.terminDatum === today ? "heute" : "morgen") + ", aber Material/Ersatzteile fehlen");
+          add(o, "🔧 Termin " + (o.terminDatum === today ? "heute" : "morgen") + ", aber Material / Ersatzteile fehlen");
         }
         if (needsPickup(o) && o.bestelltAm) {
           var days = Math.floor((Date.now() - Number(o.bestelltAm)) / 86400000);
@@ -2047,7 +2040,7 @@
       html += br.map(function (o) {
         var who = (o.ausgefuehrtVon || o.monteur || "").trim();
         return '<div class="abr-row" data-edit="' + o.id + '"><span><b>' + esc(o.name || "Ohne Bezeichnung") + '</b><br><span class="sub">' +
-          esc([fmtDate(o.durchgefuehrtAm || o.datum), who, o.auftragsart, o.kundennummer ? "Projekt-Nr. " + o.kundennummer : "", o.auftragsnummer ? "AA-Nr. " + o.auftragsnummer : ""].filter(Boolean).join(" · ")) +
+          esc([fmtDate(o.durchgefuehrtAm || o.datum), who, o.auftragsart, o.kundennummer ? "Projekt-Nr. " + o.kundennummer : ""].filter(Boolean).join(" · ")) +
           '</span></span><button type="button" class="verr-btn' + (o.verrechnet ? " on" : "") + '" data-verr-toggle="' + o.id + '">' + (o.verrechnet ? "✔ verrechnet" : "💶 verrechnen") + '</button></div>';
       }).join("");
     });
@@ -2273,7 +2266,7 @@
   function setSheetToggle(el, on) { el.classList.toggle("on", !!on); el.dataset.on = on ? "1" : ""; }
   function getSheetToggle(el) { return !!el.dataset.on; }
 
-  function updateMaterialVisibility() { els.materialField.hidden = !getSheetToggle(els.t_materialNoetig); }
+  function updateMaterialVisibility() { els.materialField.hidden = !getSheetToggle(els.t_ersatzteileNoetig); }
   function updateDurchgefuehrtVisibility(ev) {
     var done = els.f_status.value !== "offen";
     setSheetToggle(els.t_durchgefuehrt, done);
@@ -2288,7 +2281,7 @@
     el.addEventListener("click", function () {
       var nowOn = !getSheetToggle(el);
       setSheetToggle(el, nowOn);
-      if (el === els.t_ersatzteileNoetig) updatePartStatusVisibility();
+      if (el === els.t_ersatzteileNoetig) { updatePartStatusVisibility(); updateMaterialVisibility(); }
       if (el === els.t_materialNoetig) updateMaterialVisibility();
       if (el === els.t_durchgefuehrt) {
         if (nowOn && !els.f_durchgefuehrtAm.value) {
@@ -2694,8 +2687,8 @@
       setSheetToggle(els.t_vorhanden, o.auftragVorhanden);
       setSheetToggle(els.t_terminAusgemacht, o.terminAusgemacht);
       updateDurchgefuehrtVisibility();
-      setSheetToggle(els.t_ersatzteileNoetig, o.ersatzteileNoetig);
-      setSheetToggle(els.t_materialNoetig, o.materialNoetig);
+      setSheetToggle(els.t_ersatzteileNoetig, needsErsatzteile(o));
+      setSheetToggle(els.t_materialNoetig, false);
       setSheetToggle(els.t_materialBesorgt, o.materialBesorgt);
       els.f_material.value = o.materialText || "";
       updateMaterialVisibility();
@@ -2776,6 +2769,7 @@
     }
     var teile = state.sheetParts.map(function (p) { return { id: p.id, name: p.name, menge: p.menge, lieferant: p.lieferant || "", bestellnr: p.bestellnr || "", preis: p.preis || "" }; });
     var fotos = state.sheetPhotos.filter(function (p) { return p.assetId; }).map(function (p) { return p.assetId; });
+    var matText = getSheetToggle(els.t_ersatzteileNoetig) ? els.f_material.value.trim() : "";
     var ersatzteileNoetig = teile.length > 0 || getSheetToggle(els.t_ersatzteileNoetig);
     var payload = {
       lieferscheinPdf: (state.sheetPdf && state.sheetPdf.assetId) ? state.sheetPdf.assetId : null,
@@ -2804,9 +2798,9 @@
       ersatzteileBestellt: ersatzteileNoetig ? getSheetToggle(els.t_bestellt) : false,
       ersatzteileLieferung: ersatzteileNoetig ? getSheetToggle(els.t_lieferung) : false,
       ersatzteileAbgeholt: ersatzteileNoetig ? getSheetToggle(els.t_abgeholt) : false,
-      materialNoetig: getSheetToggle(els.t_materialNoetig),
-      materialText: getSheetToggle(els.t_materialNoetig) ? els.f_material.value.trim() : "",
-      materialBesorgt: getSheetToggle(els.t_materialNoetig) ? getSheetToggle(els.t_materialBesorgt) : false,
+      materialNoetig: false,
+      materialText: matText,
+      materialBesorgt: ersatzteileNoetig ? getSheetToggle(els.t_abgeholt) : false,
       fotos: fotos,
       note: els.f_note.value.trim(),
       wiederholung: els.f_wiederholung.value,
@@ -3085,6 +3079,11 @@
         var ord = Object.assign({ id: d.id }, data);
         // Durchgeführt oder verrechnet = abgeschlossen (auch wenn der Status noch "offen" steht)
         if (isDone(ord)) { ord.status = "erledigt"; ord.durchgefuehrt = true; }
+        if (ord.materialNoetig) { // alt: Material war getrennt geführt
+          var hadParts = hasParts(ord) || !!ord.ersatzteileNoetig;
+          ord.ersatzteileAbgeholt = (!hadParts || !!ord.ersatzteileAbgeholt) && !!ord.materialBesorgt;
+          ord.ersatzteileNoetig = true; ord.materialNoetig = false;
+        }
         if (ord.name) ord.name = String(ord.name).replace(/\s+/g, " ").trim();
         return ord;
       });
